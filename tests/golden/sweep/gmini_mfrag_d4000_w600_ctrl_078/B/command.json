@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mfrag_d4000_w600_ctrl_078_B",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w600_ctrl_078/B",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w600_ctrl_078/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w600_ctrl_078/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "-B"
+  ],
+  "files": {
+    "gmini_mfrag_d4000_w600_ctrl_078_B_control_lambda.bdg": "c3402e701091077704d3a0e898e04173ad0f8c84a266446de1c468e7b54c8c23",
+    "gmini_mfrag_d4000_w600_ctrl_078_B_peaks.narrowPeak": "4fca9371851c1720bbae6ca4c50bc247b9d399f46506d9ac6e55303d33e420fd",
+    "gmini_mfrag_d4000_w600_ctrl_078_B_peaks.xls": "9885716f65a32a26aa4b32e4509b22612a303db0cd6858150d5a668a052ad3bb",
+    "gmini_mfrag_d4000_w600_ctrl_078_B_summits.bed": "dcc91ad24cd758c924496e84327e5392e4c5d3ee24351e5177081475d19df32f",
+    "gmini_mfrag_d4000_w600_ctrl_078_B_treat_pileup.bdg": "7b2fc293ca63499cc3f9c6842d40e3a2515f36241425bc66510a8cdaaaead8e4"
+  },
+  "fixture": "sweep/gmini_mfrag_d4000_w600_ctrl_078",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 11:41:15: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:41:15: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d4000_w600_ctrl_078_B -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w600_ctrl_078/B -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w600_ctrl_078/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w600_ctrl_078/ctrl.frag -f FRAG --nomodel --extsize 200 -B\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d4000_w600_ctrl_078_B\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w600_ctrl_078/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w600_ctrl_078/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:41:15: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:41:15: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:41:15: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #1 mean fragment size is determined as 117.3 bp from treatment \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #1 note: mean fragment size in control is 99.0 bp -- value ignored \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #1 fragment size = 117.3 \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #1  total fragments in control: 15994 \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:41:15: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:41:15: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] #3 In the peak calling step, the following will be performed simultaneously: \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] #3   Write bedGraph files for treatment pileup (after scaling if necessary)... gmini_mfrag_d4000_w600_ctrl_078_B_treat_pileup.bdg \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] #3   Write bedGraph files for control lambda (after scaling if necessary)... gmini_mfrag_d4000_w600_ctrl_078_B_control_lambda.bdg \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] #3   Pileup will be based on sequencing depth in treatment. \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w600_ctrl_078/B/gmini_mfrag_d4000_w600_ctrl_078_B_peaks.xls \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w600_ctrl_078/B/gmini_mfrag_d4000_w600_ctrl_078_B_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w600_ctrl_078/B/gmini_mfrag_d4000_w600_ctrl_078_B_summits.bed \nINFO  @ 30 Sep 2026 11:41:15: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "B",
+  "wall_seconds": 0.21
+}

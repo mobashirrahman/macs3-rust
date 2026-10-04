@@ -1,0 +1,25 @@
+fixture	gmini_mpe_d1200_w60_ctrl_336
+group	sweep
+genome	mini
+mode	pe
+model_capable	0
+treat	chr1	1200
+treat_1	chr1	1200
+treat_2	chr1	600
+treat	chr2	1200
+treat_1	chr2	1200
+treat_2	chr2	600
+treat	chr10	1200
+treat_1	chr10	1200
+treat_2	chr10	600
+treat	chrX	1200
+treat_1	chrX	1200
+treat_2	chrX	600
+treat	chrM	1200
+treat_1	chrM	1200
+treat_2	chrM	600
+ctrl	chr1	1200
+ctrl	chr2	1200
+ctrl	chr10	1200
+ctrl	chrX	1200
+ctrl	chrM	1200

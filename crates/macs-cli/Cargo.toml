@@ -1,0 +1,29 @@
+[package]
+name = "macs-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "macs3-rs command line interface"
+
+[[bin]]
+name = "macs3-rs"
+path = "src/main.rs"
+
+[dependencies]
+macs-bedgraph = { workspace = true }
+macs-callvar = { workspace = true }
+macs-score = { workspace = true }
+macs-core = { workspace = true }
+macs-model = { workspace = true }
+macs-pileup = { workspace = true }
+macs-stats = { workspace = true }
+rayon = { workspace = true }
+macs-io = { workspace = true }
+macs-peaks = { workspace = true }
+macs-track = { workspace = true }
+macs-rle = { workspace = true }
+macs-hmmratac = { workspace = true }

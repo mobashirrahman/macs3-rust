@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mpe_d400_w60_noc_246_broad",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_noc_246/broad",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_noc_246/treat.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--broad",
+    "--broad-cutoff",
+    "0.1",
+    "-q",
+    "0.05"
+  ],
+  "files": {
+    "gmini_mpe_d400_w60_noc_246_broad_peaks.broadPeak": "9e8b692d5efa477e7a5a5d343dc3ad0b13fdd49ae8a6d0ebd2d062e58151ba18",
+    "gmini_mpe_d400_w60_noc_246_broad_peaks.gappedPeak": "dd8790b504f340a0862b72db41779ed740ea7638d79b8717592dd8495468fe4c",
+    "gmini_mpe_d400_w60_noc_246_broad_peaks.xls": "d693817e85700ad519931a39f2f1aa40f9427476af45c434a4de981aa2b9c73a"
+  },
+  "fixture": "sweep/gmini_mpe_d400_w60_noc_246",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 11:44:36: [32 MB] \n# Command line: callpeak -n gmini_mpe_d400_w60_noc_246_broad -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_noc_246/broad -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_noc_246/treat.bedpe -f BEDPE --nomodel --extsize 200 --broad --broad-cutoff 0.1 -q 0.05\n# ARGUMENTS LIST:\n# name = gmini_mpe_d400_w60_noc_246_broad\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_noc_246/treat.bedpe']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff for narrow/strong regions = 5.00e-02\n# qvalue cutoff for broad/weak regions = 1.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is on\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:44:36: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:44:36: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #1 mean fragment size is determined as 150.1 bp from treatment \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #1 fragment size = 150.1 \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #1  total fragments in treatment: 400 \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #1  fragments after filtering in treatment: 73 \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #1  Redundant rate of treatment: 0.82 \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #3 Call broad peaks with given level1 -log10qvalue cutoff and level2: 1.301030, 1.000000... \nINFO  @ 30 Sep 2026 11:44:36: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:44:36: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:44:36: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_noc_246/broad/gmini_mpe_d400_w60_noc_246_broad_peaks.xls \nINFO  @ 30 Sep 2026 11:44:36: [34 MB] #4 Write broad peak in broadPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_noc_246/broad/gmini_mpe_d400_w60_noc_246_broad_peaks.broadPeak \nINFO  @ 30 Sep 2026 11:44:36: [34 MB] #4 Write broad peak in bed12/gappedPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_noc_246/broad/gmini_mpe_d400_w60_noc_246_broad_peaks.gappedPeak \nINFO  @ 30 Sep 2026 11:44:36: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "broad",
+  "wall_seconds": 0.129
+}

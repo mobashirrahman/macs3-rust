@@ -1,0 +1,38 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mfrag_d1200_w600_ctrl_070_broad",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w600_ctrl_070/broad",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w600_ctrl_070/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w600_ctrl_070/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--broad",
+    "--broad-cutoff",
+    "0.1",
+    "-q",
+    "0.05"
+  ],
+  "files": {
+    "gtiny_mfrag_d1200_w600_ctrl_070_broad_peaks.broadPeak": "c15d51511f8f6c5f29506183d73497660671c2000d428c8f6af8b4025b4234c7",
+    "gtiny_mfrag_d1200_w600_ctrl_070_broad_peaks.gappedPeak": "26226a965d6e8e9d0b86e39314cbd7cab861b3d65b1f80b4028920eeccbc6fbe",
+    "gtiny_mfrag_d1200_w600_ctrl_070_broad_peaks.xls": "e8fc0239e8327186c73a80828350f5da6f573b3dd0f76d7602257ddf40b82274"
+  },
+  "fixture": "sweep/gtiny_mfrag_d1200_w600_ctrl_070",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:27:29: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:27:29: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d1200_w600_ctrl_070_broad -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w600_ctrl_070/broad -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w600_ctrl_070/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w600_ctrl_070/ctrl.frag -f FRAG --nomodel --extsize 200 --broad --broad-cutoff 0.1 -q 0.05\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d1200_w600_ctrl_070_broad\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w600_ctrl_070/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w600_ctrl_070/ctrl.frag']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff for narrow/strong regions = 5.00e-02\n# qvalue cutoff for broad/weak regions = 1.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is on\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:27:29: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:27:29: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:27:30: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #1 note: mean fragment size in control is 170.6 bp -- value ignored \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #1  total fragments in treatment: 4794 \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #1  total fragments in control: 4794 \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:27:30: [34 MB] #3 Call broad peaks with given level1 -log10qvalue cutoff and level2: 1.301030, 1.000000... \nINFO  @ 30 Sep 2026 12:27:30: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:27:30: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:27:30: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w600_ctrl_070/broad/gtiny_mfrag_d1200_w600_ctrl_070_broad_peaks.xls \nINFO  @ 30 Sep 2026 12:27:30: [36 MB] #4 Write broad peak in broadPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w600_ctrl_070/broad/gtiny_mfrag_d1200_w600_ctrl_070_broad_peaks.broadPeak \nINFO  @ 30 Sep 2026 12:27:30: [36 MB] #4 Write broad peak in bed12/gappedPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w600_ctrl_070/broad/gtiny_mfrag_d1200_w600_ctrl_070_broad_peaks.gappedPeak \nINFO  @ 30 Sep 2026 12:27:30: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "broad",
+  "wall_seconds": 0.2
+}

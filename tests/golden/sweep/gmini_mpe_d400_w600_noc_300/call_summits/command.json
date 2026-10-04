@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mpe_d400_w600_noc_300_call_summits",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_300/call_summits",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_300/treat.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--call-summits"
+  ],
+  "files": {
+    "gmini_mpe_d400_w600_noc_300_call_summits_peaks.narrowPeak": "42161f9d4357fe48b372087d31fe0e3dea2612155a2cfb265153c3aef31de641",
+    "gmini_mpe_d400_w600_noc_300_call_summits_peaks.xls": "7b13cc5e1dc1ec4e6371b6737a1dfb2ee39e7db99a45c4eaf4cc88d9fbffdb6f",
+    "gmini_mpe_d400_w600_noc_300_call_summits_summits.bed": "72714caca76bda636d2937e8a6ec5412c90f1750c938de08582380993ae376f6"
+  },
+  "fixture": "sweep/gmini_mpe_d400_w600_noc_300",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 11:44:22: [32 MB] \n# Command line: callpeak -n gmini_mpe_d400_w600_noc_300_call_summits -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_300/call_summits -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_300/treat.bedpe -f BEDPE --nomodel --extsize 200 --call-summits\n# ARGUMENTS LIST:\n# name = gmini_mpe_d400_w600_noc_300_call_summits\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_300/treat.bedpe']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n# Searching for subpeak summits is on\n \nINFO  @ 30 Sep 2026 11:44:22: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:44:22: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #1 mean fragment size is determined as 117.6 bp from treatment \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #1 fragment size = 117.6 \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #1  total fragments in treatment: 400 \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #1  fragments after filtering in treatment: 120 \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #1  Redundant rate of treatment: 0.70 \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #3 Going to call summits inside each peak ... \nINFO  @ 30 Sep 2026 11:44:22: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:44:22: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:44:22: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_300/call_summits/gmini_mpe_d400_w600_noc_300_call_summits_peaks.xls \nINFO  @ 30 Sep 2026 11:44:22: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_300/call_summits/gmini_mpe_d400_w600_noc_300_call_summits_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:44:22: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_300/call_summits/gmini_mpe_d400_w600_noc_300_call_summits_summits.bed \nINFO  @ 30 Sep 2026 11:44:22: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "call_summits",
+  "wall_seconds": 0.143
+}

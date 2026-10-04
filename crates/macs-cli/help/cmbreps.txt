@@ -1,0 +1,26 @@
+usage: macs3 cmbreps [-h] -i IFILE [IFILE ...] [-m {fisher,max,mean}]
+                     [--outdir OUTDIR] -o OFILE [--verbose VERBOSE]
+
+options:
+  -h, --help            show this help message and exit
+  -i IFILE [IFILE ...]  MACS score in bedGraph for each replicate. Require at
+                        least 2 files such as '-i A B C D'. REQUIRED
+  -m {fisher,max,mean}, --method {fisher,max,mean}
+                        Method to use while combining scores from replicates.
+                        1) fisher: Fisher's combined probability test. It
+                        requires scores in ppois form (-log10 pvalues) from
+                        bdgcmp. Other types of scores for this method may
+                        cause cmbreps unexpected errors. 2) max: take the
+                        maximum value from replicates for each genomic
+                        position. 3) mean: take the average value. Note,
+                        except for Fisher's method, max or mean will take
+                        scores AS IS which means they won't convert scores
+                        from log scale to linear scale or vice versa.
+  --outdir OUTDIR       If specified all output files will be written to that
+                        directory. Default: the current working directory
+  -o OFILE, --ofile OFILE
+                        Output BEDGraph filename for combined scores.
+  --verbose VERBOSE     Set verbose level of runtime message. 0: only show
+                        critical message, 1: show additional warning message,
+                        2: show process information, 3: show debug messages.
+                        DEFAULT:2

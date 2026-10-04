@@ -1,0 +1,4 @@
+# effective genome size for this fixture
+chrA	2000
+chrB	1500
+# sum=3500

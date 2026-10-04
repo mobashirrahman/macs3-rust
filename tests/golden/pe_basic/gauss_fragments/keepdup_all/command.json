@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gauss_fragments_keepdup_all",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/keepdup_all",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe",
+    "-f",
+    "BEDPE",
+    "--keep-dup",
+    "all"
+  ],
+  "files": {
+    "gauss_fragments_keepdup_all_peaks.narrowPeak": "4d9dee50cfcd2407ef85e07490a0198da1cc59da513380cd3705c3153c4d181b",
+    "gauss_fragments_keepdup_all_peaks.xls": "af4b16dd4552a3174f5b1a3dd5634c5446f895a06f29e6edba7b37c3956a8ce0",
+    "gauss_fragments_keepdup_all_summits.bed": "31e89c6183b8aa854716be17b7d979099d245740efb0f8c374d3249ae314c375"
+  },
+  "fixture": "pe_basic/gauss_fragments",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:01: [32 MB] \n# Command line: callpeak -n gauss_fragments_keepdup_all -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe -c /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe -f BEDPE --keep-dup all\n# ARGUMENTS LIST:\n# name = gauss_fragments_keepdup_all\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:26:01: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:26:01: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:26:01: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #1 mean fragment size is determined as 100.3 bp from treatment \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #1 note: mean fragment size in control is 100.4 bp -- value ignored \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #1 fragment size = 100.3 \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #1  total fragments in treatment: 3000 \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #1  total fragments in control: 2500 \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:01: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:01: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:01: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/keepdup_all/gauss_fragments_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:26:01: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/keepdup_all/gauss_fragments_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:01: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/keepdup_all/gauss_fragments_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:26:01: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_all",
+  "wall_seconds": 0.199
+}

@@ -1,0 +1,20 @@
+[package]
+name = "macs-model"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "macs3-rs: peak model building (PeakModel.py port)"
+
+[dependencies]
+macs-core = { workspace = true }
+macs-track = { workspace = true }
+thiserror.workspace = true
+
+[dev-dependencies]
+# `tests/paired_peaks_vs_upstream.rs` reads upstream's own CTCF fixture through
+# the same sniffing reader the library uses.
+macs-io = { workspace = true }

@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mpe_d4000_w180_ctrl_373_keepdup_all",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_ctrl_373/keepdup_all",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_ctrl_373/treat.bedpe",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_ctrl_373/ctrl.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--keep-dup",
+    "all"
+  ],
+  "files": {
+    "gtiny_mpe_d4000_w180_ctrl_373_keepdup_all_peaks.narrowPeak": "b35996ba527e2a767c56fcb14c09b14623f42fd720a10d8866de63ae2bfc1b9b",
+    "gtiny_mpe_d4000_w180_ctrl_373_keepdup_all_peaks.xls": "41d823dd9323f2827b5aaef6123c56eb606ac4105fad2479f7d24cd797628079",
+    "gtiny_mpe_d4000_w180_ctrl_373_keepdup_all_summits.bed": "070c47508b9664aa3e4fc1079f0b8fb5344bb99b0af4863103a68985cebcaea0"
+  },
+  "fixture": "sweep/gtiny_mpe_d4000_w180_ctrl_373",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:30:51: [32 MB] \n# Command line: callpeak -n gtiny_mpe_d4000_w180_ctrl_373_keepdup_all -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_ctrl_373/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_ctrl_373/treat.bedpe -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_ctrl_373/ctrl.bedpe -f BEDPE --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gtiny_mpe_d4000_w180_ctrl_373_keepdup_all\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_ctrl_373/treat.bedpe']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_ctrl_373/ctrl.bedpe']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:30:51: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:30:51: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:30:51: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #1 note: mean fragment size in control is 169.4 bp -- value ignored \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #1  total fragments in treatment: 4000 \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #1  total fragments in control: 4000 \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:30:51: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:30:51: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:30:51: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_ctrl_373/keepdup_all/gtiny_mpe_d4000_w180_ctrl_373_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:30:51: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_ctrl_373/keepdup_all/gtiny_mpe_d4000_w180_ctrl_373_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:30:51: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_ctrl_373/keepdup_all/gtiny_mpe_d4000_w180_ctrl_373_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:30:51: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_all",
+  "wall_seconds": 0.213
+}

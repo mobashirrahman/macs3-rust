@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mpe_d4000_w180_noc_131_call_summits",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d4000_w180_noc_131/call_summits",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d4000_w180_noc_131/treat.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--call-summits"
+  ],
+  "files": {
+    "gonechrom_mpe_d4000_w180_noc_131_call_summits_peaks.narrowPeak": "f2ec7236898222625ea109c5c126e7c9d38e02839e150ba603028e4ee7c6094d",
+    "gonechrom_mpe_d4000_w180_noc_131_call_summits_peaks.xls": "e5143b2fb74836c0245fa0709804cb37a6c95bcb0e37eae97b32879989ef2741",
+    "gonechrom_mpe_d4000_w180_noc_131_call_summits_summits.bed": "3c880e88428e0a50319fa4a9abcd50eae6a4d626178376af5f4ccbb7f801ce41"
+  },
+  "fixture": "sweep/gonechrom_mpe_d4000_w180_noc_131",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:22:05: [32 MB] \n# Command line: callpeak -n gonechrom_mpe_d4000_w180_noc_131_call_summits -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d4000_w180_noc_131/call_summits -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d4000_w180_noc_131/treat.bedpe -f BEDPE --nomodel --extsize 200 --call-summits\n# ARGUMENTS LIST:\n# name = gonechrom_mpe_d4000_w180_noc_131_call_summits\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d4000_w180_noc_131/treat.bedpe']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n# Searching for subpeak summits is on\n \nINFO  @ 30 Sep 2026 12:22:05: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:22:05: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #1  total fragments in treatment: 4000 \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #1  fragments after filtering in treatment: 255 \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #1  Redundant rate of treatment: 0.94 \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:22:05: [33 MB] #3 Going to call summits inside each peak ... \nINFO  @ 30 Sep 2026 12:22:05: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:22:05: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:22:05: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d4000_w180_noc_131/call_summits/gonechrom_mpe_d4000_w180_noc_131_call_summits_peaks.xls \nINFO  @ 30 Sep 2026 12:22:05: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d4000_w180_noc_131/call_summits/gonechrom_mpe_d4000_w180_noc_131_call_summits_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:22:05: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d4000_w180_noc_131/call_summits/gonechrom_mpe_d4000_w180_noc_131_call_summits_summits.bed \nINFO  @ 30 Sep 2026 12:22:05: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "call_summits",
+  "wall_seconds": 0.193
+}

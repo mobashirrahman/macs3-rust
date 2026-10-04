@@ -1,0 +1,4115 @@
+poisson_cdf	0	1e-8	0	0	0x3e45798ee0636110
+poisson_cdf	0	1e-8	0	1	0xc020000000000000
+poisson_cdf	0	1e-8	1	0	0x3feffffffaa19c48
+poisson_cdf	0	1e-8	1	1	0x8000000000000000
+poisson_cdf	1	1e-8	0	0	0x3c8cd2b2949f3ea3
+poisson_cdf	1	1e-8	0	1	0xc0304d104d551d69
+poisson_cdf	1	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	1	1e-8	1	1	0xc020000000000000
+poisson_cdf	2	1e-8	0	0	0x3ac9ca58c9a1f9ba
+poisson_cdf	2	1e-8	0	1	0xc038c734d6a161e5
+poisson_cdf	2	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	2	1e-8	1	1	0xc0209a209aaa3ad2
+poisson_cdf	5	1e-8	0	0	0x3560a0ee98f590e8
+poisson_cdf	5	1e-8	0	1	0xc0496dbcfd4bf099
+poisson_cdf	5	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	5	1e-8	1	1	0xc02165df6555c52e
+poisson_cdf	10	1e-8	0	0	0x2c1567863024ba55
+poisson_cdf	10	1e-8	0	1	0xc057e67967caea74
+poisson_cdf	10	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	10	1e-8	1	1	0xc022000000000000
+poisson_cdf	37	1e-8	0	0	0x0000000000000000
+poisson_cdf	37	1e-8	0	1	0xc075cb7f0ed3d85a
+poisson_cdf	37	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	37	1e-8	1	1	0xc02322eb1c432ca5
+poisson_cdf	100	1e-8	0	0	0x0000000000000000
+poisson_cdf	100	1e-8	0	1	0xc08e3fcb6d86ec18
+poisson_cdf	100	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	100	1e-8	1	1	0xc024000000000000
+poisson_cdf	200	1e-8	0	0	0x0000000000000000
+poisson_cdf	200	1e-8	0	1	0xc09f04cce1c58256
+poisson_cdf	200	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	200	1e-8	1	1	0xc0249a209aaa3ad2
+poisson_cdf	500	1e-8	0	0	0x0000000000000000
+poisson_cdf	500	1e-8	0	1	0xc0b418c947ae147b
+poisson_cdf	500	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	500	1e-8	1	1	0xc02565df6555c52e
+poisson_cdf	1000	1e-8	0	0	0x0000000000000000
+poisson_cdf	1000	1e-8	0	1	0xc0c4a94d7342edbb
+poisson_cdf	1000	1e-8	1	0	0x3ff0000000000000
+poisson_cdf	1000	1e-8	1	1	0xc026000000000000
+poisson_cdf	0	0.001	0	0	0x3f50603521cac48c
+poisson_cdf	0	0.001	0	1	0xc008007357e670e3
+poisson_cdf	0	0.001	1	0	0x3feff7cfe56f1a9e
+poisson_cdf	0	0.001	1	1	0xbf3c2e33eff19503
+poisson_cdf	1	0.001	0	0	0x3ea0c41ae5137f91
+poisson_cdf	1	0.001	0	1	0xc019348d3ae685db
+poisson_cdf	1	0.001	1	0	0x3feffffef3be51af
+poisson_cdf	1	0.001	1	1	0xc00800e1719f7f8d
+poisson_cdf	2	0.001	0	0	0x3de6e3aa6d16154b
+poisson_cdf	2	0.001	0	1	0xc0238e94ee392e1f
+poisson_cdf	2	0.001	1	0	0x3fefffffffe91c56
+poisson_cdf	2	0.001	1	1	0xc00a68826aa8eb46
+poisson_cdf	5	0.001	0	0	0x3b9a368012753fab
+poisson_cdf	5	0.001	0	1	0xc034db923a29c77a
+poisson_cdf	5	0.001	1	0	0x3ff0000000000000
+poisson_cdf	5	0.001	1	1	0xc00d977d955714ba
+poisson_cdf	10	0.001	0	0	0x37817159b2d416ea
+poisson_cdf	10	0.001	0	1	0xc0444cff97247454
+poisson_cdf	10	0.001	1	0	0x3ff0000000000000
+poisson_cdf	10	0.001	1	1	0xc010000000000000
+poisson_cdf	37	0.001	0	0	0x1efadab454bde69c
+poisson_cdf	37	0.001	0	1	0xc063d7018e757929
+poisson_cdf	37	0.001	1	0	0x3ff0000000000000
+poisson_cdf	37	0.001	1	1	0xc01245d63886594b
+poisson_cdf	100	0.001	0	0	0x0000000000000000
+poisson_cdf	100	0.001	0	1	0xc07cef989df1172f
+poisson_cdf	100	0.001	1	0	0x3ff0000000000000
+poisson_cdf	100	0.001	1	1	0xc014000000000000
+poisson_cdf	200	0.001	0	0	0x0000000000000000
+poisson_cdf	200	0.001	0	1	0xc08ea19aaa3ad18d
+poisson_cdf	200	0.001	1	0	0x3ff0000000000000
+poisson_cdf	200	0.001	1	1	0xc0153441355475a3
+poisson_cdf	500	0.001	0	0	0x0000000000000000
+poisson_cdf	500	0.001	0	1	0xc0a49f92c7b890d6
+poisson_cdf	500	0.001	1	0	0x3ff0000000000000
+poisson_cdf	500	0.001	1	1	0xc016cbbecaab8a5d
+poisson_cdf	1000	0.001	0	0	0x0000000000000000
+poisson_cdf	1000	0.001	0	1	0xc0b5c59b02b40f67
+poisson_cdf	1000	0.001	1	0	0x3ff0000000000000
+poisson_cdf	1000	0.001	1	1	0xc018000000000000
+poisson_cdf	0	0.1	0	0	0x3fb85c933156a62c
+poisson_cdf	0	0.1	0	1	0xbff0582fd75e2047
+poisson_cdf	0	0.1	1	0	0x3fecf46d99d52b3a
+poisson_cdf	0	0.1	1	1	0xbfa63c74fb549f95
+poisson_cdf	1	0.1	0	0	0x3f732a1e978e9fd4
+poisson_cdf	1	0.1	0	1	0xc002a38da3c21188
+poisson_cdf	1	0.1	1	0	0x3fefd9abc2d0e2c0
+poisson_cdf	1	0.1	1	1	0xbff0b1e3a7daa4fd
+poisson_cdf	2	0.1	0	0	0x3f24454bc20df5b7
+poisson_cdf	2	0.1	0	1	0xc00e7c30d306a2b1
+poisson_cdf	2	0.1	1	0	0x3feffebbab43df20
+poisson_cdf	2	0.1	1	1	0xbff4d95feda66128
+poisson_cdf	5	0.1	0	0	0x3e15e710519de140
+poisson_cdf	5	0.1	0	1	0xc021c9fe86833c60
+poisson_cdf	5	0.1	1	0	0x3fefffffff50c77d
+poisson_cdf	5	0.1	1	1	0xbffb2efb2aae2974
+poisson_cdf	10	0.1	0	0	0x3c10ddd6c857a0d0
+poisson_cdf	10	0.1	0	1	0xc032a4154c985f07
+poisson_cdf	10	0.1	1	0	0x3feffffffffffffe
+poisson_cdf	10	0.1	1	1	0xc000000000000000
+poisson_cdf	37	0.1	0	0	0x2ec0d8f18af225dc
+poisson_cdf	37	0.1	0	1	0xc054b0b1704ff434
+poisson_cdf	37	0.1	1	0	0x3feffffffffffffe
+poisson_cdf	37	0.1	1	1	0xc0048bac710cb296
+poisson_cdf	100	0.1	0	0	0x09be41d33f745ad1
+poisson_cdf	100	0.1	0	1	0xc0705046fbd273d6
+poisson_cdf	100	0.1	1	0	0x3feffffffffffffe
+poisson_cdf	100	0.1	1	1	0xc008000000000000
+poisson_cdf	200	0.1	0	0	0x0000000000000000
+poisson_cdf	200	0.1	0	1	0xc08211f2474538ef
+poisson_cdf	200	0.1	1	0	0x3feffffffffffffe
+poisson_cdf	200	0.1	1	1	0xc00a68826aa8eb46
+poisson_cdf	500	0.1	0	0	0x0000000000000000
+poisson_cdf	500	0.1	0	1	0xc0999751800a7c5b
+poisson_cdf	500	0.1	1	0	0x3feffffffffffffe
+poisson_cdf	500	0.1	1	1	0xc00d977d955714ba
+poisson_cdf	1000	0.1	0	0	0x0000000000000000
+poisson_cdf	1000	0.1	0	1	0xc0abe74c02f2f987
+poisson_cdf	1000	0.1	1	0	0x3feffffffffffffe
+poisson_cdf	1000	0.1	1	1	0xc010000000000000
+poisson_cdf	0	0.5	0	0	0x3fd92e9a0720d3ec
+poisson_cdf	0	0.5	0	1	0xbfd9ecfe9b7bf1e9
+poisson_cdf	0	0.5	1	0	0x3fe368b2fc6f960a
+poisson_cdf	0	0.5	1	1	0xbfcbcb923a29c77a
+poisson_cdf	1	0.5	0	0	0x3fb7179c2ac4f78a
+poisson_cdf	1	0.5	0	1	0xbff0b760bf5d7881
+poisson_cdf	1	0.5	1	0	0x3fed1d0c7aa7610f
+poisson_cdf	1	0.5	1	1	0xbfe094ee392e1ef7
+poisson_cdf	2	0.5	0	0	0x3f8d774972ab0bef
+poisson_cdf	2	0.5	0	1	0xbffd78df7a4e7ab7
+poisson_cdf	2	0.5	1	0	0x3fef8a22da3553d0
+poisson_cdf	2	0.5	1	1	0xbfe4947064ece9a3
+poisson_cdf	5	0.5	0	0	0x3eedb4be295d4194
+poisson_cdf	5	0.5	0	1	0xc013652934acaff7
+poisson_cdf	5	0.5	1	0	0x3fefffe24b41d6a3
+poisson_cdf	5	0.5	1	1	0xbff00049667b5f1c
+poisson_cdf	10	0.5	0	0	0x3da105b4b81053a6
+poisson_cdf	10	0.5	0	1	0xc02638f08461f9f0
+poisson_cdf	10	0.5	1	0	0x3feffffffffeefa5
+poisson_cdf	10	0.5	1	1	0xbff4d104d551d68c
+poisson_cdf	37	0.5	0	0	0x343ad36ba094a417
+poisson_cdf	37	0.5	0	1	0xc04c2f4245f5ad97
+poisson_cdf	37	0.5	1	0	0x3ff0000000000000
+poisson_cdf	37	0.5	1	1	0xbffde85db76b3bb8
+poisson_cdf	100	0.5	0	0	0x185d177b1861d59c
+poisson_cdf	100	0.5	0	1	0xc067d2fce3150dae
+poisson_cdf	100	0.5	1	0	0x3ff0000000000000
+poisson_cdf	100	0.5	1	1	0xc00268826aa8eb46
+poisson_cdf	200	0.5	0	0	0x0000000000000000
+poisson_cdf	200	0.5	0	1	0xc07b5ec558644524
+poisson_cdf	200	0.5	1	0	0x3ff0000000000000
+poisson_cdf	200	0.5	1	1	0xc004d104d551d68c
+poisson_cdf	500	0.5	0	0	0x0000000000000000
+poisson_cdf	500	0.5	0	1	0xc0941f46a5508701
+poisson_cdf	500	0.5	1	0	0x3ff0000000000000
+poisson_cdf	500	0.5	1	1	0xc008000000000000
+poisson_cdf	1000	0.5	0	0	0x0000000000000000
+poisson_cdf	1000	0.5	0	1	0xc0a6704e59f2ba9d
+poisson_cdf	1000	0.5	1	0	0x3ff0000000000000
+poisson_cdf	1000	0.5	1	1	0xc00a68826aa8eb46
+poisson_cdf	0	1.0	0	0	0x3fe43a54e4e98864
+poisson_cdf	0	1.0	0	1	0xbfc97f62b6ae7d56
+poisson_cdf	0	1.0	1	0	0x3fd78b56362cef38
+poisson_cdf	0	1.0	1	1	0xbfdbcb6848beb5b3
+poisson_cdf	1	1.0	0	0	0x3fd0e95393a62191
+poisson_cdf	1	1.0	0	1	0xbfe27ef9db22d0e5
+poisson_cdf	1	1.0	1	0	0x3fe78b56362cef38
+poisson_cdf	1	1.0	1	1	0xbfdbcb6848beb5b3
+poisson_cdf	2	1.0	0	0	0x3fb48ea1e23ea7d2
+poisson_cdf	2	1.0	0	1	0xbff18644523f67f5
+poisson_cdf	2	1.0	1	0	0x3fed6e2bc3b82b06
+poisson_cdf	2	1.0	1	1	0xbfdbcb6848beb5b3
+poisson_cdf	5	1.0	0	0	0x3f4378622dfd50f3
+poisson_cdf	5	1.0	0	1	0xc009cf0307f23cc9
+poisson_cdf	5	1.0	1	0	0x3feffb21e77480ac
+poisson_cdf	5	1.0	1	1	0xbfe66afcce1c5825
+poisson_cdf	10	1.0	0	0	0x3e4593d1673e65be
+poisson_cdf	10	1.0	0	1	0xc01ffde15ca6ca04
+poisson_cdf	10	1.0	1	0	0x3feffffffa9b0ba6
+poisson_cdf	10	1.0	1	1	0xbff0000000000000
+poisson_cdf	37	1.0	0	0	0x36907c0d72891328
+poisson_cdf	37	1.0	0	1	0xc046921dfb9389b5
+poisson_cdf	37	1.0	1	0	0x3ff0000000000000
+poisson_cdf	37	1.0	1	1	0xbff91758e219652c
+poisson_cdf	100	1.0	0	0	0x1ea1bb7bf6312ecb
+poisson_cdf	100	1.0	0	1	0xc0640cf05a708ede
+poisson_cdf	100	1.0	1	0	0x3ff0000000000000
+poisson_cdf	100	1.0	1	1	0xc000000000000000
+poisson_cdf	200	1.0	0	0	0x0000000000000000
+poisson_cdf	200	1.0	0	1	0xc0779a1d92b7fe09
+poisson_cdf	200	1.0	1	0	0x3ff0000000000000
+poisson_cdf	200	1.0	1	1	0xc00268826aa8eb46
+poisson_cdf	500	1.0	0	0	0x0000000000000000
+poisson_cdf	500	1.0	0	1	0xc091c4e0f12c27a6
+poisson_cdf	500	1.0	1	0	0x3ff0000000000000
+poisson_cdf	500	1.0	1	1	0xc005977d955714ba
+poisson_cdf	1000	1.0	0	0	0x0000000000000000
+poisson_cdf	1000	1.0	0	1	0xc0a41613eff19503
+poisson_cdf	1000	1.0	1	0	0x3ff0000000000000
+poisson_cdf	1000	1.0	1	1	0xc008000000000000
+poisson_cdf	0	2.0	0	0	0x3febab5557101f8e
+poisson_cdf	0	2.0	0	1	0xbfb02a9930be0ded
+poisson_cdf	0	2.0	1	0	0x3fc152aaa3bf81cc
+poisson_cdf	0	2.0	1	1	0xbfebcb7d41743e96
+poisson_cdf	1	2.0	0	0	0x3fe3020005305ea8
+poisson_cdf	1	2.0	0	1	0xbfccf4c6e6d9be4d
+poisson_cdf	1	2.0	1	0	0x3fd9fbfff59f42b2
+poisson_cdf	1	2.0	1	1	0xbfe2297396d0917d
+poisson_cdf	2	2.0	0	0	0x3fd4b15566a13b85
+poisson_cdf	2	2.0	0	1	0xbfdf620ee8d10f52
+poisson_cdf	2	2.0	1	0	0x3fe5a7554caf623f
+poisson_cdf	2	2.0	1	1	0xbfd90dd82fd75e20
+poisson_cdf	5	2.0	0	0	0x3f90f60cf2e9757f
+poisson_cdf	5	2.0	0	1	0xbffc7e5c91d14e3c
+poisson_cdf	5	2.0	1	0	0x3fef784f9868b455
+poisson_cdf	5	2.0	1	1	0xbfdaf8b588e368f1
+poisson_cdf	10	2.0	0	0	0x3ee16c71a994082c
+poisson_cdf	10	2.0	0	1	0xc014526bf8769ec3
+poisson_cdf	10	2.0	1	0	0x3fefffee938e566d
+poisson_cdf	10	2.0	1	1	0xbfe65e2046c764ae
+poisson_cdf	37	2.0	0	0	0x38d8e95d1c1f0265
+poisson_cdf	37	2.0	0	1	0xc04110049667b5f2
+poisson_cdf	37	2.0	1	0	0x3ff0000000000000
+poisson_cdf	37	2.0	1	1	0xbff446540cc78e9f
+poisson_cdf	100	2.0	0	0	0x24da5ab613812d3f
+poisson_cdf	100	2.0	0	1	0xc0604dc4ef88b978
+poisson_cdf	100	2.0	1	0	0x3ff0000000000000
+poisson_cdf	100	2.0	1	1	0xbffb2efb2aae2974
+poisson_cdf	200	2.0	0	0	0x0000000000088f0d
+poisson_cdf	200	2.0	0	1	0xc073d8eac8605682
+poisson_cdf	200	2.0	1	0	0x3ff0000000000000
+poisson_cdf	200	2.0	1	1	0xc000000000000000
+poisson_cdf	500	2.0	0	0	0x0000000000000000
+poisson_cdf	500	2.0	0	1	0xc08ed6b251c193b4
+poisson_cdf	500	2.0	1	0	0x3ff0000000000000
+poisson_cdf	500	2.0	1	1	0xc0032efb2aae2974
+poisson_cdf	1000	2.0	0	0	0x0000000000000000
+poisson_cdf	1000	2.0	0	1	0xc0a1bc489613d31c
+poisson_cdf	1000	2.0	1	0	0x3ff0000000000000
+poisson_cdf	1000	2.0	1	1	0xc005977d955714ba
+poisson_cdf	0	3.7	0	0	0x3fef357701cbc77f
+poisson_cdf	0	3.7	0	1	0xbf864302b40f66a5
+poisson_cdf	0	3.7	1	0	0x3f99511fc6871044
+poisson_cdf	0	3.7	1	1	0xbff9b5d249e44fa0
+poisson_cdf	1	3.7	0	0	0x3fec4815bba4299d
+poisson_cdf	1	3.7	0	1	0xbfab780346dc5d64
+poisson_cdf	1	3.7	1	0	0x3fbdbf5222deb31d
+poisson_cdf	1	3.7	1	1	0xbff09e7967caea74
+poisson_cdf	2	3.7	0	0	0x3fe6ddbb60414589
+poisson_cdf	2	3.7	0	1	0xbfc2aed1394317ad
+poisson_cdf	2	3.7	1	0	0x3fd244893f7d74f0
+poisson_cdf	2	3.7	1	1	0xbfe55d249e44fa05
+poisson_cdf	5	3.7	0	0	0x3fc5bfaaafed9d6c
+poisson_cdf	5	3.7	0	1	0xbfe8a209aaa3ad19
+poisson_cdf	5	3.7	1	0	0x3fea9015540498a6
+poisson_cdf	5	3.7	1	1	0xbfd2cb7d41743e96
+poisson_cdf	10	3.7	0	0	0x3f59c2347ede8f73
+poisson_cdf	10	3.7	0	1	0xc0066d916872b021
+poisson_cdf	10	3.7	1	0	0x3feff31ee5c090b8
+poisson_cdf	10	3.7	1	1	0xbfdbc52e72da1230
+poisson_cdf	37	3.7	0	0	0x3acf8d7fe558bd9c
+poisson_cdf	37	3.7	0	1	0xc038b0c9320d9946
+poisson_cdf	37	3.7	1	0	0x3ff0000000000000
+poisson_cdf	37	3.7	1	1	0xbff0000000000000
+poisson_cdf	100	3.7	0	0	0x2a4e87b6c02c156b
+poisson_cdf	100	3.7	0	1	0xc05a0b50b0f27bb3
+poisson_cdf	100	3.7	1	0	0x3ff0000000000000
+poisson_cdf	100	3.7	1	1	0xbff6e8a71de69ad4
+poisson_cdf	200	3.7	0	0	0x09008f9d269351bd
+poisson_cdf	200	3.7	0	1	0xc0708972474538ef
+poisson_cdf	200	3.7	1	0	0x3ff0000000000000
+poisson_cdf	200	3.7	1	1	0xbffbb9abf3387161
+poisson_cdf	500	3.7	0	0	0x0000000000000000
+poisson_cdf	500	3.7	0	1	0xc08aadc4523f67f5
+poisson_cdf	500	3.7	1	0	0x3ff0000000000000
+poisson_cdf	500	3.7	1	1	0xc0010bd1244a6224
+poisson_cdf	1000	3.7	0	0	0x0000000000000000
+poisson_cdf	1000	3.7	0	1	0xc09f4dc302b40f67
+poisson_cdf	1000	3.7	1	0	0x3ff0000000000000
+poisson_cdf	1000	3.7	1	1	0xc00374538ef34d6a
+poisson_cdf	0	5.0	0	0	0x3fefc8cd803fe558
+poisson_cdf	0	5.0	0	1	0xbf6815a07b352a84
+poisson_cdf	0	5.0	1	0	0x3f7b993fe00d5376
+poisson_cdf	0	5.0	1	1	0xc0015f2ba9d1f601
+poisson_cdf	1	5.0	0	0	0x3feeb4d1017f6016
+poisson_cdf	1	5.0	0	1	0xbf92599ed7c6fbd2
+poisson_cdf	1	5.0	1	0	0x3fa4b2efe809fe99
+poisson_cdf	1	5.0	1	1	0xbff78f5c28f5c28f
+poisson_cdf	2	5.0	0	0	0x3fec02d9c49e12f0
+poisson_cdf	2	5.0	0	1	0xbfad9a95421c0443
+poisson_cdf	2	5.0	1	0	0x3fbfe931db0f6880
+poisson_cdf	2	5.0	1	1	0xbfefda272862f599
+poisson_cdf	5	5.0	0	0	0x3fd89419c2f7a1c9
+poisson_cdf	5	5.0	0	1	0xbfda9984a0e410b6
+poisson_cdf	5	5.0	1	0	0x3fe3b5f31e842f1c
+poisson_cdf	5	5.0	1	1	0xbfd6c9afe1da7b0b
+poisson_cdf	10	5.0	0	0	0x3f8c0c43d5eb8022
+poisson_cdf	10	5.0	0	1	0xbffdd09bf9c62a1b
+poisson_cdf	10	5.0	1	0	0x3fef8fcef0a85200
+poisson_cdf	10	5.0	1	1	0xbfd42a454de7ea60
+poisson_cdf	37	5.0	0	0	0x3bb95fa1c6734ad5
+poisson_cdf	37	5.0	0	1	0xc03445104d551d69
+poisson_cdf	37	5.0	1	0	0x3ff0000000000000
+poisson_cdf	37	5.0	1	1	0xbfebd0bb6ed67770
+poisson_cdf	100	5.0	0	0	0x2ceeebdfca1c7065
+poisson_cdf	100	5.0	0	1	0xc056e1caea747d80
+poisson_cdf	100	5.0	1	0	0x3ff0000000000000
+poisson_cdf	100	5.0	1	1	0xbff4d104d551d68c
+poisson_cdf	200	5.0	0	0	0x0e569b461cf12841
+poisson_cdf	200	5.0	0	1	0xc06ddbc432ca57a8
+poisson_cdf	200	5.0	1	0	0x3ff0000000000000
+poisson_cdf	200	5.0	1	1	0xbff9a209aaa3ad19
+poisson_cdf	500	5.0	0	0	0x0000000000000000
+poisson_cdf	500	5.0	0	1	0xc088a627bb2fec57
+poisson_cdf	500	5.0	1	0	0x3ff0000000000000
+poisson_cdf	500	5.0	1	1	0xc000000000000000
+poisson_cdf	1000	5.0	0	0	0x0000000000000000
+poisson_cdf	1000	5.0	0	1	0xc09d446bedfa43fe
+poisson_cdf	1000	5.0	1	0	0x3ff0000000000000
+poisson_cdf	1000	5.0	1	1	0xc00268826aa8eb46
+poisson_cdf	0	10.0	0	0	0x3fefffa0ca192a6d
+poisson_cdf	0	10.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	0	10.0	1	0	0x3f07cd79b5647c9b
+poisson_cdf	0	10.0	1	1	0xc0115f2ba9d1f601
+poisson_cdf	1	10.0	0	0	0x3feffbe8af14d2b9
+poisson_cdf	1	10.0	0	1	0xbf2cd5f99c38b04b
+poisson_cdf	1	10.0	1	0	0x3f405d43acb515ab
+poisson_cdf	1	10.0	1	1	0xc00abe5753a3ec03
+poisson_cdf	2	10.0	0	0	0x3fefe95027ff1c38
+poisson_cdf	2	10.0	0	1	0xbf53d31b9b66f933
+poisson_cdf	2	10.0	1	0	0x3f66afd800e3c6c4
+poisson_cdf	2	10.0	1	1	0xc004d2157689ca19
+poisson_cdf	5	10.0	0	0	0x3fedda6e89ed3e92
+poisson_cdf	5	10.0	0	1	0xbf9ee2435696e58a
+poisson_cdf	5	10.0	1	0	0x3fb12c8bb0960b67
+poisson_cdf	5	10.0	1	1	0xbff3b98c7e28240b
+poisson_cdf	10	10.0	0	0	0x3fdaaf7a0b29ccad
+poisson_cdf	10	10.0	0	1	0xbfd85072085b1855
+poisson_cdf	10	10.0	1	0	0x3fe2a842fa6b19aa
+poisson_cdf	10	10.0	1	1	0xbfd5b573eab367a1
+poisson_cdf	37	10.0	0	0	0x3da998d6defe1200
+poisson_cdf	37	10.0	0	1	0xc025de3a7daa4fca
+poisson_cdf	37	10.0	1	0	0x3feffffffffe6673
+poisson_cdf	37	10.0	1	1	0xbfe22eb1c432ca58
+poisson_cdf	100	10.0	0	0	0x32cc1d811b4bf589
+poisson_cdf	100	10.0	0	1	0xc04fa2e19b90ea9e
+poisson_cdf	100	10.0	1	0	0x3fefffffffffffff
+poisson_cdf	100	10.0	1	1	0xbff0000000000000
+poisson_cdf	200	10.0	0	0	0x1a740134847d90b8
+poisson_cdf	200	10.0	0	1	0xc06690abf3387161
+poisson_cdf	200	10.0	1	0	0x3fefffffffffffff
+poisson_cdf	200	10.0	1	1	0xbff4d104d551d68c
+poisson_cdf	500	10.0	0	0	0x0000000000000000
+poisson_cdf	500	10.0	0	1	0xc08400f6ae7d566d
+poisson_cdf	500	10.0	1	0	0x3fefffffffffffff
+poisson_cdf	500	10.0	1	1	0xbffb2efb2aae2974
+poisson_cdf	1000	10.0	0	0	0x0000000000000000
+poisson_cdf	1000	10.0	0	1	0xc09897c6516db0de
+poisson_cdf	1000	10.0	1	0	0x3fefffffffffffff
+poisson_cdf	1000	10.0	1	1	0xc000000000000000
+poisson_cdf	0	50.0	0	0	0x3feffffffffffffd
+poisson_cdf	0	50.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	0	50.0	1	0	0x3b6d257d547e083f
+poisson_cdf	0	50.0	1	1	0xc035b6f7e3d1cc10
+poisson_cdf	1	50.0	0	0	0x3feffffffffffffd
+poisson_cdf	1	50.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	1	50.0	1	0	0x3bc739dfdf546e92
+poisson_cdf	1	50.0	1	1	0xc03404083126e979
+poisson_cdf	2	50.0	0	0	0x3feffffffffffffd
+poisson_cdf	2	50.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	2	50.0	1	0	0x3c1283f0bdcc8ffd
+poisson_cdf	2	50.0	1	1	0xc0329bf52fc2656b
+poisson_cdf	5	50.0	0	0	0x3feffffffffffff8
+poisson_cdf	5	50.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	5	50.0	1	0	0x3cc40f59470b400b
+poisson_cdf	5	50.0	1	1	0xc02e86fa82e87d2c
+poisson_cdf	10	50.0	0	0	0x3fefffffffff1d0c
+poisson_cdf	10	50.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	10	50.0	1	0	0x3d9c5e3a007eca38
+poisson_cdf	10	50.0	1	1	0xc02666cdf266ba49
+poisson_cdf	37	50.0	0	0	0x3feee9d76d0a1389
+poisson_cdf	37	50.0	0	1	0xbf8ebd9018e75793
+poisson_cdf	37	50.0	1	0	0x3fa162892f5ec742
+poisson_cdf	37	50.0	1	1	0xbff7e501e2584f4c
+poisson_cdf	100	50.0	0	0	0x3de5930d79adb981
+poisson_cdf	100	50.0	0	1	0xc0239bbc2b94d940
+poisson_cdf	100	50.0	1	0	0x3fefffffffea6cf1
+poisson_cdf	100	50.0	1	1	0xbfd3441355475a32
+poisson_cdf	200	50.0	0	0	0x3409406a5cfc0a06
+poisson_cdf	200	50.0	0	1	0xc04ca63736cdf267
+poisson_cdf	200	50.0	1	0	0x3feffffffffffffd
+poisson_cdf	200	50.0	1	1	0xbfe3441355475a32
+poisson_cdf	500	50.0	0	0	0x00233e8a632dc64a
+poisson_cdf	500	50.0	0	1	0xc0733457d1782d38
+poisson_cdf	500	50.0	1	0	0x3feffffffffffffd
+poisson_cdf	500	50.0	1	1	0xbff0000000000000
+poisson_cdf	1000	50.0	0	0	0x0000000000000000
+poisson_cdf	1000	50.0	0	1	0xc08bdd075f6fd220
+poisson_cdf	1000	50.0	1	0	0x3feffffffffffffd
+poisson_cdf	1000	50.0	1	1	0xbff4d104d551d68c
+poisson_cdf	0	100.0	0	0	0x3ff0000000000000
+poisson_cdf	0	100.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	0	100.0	1	0	0x36ea8c1f14e2af5d
+poisson_cdf	0	100.0	1	1	0xc045b6f837b4a234
+poisson_cdf	1	100.0	0	0	0x3ff0000000000000
+poisson_cdf	1	100.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	1	100.0	1	0	0x3754f290867ade60
+poisson_cdf	1	100.0	1	1	0xc044b6f837b4a234
+poisson_cdf	2	100.0	0	0	0x3ff0000000000000
+poisson_cdf	2	100.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	2	100.0	1	0	0x37b087d03a994702
+poisson_cdf	2	100.0	1	1	0xc043dcf2cf95d4e9
+poisson_cdf	5	100.0	0	0	0x3ff0000000000000
+poisson_cdf	5	100.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	5	100.0	1	0	0x38915743ada4350f
+poisson_cdf	5	100.0	1	1	0xc041bedc0980b242
+poisson_cdf	10	100.0	0	0	0x3ff0000000000000
+poisson_cdf	10	100.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	10	100.0	1	0	0x39b71336ad05330e
+poisson_cdf	10	100.0	1	1	0xc03df2dea897635e
+poisson_cdf	37	100.0	0	0	0x3feffffffffff109
+poisson_cdf	37	100.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	37	100.0	1	0	0x3d5dec5e4ac5220a
+poisson_cdf	37	100.0	1	1	0xc028c189374bc6a8
+poisson_cdf	100	100.0	0	0	0x3fde4cce10803e39
+poisson_cdf	100	100.0	0	1	0xbfd4c8b439581062
+poisson_cdf	100	100.0	1	0	0x3fe0d998f7bfe0e7
+poisson_cdf	100	100.0	1	1	0xbfd403eea209aaa4
+poisson_cdf	200	100.0	0	0	0x3c21114d8fc0f701
+poisson_cdf	200	100.0	0	1	0xc03255b4245f5ad9
+poisson_cdf	200	100.0	1	0	0x3ff0000000000000
+poisson_cdf	200	100.0	1	1	0xbfd3441355475a32
+poisson_cdf	500	100.0	0	0	0x1af3b4d6b727c69b
+poisson_cdf	500	100.0	0	1	0xc06643d10f51ac9b
+poisson_cdf	500	100.0	1	0	0x3ff0000000000000
+poisson_cdf	500	100.0	1	1	0xbfe65df6555c52e7
+poisson_cdf	1000	100.0	0	0	0x0000000000000000
+poisson_cdf	1000	100.0	0	1	0xc0831fe934acaff7
+poisson_cdf	1000	100.0	1	0	0x3ff0000000000000
+poisson_cdf	1000	100.0	1	1	0xbff0000000000000
+poisson_cdf	0	299.0	0	0	0x3ff0000000000006
+poisson_cdf	0	299.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	0	299.0	1	0	0x24f8d53b1c55c677
+poisson_cdf	0	299.0	1	1	0xc0603b5460aa64c3
+poisson_cdf	1	299.0	0	0	0x3ff0000000000006
+poisson_cdf	1	299.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	1	299.0	1	0	0x257d19e145348493
+poisson_cdf	1	299.0	1	1	0xc05fd83760bf5d79
+poisson_cdf	2	299.0	0	0	0x3ff0000000000006
+poisson_cdf	2	299.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	2	299.0	1	0	0x25f10d36692a53da
+poisson_cdf	2	299.0	1	1	0xc05f4cf251c193b4
+poisson_cdf	5	299.0	0	0	0x3ff0000000000006
+poisson_cdf	5	299.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	5	299.0	1	0	0x271d46238d97e066
+poisson_cdf	5	299.0	1	1	0xc05de323a29c779a
+poisson_cdf	10	299.0	0	0	0x3ff0000000000006
+poisson_cdf	10	299.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	10	299.0	1	0	0x28c1889414c551e6
+poisson_cdf	10	299.0	1	1	0xc05be9352a843809
+poisson_cdf	37	299.0	0	0	0x3ff0000000000006
+poisson_cdf	37	299.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	37	299.0	1	0	0x2f0c048d1cd273be
+poisson_cdf	37	299.0	1	1	0xc0545598f1d3ed52
+poisson_cdf	100	299.0	0	0	0x3ff0000000000006
+poisson_cdf	100	299.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	100	299.0	1	0	0x379ce72d09449445
+poisson_cdf	100	299.0	1	1	0xc0440aab367a0f91
+poisson_cdf	200	299.0	0	0	0x3fefffffff9d9115
+poisson_cdf	200	299.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	200	299.0	1	0	0x3e089bbe0d3f7cd2
+poisson_cdf	200	299.0	1	1	0xc0224c5c13fd0d06
+poisson_cdf	500	299.0	0	0	0x3a8c94abea14c755
+poisson_cdf	500	299.0	0	1	0xc039f00a7c5ac472
+poisson_cdf	500	299.0	1	0	0x3ff0000000000000
+poisson_cdf	500	299.0	1	1	0xbfcc95182a9930be
+poisson_cdf	1000	299.0	0	0	0x11d01015d2143440
+poisson_cdf	1000	299.0	0	1	0xc06bc511f0c34c1b
+poisson_cdf	1000	299.0	1	0	0x3ff0000000000000
+poisson_cdf	1000	299.0	1	1	0xbfe0c74fb549f948
+poisson_cdf	0	300.0	0	0	0x3ff0000000000004
+poisson_cdf	0	300.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	0	300.0	1	0	0x24e245639c3a49f7
+poisson_cdf	0	300.0	1	1	0xc060493a14cec41e
+poisson_cdf	1	300.0	0	0	0x3ff0000000000004
+poisson_cdf	1	300.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	1	300.0	1	0	0x25657b961eb088f7
+poisson_cdf	1	300.0	1	1	0xc05ff3eb074a771d
+poisson_cdf	2	300.0	0	0	0x3ff0000000000004
+poisson_cdf	2	300.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	2	300.0	1	0	0x25d94261c7792d45
+poisson_cdf	2	300.0	1	1	0xc05f688e60807358
+poisson_cdf	5	300.0	0	0	0x3ff0000000000004
+poisson_cdf	5	300.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	5	300.0	1	0	0x2705e663442939f9
+poisson_cdf	5	300.0	1	1	0xc05dfe789613d31c
+poisson_cdf	10	300.0	0	0	0x3ff0000000000004
+poisson_cdf	10	300.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	10	300.0	1	0	0x28aaac7fc695b5ac
+poisson_cdf	10	300.0	1	1	0xc05c0413d31b9b67
+poisson_cdf	37	300.0	0	0	0x3ff0000000000004
+poisson_cdf	37	300.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	37	300.0	1	0	0x2ef7506a28abbbeb
+poisson_cdf	37	300.0	1	1	0xc0546df8a0902de0
+poisson_cdf	100	300.0	0	0	0x3ff0000000000004
+poisson_cdf	100	300.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	100	300.0	1	0	0x378da56eb8149dbc
+poisson_cdf	100	300.0	1	1	0xc0442fc9eecbfb16
+poisson_cdf	200	300.0	0	0	0x3fefffffffb9d67d
+poisson_cdf	200	300.0	0	1	0xbee4f8b588e368f1
+poisson_cdf	200	300.0	1	0	0x3e018a62dca3f9e5
+poisson_cdf	200	300.0	1	1	0xc022979fa97e132b
+poisson_cdf	500	300.0	0	0	0x3a9c243813a97143
+poisson_cdf	500	300.0	0	1	0xc039a4b33daf8df8
+poisson_cdf	500	300.0	1	0	0x3ff0000000000000
+poisson_cdf	500	300.0	1	1	0xbfcc6594af4f0d84
+poisson_cdf	1000	300.0	0	0	0x1204eba470dcca57
+poisson_cdf	1000	300.0	0	1	0xc06ba47fcb923a2a
+poisson_cdf	1000	300.0	1	0	0x3ff0000000000000
+poisson_cdf	1000	300.0	1	1	0xbfe0bb6ed677707a
+poisson_cdf	0	500.0	0	0	0x3feffffffffffff9
+poisson_cdf	0	500.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	0	500.0	1	0	0x12d9265e78d4438d
+poisson_cdf	0	500.0	1	1	0xc06b24b630a91538
+poisson_cdf	1	500.0	0	0	0x3feffffffffffff9
+poisson_cdf	1	500.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	1	500.0	1	0	0x13689c0b713bb41a
+poisson_cdf	1	500.0	1	1	0xc06ace583a53b8e5
+poisson_cdf	2	500.0	0	0	0x3feffffffffffff9
+poisson_cdf	2	500.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	2	500.0	1	0	0x13e814b77be489f0
+poisson_cdf	2	500.0	1	1	0xc06a81952d234eba
+poisson_cdf	5	500.0	0	0	0x3feffffffffffff9
+poisson_cdf	5	500.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	5	500.0	1	0	0x15381122c77c3330
+poisson_cdf	5	500.0	1	1	0xc069b74c8366516e
+poisson_cdf	10	500.0	0	0	0x3feffffffffffff9
+poisson_cdf	10	500.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	10	500.0	1	0	0x17176607faf876e2
+poisson_cdf	10	500.0	1	1	0xc06896b3a68b19a4
+poisson_cdf	37	500.0	0	0	0x3feffffffffffff9
+poisson_cdf	37	500.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	37	500.0	1	0	0x1ea24b8aa50e63de
+poisson_cdf	37	500.0	1	1	0xc0640c88e368f084
+poisson_cdf	100	500.0	0	0	0x3feffffffffffff9
+poisson_cdf	100	500.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	100	500.0	1	0	0x2a1b9b5143fedbf0
+poisson_cdf	100	500.0	1	1	0xc05a47fac1d29dc7
+poisson_cdf	200	500.0	0	0	0x3feffffffffffff9
+poisson_cdf	200	500.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	200	500.0	1	0	0x3521e8c00b31f8cb
+poisson_cdf	200	500.0	1	1	0xc04a03ecfe9b7bf2
+poisson_cdf	500	500.0	0	0	0x3fdf3d2d054c3b19
+poisson_cdf	500	500.0	0	1	0xbfd3ef9db22d0e56
+poisson_cdf	500	500.0	1	0	0x3fe061697d59e272
+poisson_cdf	500	500.0	1	1	0xbfd39945b6c3760c
+poisson_cdf	1000	500.0	0	0	0x2e205ed6cf9c96d5
+poisson_cdf	1000	500.0	0	1	0xc0557226aa8eb463
+poisson_cdf	1000	500.0	1	0	0x3feffffffffffff9
+poisson_cdf	1000	500.0	1	1	0xbfd3441355475a32
+poisson_cdf	0	699.0	0	0	0x3ff0000000000000
+poisson_cdf	0	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	0	699.0	1	0	0x00e78694fe9f73cc
+poisson_cdf	0	699.0	1	1	0xc072f92641b328b7
+poisson_cdf	1	699.0	0	0	0x3ff0000000000000
+poisson_cdf	1	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	1	699.0	1	0	0x018014ffda0f0029
+poisson_cdf	1	699.0	1	1	0xc072cba34eb9a177
+poisson_cdf	2	699.0	0	0	0x3ff0000000000000
+poisson_cdf	2	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	2	699.0	1	0	0x0205fcb8bcf3220c
+poisson_cdf	2	699.0	1	1	0xc072a2eecbfb15b5
+poisson_cdf	5	699.0	0	0	0x3ff0000000000000
+poisson_cdf	5	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	5	699.0	1	0	0x036df7dc7963edcf
+poisson_cdf	5	699.0	1	1	0xc07236d182a9930c
+poisson_cdf	10	699.0	0	0	0x3ff0000000000000
+poisson_cdf	10	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	10	699.0	1	0	0x057364371457cf3e
+poisson_cdf	10	699.0	1	1	0xc0719ae63c74fb55
+poisson_cdf	37	699.0	0	0	0x3ff0000000000000
+poisson_cdf	37	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	37	699.0	1	0	0x0dcee4b22de8d30b
+poisson_cdf	37	699.0	1	1	0xc06e2e24dd2f1aa0
+poisson_cdf	100	699.0	0	0	0x3ff0000000000000
+poisson_cdf	100	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	100	699.0	1	0	0x1b2e7337cae4b8c7
+poisson_cdf	100	699.0	1	1	0xc06620e4b87bdcf0
+poisson_cdf	200	699.0	0	0	0x3ff0000000000000
+poisson_cdf	200	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	200	699.0	1	0	0x29367a8ea09221ac
+poisson_cdf	200	699.0	1	1	0xc05b5b667b5f1bef
+poisson_cdf	500	699.0	0	0	0x3feffffffffffff8
+poisson_cdf	500	699.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	500	699.0	1	0	0x3cd7c90af50e9c2f
+poisson_cdf	500	699.0	1	1	0xc02dc34acaff6d33
+poisson_cdf	1000	699.0	0	0	0x3a76bbb7299087b6
+poisson_cdf	1000	699.0	0	1	0xc03a568e60807358
+poisson_cdf	1000	699.0	1	0	0x3ff0000000000000
+poisson_cdf	1000	699.0	1	1	0xbfc3e81450efdc9c
+poisson_cdf	0	699.9	0	0	0x3feffffffffffff9
+poisson_cdf	0	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	0	699.9	1	0	0x00d32132bfae6577
+poisson_cdf	0	699.9	1	1	0xc072ff674299d884
+poisson_cdf	1	699.9	0	0	0x3feffffffffffff9
+poisson_cdf	1	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	1	699.9	1	0	0x016a2fff1f4d16cd
+poisson_cdf	1	699.9	1	1	0xc072d1e1f9f01b86
+poisson_cdf	2	699.9	0	0	0x3feffffffffffff9
+poisson_cdf	2	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	2	699.9	1	0	0x01f1ecb630bfe24a
+poisson_cdf	2	699.9	1	1	0xc072a92b367a0f91
+poisson_cdf	5	699.9	0	0	0x3feffffffffffff9
+poisson_cdf	5	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	5	699.9	1	0	0x0358867f8d371be8
+poisson_cdf	5	699.9	1	1	0xc0723d070b8cfbfc
+poisson_cdf	10	699.9	0	0	0x3feffffffffffff9
+poisson_cdf	10	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	10	699.9	1	0	0x055ff19891b76c90
+poisson_cdf	10	699.9	1	1	0xc071a110624dd2f2
+poisson_cdf	37	699.9	0	0	0x3feffffffffffff9
+poisson_cdf	37	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	37	699.9	1	0	0x0dba57f5c6511439
+poisson_cdf	37	699.9	1	1	0xc06e39fdb4cc2507
+poisson_cdf	100	699.9	0	0	0x3feffffffffffff9
+poisson_cdf	100	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	100	699.9	1	0	0x1b1c27755427778f
+poisson_cdf	100	699.9	1	1	0xc0662b9db22d0e56
+poisson_cdf	200	699.9	0	0	0x3feffffffffffff9
+poisson_cdf	200	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	200	699.9	1	0	0x2927a17a54abaee0
+poisson_cdf	200	699.9	1	1	0xc05b6d47064ece9a
+poisson_cdf	500	699.9	0	0	0x3feffffffffffff0
+poisson_cdf	500	699.9	0	1	0xbef4f8b588e368f1
+poisson_cdf	500	699.9	1	0	0x3cd2581adb625d70
+poisson_cdf	500	699.9	1	1	0xc02dfd0bb6ed6777
+poisson_cdf	1000	699.9	0	0	0x3a80cddc148a7ec8
+poisson_cdf	1000	699.9	0	1	0xc03a2b1704ff4342
+poisson_cdf	1000	699.9	1	0	0x3feffffffffffff9
+poisson_cdf	1000	699.9	1	1	0xbfc3d5bab21815a0
+poisson_cdf	0	700.0	0	0	0x3fefffffffffffdf
+poisson_cdf	0	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	0	700.0	1	0	0x00d14f2b0fb9307f
+poisson_cdf	0	700.0	1	1	0xc07300192641b329
+poisson_cdf	1	700.0	0	0	0x3fefffffffffffdf
+poisson_cdf	1	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	1	700.0	1	0	0x0167b2e475070ce6
+poisson_cdf	1	700.0	1	1	0xc072d2939eadd591
+poisson_cdf	2	700.0	0	0	0x3fefffffffffffdf
+poisson_cdf	2	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	2	700.0	1	0	0x01f039390f02758b
+poisson_cdf	2	700.0	1	1	0xc072a9dc91d14e3c
+poisson_cdf	5	700.0	0	0	0x3fefffffffffffdf
+poisson_cdf	5	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	5	700.0	1	0	0x03563512ecfe48df
+poisson_cdf	5	700.0	1	1	0xc0723db7aa25d8d8
+poisson_cdf	10	700.0	0	0	0x3fefffffffffffdf
+poisson_cdf	10	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	10	700.0	1	0	0x055cf1f559d166d8
+poisson_cdf	10	700.0	1	1	0xc071a1bfbbd7b203
+poisson_cdf	37	700.0	0	0	0x3fefffffffffffdf
+poisson_cdf	37	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	37	700.0	1	0	0x0db7f67b1427885f
+poisson_cdf	37	700.0	1	1	0xc06e3b4ea4a8c155
+poisson_cdf	100	700.0	0	0	0x3fefffffffffffdf
+poisson_cdf	100	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	100	700.0	1	0	0x1b19d74308683e22
+poisson_cdf	100	700.0	1	1	0xc0662cceaf251c19
+poisson_cdf	200	700.0	0	0	0x3fefffffffffffdf
+poisson_cdf	200	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	200	700.0	1	0	0x292600229275ee40
+poisson_cdf	200	700.0	1	1	0xc05b6f4395810625
+poisson_cdf	500	700.0	0	0	0x3fefffffffffffd7
+poisson_cdf	500	700.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	500	700.0	1	0	0x3cd1d2467c37d8bc
+poisson_cdf	500	700.0	1	1	0xc02e0378ab0c88a4
+poisson_cdf	1000	700.0	0	0	0x3a818c62a6c78cb4
+poisson_cdf	1000	700.0	0	1	0xc03a2645a1cac083
+poisson_cdf	1000	700.0	1	0	0x3fefffffffffffdf
+poisson_cdf	1000	700.0	1	1	0xbfc3d3c36113404f
+poisson_cdf	0	700.1	0	0	0x3feffffffffffffc
+poisson_cdf	0	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	0	700.1	1	0	0x0000000000000000
+poisson_cdf	0	700.1	1	1	0xc07300cb09e98dce
+poisson_cdf	1	700.1	0	0	0x3feffffffffffffc
+poisson_cdf	1	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	1	700.1	1	0	0x01656a80dac8be51
+poisson_cdf	1	700.1	1	1	0xc072d345436b8f9b
+poisson_cdf	2	700.1	0	0	0x3feffffffffffffc
+poisson_cdf	2	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	2	700.1	1	0	0x01ed5e18cc042d62
+poisson_cdf	2	700.1	1	1	0xc072aa8df7a4e7ab
+poisson_cdf	5	700.1	0	0	0x3feffffffffffffc
+poisson_cdf	5	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	5	700.1	1	0	0x03541bbcdb81ef58
+poisson_cdf	5	700.1	1	1	0xc0723e6848beb5b3
+poisson_cdf	10	700.1	0	0	0x3feffffffffffffc
+poisson_cdf	10	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	10	700.1	1	0	0x055a3a60d3666b87
+poisson_cdf	10	700.1	1	1	0xc071a26f15619115
+poisson_cdf	37	700.1	0	0	0x3feffffffffffffc
+poisson_cdf	37	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	37	700.1	1	0	0x0db5cc1414292701
+poisson_cdf	37	700.1	1	1	0xc06e3c9fa97e132b
+poisson_cdf	100	700.1	0	0	0x3feffffffffffffc
+poisson_cdf	100	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	100	700.1	1	0	0x1b17b7b5e32f5af1
+poisson_cdf	100	700.1	1	1	0xc0662dffc115df65
+poisson_cdf	200	700.1	0	0	0x3feffffffffffffc
+poisson_cdf	200	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	200	700.1	1	0	0x29247b900c0a2d1f
+poisson_cdf	200	700.1	1	1	0xc05b71404ea4a8c1
+poisson_cdf	500	700.1	0	0	0x3feffffffffffff3
+poisson_cdf	500	700.1	0	1	0xbef4f8b588e368f1
+poisson_cdf	500	700.1	1	0	0x3cd1503720fba700
+poisson_cdf	500	700.1	1	1	0xc02e09e6eeb70260
+poisson_cdf	1000	700.1	0	0	0x3a825340ff628075
+poisson_cdf	1000	700.1	0	1	0xc03a2174e65bea0c
+poisson_cdf	1000	700.1	1	0	0x3feffffffffffffc
+poisson_cdf	1000	700.1	1	1	0xbfc3d1cc100e6afd
+poisson_cdf	0	701.0	0	0	0x3ff0000000000006
+poisson_cdf	0	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	0	701.0	1	0	0x0000000000000000
+poisson_cdf	0	701.0	1	1	0xc073070c0053e2d6
+poisson_cdf	1	701.0	0	0	0x3ff0000000000006
+poisson_cdf	1	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	1	701.0	1	0	0x01516fc51d5e8b12
+poisson_cdf	1	701.0	1	1	0xc072d983eea209ab
+poisson_cdf	2	701.0	0	0	0x3ff0000000000006
+poisson_cdf	2	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	2	701.0	1	0	0x01d7f0f725d34ff3
+poisson_cdf	2	701.0	1	1	0xc072b0ca6223e187
+poisson_cdf	5	701.0	0	0	0x3ff0000000000006
+poisson_cdf	5	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	5	701.0	1	0	0x034074c372cbc406
+poisson_cdf	5	701.0	1	1	0xc072449ddc1e7968
+poisson_cdf	10	701.0	0	0	0x3ff0000000000006
+poisson_cdf	10	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	10	701.0	1	0	0x05459a37597b4d15
+poisson_cdf	10	701.0	1	1	0xc071a8993b3a68b2
+poisson_cdf	37	701.0	0	0	0x3ff0000000000006
+poisson_cdf	37	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	37	701.0	1	0	0x0da295ee11a19804
+poisson_cdf	37	701.0	1	1	0xc06e4878c0053e2d
+poisson_cdf	100	701.0	0	0	0x3ff0000000000006
+poisson_cdf	100	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	100	701.0	1	0	0x1b05ecc5f8739dfe
+poisson_cdf	100	701.0	1	1	0xc06638b9628cbd12
+poisson_cdf	200	701.0	0	0	0x3ff0000000000006
+poisson_cdf	200	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	200	701.0	1	0	0x291586141dc5ee3b
+poisson_cdf	200	701.0	1	1	0xc05b832378ab0c89
+poisson_cdf	500	701.0	0	0	0x3ff0000000000003
+poisson_cdf	500	701.0	0	1	0xbef4f8b588e368f1
+poisson_cdf	500	701.0	1	0	0x3ccaadd50f58c100
+poisson_cdf	500	701.0	1	1	0xc02e43e186983516
+poisson_cdf	1000	701.0	0	0	0x3a8b097d596a8da2
+poisson_cdf	1000	701.0	0	1	0xc039f63736cdf267
+poisson_cdf	1000	701.0	1	0	0x3ff0000000000006
+poisson_cdf	1000	701.0	1	1	0xbfc3bf727136a401
+poisson_cdf	0	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	0	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	0	1000.0	1	0	0x0000000000000000
+poisson_cdf	0	1000.0	1	1	0xc07b24b630a91538
+poisson_cdf	1	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	1	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	1	1000.0	1	0	0x0000000000000000
+poisson_cdf	1	1000.0	1	1	0xc07af4b630a91538
+poisson_cdf	2	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	2	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	2	1000.0	1	0	0x0000000000000000
+poisson_cdf	2	1000.0	1	1	0xc07ac985729b280f
+poisson_cdf	5	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	5	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	5	1000.0	1	0	0x0000000000000000
+poisson_cdf	5	1000.0	1	1	0xc07a55f36262cba7
+poisson_cdf	10	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	10	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	10	1000.0	1	0	0x0000000000000000
+poisson_cdf	10	1000.0	1	1	0xc079ad9ae924f228
+poisson_cdf	37	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	37	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	37	1000.0	1	0	0x0000000000000000
+poisson_cdf	37	1000.0	1	1	0xc076e6ad4d4024b3
+poisson_cdf	100	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	100	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	100	1000.0	1	0	0x03434bbdb9c8dea0
+poisson_cdf	100	1000.0	1	1	0xc072438216c61523
+poisson_cdf	200	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	200	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	200	1000.0	1	0	0x1485272870886ea5
+poisson_cdf	200	1000.0	1	1	0xc06a230b630a9153
+poisson_cdf	500	1000.0	0	0	0x3fefffffffffffed
+poisson_cdf	500	1000.0	0	1	0xbeff75104d551d69
+poisson_cdf	500	1000.0	1	0	0x31cca7cd6ba5fe9c
+poisson_cdf	500	1000.0	1	1	0xc05105389b52007e
+poisson_cdf	1000	1000.0	0	0	0x3fdf76388ec1ff5a
+poisson_cdf	1000	1000.0	0	1	0xbfd3bd512ec6bce8
+poisson_cdf	1000	1000.0	1	0	0x3fe044e3b89f0050
+poisson_cdf	1000	1000.0	1	1	0xbfd380346dc5d639
+poisson_cdf	0	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	0	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	0	5000.0	1	0	0x0000000000000000
+poisson_cdf	0	5000.0	1	1	0xc0a0f6f1dfb9389b
+poisson_cdf	1	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	1	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	1	5000.0	1	0	0x0000000000000000
+poisson_cdf	1	5000.0	1	1	0xc0a0ef8c0053e2d6
+poisson_cdf	2	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	2	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	2	5000.0	1	0	0x0000000000000000
+poisson_cdf	2	5000.0	1	1	0xc0a0e8c035bd512f
+poisson_cdf	5	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	5	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	5	5000.0	1	0	0x0000000000000000
+poisson_cdf	5	5000.0	1	1	0xc0a0d61cdf266ba5
+poisson_cdf	10	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	10	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	10	5000.0	1	0	0x0000000000000000
+poisson_cdf	10	5000.0	1	1	0xc0a0ba1558644524
+poisson_cdf	37	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	37	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	37	5000.0	1	0	0x0000000000000000
+poisson_cdf	37	5000.0	1	1	0xc0a03b7e0370cdc8
+poisson_cdf	100	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	100	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	100	5000.0	1	0	0x0000000000000000
+poisson_cdf	100	5000.0	1	1	0xc09e9e259c8c9321
+poisson_cdf	200	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	200	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	200	5000.0	1	0	0x0000000000000000
+poisson_cdf	200	5000.0	1	1	0xc09c3a3b0b391926
+poisson_cdf	500	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	500	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	500	5000.0	1	0	0x0000000000000000
+poisson_cdf	500	5000.0	1	1	0xc096c01cd898b2ea
+poisson_cdf	1000	5000.0	0	0	0x3ff0000000000013
+poisson_cdf	1000	5000.0	0	1	0xbf14f8b588e368f1
+poisson_cdf	1000	5000.0	1	0	0x0000000000000000
+poisson_cdf	1000	5000.0	1	1	0xc090400a86d71f36
+poisson_cdf	0	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	0	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	0	50000.0	1	0	0x0000000000000000
+poisson_cdf	0	50000.0	1	1	0xc0d534ae57a786c2
+poisson_cdf	1	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	1	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	1	50000.0	1	0	0x0000000000000000
+poisson_cdf	1	50000.0	1	1	0xc0d533819bbadc0a
+poisson_cdf	2	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	2	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	2	50000.0	1	0	0x0000000000000000
+poisson_cdf	2	50000.0	1	1	0xc0d5326823b7952d
+poisson_cdf	5	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	5	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	5	50000.0	1	0	0x0000000000000000
+poisson_cdf	5	50000.0	1	1	0xc0d52f53bca9691a
+poisson_cdf	10	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	10	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	10	50000.0	1	0	0x0000000000000000
+poisson_cdf	10	50000.0	1	1	0xc0d52a92d234eb9a
+poisson_cdf	37	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	37	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	37	50000.0	1	0	0x0000000000000000
+poisson_cdf	37	50000.0	1	1	0xc0d514000a526959
+poisson_cdf	100	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	100	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	100	50000.0	1	0	0x0000000000000000
+poisson_cdf	100	50000.0	1	1	0xc0d4e6b2f5989df1
+poisson_cdf	200	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	200	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	200	50000.0	1	0	0x0000000000000000
+poisson_cdf	200	50000.0	1	1	0xc0d4a774d0e56042
+poisson_cdf	500	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	500	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	500	50000.0	1	0	0x0000000000000000
+poisson_cdf	500	50000.0	1	1	0xc0d404d48db8bac7
+poisson_cdf	1000	50000.0	0	0	0x3ff000000000003b
+poisson_cdf	1000	50000.0	0	1	0xbf31b1d92b7fe08b
+poisson_cdf	1000	50000.0	1	0	0x0000000000000000
+poisson_cdf	1000	50000.0	1	1	0xc0d31fd665e89225
+poisson_cdf_inv	0.5	0.0	100	0
+poisson_cdf_Q_inv	0.5	0.0	100	0
+poisson_cdf_inv	0.5	0.0	1000	0
+poisson_cdf_Q_inv	0.5	0.0	1000	0
+poisson_cdf_inv	0.5	1e-12	100	100
+poisson_cdf_Q_inv	0.5	1e-12	100	100
+poisson_cdf_inv	0.5	1e-12	1000	1000
+poisson_cdf_Q_inv	0.5	1e-12	1000	1000
+poisson_cdf_inv	0.5	0.001	100	100
+poisson_cdf_Q_inv	0.5	0.001	100	100
+poisson_cdf_inv	0.5	0.001	1000	1000
+poisson_cdf_Q_inv	0.5	0.001	1000	1000
+poisson_cdf_inv	0.5	0.1	100	100
+poisson_cdf_Q_inv	0.5	0.1	100	100
+poisson_cdf_inv	0.5	0.1	1000	1000
+poisson_cdf_Q_inv	0.5	0.1	1000	1000
+poisson_cdf_inv	0.5	0.36787944117144233	100	100
+poisson_cdf_Q_inv	0.5	0.36787944117144233	100	100
+poisson_cdf_inv	0.5	0.36787944117144233	1000	1000
+poisson_cdf_Q_inv	0.5	0.36787944117144233	1000	1000
+poisson_cdf_inv	0.5	0.5	100	100
+poisson_cdf_Q_inv	0.5	0.5	100	100
+poisson_cdf_inv	0.5	0.5	1000	1000
+poisson_cdf_Q_inv	0.5	0.5	1000	1000
+poisson_cdf_inv	0.5	0.9	100	1
+poisson_cdf_Q_inv	0.5	0.9	100	1
+poisson_cdf_inv	0.5	0.9	1000	1
+poisson_cdf_Q_inv	0.5	0.9	1000	1
+poisson_cdf_inv	0.5	0.99	100	3
+poisson_cdf_Q_inv	0.5	0.99	100	3
+poisson_cdf_inv	0.5	0.99	1000	3
+poisson_cdf_Q_inv	0.5	0.99	1000	3
+poisson_cdf_inv	0.5	0.999	100	4
+poisson_cdf_Q_inv	0.5	0.999	100	4
+poisson_cdf_inv	0.5	0.999	1000	4
+poisson_cdf_Q_inv	0.5	0.999	1000	4
+poisson_cdf_inv	0.5	1.0	100	14
+poisson_cdf_Q_inv	0.5	1.0	100	14
+poisson_cdf_inv	0.5	1.0	1000	14
+poisson_cdf_Q_inv	0.5	1.0	1000	14
+poisson_cdf_inv	1.0	0.0	100	0
+poisson_cdf_Q_inv	1.0	0.0	100	0
+poisson_cdf_inv	1.0	0.0	1000	0
+poisson_cdf_Q_inv	1.0	0.0	1000	0
+poisson_cdf_inv	1.0	1e-12	100	100
+poisson_cdf_Q_inv	1.0	1e-12	100	100
+poisson_cdf_inv	1.0	1e-12	1000	1000
+poisson_cdf_Q_inv	1.0	1e-12	1000	1000
+poisson_cdf_inv	1.0	0.001	100	100
+poisson_cdf_Q_inv	1.0	0.001	100	100
+poisson_cdf_inv	1.0	0.001	1000	1000
+poisson_cdf_Q_inv	1.0	0.001	1000	1000
+poisson_cdf_inv	1.0	0.1	100	100
+poisson_cdf_Q_inv	1.0	0.1	100	100
+poisson_cdf_inv	1.0	0.1	1000	1000
+poisson_cdf_Q_inv	1.0	0.1	1000	1000
+poisson_cdf_inv	1.0	0.36787944117144233	100	1
+poisson_cdf_Q_inv	1.0	0.36787944117144233	100	1
+poisson_cdf_inv	1.0	0.36787944117144233	1000	1
+poisson_cdf_Q_inv	1.0	0.36787944117144233	1000	1
+poisson_cdf_inv	1.0	0.5	100	1
+poisson_cdf_Q_inv	1.0	0.5	100	1
+poisson_cdf_inv	1.0	0.5	1000	1
+poisson_cdf_Q_inv	1.0	0.5	1000	1
+poisson_cdf_inv	1.0	0.9	100	2
+poisson_cdf_Q_inv	1.0	0.9	100	2
+poisson_cdf_inv	1.0	0.9	1000	2
+poisson_cdf_Q_inv	1.0	0.9	1000	2
+poisson_cdf_inv	1.0	0.99	100	4
+poisson_cdf_Q_inv	1.0	0.99	100	4
+poisson_cdf_inv	1.0	0.99	1000	4
+poisson_cdf_Q_inv	1.0	0.99	1000	4
+poisson_cdf_inv	1.0	0.999	100	5
+poisson_cdf_Q_inv	1.0	0.999	100	5
+poisson_cdf_inv	1.0	0.999	1000	5
+poisson_cdf_Q_inv	1.0	0.999	1000	5
+poisson_cdf_inv	1.0	1.0	100	18
+poisson_cdf_Q_inv	1.0	1.0	100	18
+poisson_cdf_inv	1.0	1.0	1000	18
+poisson_cdf_Q_inv	1.0	1.0	1000	18
+poisson_cdf_inv	2.0	0.0	100	0
+poisson_cdf_Q_inv	2.0	0.0	100	0
+poisson_cdf_inv	2.0	0.0	1000	0
+poisson_cdf_Q_inv	2.0	0.0	1000	0
+poisson_cdf_inv	2.0	1e-12	100	100
+poisson_cdf_Q_inv	2.0	1e-12	100	100
+poisson_cdf_inv	2.0	1e-12	1000	1000
+poisson_cdf_Q_inv	2.0	1e-12	1000	1000
+poisson_cdf_inv	2.0	0.001	100	100
+poisson_cdf_Q_inv	2.0	0.001	100	100
+poisson_cdf_inv	2.0	0.001	1000	1000
+poisson_cdf_Q_inv	2.0	0.001	1000	1000
+poisson_cdf_inv	2.0	0.1	100	100
+poisson_cdf_Q_inv	2.0	0.1	100	100
+poisson_cdf_inv	2.0	0.1	1000	1000
+poisson_cdf_Q_inv	2.0	0.1	1000	1000
+poisson_cdf_inv	2.0	0.36787944117144233	100	1
+poisson_cdf_Q_inv	2.0	0.36787944117144233	100	1
+poisson_cdf_inv	2.0	0.36787944117144233	1000	1
+poisson_cdf_Q_inv	2.0	0.36787944117144233	1000	1
+poisson_cdf_inv	2.0	0.5	100	2
+poisson_cdf_Q_inv	2.0	0.5	100	2
+poisson_cdf_inv	2.0	0.5	1000	2
+poisson_cdf_Q_inv	2.0	0.5	1000	2
+poisson_cdf_inv	2.0	0.9	100	4
+poisson_cdf_Q_inv	2.0	0.9	100	4
+poisson_cdf_inv	2.0	0.9	1000	4
+poisson_cdf_Q_inv	2.0	0.9	1000	4
+poisson_cdf_inv	2.0	0.99	100	6
+poisson_cdf_Q_inv	2.0	0.99	100	6
+poisson_cdf_inv	2.0	0.99	1000	6
+poisson_cdf_Q_inv	2.0	0.99	1000	6
+poisson_cdf_inv	2.0	0.999	100	8
+poisson_cdf_Q_inv	2.0	0.999	100	8
+poisson_cdf_inv	2.0	0.999	1000	8
+poisson_cdf_Q_inv	2.0	0.999	1000	8
+poisson_cdf_inv	2.0	1.0	100	22
+poisson_cdf_Q_inv	2.0	1.0	100	22
+poisson_cdf_inv	2.0	1.0	1000	22
+poisson_cdf_Q_inv	2.0	1.0	1000	22
+poisson_cdf_inv	5.0	0.0	100	0
+poisson_cdf_Q_inv	5.0	0.0	100	0
+poisson_cdf_inv	5.0	0.0	1000	0
+poisson_cdf_Q_inv	5.0	0.0	1000	0
+poisson_cdf_inv	5.0	1e-12	100	100
+poisson_cdf_Q_inv	5.0	1e-12	100	100
+poisson_cdf_inv	5.0	1e-12	1000	1000
+poisson_cdf_Q_inv	5.0	1e-12	1000	1000
+poisson_cdf_inv	5.0	0.001	100	100
+poisson_cdf_Q_inv	5.0	0.001	100	100
+poisson_cdf_inv	5.0	0.001	1000	1000
+poisson_cdf_Q_inv	5.0	0.001	1000	1000
+poisson_cdf_inv	5.0	0.1	100	2
+poisson_cdf_Q_inv	5.0	0.1	100	2
+poisson_cdf_inv	5.0	0.1	1000	2
+poisson_cdf_Q_inv	5.0	0.1	1000	2
+poisson_cdf_inv	5.0	0.36787944117144233	100	4
+poisson_cdf_Q_inv	5.0	0.36787944117144233	100	4
+poisson_cdf_inv	5.0	0.36787944117144233	1000	4
+poisson_cdf_Q_inv	5.0	0.36787944117144233	1000	4
+poisson_cdf_inv	5.0	0.5	100	5
+poisson_cdf_Q_inv	5.0	0.5	100	5
+poisson_cdf_inv	5.0	0.5	1000	5
+poisson_cdf_Q_inv	5.0	0.5	1000	5
+poisson_cdf_inv	5.0	0.9	100	8
+poisson_cdf_Q_inv	5.0	0.9	100	8
+poisson_cdf_inv	5.0	0.9	1000	8
+poisson_cdf_Q_inv	5.0	0.9	1000	8
+poisson_cdf_inv	5.0	0.99	100	11
+poisson_cdf_Q_inv	5.0	0.99	100	11
+poisson_cdf_inv	5.0	0.99	1000	11
+poisson_cdf_Q_inv	5.0	0.99	1000	11
+poisson_cdf_inv	5.0	0.999	100	13
+poisson_cdf_Q_inv	5.0	0.999	100	13
+poisson_cdf_inv	5.0	0.999	1000	13
+poisson_cdf_Q_inv	5.0	0.999	1000	13
+poisson_cdf_inv	5.0	1.0	100	33
+poisson_cdf_Q_inv	5.0	1.0	100	33
+poisson_cdf_inv	5.0	1.0	1000	33
+poisson_cdf_Q_inv	5.0	1.0	1000	33
+poisson_cdf_inv	10.0	0.0	100	0
+poisson_cdf_Q_inv	10.0	0.0	100	0
+poisson_cdf_inv	10.0	0.0	1000	0
+poisson_cdf_Q_inv	10.0	0.0	1000	0
+poisson_cdf_inv	10.0	1e-12	100	100
+poisson_cdf_Q_inv	10.0	1e-12	100	100
+poisson_cdf_inv	10.0	1e-12	1000	1000
+poisson_cdf_Q_inv	10.0	1e-12	1000	1000
+poisson_cdf_inv	10.0	0.001	100	2
+poisson_cdf_Q_inv	10.0	0.001	100	2
+poisson_cdf_inv	10.0	0.001	1000	2
+poisson_cdf_Q_inv	10.0	0.001	1000	2
+poisson_cdf_inv	10.0	0.1	100	6
+poisson_cdf_Q_inv	10.0	0.1	100	6
+poisson_cdf_inv	10.0	0.1	1000	6
+poisson_cdf_Q_inv	10.0	0.1	1000	6
+poisson_cdf_inv	10.0	0.36787944117144233	100	9
+poisson_cdf_Q_inv	10.0	0.36787944117144233	100	9
+poisson_cdf_inv	10.0	0.36787944117144233	1000	9
+poisson_cdf_Q_inv	10.0	0.36787944117144233	1000	9
+poisson_cdf_inv	10.0	0.5	100	10
+poisson_cdf_Q_inv	10.0	0.5	100	10
+poisson_cdf_inv	10.0	0.5	1000	10
+poisson_cdf_Q_inv	10.0	0.5	1000	10
+poisson_cdf_inv	10.0	0.9	100	14
+poisson_cdf_Q_inv	10.0	0.9	100	14
+poisson_cdf_inv	10.0	0.9	1000	14
+poisson_cdf_Q_inv	10.0	0.9	1000	14
+poisson_cdf_inv	10.0	0.99	100	18
+poisson_cdf_Q_inv	10.0	0.99	100	18
+poisson_cdf_inv	10.0	0.99	1000	18
+poisson_cdf_Q_inv	10.0	0.99	1000	18
+poisson_cdf_inv	10.0	0.999	100	21
+poisson_cdf_Q_inv	10.0	0.999	100	21
+poisson_cdf_inv	10.0	0.999	1000	21
+poisson_cdf_Q_inv	10.0	0.999	1000	21
+poisson_cdf_inv	10.0	1.0	100	100
+poisson_cdf_Q_inv	10.0	1.0	100	100
+poisson_cdf_inv	10.0	1.0	1000	1000
+poisson_cdf_Q_inv	10.0	1.0	1000	1000
+poisson_cdf_inv	50.0	0.0	100	0
+poisson_cdf_Q_inv	50.0	0.0	100	0
+poisson_cdf_inv	50.0	0.0	1000	0
+poisson_cdf_Q_inv	50.0	0.0	1000	0
+poisson_cdf_inv	50.0	1e-12	100	9
+poisson_cdf_Q_inv	50.0	1e-12	100	9
+poisson_cdf_inv	50.0	1e-12	1000	9
+poisson_cdf_Q_inv	50.0	1e-12	1000	9
+poisson_cdf_inv	50.0	0.001	100	30
+poisson_cdf_Q_inv	50.0	0.001	100	30
+poisson_cdf_inv	50.0	0.001	1000	30
+poisson_cdf_Q_inv	50.0	0.001	1000	30
+poisson_cdf_inv	50.0	0.1	100	41
+poisson_cdf_Q_inv	50.0	0.1	100	41
+poisson_cdf_inv	50.0	0.1	1000	41
+poisson_cdf_Q_inv	50.0	0.1	1000	41
+poisson_cdf_inv	50.0	0.36787944117144233	100	47
+poisson_cdf_Q_inv	50.0	0.36787944117144233	100	47
+poisson_cdf_inv	50.0	0.36787944117144233	1000	47
+poisson_cdf_Q_inv	50.0	0.36787944117144233	1000	47
+poisson_cdf_inv	50.0	0.5	100	50
+poisson_cdf_Q_inv	50.0	0.5	100	50
+poisson_cdf_inv	50.0	0.5	1000	50
+poisson_cdf_Q_inv	50.0	0.5	1000	50
+poisson_cdf_inv	50.0	0.9	100	59
+poisson_cdf_Q_inv	50.0	0.9	100	59
+poisson_cdf_inv	50.0	0.9	1000	59
+poisson_cdf_Q_inv	50.0	0.9	1000	59
+poisson_cdf_inv	50.0	0.99	100	67
+poisson_cdf_Q_inv	50.0	0.99	100	67
+poisson_cdf_inv	50.0	0.99	1000	67
+poisson_cdf_Q_inv	50.0	0.99	1000	67
+poisson_cdf_inv	50.0	0.999	100	73
+poisson_cdf_Q_inv	50.0	0.999	100	73
+poisson_cdf_inv	50.0	0.999	1000	73
+poisson_cdf_Q_inv	50.0	0.999	1000	73
+poisson_cdf_inv	50.0	1.0	100	100
+poisson_cdf_Q_inv	50.0	1.0	100	100
+poisson_cdf_inv	50.0	1.0	1000	1000
+poisson_cdf_Q_inv	50.0	1.0	1000	1000
+poisson_cdf_inv	100.0	0.0	100	0
+poisson_cdf_Q_inv	100.0	0.0	100	0
+poisson_cdf_inv	100.0	0.0	1000	0
+poisson_cdf_Q_inv	100.0	0.0	1000	0
+poisson_cdf_inv	100.0	1e-12	100	38
+poisson_cdf_Q_inv	100.0	1e-12	100	38
+poisson_cdf_inv	100.0	1e-12	1000	38
+poisson_cdf_Q_inv	100.0	1e-12	1000	38
+poisson_cdf_inv	100.0	0.001	100	71
+poisson_cdf_Q_inv	100.0	0.001	100	71
+poisson_cdf_inv	100.0	0.001	1000	71
+poisson_cdf_Q_inv	100.0	0.001	1000	71
+poisson_cdf_inv	100.0	0.1	100	87
+poisson_cdf_Q_inv	100.0	0.1	100	87
+poisson_cdf_inv	100.0	0.1	1000	87
+poisson_cdf_Q_inv	100.0	0.1	1000	87
+poisson_cdf_inv	100.0	0.36787944117144233	100	96
+poisson_cdf_Q_inv	100.0	0.36787944117144233	100	96
+poisson_cdf_inv	100.0	0.36787944117144233	1000	96
+poisson_cdf_Q_inv	100.0	0.36787944117144233	1000	96
+poisson_cdf_inv	100.0	0.5	100	100
+poisson_cdf_Q_inv	100.0	0.5	100	100
+poisson_cdf_inv	100.0	0.5	1000	100
+poisson_cdf_Q_inv	100.0	0.5	1000	100
+poisson_cdf_inv	100.0	0.9	100	100
+poisson_cdf_Q_inv	100.0	0.9	100	100
+poisson_cdf_inv	100.0	0.9	1000	113
+poisson_cdf_Q_inv	100.0	0.9	1000	113
+poisson_cdf_inv	100.0	0.99	100	100
+poisson_cdf_Q_inv	100.0	0.99	100	100
+poisson_cdf_inv	100.0	0.99	1000	124
+poisson_cdf_Q_inv	100.0	0.99	1000	124
+poisson_cdf_inv	100.0	0.999	100	100
+poisson_cdf_Q_inv	100.0	0.999	100	100
+poisson_cdf_inv	100.0	0.999	1000	132
+poisson_cdf_Q_inv	100.0	0.999	1000	132
+poisson_cdf_inv	100.0	1.0	100	100
+poisson_cdf_Q_inv	100.0	1.0	100	100
+poisson_cdf_inv	100.0	1.0	1000	192
+poisson_cdf_Q_inv	100.0	1.0	1000	192
+poisson_cdf_inv	300.0	0.0	100	0
+poisson_cdf_Q_inv	300.0	0.0	100	0
+poisson_cdf_inv	300.0	0.0	1000	0
+poisson_cdf_Q_inv	300.0	0.0	1000	0
+poisson_cdf_inv	300.0	1e-12	100	100
+poisson_cdf_Q_inv	300.0	1e-12	100	100
+poisson_cdf_inv	300.0	1e-12	1000	187
+poisson_cdf_Q_inv	300.0	1e-12	1000	187
+poisson_cdf_inv	300.0	0.001	100	100
+poisson_cdf_Q_inv	300.0	0.001	100	100
+poisson_cdf_inv	300.0	0.001	1000	248
+poisson_cdf_Q_inv	300.0	0.001	1000	248
+poisson_cdf_inv	300.0	0.1	100	100
+poisson_cdf_Q_inv	300.0	0.1	100	100
+poisson_cdf_inv	300.0	0.1	1000	278
+poisson_cdf_Q_inv	300.0	0.1	1000	278
+poisson_cdf_inv	300.0	0.36787944117144233	100	100
+poisson_cdf_Q_inv	300.0	0.36787944117144233	100	100
+poisson_cdf_inv	300.0	0.36787944117144233	1000	294
+poisson_cdf_Q_inv	300.0	0.36787944117144233	1000	294
+poisson_cdf_inv	300.0	0.5	100	100
+poisson_cdf_Q_inv	300.0	0.5	100	100
+poisson_cdf_inv	300.0	0.5	1000	300
+poisson_cdf_Q_inv	300.0	0.5	1000	300
+poisson_cdf_inv	300.0	0.9	100	100
+poisson_cdf_Q_inv	300.0	0.9	100	100
+poisson_cdf_inv	300.0	0.9	1000	322
+poisson_cdf_Q_inv	300.0	0.9	1000	322
+poisson_cdf_inv	300.0	0.99	100	100
+poisson_cdf_Q_inv	300.0	0.99	100	100
+poisson_cdf_inv	300.0	0.99	1000	341
+poisson_cdf_Q_inv	300.0	0.99	1000	341
+poisson_cdf_inv	300.0	0.999	100	100
+poisson_cdf_Q_inv	300.0	0.999	100	100
+poisson_cdf_inv	300.0	0.999	1000	355
+poisson_cdf_Q_inv	300.0	0.999	1000	355
+poisson_cdf_inv	300.0	1.0	100	100
+poisson_cdf_Q_inv	300.0	1.0	100	100
+poisson_cdf_inv	300.0	1.0	1000	447
+poisson_cdf_Q_inv	300.0	1.0	1000	447
+poisson_cdf_inv	700.0	0.0	100	0
+poisson_cdf_Q_inv	700.0	0.0	100	0
+poisson_cdf_inv	700.0	0.0	1000	0
+poisson_cdf_Q_inv	700.0	0.0	1000	0
+poisson_cdf_inv	700.0	1e-12	100	100
+poisson_cdf_Q_inv	700.0	1e-12	100	100
+poisson_cdf_inv	700.0	1e-12	1000	522
+poisson_cdf_Q_inv	700.0	1e-12	1000	522
+poisson_cdf_inv	700.0	0.001	100	100
+poisson_cdf_Q_inv	700.0	0.001	100	100
+poisson_cdf_inv	700.0	0.001	1000	620
+poisson_cdf_Q_inv	700.0	0.001	1000	620
+poisson_cdf_inv	700.0	0.1	100	100
+poisson_cdf_Q_inv	700.0	0.1	100	100
+poisson_cdf_inv	700.0	0.1	1000	666
+poisson_cdf_Q_inv	700.0	0.1	1000	666
+poisson_cdf_inv	700.0	0.36787944117144233	100	100
+poisson_cdf_Q_inv	700.0	0.36787944117144233	100	100
+poisson_cdf_inv	700.0	0.36787944117144233	1000	691
+poisson_cdf_Q_inv	700.0	0.36787944117144233	1000	691
+poisson_cdf_inv	700.0	0.5	100	100
+poisson_cdf_Q_inv	700.0	0.5	100	100
+poisson_cdf_inv	700.0	0.5	1000	700
+poisson_cdf_Q_inv	700.0	0.5	1000	700
+poisson_cdf_inv	700.0	0.9	100	100
+poisson_cdf_Q_inv	700.0	0.9	100	100
+poisson_cdf_inv	700.0	0.9	1000	734
+poisson_cdf_Q_inv	700.0	0.9	1000	734
+poisson_cdf_inv	700.0	0.99	100	100
+poisson_cdf_Q_inv	700.0	0.99	100	100
+poisson_cdf_inv	700.0	0.99	1000	762
+poisson_cdf_Q_inv	700.0	0.99	1000	762
+poisson_cdf_inv	700.0	0.999	100	100
+poisson_cdf_Q_inv	700.0	0.999	100	100
+poisson_cdf_inv	700.0	0.999	1000	783
+poisson_cdf_Q_inv	700.0	0.999	1000	783
+poisson_cdf_inv	700.0	1.0	100	100
+poisson_cdf_Q_inv	700.0	1.0	100	100
+poisson_cdf_inv	700.0	1.0	1000	1000
+poisson_cdf_Q_inv	700.0	1.0	1000	1000
+poisson_cdf_inv	739.0	0.0	100	0
+poisson_cdf_Q_inv	739.0	0.0	100	0
+poisson_cdf_inv	739.0	0.0	1000	0
+poisson_cdf_Q_inv	739.0	0.0	1000	0
+poisson_cdf_inv	739.0	1e-12	100	100
+poisson_cdf_Q_inv	739.0	1e-12	100	100
+poisson_cdf_inv	739.0	1e-12	1000	556
+poisson_cdf_Q_inv	739.0	1e-12	1000	556
+poisson_cdf_inv	739.0	0.001	100	100
+poisson_cdf_Q_inv	739.0	0.001	100	100
+poisson_cdf_inv	739.0	0.001	1000	656
+poisson_cdf_Q_inv	739.0	0.001	1000	656
+poisson_cdf_inv	739.0	0.1	100	100
+poisson_cdf_Q_inv	739.0	0.1	100	100
+poisson_cdf_inv	739.0	0.1	1000	704
+poisson_cdf_Q_inv	739.0	0.1	1000	704
+poisson_cdf_inv	739.0	0.36787944117144233	100	100
+poisson_cdf_Q_inv	739.0	0.36787944117144233	100	100
+poisson_cdf_inv	739.0	0.36787944117144233	1000	730
+poisson_cdf_Q_inv	739.0	0.36787944117144233	1000	730
+poisson_cdf_inv	739.0	0.5	100	100
+poisson_cdf_Q_inv	739.0	0.5	100	100
+poisson_cdf_inv	739.0	0.5	1000	739
+poisson_cdf_Q_inv	739.0	0.5	1000	739
+poisson_cdf_inv	739.0	0.9	100	100
+poisson_cdf_Q_inv	739.0	0.9	100	100
+poisson_cdf_inv	739.0	0.9	1000	774
+poisson_cdf_Q_inv	739.0	0.9	1000	774
+poisson_cdf_inv	739.0	0.99	100	100
+poisson_cdf_Q_inv	739.0	0.99	100	100
+poisson_cdf_inv	739.0	0.99	1000	805
+poisson_cdf_Q_inv	739.0	0.99	1000	805
+poisson_cdf_inv	739.0	0.999	100	100
+poisson_cdf_Q_inv	739.0	0.999	100	100
+poisson_cdf_inv	739.0	0.999	1000	1000
+poisson_cdf_Q_inv	739.0	0.999	1000	1000
+poisson_cdf_inv	739.0	1.0	100	100
+poisson_cdf_Q_inv	739.0	1.0	100	100
+poisson_cdf_inv	739.0	1.0	1000	1000
+poisson_cdf_Q_inv	739.0	1.0	1000	1000
+poisson_pdf	0	0.5	0x3fe368b2fc6f960a
+poisson_pdf	1	0.5	0x3fd368b2fc6f960a
+poisson_pdf	5	0.5	0x3f24b3f21e54e44f
+poisson_pdf	20	0.5	0x3ad265351aa991ef
+poisson_pdf	50	0.5	0x2f60cd2c44226133
+poisson_pdf	100	0.5	0x18d6d7b90421ff05
+poisson_pdf	150	0.5	0x0005593a29320707
+poisson_pdf	0	1.0	0x3fd78b56362cef38
+poisson_pdf	1	1.0	0x3fd78b56362cef38
+poisson_pdf	5	1.0	0x3f691d28c252103c
+poisson_pdf	20	1.0	0x3c06508eb0ffc324
+poisson_pdf	50	1.0	0x327461962444cf05
+poisson_pdf	100	1.0	0x1f0bb5a56fd27a93
+poisson_pdf	150	1.0	0x0949f3d38003641d
+poisson_pdf	0	5.0	0x3f7b993fe00d5376
+poisson_pdf	1	5.0	0x3fa13fc7ec08542a
+poisson_pdf	5	5.0	0x3fc675b6fb5582ec
+poisson_pdf	20	5.0	0x3e91b990c88b46f7
+poisson_pdf	50	5.0	0x39598ab718d3af22
+poisson_pdf	100	5.0	0x2d32901271bd51ac
+poisson_pdf	150	5.0	0x1eb2964ea0796584
+poisson_pdf	0	20.0	0x3e21b48655f37267
+poisson_pdf	1	20.0	0x3e6621a7eb704f01
+poisson_pdf	5	20.0	0x3f0cd127fa8f9189
+poisson_pdf	20	20.0	0x3fb6bde94eedc4eb
+poisson_pdf	50	20.0	0x3e4062bd94318e69
+poisson_pdf	100	20.0	0x3857d12222576d74
+poisson_pdf	150	20.0	0x3017d9221ca616cb
+poisson_pdf	0	100.0	0x36ea8c1f14e2af5d
+poisson_pdf	1	100.0	0x3754bd7848511901
+poisson_pdf	5	100.0	0x38907b9668338e07
+poisson_pdf	20	100.0	0x3b671b4cf897b64d
+poisson_pdf	50	100.0	0x3e4a444b8f58faf5
+poisson_pdf	100	100.0	0x3fa468a91b5ccc75
+poisson_pdf	150	100.0	0x3ea5d90b54431f4b
+binomial_pdf	0	1	1e-08	0x3feffffffaa19c47
+binomial_cdf_f	0	1	1e-08	0x3feffffffaa19c47
+binomial_cdf_r	0	1	1e-08	0x3e45798ee4000000
+binomial_sf_f	0	1	1e-08	0x3e45798ee4000000
+binomial_sf_r	0	1	1e-08	0x3feffffffaa19c47
+binomial_skipped	1	1	1e-08	F11
+binomial_pdf	0	1	1e-06	0x3feffffde7210be9
+binomial_cdf_f	0	1	1e-06	0x3feffffde7210be9
+binomial_cdf_r	0	1	1e-06	0x3eb0c6f7a0b80000
+binomial_sf_f	0	1	1e-06	0x3eb0c6f7a0b80000
+binomial_sf_r	0	1	1e-06	0x3feffffde7210be9
+binomial_skipped	1	1	1e-06	F11
+binomial_pdf	0	1	0.001	0x3feff7ced916872b
+binomial_cdf_f	0	1	0.001	0x3feff7ced916872b
+binomial_cdf_r	0	1	0.001	0x3f50624dd2f1aa00
+binomial_sf_f	0	1	0.001	0x3f50624dd2f1aa00
+binomial_sf_r	0	1	0.001	0x3feff7ced916872b
+binomial_pdf	1	1	0.001	0x3f50624dd2f1aa00
+binomial_cdf_f	1	1	0.001	0x3ff0000000000000
+binomial_cdf_r	1	1	0.001	0x0000000000000000
+binomial_sf_f	1	1	0.001	0x0000000000000000
+binomial_sf_r	1	1	0.001	0x3ff0000000000000
+binomial_pdf	0	1	0.1	0x3feccccccccccccd
+binomial_cdf_f	0	1	0.1	0x3feccccccccccccd
+binomial_cdf_r	0	1	0.1	0x3fb9999999999998
+binomial_sf_f	0	1	0.1	0x3fb9999999999998
+binomial_sf_r	0	1	0.1	0x3feccccccccccccd
+binomial_pdf	1	1	0.1	0x3fb9999999999998
+binomial_cdf_f	1	1	0.1	0x3ff0000000000000
+binomial_cdf_r	1	1	0.1	0x0000000000000000
+binomial_sf_f	1	1	0.1	0x0000000000000000
+binomial_sf_r	1	1	0.1	0x3ff0000000000000
+binomial_pdf	0	1	0.5	0x3fe0000000000000
+binomial_cdf_f	0	1	0.5	0x3fe0000000000000
+binomial_cdf_r	0	1	0.5	0x3fe0000000000000
+binomial_sf_f	0	1	0.5	0x3fe0000000000000
+binomial_sf_r	0	1	0.5	0x3fe0000000000000
+binomial_pdf	1	1	0.5	0x3fe0000000000000
+binomial_cdf_f	1	1	0.5	0x3ff0000000000000
+binomial_cdf_r	1	1	0.5	0x0000000000000000
+binomial_sf_f	1	1	0.5	0x0000000000000000
+binomial_sf_r	1	1	0.5	0x3ff0000000000000
+binomial_pdf	0	1	0.9	0x3fb9999999999998
+binomial_cdf_f	0	1	0.9	0x3fb9999999999998
+binomial_cdf_r	0	1	0.9	0x3feccccccccccccd
+binomial_sf_f	0	1	0.9	0x3feccccccccccccd
+binomial_sf_r	0	1	0.9	0x3fb9999999999998
+binomial_pdf	1	1	0.9	0x3feccccccccccccd
+binomial_cdf_f	1	1	0.9	0x3ff0000000000000
+binomial_cdf_r	1	1	0.9	0x0000000000000000
+binomial_sf_f	1	1	0.9	0x0000000000000000
+binomial_sf_r	1	1	0.9	0x3ff0000000000000
+binomial_pdf	0	1	0.999	0x3f50624dd2f1aa00
+binomial_cdf_f	0	1	0.999	0x3f50624dd2f1aa00
+binomial_cdf_r	0	1	0.999	0x3feff7ced916872b
+binomial_sf_f	0	1	0.999	0x3feff7ced916872b
+binomial_sf_r	0	1	0.999	0x3f50624dd2f1aa00
+binomial_pdf	1	1	0.999	0x3feff7ced916872b
+binomial_cdf_f	1	1	0.999	0x3ff0000000000000
+binomial_cdf_r	1	1	0.999	0x0000000000000000
+binomial_sf_f	1	1	0.999	0x0000000000000000
+binomial_sf_r	1	1	0.999	0x3ff0000000000000
+binomial_pdf	0	2	1e-08	0x3feffffff543388f
+binomial_cdf_f	0	2	1e-08	0x3feffffff543388f
+binomial_cdf_r	0	2	1e-08	0x3e55798ee0636110
+binomial_sf_f	0	2	1e-08	0x3e55798ee2000000
+binomial_sf_r	0	2	1e-08	0x3feffffff5433890
+binomial_skipped	1	2	1e-08	F11
+binomial_skipped	2	2	1e-08	F11
+binomial_pdf	0	2	1e-06	0x3feffffbce423b01
+binomial_cdf_f	0	2	1e-06	0x3feffffbce423b01
+binomial_cdf_r	0	2	1e-06	0x3ec0c6f713f92183
+binomial_sf_f	0	2	1e-06	0x3ec0c6f713fc0000
+binomial_sf_r	0	2	1e-06	0x3feffffbce423b02
+binomial_skipped	1	2	1e-06	F11
+binomial_skipped	2	2	1e-06	F11
+binomial_pdf	0	2	0.001	0x3fefef9fcb0c026d
+binomial_cdf_f	0	2	0.001	0x3fefef9fcb0c026d
+binomial_cdf_r	0	2	0.001	0x3f606034f3fd933f
+binomial_sf_f	0	2	0.001	0x3f606034f3fd9300
+binomial_sf_r	0	2	0.001	0x3fefef9fcb0c026d
+binomial_pdf	1	2	0.001	0x3f605e1c15097c81
+binomial_cdf_f	1	2	0.001	0x3feffffde7210bea
+binomial_cdf_r	1	2	0.001	0x3eb0c6f7a0b5ed96
+binomial_sf_f	1	2	0.001	0x3eb0c6f7a0b00000
+binomial_sf_r	1	2	0.001	0x3feffffde7210be9
+binomial_pdf	2	2	0.001	0x3eb0c6f7a0b5ed96
+binomial_cdf_f	2	2	0.001	0x3ff0000000000000
+binomial_cdf_r	2	2	0.001	0x0000000000000000
+binomial_sf_f	2	2	0.001	0x0000000000000000
+binomial_sf_r	2	2	0.001	0x3ff0000000000000
+binomial_pdf	0	2	0.1	0x3fe9eb851eb851ec
+binomial_cdf_f	0	2	0.1	0x3fe9eb851eb851ec
+binomial_cdf_r	0	2	0.1	0x3fc851eb851eb853
+binomial_sf_f	0	2	0.1	0x3fc851eb851eb850
+binomial_sf_r	0	2	0.1	0x3fe9eb851eb851eb
+binomial_pdf	1	2	0.1	0x3fc70a3d70a3d70b
+binomial_cdf_f	1	2	0.1	0x3fefae147ae147af
+binomial_cdf_r	1	2	0.1	0x3f847ae147ae1478
+binomial_sf_f	1	2	0.1	0x3f847ae147ae1440
+binomial_sf_r	1	2	0.1	0x3fefae147ae147ae
+binomial_pdf	2	2	0.1	0x3f847ae147ae1478
+binomial_cdf_f	2	2	0.1	0x3ff0000000000000
+binomial_cdf_r	2	2	0.1	0x0000000000000000
+binomial_sf_f	2	2	0.1	0x0000000000000000
+binomial_sf_r	2	2	0.1	0x3ff0000000000000
+binomial_pdf	0	2	0.5	0x3fd0000000000000
+binomial_cdf_f	0	2	0.5	0x3fd0000000000000
+binomial_cdf_r	0	2	0.5	0x3fe8000000000000
+binomial_sf_f	0	2	0.5	0x3fe8000000000000
+binomial_sf_r	0	2	0.5	0x3fd0000000000000
+binomial_pdf	1	2	0.5	0x3fe0000000000000
+binomial_cdf_f	1	2	0.5	0x3fe8000000000000
+binomial_cdf_r	1	2	0.5	0x3fd0000000000000
+binomial_sf_f	1	2	0.5	0x3fd0000000000000
+binomial_sf_r	1	2	0.5	0x3fe8000000000000
+binomial_pdf	2	2	0.5	0x3fd0000000000000
+binomial_cdf_f	2	2	0.5	0x3ff0000000000000
+binomial_cdf_r	2	2	0.5	0x0000000000000000
+binomial_sf_f	2	2	0.5	0x0000000000000000
+binomial_sf_r	2	2	0.5	0x3ff0000000000000
+binomial_pdf	0	2	0.9	0x3f847ae147ae1478
+binomial_cdf_f	0	2	0.9	0x3f847ae147ae1478
+binomial_cdf_r	0	2	0.9	0x3fefae147ae147ae
+binomial_sf_f	0	2	0.9	0x3fefae147ae147ae
+binomial_sf_r	0	2	0.9	0x3f847ae147ae1480
+binomial_pdf	1	2	0.9	0x3fc70a3d70a3d709
+binomial_cdf_f	1	2	0.9	0x3fc851eb851eb851
+binomial_cdf_r	1	2	0.9	0x3fe9eb851eb851ec
+binomial_sf_f	1	2	0.9	0x3fe9eb851eb851ec
+binomial_sf_r	1	2	0.9	0x3fc851eb851eb850
+binomial_pdf	2	2	0.9	0x3fe9eb851eb851ec
+binomial_cdf_f	2	2	0.9	0x3ff0000000000000
+binomial_cdf_r	2	2	0.9	0x0000000000000000
+binomial_sf_f	2	2	0.9	0x0000000000000000
+binomial_sf_r	2	2	0.9	0x3ff0000000000000
+binomial_pdf	0	2	0.999	0x3eb0c6f7a0b5ed96
+binomial_cdf_f	0	2	0.999	0x3eb0c6f7a0b5ed96
+binomial_cdf_r	0	2	0.999	0x3feffffde7210bea
+binomial_sf_f	0	2	0.999	0x3feffffde7210be9
+binomial_sf_r	0	2	0.999	0x3eb0c6f7a0b00000
+binomial_pdf	1	2	0.999	0x3f605e1c15097c85
+binomial_cdf_f	1	2	0.999	0x3f606034f3fd9343
+binomial_cdf_r	1	2	0.999	0x3fefef9fcb0c026d
+binomial_sf_f	1	2	0.999	0x3fefef9fcb0c026d
+binomial_sf_r	1	2	0.999	0x3f606034f3fd9300
+binomial_pdf	2	2	0.999	0x3fefef9fcb0c026d
+binomial_cdf_f	2	2	0.999	0x3ff0000000000000
+binomial_cdf_r	2	2	0.999	0x0000000000000000
+binomial_sf_f	2	2	0.999	0x0000000000000000
+binomial_sf_r	2	2	0.999	0x3ff0000000000000
+binomial_pdf	0	5	1e-08	0x3fefffffe5280d6d
+binomial_cdf_f	0	5	1e-08	0x3fefffffe5280d6d
+binomial_cdf_r	0	5	1e-08	0x3e6ad7f291bad779
+binomial_sf_f	0	5	1e-08	0x3e6ad7f293000000
+binomial_sf_r	0	5	1e-08	0x3fefffffe5280d6e
+binomial_skipped	1	5	1e-08	F11
+binomial_skipped	2	5	1e-08	F11
+binomial_skipped	4	5	1e-08	F11
+binomial_skipped	5	5	1e-08	F11
+binomial_pdf	0	5	1e-06	0x3feffff583a69b65
+binomial_cdf_f	0	5	1e-06	0x3feffff583a69b65
+binomial_cdf_r	0	5	1e-06	0x3ed4f8b2c9339add
+binomial_sf_f	0	5	1e-06	0x3ed4f8b2c9360000
+binomial_sf_r	0	5	1e-06	0x3feffff583a69b66
+binomial_skipped	1	5	1e-06	F11
+binomial_skipped	2	5	1e-06	F11
+binomial_skipped	4	5	1e-06	F11
+binomial_skipped	5	5	1e-06	F11
+binomial_pdf	0	5	0.001	0x3fefd71f30c878e5
+binomial_cdf_f	0	5	0.001	0x3fefd71f30c878e5
+binomial_cdf_r	0	5	0.001	0x3f7470679bc38d8e
+binomial_sf_f	0	5	0.001	0x3f7470679bc38d80
+binomial_sf_r	0	5	0.001	0x3fefd71f30c878e5
+binomial_pdf	1	5	0.001	0x3f7465f09e5b046b
+binomial_cdf_f	1	5	0.001	0x3fefffeb12052eee
+binomial_cdf_r	1	5	0.001	0x3ee4edfad1124670
+binomial_sf_f	1	5	0.001	0x3ee4edfad1120000
+binomial_sf_r	1	5	0.001	0x3fefffeb12052eee
+binomial_pdf	2	5	0.001	0x3ee4e89e7ce7ac61
+binomial_cdf_f	2	5	0.001	0x3feffffffaa3abd6
+binomial_cdf_r	2	5	0.001	0x3e457150aa683a38
+binomial_sf_f	2	5	0.001	0x3e457150a8000000
+binomial_sf_r	2	5	0.001	0x3feffffffaa3abd5
+binomial_pdf	4	5	0.001	0x3d95f7deba97bc61
+binomial_cdf_f	4	5	0.001	0x3feffffffffffff8
+binomial_cdf_r	4	5	0.001	0x3cd203af9ee7562c
+binomial_sf_f	4	5	0.001	0x3cd0000000000000
+binomial_sf_r	4	5	0.001	0x3feffffffffffff7
+binomial_pdf	5	5	0.001	0x3cd203af9ee7562c
+binomial_cdf_f	5	5	0.001	0x3ff0000000000000
+binomial_cdf_r	5	5	0.001	0x0000000000000000
+binomial_sf_f	5	5	0.001	0x0000000000000000
+binomial_sf_r	5	5	0.001	0x3ff0000000000000
+binomial_pdf	0	5	0.1	0x3fe2e54b48d3ae6a
+binomial_cdf_f	0	5	0.1	0x3fe2e54b48d3ae6a
+binomial_cdf_r	0	5	0.1	0x3fda35696e58a331
+binomial_sf_f	0	5	0.1	0x3fda35696e58a32c
+binomial_sf_r	0	5	0.1	0x3fe2e54b48d3ae68
+binomial_pdf	1	5	0.1	0x3fd4fec56d5cfaae
+binomial_cdf_f	1	5	0.1	0x3fed64adff822bc2
+binomial_cdf_r	1	5	0.1	0x3fb4da9003eea20b
+binomial_sf_f	1	5	0.1	0x3fb4da9003eea1f0
+binomial_sf_r	1	5	0.1	0x3fed64adff822bbf
+binomial_pdf	2	5	0.1	0x3fb2a9930be0ded4
+binomial_cdf_f	2	5	0.1	0x3fefb9e060fe479d
+binomial_cdf_r	2	5	0.1	0x3f8187e7c06e19b5
+binomial_sf_f	2	5	0.1	0x3f8187e7c06e18c0
+binomial_sf_r	2	5	0.1	0x3fefb9e060fe4799
+binomial_pdf	4	5	0.1	0x3f3d7dbf487fcb8b
+binomial_cdf_f	4	5	0.1	0x3fefffeb074a7720
+binomial_cdf_r	4	5	0.1	0x3ee4f8b588e368ea
+binomial_sf_f	4	5	0.1	0x3ee4f8b588e00000
+binomial_sf_r	4	5	0.1	0x3fefffeb074a771d
+binomial_pdf	5	5	0.1	0x3ee4f8b588e368ea
+binomial_cdf_f	5	5	0.1	0x3ff0000000000000
+binomial_cdf_r	5	5	0.1	0x0000000000000000
+binomial_sf_f	5	5	0.1	0x0000000000000000
+binomial_sf_r	5	5	0.1	0x3ff0000000000000
+binomial_pdf	0	5	0.5	0x3fa0000000000000
+binomial_cdf_f	0	5	0.5	0x3fa0000000000000
+binomial_cdf_r	0	5	0.5	0x3fef000000000000
+binomial_sf_f	0	5	0.5	0x3fef000000000000
+binomial_sf_r	0	5	0.5	0x3fa0000000000000
+binomial_pdf	1	5	0.5	0x3fc4000000000000
+binomial_cdf_f	1	5	0.5	0x3fc8000000000000
+binomial_cdf_r	1	5	0.5	0x3fea000000000000
+binomial_sf_f	1	5	0.5	0x3fea000000000000
+binomial_sf_r	1	5	0.5	0x3fc8000000000000
+binomial_pdf	2	5	0.5	0x3fd4000000000000
+binomial_cdf_f	2	5	0.5	0x3fe0000000000000
+binomial_cdf_r	2	5	0.5	0x3fe0000000000000
+binomial_sf_f	2	5	0.5	0x3fe0000000000000
+binomial_sf_r	2	5	0.5	0x3fe0000000000000
+binomial_pdf	4	5	0.5	0x3fc4000000000000
+binomial_cdf_f	4	5	0.5	0x3fef000000000000
+binomial_cdf_r	4	5	0.5	0x3fa0000000000000
+binomial_sf_f	4	5	0.5	0x3fa0000000000000
+binomial_sf_r	4	5	0.5	0x3fef000000000000
+binomial_pdf	5	5	0.5	0x3fa0000000000000
+binomial_cdf_f	5	5	0.5	0x3ff0000000000000
+binomial_cdf_r	5	5	0.5	0x0000000000000000
+binomial_sf_f	5	5	0.5	0x0000000000000000
+binomial_sf_r	5	5	0.5	0x3ff0000000000000
+binomial_pdf	0	5	0.9	0x3ee4f8b588e368ea
+binomial_cdf_f	0	5	0.9	0x3ee4f8b588e368ea
+binomial_cdf_r	0	5	0.9	0x3fefffeb074a771c
+binomial_sf_f	0	5	0.9	0x3fefffeb074a771d
+binomial_sf_r	0	5	0.9	0x3ee4f8b588e40000
+binomial_pdf	1	5	0.9	0x3f3d7dbf487fcb8b
+binomial_cdf_f	1	5	0.9	0x3f3e2584f4c6e6d2
+binomial_cdf_r	1	5	0.9	0x3feffc3b4f616722
+binomial_sf_f	1	5	0.9	0x3feffc3b4f616723
+binomial_sf_r	1	5	0.9	0x3f3e2584f4c6f000
+binomial_pdf	2	5	0.9	0x3f8096bb98c7e27f
+binomial_cdf_f	2	5	0.9	0x3f8187e7c06e19b5
+binomial_cdf_r	2	5	0.9	0x3fefb9e060fe4798
+binomial_sf_f	2	5	0.9	0x3fefb9e060fe4799
+binomial_sf_r	2	5	0.9	0x3f8187e7c06e1a00
+binomial_pdf	4	5	0.9	0x3fd4fec56d5cfaac
+binomial_cdf_f	4	5	0.9	0x3fda35696e58a32e
+binomial_cdf_r	4	5	0.9	0x3fe2e54b48d3ae6a
+binomial_sf_f	4	5	0.9	0x3fe2e54b48d3ae69
+binomial_sf_r	4	5	0.9	0x3fda35696e58a32c
+binomial_pdf	5	5	0.9	0x3fe2e54b48d3ae6a
+binomial_cdf_f	5	5	0.9	0x3fefffffffffffff
+binomial_cdf_r	5	5	0.9	0x0000000000000000
+binomial_sf_f	5	5	0.9	0x3ca0000000000000
+binomial_sf_r	5	5	0.9	0x3ff0000000000000
+binomial_pdf	0	5	0.999	0x3cd203af9ee7562c
+binomial_cdf_f	0	5	0.999	0x3cd203af9ee7562c
+binomial_cdf_r	0	5	0.999	0x3feffffffffffff7
+binomial_sf_f	0	5	0.999	0x3feffffffffffff7
+binomial_sf_r	0	5	0.999	0x3cd2000000000000
+binomial_pdf	1	5	0.999	0x3d95f7deba97bc61
+binomial_cdf_f	1	5	0.999	0x3d95f8fef591aad6
+binomial_cdf_r	1	5	0.999	0x3fefffffffff5038
+binomial_sf_f	1	5	0.999	0x3fefffffffff5038
+binomial_sf_r	1	5	0.999	0x3d95f90000000000
+binomial_pdf	2	5	0.999	0x3e456e918a898802
+binomial_cdf_f	2	5	0.999	0x3e457150aa683a38
+binomial_cdf_r	2	5	0.999	0x3feffffffaa3abd6
+binomial_sf_f	2	5	0.999	0x3feffffffaa3abd5
+binomial_sf_r	2	5	0.999	0x3e457150a8000000
+binomial_pdf	4	5	0.999	0x3f7465f09e5b0470
+binomial_cdf_f	4	5	0.999	0x3f7470679bc38d93
+binomial_cdf_r	4	5	0.999	0x3fefd71f30c878e5
+binomial_sf_f	4	5	0.999	0x3fefd71f30c878e5
+binomial_sf_r	4	5	0.999	0x3f7470679bc38d80
+binomial_pdf	5	5	0.999	0x3fefd71f30c878e5
+binomial_cdf_f	5	5	0.999	0x3ff0000000000000
+binomial_cdf_r	5	5	0.999	0x0000000000000000
+binomial_sf_f	5	5	0.999	0x0000000000000000
+binomial_sf_r	5	5	0.999	0x3ff0000000000000
+binomial_pdf	0	10	1e-08	0x3fefffffca501aef
+binomial_cdf_f	0	10	1e-08	0x3fefffffca501aef
+binomial_cdf_r	0	10	1e-08	0x3e7ad7f2867889bb
+binomial_sf_f	0	10	1e-08	0x3e7ad7f288800000
+binomial_sf_r	0	10	1e-08	0x3fefffffca501af3
+binomial_skipped	1	10	1e-08	F11
+binomial_skipped	2	10	1e-08	F11
+binomial_skipped	5	10	1e-08	F11
+binomial_skipped	9	10	1e-08	F11
+binomial_skipped	10	10	1e-08	F11
+binomial_pdf	0	10	1e-06	0x3fefffeb0750a664
+binomial_cdf_f	0	10	1e-06	0x3fefffeb0750a664
+binomial_cdf_r	0	10	1e-06	0x3ee4f8af59988637
+binomial_sf_f	0	10	1e-06	0x3ee4f8af599c0000
+binomial_sf_r	0	10	1e-06	0x3fefffeb0750a667
+binomial_skipped	1	10	1e-06	F11
+binomial_skipped	2	10	1e-06	F11
+binomial_skipped	5	10	1e-06	F11
+binomial_skipped	9	10	1e-06	F11
+binomial_skipped	10	10	1e-06	F11
+binomial_pdf	0	10	0.001	0x3fefae7299c256e3
+binomial_cdf_f	0	10	0.001	0x3fefae7299c256e3
+binomial_cdf_r	0	10	0.001	0x3f8463598f6a474f
+binomial_sf_f	0	10	0.001	0x3f8463598f6a4740
+binomial_sf_r	0	10	0.001	0x3fefae7299c256e3
+binomial_pdf	1	10	0.001	0x3f844be1e3e9ec53
+binomial_cdf_f	1	10	0.001	0x3fefffa22151fe94
+binomial_cdf_r	1	10	0.001	0x3f0777ab805afb9f
+binomial_sf_f	1	10	0.001	0x3f0777ab805b0000
+binomial_sf_r	1	10	0.001	0x3fefffa22151fe94
+binomial_pdf	2	10	0.001	0x3f0767a5ed733a09
+binomial_cdf_f	2	10	0.001	0x3fefffffbfe9b461
+binomial_cdf_r	2	10	0.001	0x3e800592e7c19630
+binomial_sf_f	2	10	0.001	0x3e800592e7c00000
+binomial_sf_r	2	10	0.001	0x3fefffffbfe9b461
+binomial_pdf	5	10	0.001	0x3d51a4f9c318911e
+binomial_cdf_f	5	10	0.001	0x3feffffffffffffe
+binomial_cdf_r	5	10	0.001	0x3cae291aa292f23d
+binomial_sf_f	5	10	0.001	0x3cb0000000000000
+binomial_sf_r	5	10	0.001	0x3feffffffffffffe
+binomial_pdf	9	10	0.001	0x3a88bbea2cef21a1
+binomial_cdf_f	9	10	0.001	0x3ff0000000000000
+binomial_cdf_r	9	10	0.001	0x39b4484bfeebc2d2
+binomial_sf_f	9	10	0.001	0x0000000000000000
+binomial_sf_r	9	10	0.001	0x3ff0000000000000
+binomial_pdf	10	10	0.001	0x39b4484bfeebc2d2
+binomial_cdf_f	10	10	0.001	0x3ff0000000000000
+binomial_cdf_r	10	10	0.001	0x0000000000000000
+binomial_sf_f	10	10	0.001	0x0000000000000000
+binomial_sf_r	10	10	0.001	0x3ff0000000000000
+binomial_pdf	0	10	0.1	0x3fd650bf60432fda
+binomial_cdf_f	0	10	0.1	0x3fd650bf60432fda
+binomial_cdf_r	0	10	0.1	0x3fe4d7a04fde6816
+binomial_sf_f	0	10	0.1	0x3fe4d7a04fde6813
+binomial_sf_r	0	10	0.1	0x3fd650bf60432fd4
+binomial_pdf	1	10	0.1	0x3fd8cb7f4e838a80
+binomial_cdf_f	1	10	0.1	0x3fe78e1f57635d2c
+binomial_cdf_r	1	10	0.1	0x3fd0e3c1513945ae
+binomial_sf_f	1	10	0.1	0x3fd0e3c1513945a8
+binomial_sf_r	1	10	0.1	0x3fe78e1f57635d29
+binomial_pdf	2	10	0.1	0x3fc8cb7f4e838a80
+binomial_cdf_f	2	10	0.1	0x3fedc0ff2b043fcc
+binomial_cdf_r	2	10	0.1	0x3fb1f806a7de01b3
+binomial_sf_f	2	10	0.1	0x3fb1f806a7de01a0
+binomial_sf_r	2	10	0.1	0x3fedc0ff2b043fca
+binomial_pdf	5	10	0.1	0x3f5861453348a957
+binomial_cdf_f	5	10	0.1	0x3feffecbec4464cc
+binomial_cdf_r	5	10	0.1	0x3f23413bb9b37832
+binomial_sf_f	5	10	0.1	0x3f23413bb9b34000
+binomial_sf_r	5	10	0.1	0x3feffecbec4464c8
+binomial_pdf	9	10	0.1	0x3e4353cd652bb15d
+binomial_cdf_f	9	10	0.1	0x3feffffffff24192
+binomial_cdf_r	9	10	0.1	0x3ddb7cdfd9d7bda9
+binomial_sf_f	9	10	0.1	0x3ddb7cdc00000000
+binomial_sf_r	9	10	0.1	0x3feffffffff24190
+binomial_pdf	10	10	0.1	0x3ddb7cdfd9d7bda9
+binomial_cdf_f	10	10	0.1	0x3ff0000000000000
+binomial_cdf_r	10	10	0.1	0x0000000000000000
+binomial_sf_f	10	10	0.1	0x0000000000000000
+binomial_sf_r	10	10	0.1	0x3ff0000000000000
+binomial_pdf	0	10	0.5	0x3f50000000000000
+binomial_cdf_f	0	10	0.5	0x3f50000000000000
+binomial_cdf_r	0	10	0.5	0x3feff80000000000
+binomial_sf_f	0	10	0.5	0x3feff80000000000
+binomial_sf_r	0	10	0.5	0x3f50000000000000
+binomial_pdf	1	10	0.5	0x3f84000000000000
+binomial_cdf_f	1	10	0.5	0x3f86000000000000
+binomial_cdf_r	1	10	0.5	0x3fefa80000000000
+binomial_sf_f	1	10	0.5	0x3fefa80000000000
+binomial_sf_r	1	10	0.5	0x3f86000000000000
+binomial_pdf	2	10	0.5	0x3fa6800000000000
+binomial_cdf_f	2	10	0.5	0x3fac000000000000
+binomial_cdf_r	2	10	0.5	0x3fee400000000000
+binomial_sf_f	2	10	0.5	0x3fee400000000000
+binomial_sf_r	2	10	0.5	0x3fac000000000000
+binomial_pdf	5	10	0.5	0x3fcf800000000000
+binomial_cdf_f	5	10	0.5	0x3fe3f00000000000
+binomial_cdf_r	5	10	0.5	0x3fd8200000000000
+binomial_sf_f	5	10	0.5	0x3fd8200000000000
+binomial_sf_r	5	10	0.5	0x3fe3f00000000000
+binomial_pdf	9	10	0.5	0x3f84000000000000
+binomial_cdf_f	9	10	0.5	0x3feff80000000000
+binomial_cdf_r	9	10	0.5	0x3f50000000000000
+binomial_sf_f	9	10	0.5	0x3f50000000000000
+binomial_sf_r	9	10	0.5	0x3feff80000000000
+binomial_pdf	10	10	0.5	0x3f50000000000000
+binomial_cdf_f	10	10	0.5	0x3ff0000000000000
+binomial_cdf_r	10	10	0.5	0x0000000000000000
+binomial_sf_f	10	10	0.5	0x0000000000000000
+binomial_sf_r	10	10	0.5	0x3ff0000000000000
+binomial_pdf	0	10	0.9	0x3ddb7cdfd9d7bda9
+binomial_cdf_f	0	10	0.9	0x3ddb7cdfd9d7bda9
+binomial_cdf_r	0	10	0.9	0x3feffffffff2418e
+binomial_sf_f	0	10	0.9	0x3feffffffff24190
+binomial_sf_r	0	10	0.9	0x3ddb7ce400000000
+binomial_pdf	1	10	0.9	0x3e4353cd652bb15d
+binomial_cdf_f	1	10	0.9	0x3e438ac724df60d8
+binomial_cdf_r	1	10	0.9	0x3feffffffb1d4e35
+binomial_sf_f	1	10	0.9	0x3feffffffb1d4e37
+binomial_sf_r	1	10	0.9	0x3e438ac72c000000
+binomial_pdf	2	10	0.9	0x3e98760ff40b4c79
+binomial_cdf_f	2	10	0.9	0x3e9912662d324780
+binomial_cdf_r	2	10	0.9	0x3fefffff376cce95
+binomial_sf_f	2	10	0.9	0x3fefffff376cce96
+binomial_sf_r	2	10	0.9	0x3e9912662d600000
+binomial_pdf	5	10	0.9	0x3f5861453348a94a
+binomial_cdf_f	5	10	0.9	0x3f5ac96caa7f1851
+binomial_cdf_r	5	10	0.9	0x3feff29b49aac073
+binomial_sf_f	5	10	0.9	0x3feff29b49aac074
+binomial_sf_r	5	10	0.9	0x3f5ac96caa7f1a00
+binomial_pdf	9	10	0.9	0x3fd8cb7f4e838a7d
+binomial_cdf_f	9	10	0.9	0x3fe4d7a04fde6812
+binomial_cdf_r	9	10	0.9	0x3fd650bf60432fda
+binomial_sf_f	9	10	0.9	0x3fd650bf60432fdc
+binomial_sf_r	9	10	0.9	0x3fe4d7a04fde6813
+binomial_pdf	10	10	0.9	0x3fd650bf60432fda
+binomial_cdf_f	10	10	0.9	0x3feffffffffffffe
+binomial_cdf_r	10	10	0.9	0x0000000000000000
+binomial_sf_f	10	10	0.9	0x3cb0000000000000
+binomial_sf_r	10	10	0.9	0x3ff0000000000000
+binomial_pdf	0	10	0.999	0x39b4484bfeebc2d2
+binomial_cdf_f	0	10	0.999	0x39b4484bfeebc2d2
+binomial_cdf_r	0	10	0.999	0x3ff0000000000000
+binomial_sf_f	0	10	0.999	0x3ff0000000000000
+binomial_sf_r	0	10	0.999	0x0000000000000000
+binomial_pdf	1	10	0.999	0x3a88bbea2cef21a1
+binomial_cdf_f	1	10	0.999	0x3a88bc8c6f4f18ff
+binomial_cdf_r	1	10	0.999	0x3ff0000000000000
+binomial_sf_f	1	10	0.999	0x3ff0000000000000
+binomial_sf_r	1	10	0.999	0x0000000000000000
+binomial_pdf	2	10	0.999	0x3b4b257e2c011467
+binomial_cdf_f	2	10	0.999	0x3b4b2709f4c80958
+binomial_cdf_r	2	10	0.999	0x3ff0000000000000
+binomial_sf_f	2	10	0.999	0x3ff0000000000000
+binomial_sf_r	2	10	0.999	0x0000000000000000
+binomial_pdf	5	10	0.999	0x3d51a4f9c3189134
+binomial_cdf_f	5	10	0.999	0x3d51a8bee66ce392
+binomial_cdf_r	5	10	0.999	0x3feffffffffff72c
+binomial_sf_f	5	10	0.999	0x3feffffffffff72c
+binomial_sf_r	5	10	0.999	0x3d51a80000000000
+binomial_pdf	9	10	0.999	0x3f844be1e3e9ec58
+binomial_cdf_f	9	10	0.999	0x3f8463598f6a4754
+binomial_cdf_r	9	10	0.999	0x3fefae7299c256e3
+binomial_sf_f	9	10	0.999	0x3fefae7299c256e3
+binomial_sf_r	9	10	0.999	0x3f8463598f6a4740
+binomial_pdf	10	10	0.999	0x3fefae7299c256e3
+binomial_cdf_f	10	10	0.999	0x3ff0000000000000
+binomial_cdf_r	10	10	0.999	0x0000000000000000
+binomial_sf_f	10	10	0.999	0x0000000000000000
+binomial_sf_r	10	10	0.999	0x3ff0000000000000
+binomial_pdf	0	50	1e-08	0x3feffffef3908a2f
+binomial_cdf_f	0	50	1e-08	0x3feffffef3908a2f
+binomial_cdf_r	0	50	1e-08	0x3ea0c6f75bbfd1ee
+binomial_sf_f	0	50	1e-08	0x3ea0c6f75d100000
+binomial_sf_r	0	50	1e-08	0x3feffffef3908a44
+binomial_skipped	1	50	1e-08	F11
+binomial_skipped	12	50	1e-08	F11
+binomial_skipped	25	50	1e-08	F11
+binomial_skipped	49	50	1e-08	F11
+binomial_skipped	50	50	1e-08	F11
+binomial_pdf	0	50	1e-06	0x3fefff97251cafa9
+binomial_cdf_f	0	50	1e-06	0x3fefff97251cafa9
+binomial_cdf_r	0	50	1e-06	0x3f0a36b8d411a00e
+binomial_sf_f	0	50	1e-06	0x3f0a36b8d415c000
+binomial_sf_r	0	50	1e-06	0x3fefff97251cafb9
+binomial_skipped	1	50	1e-06	F11
+binomial_skipped	12	50	1e-06	F11
+binomial_skipped	25	50	1e-06	F11
+binomial_skipped	49	50	1e-06	F11
+binomial_skipped	50	50	1e-06	F11
+binomial_pdf	0	50	0.001	0x3fee7046c91c138b
+binomial_cdf_f	0	50	0.001	0x3fee7046c91c138b
+binomial_cdf_r	0	50	0.001	0x3fa8fb936e3ec761
+binomial_sf_f	0	50	0.001	0x3fa8fb936e3ec750
+binomial_sf_r	0	50	0.001	0x3fee7046c91c138a
+binomial_pdf	1	50	0.001	0x3fa8600faf2493df
+binomial_cdf_f	1	50	0.001	0x3feff647c40e5cc9
+binomial_cdf_r	1	50	0.001	0x3f537077e3467032
+binomial_sf_f	1	50	0.001	0x3f537077e3466e00
+binomial_sf_r	1	50	0.001	0x3feff647c40e5cc8
+binomial_pdf	12	50	0.001	0x3ac215baa5e5bc3e
+binomial_cdf_f	12	50	0.001	0x3ff0000000000000
+binomial_cdf_r	12	50	0.001	0x3a3b2a40ae67e586
+binomial_sf_f	12	50	0.001	0x0000000000000000
+binomial_sf_r	12	50	0.001	0x3ff0000000000000
+binomial_pdf	25	50	0.001	0x33495bde9e9698a6
+binomial_cdf_f	25	50	0.001	0x3ff0000000000000
+binomial_cdf_r	25	50	0.001	0x32a9041746a7619b
+binomial_sf_f	25	50	0.001	0x0000000000000000
+binomial_sf_r	25	50	0.001	0x3ff0000000000000
+binomial_pdf	49	50	0.001	0x21c3f58ee30ce281
+binomial_cdf_f	49	50	0.001	0x3ff0000000000000
+binomial_cdf_r	49	50	0.001	0x20ca2fe76a3f95bb
+binomial_sf_f	49	50	0.001	0x0000000000000000
+binomial_sf_r	49	50	0.001	0x3ff0000000000000
+binomial_pdf	50	50	0.001	0x20ca2fe76a3f95bb
+binomial_cdf_f	50	50	0.001	0x3ff0000000000000
+binomial_cdf_r	50	50	0.001	0x0000000000000000
+binomial_sf_f	50	50	0.001	0x0000000000000000
+binomial_sf_r	50	50	0.001	0x3ff0000000000000
+binomial_pdf	0	50	0.1	0x3f751c1fff764631
+binomial_cdf_f	0	50	0.1	0x3f751c1fff764631
+binomial_cdf_r	0	50	0.1	0x3fefd5c7c0011381
+binomial_sf_f	0	50	0.1	0x3fefd5c7c0011374
+binomial_sf_r	0	50	0.1	0x3f751c1fff763f80
+binomial_pdf	1	50	0.1	0x3f9d51baa9eb6177
+binomial_cdf_f	1	50	0.1	0x3fa14c6154e47981
+binomial_cdf_r	1	50	0.1	0x3feeeb39eab1b875
+binomial_sf_f	1	50	0.1	0x3feeeb39eab1b868
+binomial_sf_r	1	50	0.1	0x3fa14c6154e478b0
+binomial_pdf	12	50	0.1	0x3f6225d2d0bda0c0
+binomial_cdf_f	12	50	0.1	0x3feff7c528d18f21
+binomial_cdf_r	12	50	0.1	0x3f5075ae5ce1d7b2
+binomial_sf_f	12	50	0.1	0x3f5075ae5ce1be00
+binomial_sf_r	12	50	0.1	0x3feff7c528d18f14
+binomial_pdf	25	50	0.1	0x3d6fee06af92a24d
+binomial_cdf_f	25	50	0.1	0x3feffffffffffc45
+binomial_cdf_r	25	50	0.1	0x3d3e411633ca7b35
+binomial_sf_f	25	50	0.1	0x3d3dd80000000000
+binomial_sf_r	25	50	0.1	0x3feffffffffffc38
+binomial_pdf	49	50	0.1	0x361a4e997bc4f585
+binomial_cdf_f	49	50	0.1	0x3ff0000000000000
+binomial_cdf_r	49	50	0.1	0x358dee7a4ad4b7be
+binomial_sf_f	49	50	0.1	0x0000000000000000
+binomial_sf_r	49	50	0.1	0x3ff0000000000000
+binomial_pdf	50	50	0.1	0x358dee7a4ad4b7be
+binomial_cdf_f	50	50	0.1	0x3ff0000000000000
+binomial_cdf_r	50	50	0.1	0x0000000000000000
+binomial_sf_f	50	50	0.1	0x0000000000000000
+binomial_sf_r	50	50	0.1	0x3ff0000000000000
+binomial_pdf	0	50	0.5	0x3cd0000000000000
+binomial_cdf_f	0	50	0.5	0x3cd0000000000000
+binomial_cdf_r	0	50	0.5	0x3feffffffffffff9
+binomial_sf_f	0	50	0.5	0x3feffffffffffff8
+binomial_sf_r	0	50	0.5	0x3ccc000000000000
+binomial_pdf	1	50	0.5	0x3d29000000000000
+binomial_cdf_f	1	50	0.5	0x3d29800000000000
+binomial_cdf_r	1	50	0.5	0x3feffffffffffe69
+binomial_sf_f	1	50	0.5	0x3feffffffffffe68
+binomial_sf_r	1	50	0.5	0x3d29700000000000
+binomial_pdf	12	50	0.5	0x3f1c43fbab1bfffe
+binomial_cdf_f	12	50	0.5	0x3f240b8be247ffff
+binomial_cdf_r	12	50	0.5	0x3feffebf4741db81
+binomial_sf_f	12	50	0.5	0x3feffebf4741db80
+binomial_sf_r	12	50	0.5	0x3f240b8be247f000
+binomial_pdf	25	50	0.5	0x3fbcbe10d2b95e02
+binomial_cdf_f	25	50	0.5	0x3fe1cbe10d2b95e1
+binomial_cdf_r	25	50	0.5	0x3fdc683de5a8d441
+binomial_sf_f	25	50	0.5	0x3fdc683de5a8d43e
+binomial_sf_r	25	50	0.5	0x3fe1cbe10d2b95e0
+binomial_pdf	49	50	0.5	0x3d29000000000000
+binomial_cdf_f	49	50	0.5	0x3feffffffffffff9
+binomial_cdf_r	49	50	0.5	0x3cd0000000000000
+binomial_sf_f	49	50	0.5	0x3ccc000000000000
+binomial_sf_r	49	50	0.5	0x3feffffffffffff8
+binomial_pdf	50	50	0.5	0x3cd0000000000000
+binomial_cdf_f	50	50	0.5	0x3ff0000000000000
+binomial_cdf_r	50	50	0.5	0x0000000000000000
+binomial_sf_f	50	50	0.5	0x0000000000000000
+binomial_sf_r	50	50	0.5	0x3ff0000000000000
+binomial_pdf	0	50	0.9	0x358dee7a4ad4b7be
+binomial_cdf_f	0	50	0.9	0x358dee7a4ad4b7be
+binomial_cdf_r	0	50	0.9	0x3ff0000000000000
+binomial_sf_f	0	50	0.9	0x3ff0000000000000
+binomial_sf_r	0	50	0.9	0x0000000000000000
+binomial_pdf	1	50	0.9	0x361a4e997bc4f585
+binomial_cdf_f	1	50	0.9	0x361a5d90b8ea5fe1
+binomial_cdf_r	1	50	0.9	0x3ff0000000000000
+binomial_sf_f	1	50	0.9	0x3ff0000000000000
+binomial_sf_r	1	50	0.9	0x0000000000000000
+binomial_pdf	12	50	0.9	0x3a3b2a32e3b5babb
+binomial_cdf_f	12	50	0.9	0x3a3c1f6a5966c4ca
+binomial_cdf_r	12	50	0.9	0x3ff0000000000000
+binomial_sf_f	12	50	0.9	0x3ff0000000000000
+binomial_sf_r	12	50	0.9	0x0000000000000000
+binomial_pdf	25	50	0.9	0x3d6fee06af92a211
+binomial_cdf_f	25	50	0.9	0x3d71db14bb05f8bb
+binomial_cdf_r	25	50	0.9	0x3fefffffffffdc4c
+binomial_sf_f	25	50	0.9	0x3fefffffffffdc4a
+binomial_sf_r	25	50	0.9	0x3d71da0000000000
+binomial_pdf	49	50	0.9	0x3f9d51baa9eb6177
+binomial_cdf_f	49	50	0.9	0x3fefd5c7c0011376
+binomial_cdf_r	49	50	0.9	0x3f751c1fff764631
+binomial_sf_f	49	50	0.9	0x3f751c1fff764500
+binomial_sf_r	49	50	0.9	0x3fefd5c7c0011374
+binomial_pdf	50	50	0.9	0x3f751c1fff764631
+binomial_cdf_f	50	50	0.9	0x3ff0000000000000
+binomial_cdf_r	50	50	0.9	0x0000000000000000
+binomial_sf_f	50	50	0.9	0x0000000000000000
+binomial_sf_r	50	50	0.9	0x3ff0000000000000
+binomial_pdf	0	50	0.999	0x20ca2fe76a3f95bb
+binomial_cdf_f	0	50	0.999	0x20ca2fe76a3f95bb
+binomial_cdf_r	0	50	0.999	0x3fefffffffffffff
+binomial_sf_f	0	50	0.999	0x3ff0000000000000
+binomial_sf_r	0	50	0.999	0x3ca0000000000000
+binomial_pdf	1	50	0.999	0x21c3f58ee30ce281
+binomial_cdf_f	1	50	0.999	0x21c3f5a912f44cc1
+binomial_cdf_r	1	50	0.999	0x3fefffffffffffff
+binomial_sf_f	1	50	0.999	0x3ff0000000000000
+binomial_sf_r	1	50	0.999	0x3ca0000000000000
+binomial_pdf	12	50	0.999	0x2a9131b6a1c1a50b
+binomial_cdf_f	12	50	0.999	0x2a913311cb4819a0
+binomial_cdf_r	12	50	0.999	0x3fefffffffffffff
+binomial_sf_f	12	50	0.999	0x3ff0000000000000
+binomial_sf_r	12	50	0.999	0x3ca0000000000000
+binomial_pdf	25	50	0.999	0x33495bde9e96993f
+binomial_cdf_f	25	50	0.999	0x3349621fa4684318
+binomial_cdf_r	25	50	0.999	0x3fefffffffffffff
+binomial_sf_f	25	50	0.999	0x3ff0000000000000
+binomial_sf_r	25	50	0.999	0x3ca0000000000000
+binomial_pdf	49	50	0.999	0x3fa8600faf2493e5
+binomial_cdf_f	49	50	0.999	0x3fa8fb936e3ec767
+binomial_cdf_r	49	50	0.999	0x3fee7046c91c138b
+binomial_sf_f	49	50	0.999	0x3fee7046c91c138a
+binomial_sf_r	49	50	0.999	0x3fa8fb936e3ec750
+binomial_pdf	50	50	0.999	0x3fee7046c91c138b
+binomial_cdf_f	50	50	0.999	0x3fefffffffffffff
+binomial_cdf_r	50	50	0.999	0x0000000000000000
+binomial_sf_f	50	50	0.999	0x3ca0000000000000
+binomial_sf_r	50	50	0.999	0x3ff0000000000000
+binomial_pdf	0	100	1e-08	0x3feffffde7211d28
+binomial_cdf_f	0	100	1e-08	0x3feffffde7211d28
+binomial_cdf_r	0	100	1e-08	0x3eb0c6f715616e1f
+binomial_sf_f	0	100	1e-08	0x3eb0c6f716c00000
+binomial_sf_r	0	100	1e-08	0x3feffffde7211d54
+binomial_skipped	1	100	1e-08	F11
+binomial_skipped	25	100	1e-08	F11
+binomial_skipped	50	100	1e-08	F11
+binomial_skipped	99	100	1e-08	F11
+binomial_skipped	100	100	1e-08	F11
+binomial_pdf	0	100	1e-06	0x3fefff2e4b90f3f2
+binomial_cdf_f	0	100	1e-06	0x3fefff2e4b90f3f2
+binomial_cdf_r	0	100	1e-06	0x3f1a368de17dc6dd
+binomial_sf_f	0	100	1e-06	0x3f1a368de181c000
+binomial_sf_r	0	100	1e-06	0x3fefff2e4b90f412
+binomial_skipped	1	100	1e-06	F11
+binomial_skipped	25	100	1e-06	F11
+binomial_skipped	50	100	1e-06	F11
+binomial_skipped	99	100	1e-06	F11
+binomial_skipped	100	100	1e-06	F11
+binomial_pdf	0	100	0.001	0x3fecf40ea930fdfb
+binomial_cdf_f	0	100	0.001	0x3fecf40ea930fdfb
+binomial_cdf_r	0	100	0.001	0x3fb85f8ab678104e
+binomial_sf_f	0	100	0.001	0x3fb85f8ab6781028
+binomial_sf_r	0	100	0.001	0x3fecf40ea930fdf6
+binomial_pdf	1	100	0.001	0x3fb72f94d66a5f3c
+binomial_cdf_f	1	100	0.001	0x3fefda0143fe49e3
+binomial_cdf_r	1	100	0.001	0x3f72ff5e00db113c
+binomial_sf_f	1	100	0.001	0x3f72ff5e00db0e80
+binomial_sf_r	1	100	0.001	0x3fefda0143fe49de
+binomial_pdf	25	100	0.001	0x35358cabbb55571b
+binomial_cdf_f	25	100	0.001	0x3ff0000000000000
+binomial_cdf_r	25	100	0.001	0x34aff249ce503511
+binomial_sf_f	25	100	0.001	0x0000000000000000
+binomial_sf_r	25	100	0.001	0x3ff0000000000000
+binomial_pdf	50	100	0.001	0x26cfb8621670d16e
+binomial_cdf_f	50	100	0.001	0x3ff0000000000000
+binomial_cdf_r	50	100	0.001	0x262fe817ab85b2da
+binomial_sf_f	50	100	0.001	0x0000000000000000
+binomial_sf_r	50	100	0.001	0x3ff0000000000000
+binomial_pdf	99	100	0.001	0x02b05565193c7c24
+binomial_cdf_f	99	100	0.001	0x3ff0000000000000
+binomial_cdf_r	99	100	0.001	0x01a56e1fc2f8f571
+binomial_sf_f	99	100	0.001	0x0000000000000000
+binomial_sf_r	99	100	0.001	0x3ff0000000000000
+binomial_pdf	100	100	0.001	0x01a56e1fc2f8f571
+binomial_cdf_f	100	100	0.001	0x3ff0000000000000
+binomial_cdf_r	100	100	0.001	0x0000000000000000
+binomial_sf_f	100	100	0.001	0x0000000000000000
+binomial_sf_r	100	100	0.001	0x3ff0000000000000
+binomial_pdf	0	100	0.1	0x3efbda056ed49410
+binomial_cdf_f	0	100	0.1	0x3efbda056ed49410
+binomial_cdf_r	0	100	0.1	0x3fefffc84bf5226f
+binomial_sf_f	0	100	0.1	0x3fefffc84bf52257
+binomial_sf_r	0	100	0.1	0x3efbda056ec88000
+binomial_pdf	1	100	0.1	0x3f33576754139fb6
+binomial_cdf_f	1	100	0.1	0x3f351507ab00e8f7
+binomial_cdf_r	1	100	0.1	0x3feffd5d5f0a9ffb
+binomial_sf_f	1	100	0.1	0x3feffd5d5f0a9fe3
+binomial_sf_r	1	100	0.1	0x3f351507ab002800
+binomial_pdf	25	100	0.1	0x3ee2d14e9eb7b57f
+binomial_cdf_f	25	100	0.1	0x3feffff766e44610
+binomial_cdf_r	25	100	0.1	0x3ed132377410d458
+binomial_sf_f	25	100	0.1	0x3ed1323773e00000
+binomial_sf_r	25	100	0.1	0x3feffff766e445f8
+binomial_pdf	50	100	0.1	0x3b1924eedbc93e79
+binomial_cdf_f	50	100	0.1	0x3ff0000000000000
+binomial_cdf_r	50	100	0.1	0x3ae8764010f6be98
+binomial_sf_f	50	100	0.1	0x0000000000000000
+binomial_sf_r	50	100	0.1	0x3ff0000000000000
+binomial_pdf	99	100	0.1	0x2bc89b4836e0d1f8
+binomial_cdf_f	99	100	0.1	0x3ff0000000000000
+binomial_cdf_r	99	100	0.1	0x2b2bff2ee48e047b
+binomial_sf_f	99	100	0.1	0x0000000000000000
+binomial_sf_r	99	100	0.1	0x3ff0000000000000
+binomial_pdf	100	100	0.1	0x2b2bff2ee48e047b
+binomial_cdf_f	100	100	0.1	0x3ff0000000000000
+binomial_cdf_r	100	100	0.1	0x0000000000000000
+binomial_sf_f	100	100	0.1	0x0000000000000000
+binomial_sf_r	100	100	0.1	0x3ff0000000000000
+binomial_pdf	0	100	0.5	0x39b0000000000000
+binomial_cdf_f	0	100	0.5	0x39b0000000000000
+binomial_cdf_r	0	100	0.5	0x3feffffffffffffd
+binomial_sf_f	0	100	0.5	0x3ff0000000000000
+binomial_sf_r	0	100	0.5	0x3cb8000000000000
+binomial_pdf	1	100	0.5	0x3a19000000000000
+binomial_cdf_f	1	100	0.5	0x3a19400000000000
+binomial_cdf_r	1	100	0.5	0x3feffffffffffffd
+binomial_sf_f	1	100	0.5	0x3ff0000000000000
+binomial_sf_r	1	100	0.5	0x3cb8000000000000
+binomial_pdf	25	100	0.5	0x3e89ad7f7b743e43
+binomial_cdf_f	25	100	0.5	0x3e92e98786dcced4
+binomial_cdf_r	25	100	0.5	0x3fefffff68b3c3c5
+binomial_sf_f	25	100	0.5	0x3fefffff68b3c3c9
+binomial_sf_r	25	100	0.5	0x3e92e98787600000
+binomial_pdf	50	100	0.5	0x3fb45ff5d3b10702
+binomial_cdf_f	50	100	0.5	0x3fe145ff5d3b106f
+binomial_cdf_r	50	100	0.5	0x3fdd74014589df26
+binomial_sf_f	50	100	0.5	0x3fdd74014589df22
+binomial_sf_r	50	100	0.5	0x3fe145ff5d3b106d
+binomial_pdf	99	100	0.5	0x3a19000000000000
+binomial_cdf_f	99	100	0.5	0x3feffffffffffffd
+binomial_cdf_r	99	100	0.5	0x39b0000000000000
+binomial_sf_f	99	100	0.5	0x3cb8000000000000
+binomial_sf_r	99	100	0.5	0x3ff0000000000000
+binomial_pdf	100	100	0.5	0x39b0000000000000
+binomial_cdf_f	100	100	0.5	0x3feffffffffffffd
+binomial_cdf_r	100	100	0.5	0x0000000000000000
+binomial_sf_f	100	100	0.5	0x3cb8000000000000
+binomial_sf_r	100	100	0.5	0x3ff0000000000000
+binomial_pdf	0	100	0.9	0x2b2bff2ee48e047b
+binomial_cdf_f	0	100	0.9	0x2b2bff2ee48e047b
+binomial_cdf_r	0	100	0.9	0x3ff0000000000000
+binomial_sf_f	0	100	0.9	0x3ff0000000000000
+binomial_sf_r	0	100	0.9	0x0000000000000000
+binomial_pdf	1	100	0.9	0x2bc89b4836e0d1f8
+binomial_cdf_f	1	100	0.9	0x2bc8a2480299f579
+binomial_cdf_r	1	100	0.9	0x3ff0000000000000
+binomial_sf_f	1	100	0.9	0x3ff0000000000000
+binomial_sf_r	1	100	0.9	0x0000000000000000
+binomial_pdf	25	100	0.9	0x34faae6e9816cc38
+binomial_cdf_f	25	100	0.9	0x34fbb1053f425a76
+binomial_cdf_r	25	100	0.9	0x3ff0000000000000
+binomial_sf_f	25	100	0.9	0x3ff0000000000000
+binomial_sf_r	25	100	0.9	0x0000000000000000
+binomial_pdf	50	100	0.9	0x3b1924eedbc93e22
+binomial_cdf_f	50	100	0.9	0x3b1c33b6dde815f5
+binomial_cdf_r	50	100	0.9	0x3ff0000000000000
+binomial_sf_f	50	100	0.9	0x3ff0000000000000
+binomial_sf_r	50	100	0.9	0x0000000000000000
+binomial_pdf	99	100	0.9	0x3f33576754139fb6
+binomial_cdf_f	99	100	0.9	0x3fefffc84bf5225f
+binomial_cdf_r	99	100	0.9	0x3efbda056ed49410
+binomial_sf_f	99	100	0.9	0x3efbda056ed08000
+binomial_sf_r	99	100	0.9	0x3fefffc84bf52257
+binomial_pdf	100	100	0.9	0x3efbda056ed49410
+binomial_cdf_f	100	100	0.9	0x3ff0000000000000
+binomial_cdf_r	100	100	0.9	0x0000000000000000
+binomial_sf_f	100	100	0.9	0x0000000000000000
+binomial_sf_r	100	100	0.9	0x3ff0000000000000
+binomial_pdf	0	100	0.999	0x01a56e1fc2f8f571
+binomial_cdf_f	0	100	0.999	0x01a56e1fc2f8f571
+binomial_cdf_r	0	100	0.999	0x3ff0000000000000
+binomial_sf_f	0	100	0.999	0x3ff0000000000000
+binomial_sf_r	0	100	0.999	0x0000000000000000
+binomial_pdf	1	100	0.999	0x02b05565193c7c24
+binomial_cdf_f	1	100	0.999	0x02b0556fd04c5da0
+binomial_cdf_r	1	100	0.999	0x3ff0000000000000
+binomial_sf_f	1	100	0.999	0x3ff0000000000000
+binomial_sf_r	1	100	0.999	0x0000000000000000
+binomial_pdf	25	100	0.999	0x16128a23b734f858
+binomial_cdf_f	25	100	0.999	0x16128bb3ea5dcdb5
+binomial_cdf_r	25	100	0.999	0x3ff0000000000000
+binomial_sf_f	25	100	0.999	0x3ff0000000000000
+binomial_sf_r	25	100	0.999	0x0000000000000000
+binomial_pdf	50	100	0.999	0x26cfb8621670d2ad
+binomial_cdf_f	50	100	0.999	0x26cfc05c1c5bb419
+binomial_cdf_r	50	100	0.999	0x3ff0000000000000
+binomial_sf_f	50	100	0.999	0x3ff0000000000000
+binomial_sf_r	50	100	0.999	0x0000000000000000
+binomial_pdf	99	100	0.999	0x3fb72f94d66a5f42
+binomial_cdf_f	99	100	0.999	0x3fb85f8ab6781056
+binomial_cdf_r	99	100	0.999	0x3fecf40ea930fdfb
+binomial_sf_f	99	100	0.999	0x3fecf40ea930fdf5
+binomial_sf_r	99	100	0.999	0x3fb85f8ab6781028
+binomial_pdf	100	100	0.999	0x3fecf40ea930fdfb
+binomial_cdf_f	100	100	0.999	0x3ff0000000000000
+binomial_cdf_r	100	100	0.999	0x0000000000000000
+binomial_sf_f	100	100	0.999	0x0000000000000000
+binomial_sf_r	100	100	0.999	0x3ff0000000000000
+binomial_pdf	0	1000	1e-08	0x3fefffeb075152ce
+binomial_cdf_f	0	1000	1e-08	0x3fefffeb075152ce
+binomial_cdf_r	0	1000	1e-08	0x3ee4f8aeab6f4ca1
+binomial_sf_f	0	1000	1e-08	0x3ee4f8aead320000
+binomial_sf_r	0	1000	1e-08	0x3fefffeb07515491
+binomial_skipped	1	1000	1e-08	F11
+binomial_skipped	250	1000	1e-08	F11
+binomial_skipped	500	1000	1e-08	F11
+binomial_skipped	999	1000	1e-08	F11
+binomial_skipped	1000	1000	1e-08	F11
+binomial_pdf	0	1000	1e-06	0x3feff7cfe52a72ea
+binomial_cdf_f	0	1000	1e-06	0x3feff7cfe52a72ea
+binomial_cdf_r	0	1000	1e-06	0x3f506035ab17fe96
+binomial_sf_f	0	1000	1e-06	0x3f506035ab1a2c00
+binomial_sf_r	0	1000	1e-06	0x3feff7cfe52a7401
+binomial_skipped	1	1000	1e-06	F11
+binomial_skipped	250	1000	1e-06	F11
+binomial_skipped	500	1000	1e-06	F11
+binomial_skipped	999	1000	1e-06	F11
+binomial_skipped	1000	1000	1e-06	F11
+binomial_pdf	0	1000	0.001	0x3fd788526411ed6e
+binomial_cdf_f	0	1000	0.001	0x3fd788526411ed6e
+binomial_cdf_r	0	1000	0.001	0x3fe43bd6cdf7093d
+binomial_sf_f	0	1000	0.001	0x3fe43bd6cdf70949
+binomial_sf_r	0	1000	0.001	0x3fd788526411ed86
+binomial_pdf	1	1000	0.001	0x3fd78e5a293b33e2
+binomial_cdf_f	1	1000	0.001	0x3fe78b5646a690a8
+binomial_cdf_r	1	1000	0.001	0x3fd0e95372b2de96
+binomial_sf_f	1	1000	0.001	0x3fd0e95372b2deb0
+binomial_sf_r	1	1000	0.001	0x3fe78b5646a690b5
+binomial_pdf	250	1000	0.001	0x00000000000001f3
+binomial_cdf_f	250	1000	0.001	0x3feffffffffffff3
+binomial_cdf_r	250	1000	0.001	0x00000000000001f4
+binomial_sf_f	250	1000	0.001	0x3cda000000000000
+binomial_sf_r	250	1000	0.001	0x3ff0000000000000
+binomial_pdf	500	1000	0.001	0x00000000000001f3
+binomial_cdf_f	500	1000	0.001	0x3feffffffffffff3
+binomial_cdf_r	500	1000	0.001	0x0000000000000000
+binomial_sf_f	500	1000	0.001	0x3cda000000000000
+binomial_sf_r	500	1000	0.001	0x3ff0000000000000
+binomial_pdf	999	1000	0.001	0x0000000000000000
+binomial_cdf_f	999	1000	0.001	0x3feffffffffffff3
+binomial_cdf_r	999	1000	0.001	0x0000000000000000
+binomial_sf_f	999	1000	0.001	0x3cda000000000000
+binomial_sf_r	999	1000	0.001	0x3ff0000000000000
+binomial_pdf	1000	1000	0.001	0x0000000000000000
+binomial_cdf_f	1000	1000	0.001	0x3feffffffffffff3
+binomial_cdf_r	1000	1000	0.001	0x0000000000000000
+binomial_sf_f	1000	1000	0.001	0x3cda000000000000
+binomial_sf_r	1000	1000	0.001	0x3ff0000000000000
+binomial_pdf	0	1000	0.1	0x366fee7413dac34b
+binomial_cdf_f	0	1000	0.1	0x366fee7413dac34b
+binomial_cdf_r	0	1000	0.1	0x3ff0000000000000
+binomial_sf_f	0	1000	0.1	0x3ff0000000000000
+binomial_sf_r	0	1000	0.1	0x0000000000000000
+binomial_pdf	1	1000	0.1	0x36dbb7e134ca57a9
+binomial_cdf_f	1	1000	0.1	0x36dbf7be1cf20d2f
+binomial_cdf_r	1	1000	0.1	0x3ff0000000000000
+binomial_sf_f	1	1000	0.1	0x3ff0000000000000
+binomial_sf_r	1	1000	0.1	0x0000000000000000
+binomial_pdf	250	1000	0.1	0x3749d9cf702ced80
+binomial_cdf_f	250	1000	0.1	0x3ff0000000000000
+binomial_cdf_r	250	1000	0.1	0x373998bfc34a506f
+binomial_sf_f	250	1000	0.1	0x0000000000000000
+binomial_sf_r	250	1000	0.1	0x3ff0000000000000
+binomial_pdf	500	1000	0.1	0x118a742e7fc4d541
+binomial_cdf_f	500	1000	0.1	0x3ff0000000000000
+binomial_cdf_r	500	1000	0.1	0x115a61346ac5a2a4
+binomial_sf_f	500	1000	0.1	0x0000000000000000
+binomial_sf_r	500	1000	0.1	0x3ff0000000000000
+binomial_pdf	999	1000	0.1	0x0000000000000000
+binomial_cdf_f	999	1000	0.1	0x3ff0000000000000
+binomial_cdf_r	999	1000	0.1	0x0000000000000000
+binomial_sf_f	999	1000	0.1	0x0000000000000000
+binomial_sf_r	999	1000	0.1	0x3ff0000000000000
+binomial_pdf	1000	1000	0.1	0x0000000000000000
+binomial_cdf_f	1000	1000	0.1	0x3ff0000000000000
+binomial_cdf_r	1000	1000	0.1	0x0000000000000000
+binomial_sf_f	1000	1000	0.1	0x0000000000000000
+binomial_sf_r	1000	1000	0.1	0x3ff0000000000000
+binomial_pdf	0	1000	0.5	0x0170000000000000
+binomial_cdf_f	0	1000	0.5	0x0170000000000000
+binomial_cdf_r	0	1000	0.5	0x3ff0000000000000
+binomial_sf_f	0	1000	0.5	0x3ff0000000000000
+binomial_sf_r	0	1000	0.5	0x0000000000000000
+binomial_pdf	1	1000	0.5	0x020f400000000000
+binomial_cdf_f	1	1000	0.5	0x020f480000000000
+binomial_cdf_r	1	1000	0.5	0x3ff0000000000000
+binomial_sf_f	1	1000	0.5	0x3ff0000000000000
+binomial_sf_r	1	1000	0.5	0x0000000000000000
+binomial_pdf	250	1000	0.5	0x33d214fdaf539c42
+binomial_cdf_f	250	1000	0.5	0x33db11c351d8228c
+binomial_cdf_r	250	1000	0.5	0x3ff0000000000000
+binomial_sf_f	250	1000	0.5	0x3ff0000000000000
+binomial_sf_r	250	1000	0.5	0x0000000000000000
+binomial_pdf	500	1000	0.5	0x3f99d4965077dff6
+binomial_cdf_f	500	1000	0.5	0x3fe067525941df88
+binomial_cdf_r	500	1000	0.5	0x3fdf315b4d7c40f4
+binomial_sf_f	500	1000	0.5	0x3fdf315b4d7c40f0
+binomial_sf_r	500	1000	0.5	0x3fe067525941df86
+binomial_pdf	999	1000	0.5	0x020f400000000000
+binomial_cdf_f	999	1000	0.5	0x3ff0000000000000
+binomial_cdf_r	999	1000	0.5	0x0170000000000000
+binomial_sf_f	999	1000	0.5	0x0000000000000000
+binomial_sf_r	999	1000	0.5	0x3ff0000000000000
+binomial_pdf	1000	1000	0.5	0x0170000000000000
+binomial_cdf_f	1000	1000	0.5	0x3ff0000000000000
+binomial_cdf_r	1000	1000	0.5	0x0000000000000000
+binomial_sf_f	1000	1000	0.5	0x0000000000000000
+binomial_sf_r	1000	1000	0.5	0x3ff0000000000000
+binomial_pdf	0	1000	0.9	0x0000000000000000
+binomial_cdf_f	0	1000	0.9	0x0000000000000000
+binomial_cdf_r	0	1000	0.9	0x3feffffffffffff6
+binomial_sf_f	0	1000	0.9	0x3ff0000000000000
+binomial_sf_r	0	1000	0.9	0x3cd4000000000000
+binomial_pdf	1	1000	0.9	0x0000000000000000
+binomial_cdf_f	1	1000	0.9	0x0000000000000000
+binomial_cdf_r	1	1000	0.9	0x3feffffffffffff6
+binomial_sf_f	1	1000	0.9	0x3ff0000000000000
+binomial_sf_r	1	1000	0.9	0x3cd4000000000000
+binomial_pdf	250	1000	0.9	0x0000000000000000
+binomial_cdf_f	250	1000	0.9	0x0000000000000000
+binomial_cdf_r	250	1000	0.9	0x3feffffffffffff6
+binomial_sf_f	250	1000	0.9	0x3ff0000000000000
+binomial_sf_r	250	1000	0.9	0x3cd4000000000000
+binomial_pdf	500	1000	0.9	0x118a742e7fc4d0da
+binomial_cdf_f	500	1000	0.9	0x118dc0550d1d852b
+binomial_cdf_r	500	1000	0.9	0x3feffffffffffff6
+binomial_sf_f	500	1000	0.9	0x3ff0000000000000
+binomial_sf_r	500	1000	0.9	0x3cd4000000000000
+binomial_pdf	999	1000	0.9	0x36dbb7e134ca57a9
+binomial_cdf_f	999	1000	0.9	0x3feffffffffffff6
+binomial_cdf_r	999	1000	0.9	0x366fee7413dac34b
+binomial_sf_f	999	1000	0.9	0x3cd4000000000000
+binomial_sf_r	999	1000	0.9	0x3ff0000000000000
+binomial_pdf	1000	1000	0.9	0x366fee7413dac34b
+binomial_cdf_f	1000	1000	0.9	0x3feffffffffffff6
+binomial_cdf_r	1000	1000	0.9	0x0000000000000000
+binomial_sf_f	1000	1000	0.9	0x3cd4000000000000
+binomial_sf_r	1000	1000	0.9	0x3ff0000000000000
+binomial_pdf	0	1000	0.999	0x0000000000000000
+binomial_cdf_f	0	1000	0.999	0x0000000000000000
+binomial_cdf_r	0	1000	0.999	0x3feffffffffffffa
+binomial_sf_f	0	1000	0.999	0x3ff0000000000000
+binomial_sf_r	0	1000	0.999	0x3cc8000000000000
+binomial_pdf	1	1000	0.999	0x0000000000000000
+binomial_cdf_f	1	1000	0.999	0x0000000000000000
+binomial_cdf_r	1	1000	0.999	0x3feffffffffffffa
+binomial_sf_f	1	1000	0.999	0x3ff0000000000000
+binomial_sf_r	1	1000	0.999	0x3cc8000000000000
+binomial_pdf	250	1000	0.999	0x0000000000000000
+binomial_cdf_f	250	1000	0.999	0x0000000000000000
+binomial_cdf_r	250	1000	0.999	0x3feffffffffffffa
+binomial_sf_f	250	1000	0.999	0x3ff0000000000000
+binomial_sf_r	250	1000	0.999	0x3cc8000000000000
+binomial_pdf	500	1000	0.999	0x0000000000000000
+binomial_cdf_f	500	1000	0.999	0x0000000000000000
+binomial_cdf_r	500	1000	0.999	0x3feffffffffffffa
+binomial_sf_f	500	1000	0.999	0x3ff0000000000000
+binomial_sf_r	500	1000	0.999	0x3cc8000000000000
+binomial_pdf	999	1000	0.999	0x3fd78e5a293b33e7
+binomial_cdf_f	999	1000	0.999	0x3fe43bd6cdf70944
+binomial_cdf_r	999	1000	0.999	0x3fd788526411ed6e
+binomial_sf_f	999	1000	0.999	0x3fd788526411ed78
+binomial_sf_r	999	1000	0.999	0x3fe43bd6cdf70949
+binomial_pdf	1000	1000	0.999	0x3fd788526411ed6e
+binomial_cdf_f	1000	1000	0.999	0x3feffffffffffffa
+binomial_cdf_r	1000	1000	0.999	0x0000000000000000
+binomial_sf_f	1000	1000	0.999	0x3cc8000000000000
+binomial_sf_r	1000	1000	0.999	0x3ff0000000000000
+binomial_pdf	0	20000	1e-08	0x3feffe5c9c8da03e
+binomial_cdf_f	0	20000	1e-08	0x3feffe5c9c8da03e
+binomial_cdf_r	0	20000	1e-08	0x3f2a363723c67b0a
+binomial_sf_f	0	20000	1e-08	0x3f2a363725fc2000
+binomial_sf_r	0	20000	1e-08	0x3feffe5c9c8dc398
+binomial_skipped	1	20000	1e-08	F11
+binomial_skipped	5000	20000	1e-08	F11
+binomial_skipped	10000	20000	1e-08	F11
+binomial_skipped	19999	20000	1e-08	F11
+binomial_skipped	20000	20000	1e-08	F11
+binomial_pdf	0	20000	1e-06	0x3fef5dc9966aab6d
+binomial_cdf_f	0	20000	1e-06	0x3fef5dc9966aab6d
+binomial_cdf_r	0	20000	1e-06	0x3f9446cd32a806ea
+binomial_sf_f	0	20000	1e-06	0x3f9446cd32aa9260
+binomial_sf_r	0	20000	1e-06	0x3fef5dc9966abfc9
+binomial_skipped	1	20000	1e-06	F11
+binomial_skipped	5000	20000	1e-06	F11
+binomial_skipped	10000	20000	1e-06	F11
+binomial_skipped	19999	20000	1e-06	F11
+binomial_skipped	20000	20000	1e-06	F11
+binomial_pdf	0	20000	0.001	0x3e2187653b460fa6
+binomial_cdf_f	0	20000	0.001	0x3e2187653b460fa6
+binomial_cdf_r	0	20000	0.001	0x3feffffffee78937
+binomial_sf_f	0	20000	0.001	0x3feffffffee789ac
+binomial_sf_r	0	20000	0.001	0x3e21876c90000000
+binomial_pdf	1	20000	0.001	0x3e65eedbf18068d4
+binomial_cdf_f	1	20000	0.001	0x3e6707524534c9d1
+binomial_cdf_r	1	20000	0.001	0x3fefffffe8f8ad45
+binomial_sf_f	1	20000	0.001	0x3fefffffe8f8adbb
+binomial_sf_r	1	20000	0.001	0x3e670752bb000000
+binomial_pdf	5000	20000	0.001	0x00000000000001f3
+binomial_cdf_f	5000	20000	0.001	0x3fefffffffffff8b
+binomial_cdf_r	5000	20000	0.001	0x00000000000001f4
+binomial_sf_f	5000	20000	0.001	0x3d0d400000000000
+binomial_sf_r	5000	20000	0.001	0x3ff0000000000000
+binomial_pdf	10000	20000	0.001	0x00000000000001f3
+binomial_cdf_f	10000	20000	0.001	0x3fefffffffffff8b
+binomial_cdf_r	10000	20000	0.001	0x0000000000000000
+binomial_sf_f	10000	20000	0.001	0x3d0d400000000000
+binomial_sf_r	10000	20000	0.001	0x3ff0000000000000
+binomial_pdf	19999	20000	0.001	0x0000000000000000
+binomial_cdf_f	19999	20000	0.001	0x3fefffffffffff8b
+binomial_cdf_r	19999	20000	0.001	0x0000000000000000
+binomial_sf_f	19999	20000	0.001	0x3d0d400000000000
+binomial_sf_r	19999	20000	0.001	0x3ff0000000000000
+binomial_pdf	20000	20000	0.001	0x0000000000000000
+binomial_cdf_f	20000	20000	0.001	0x3fefffffffffff8b
+binomial_cdf_r	20000	20000	0.001	0x0000000000000000
+binomial_sf_f	20000	20000	0.001	0x3d0d400000000000
+binomial_sf_r	20000	20000	0.001	0x3ff0000000000000
+binomial_pdf	0	20000	0.1	0x0000000000000005
+binomial_cdf_f	0	20000	0.1	0x0000000000000005
+binomial_cdf_r	0	20000	0.1	0x3ff0000000000000
+binomial_sf_f	0	20000	0.1	0x3ff0000000000000
+binomial_sf_r	0	20000	0.1	0x0000000000000000
+binomial_pdf	1	20000	0.1	0x0000000000000005
+binomial_cdf_f	1	20000	0.1	0x0000000000000005
+binomial_cdf_r	1	20000	0.1	0x3ff0000000000000
+binomial_sf_f	1	20000	0.1	0x3ff0000000000000
+binomial_sf_r	1	20000	0.1	0x0000000000000000
+binomial_pdf	5000	20000	0.1	0x0000000000000005
+binomial_cdf_f	5000	20000	0.1	0x3ff0000000000000
+binomial_cdf_r	5000	20000	0.1	0x0000000000000008
+binomial_sf_f	5000	20000	0.1	0x0000000000000000
+binomial_sf_r	5000	20000	0.1	0x3ff0000000000000
+binomial_pdf	10000	20000	0.1	0x0000000000000005
+binomial_cdf_f	10000	20000	0.1	0x3ff0000000000000
+binomial_cdf_r	10000	20000	0.1	0x0000000000000000
+binomial_sf_f	10000	20000	0.1	0x0000000000000000
+binomial_sf_r	10000	20000	0.1	0x3ff0000000000000
+binomial_pdf	19999	20000	0.1	0x0000000000000000
+binomial_cdf_f	19999	20000	0.1	0x3ff0000000000000
+binomial_cdf_r	19999	20000	0.1	0x0000000000000000
+binomial_sf_f	19999	20000	0.1	0x0000000000000000
+binomial_sf_r	19999	20000	0.1	0x3ff0000000000000
+binomial_pdf	20000	20000	0.1	0x0000000000000000
+binomial_cdf_f	20000	20000	0.1	0x3ff0000000000000
+binomial_cdf_r	20000	20000	0.1	0x0000000000000000
+binomial_sf_f	20000	20000	0.1	0x0000000000000000
+binomial_sf_r	20000	20000	0.1	0x3ff0000000000000
+binomial_pdf	0	20000	0.5	0x0000000000000000
+binomial_cdf_f	0	20000	0.5	0x0000000000000000
+binomial_cdf_r	0	20000	0.5	0x3ff0000000000000
+binomial_sf_f	0	20000	0.5	0x3ff0000000000000
+binomial_sf_r	0	20000	0.5	0x0000000000000000
+binomial_pdf	1	20000	0.5	0x0000000000000000
+binomial_cdf_f	1	20000	0.5	0x0000000000000000
+binomial_cdf_r	1	20000	0.5	0x3ff0000000000000
+binomial_sf_f	1	20000	0.5	0x3ff0000000000000
+binomial_sf_r	1	20000	0.5	0x0000000000000000
+binomial_pdf	5000	20000	0.5	0x0000000000000000
+binomial_cdf_f	5000	20000	0.5	0x0000000000000000
+binomial_cdf_r	5000	20000	0.5	0x3ff0000000000000
+binomial_sf_f	5000	20000	0.5	0x3ff0000000000000
+binomial_sf_r	5000	20000	0.5	0x0000000000000000
+binomial_pdf	10000	20000	0.5	0x3f771be1f34aad95
+binomial_cdf_f	10000	20000	0.5	0x3fe0171be1f34adf
+binomial_cdf_r	10000	20000	0.5	0x3fdfd1c83c196a68
+binomial_sf_f	10000	20000	0.5	0x3fdfd1c83c196a42
+binomial_sf_r	10000	20000	0.5	0x3fe0171be1f34acc
+binomial_pdf	19999	20000	0.5	0x0000000000000000
+binomial_cdf_f	19999	20000	0.5	0x3ff0000000000000
+binomial_cdf_r	19999	20000	0.5	0x0000000000000000
+binomial_sf_f	19999	20000	0.5	0x0000000000000000
+binomial_sf_r	19999	20000	0.5	0x3ff0000000000000
+binomial_pdf	20000	20000	0.5	0x0000000000000000
+binomial_cdf_f	20000	20000	0.5	0x3ff0000000000000
+binomial_cdf_r	20000	20000	0.5	0x0000000000000000
+binomial_sf_f	20000	20000	0.5	0x0000000000000000
+binomial_sf_r	20000	20000	0.5	0x3ff0000000000000
+binomial_pdf	0	20000	0.9	0x0000000000000000
+binomial_cdf_f	0	20000	0.9	0x0000000000000000
+binomial_cdf_r	0	20000	0.9	0x3ff0000000000000
+binomial_sf_f	0	20000	0.9	0x3ff0000000000000
+binomial_sf_r	0	20000	0.9	0x0000000000000000
+binomial_pdf	1	20000	0.9	0x0000000000000000
+binomial_cdf_f	1	20000	0.9	0x0000000000000000
+binomial_cdf_r	1	20000	0.9	0x3ff0000000000000
+binomial_sf_f	1	20000	0.9	0x3ff0000000000000
+binomial_sf_r	1	20000	0.9	0x0000000000000000
+binomial_pdf	5000	20000	0.9	0x0000000000000000
+binomial_cdf_f	5000	20000	0.9	0x0000000000000000
+binomial_cdf_r	5000	20000	0.9	0x3ff0000000000000
+binomial_sf_f	5000	20000	0.9	0x3ff0000000000000
+binomial_sf_r	5000	20000	0.9	0x0000000000000000
+binomial_pdf	10000	20000	0.9	0x0000000000000000
+binomial_cdf_f	10000	20000	0.9	0x0000000000000000
+binomial_cdf_r	10000	20000	0.9	0x3ff0000000000000
+binomial_sf_f	10000	20000	0.9	0x3ff0000000000000
+binomial_sf_r	10000	20000	0.9	0x0000000000000000
+binomial_pdf	19999	20000	0.9	0x0000000000000005
+binomial_cdf_f	19999	20000	0.9	0x3ff0000000000000
+binomial_cdf_r	19999	20000	0.9	0x0000000000000005
+binomial_sf_f	19999	20000	0.9	0x0000000000000000
+binomial_sf_r	19999	20000	0.9	0x3ff0000000000000
+binomial_pdf	20000	20000	0.9	0x0000000000000005
+binomial_cdf_f	20000	20000	0.9	0x3ff0000000000000
+binomial_cdf_r	20000	20000	0.9	0x0000000000000000
+binomial_sf_f	20000	20000	0.9	0x0000000000000000
+binomial_sf_r	20000	20000	0.9	0x3ff0000000000000
+binomial_pdf	0	20000	0.999	0x0000000000000000
+binomial_cdf_f	0	20000	0.999	0x0000000000000000
+binomial_cdf_r	0	20000	0.999	0x3feffffffffffffc
+binomial_sf_f	0	20000	0.999	0x3ff0000000000000
+binomial_sf_r	0	20000	0.999	0x3cc0000000000000
+binomial_pdf	1	20000	0.999	0x0000000000000000
+binomial_cdf_f	1	20000	0.999	0x0000000000000000
+binomial_cdf_r	1	20000	0.999	0x3feffffffffffffc
+binomial_sf_f	1	20000	0.999	0x3ff0000000000000
+binomial_sf_r	1	20000	0.999	0x3cc0000000000000
+binomial_pdf	5000	20000	0.999	0x0000000000000000
+binomial_cdf_f	5000	20000	0.999	0x0000000000000000
+binomial_cdf_r	5000	20000	0.999	0x3feffffffffffffc
+binomial_sf_f	5000	20000	0.999	0x3ff0000000000000
+binomial_sf_r	5000	20000	0.999	0x3cc0000000000000
+binomial_pdf	10000	20000	0.999	0x0000000000000000
+binomial_cdf_f	10000	20000	0.999	0x0000000000000000
+binomial_cdf_r	10000	20000	0.999	0x3feffffffffffffc
+binomial_sf_f	10000	20000	0.999	0x3ff0000000000000
+binomial_sf_r	10000	20000	0.999	0x3cc0000000000000
+binomial_pdf	19999	20000	0.999	0x3e65eedbf18068d4
+binomial_cdf_f	19999	20000	0.999	0x3feffffffee789a8
+binomial_cdf_r	19999	20000	0.999	0x3e2187653b460fa6
+binomial_sf_f	19999	20000	0.999	0x3e21876580000000
+binomial_sf_r	19999	20000	0.999	0x3feffffffee789ac
+binomial_pdf	20000	20000	0.999	0x3e2187653b460fa6
+binomial_cdf_f	20000	20000	0.999	0x3feffffffffffffc
+binomial_cdf_r	20000	20000	0.999	0x0000000000000000
+binomial_sf_f	20000	20000	0.999	0x3cc0000000000000
+binomial_sf_r	20000	20000	0.999	0x3ff0000000000000
+binomial_cdf_inv	0.99	1000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.9	1000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.5	1000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.99	10000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.9	10000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.5	10000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.99	100000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.9	100000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.5	100000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.99	1000000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.9	1000000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.5	1000000	3.4114675040509384e-09	0
+binomial_cdf_inv	0.99	1000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.9	1000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.5	1000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.99	10000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.9	10000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.5	10000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.99	100000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.9	100000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.5	100000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.99	1000000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.9	1000000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.5	1000000	3.7696253765148946e-09	0
+binomial_cdf_inv	0.99	1000	1e-06	0
+binomial_cdf_inv	0.9	1000	1e-06	0
+binomial_cdf_inv	0.5	1000	1e-06	0
+binomial_cdf_inv	0.99	10000	1e-06	0
+binomial_cdf_inv	0.9	10000	1e-06	0
+binomial_cdf_inv	0.5	10000	1e-06	0
+binomial_cdf_inv	0.99	100000	1e-06	1
+binomial_cdf_inv	0.9	100000	1e-06	0
+binomial_cdf_inv	0.5	100000	1e-06	0
+binomial_cdf_inv	0.99	1000000	1e-06	4
+binomial_cdf_inv	0.9	1000000	1e-06	2
+binomial_cdf_inv	0.5	1000000	1e-06	1
+binomial_cdf_inv	0.99	1000	1e-05	0
+binomial_cdf_inv	0.9	1000	1e-05	0
+binomial_cdf_inv	0.5	1000	1e-05	0
+binomial_cdf_inv	0.99	10000	1e-05	1
+binomial_cdf_inv	0.9	10000	1e-05	0
+binomial_cdf_inv	0.5	10000	1e-05	0
+binomial_cdf_inv	0.99	100000	1e-05	4
+binomial_cdf_inv	0.9	100000	1e-05	2
+binomial_cdf_inv	0.5	100000	1e-05	1
+binomial_cdf_inv	0.99	1000000	1e-05	18
+binomial_cdf_inv	0.9	1000000	1e-05	14
+binomial_cdf_inv	0.5	1000000	1e-05	10
+pduplication	10	1e-08	0x00000000
+pduplication	10	1e-07	0x00000000
+pduplication	10	1e-06	0x25e00000
+pduplication	10	1e-05	0x2ab9c400
+pduplication	10	0.0001	0x2fb5414a
+pduplication	100	1e-08	0x24000000
+pduplication	100	1e-07	0x25c00000
+pduplication	100	1e-06	0x2afa8000
+pduplication	100	1e-05	0x2ff427e0
+pduplication	100	0.0001	0x34ebc118
+pduplication	1000	1e-08	0x25c00000
+pduplication	1000	1e-07	0x2b008e00
+pduplication	1000	1e-06	0x2ffae466
+pduplication	1000	1e-05	0x34f22ec3
+pduplication	1000	0.0001	0x39d2ca69
+pduplication	10000	1e-08	0x2b00de00
+pduplication	10000	1e-07	0x2ffb9099
+pduplication	10000	1e-06	0x34f2d461
+pduplication	10000	1e-05	0x39d34a4d
+pduplication	10000	0.0001	0x3e106f6c
+pduplication	100000	1e-08	0x2ffba3a1
+pduplication	100000	1e-07	0x34f2e4f3
+pduplication	100000	1e-06	0x39d3571a
+pduplication	100000	1e-05	0x3e10710c
+pduplication	100000	0.0001	0x3f7f77ea
+pnorm	-30	-10	1	0x2dd1928c553065a4
+pnorm	-30	-10	4	0x3b47416846b4d5da
+pnorm	-30	-10	25	0x3efc10f49e012121
+pnorm	-30	0	1	0x1746080417588184
+pnorm	-30	0	4	0x35a4b15e0921ea42
+pnorm	-30	0	25	0x3e14e0672fda0664
+pnorm	-30	10	1	0x0000000000000000
+pnorm	-30	10	4	0x2dc1928c553065a4
+pnorm	-30	10	25	0x3cd233e5c8076cf7
+pnorm	-29	-10	1	0x2f934373f4b7eed4
+pnorm	-29	-10	4	0x3bb7cbbcf79d2a72
+pnorm	-29	-10	25	0x3f0e9ce3ff5ca363
+pnorm	-29	0	1	0x19f03c0562a87dff
+pnorm	-29	0	4	0x36501f2a80f4bd41
+pnorm	-29	0	25	0x3e30fc2bffe509ac
+pnorm	-29	10	1	0x0000000000000000
+pnorm	-29	10	4	0x2ea4d929a91ecaf6
+pnorm	-29	10	25	0x3cf617e632d50311
+pnorm	-28	-10	1	0x313f130cd6fe9d62
+pnorm	-28	-10	4	0x3c22f67c5e7a9a3a
+pnorm	-28	-10	25	0x3f200a6782e33117
+pnorm	-28	0	1	0x1c819a83623acdd0
+pnorm	-28	0	4	0x36f39069d35d64e7
+pnorm	-28	0	25	0x3e4a8ddcf6176df4
+pnorm	-28	10	1	0x00000000845eb885
+pnorm	-28	10	4	0x2f834373f4b7eed4
+pnorm	-28	10	25	0x3d19c39cf4d4ac6e
+pnorm	-27	-10	1	0x32d270cf36213dd4
+pnorm	-27	-10	4	0x3c87899e4c2ad3a6
+pnorm	-27	-10	25	0x3f3026a434bdac61
+pnorm	-27	0	1	0x1efc16aa4d10e3e0
+pnorm	-27	0	4	0x37927d6ac5d649bf
+pnorm	-27	0	25	0x3e63f17a3470f624
+pnorm	-27	10	1	0x0221bf35e596c740
+pnorm	-27	10	4	0x305bb9577d9757f5
+pnorm	-27	10	25	0x3d3cdddf2e22ed2d
+pnorm	-26	-10	1	0x34501a73820dac40
+pnorm	-26	-10	4	0x3ce6c0df3a094835
+pnorm	-26	-10	25	0x3f3f3fac2bd4b179
+pnorm	-26	0	1	0x21607ce14ac972fb
+pnorm	-26	0	4	0x382b37f6326beeed
+pnorm	-26	0	25	0x3e7cc8269f9d2f77
+pnorm	-26	10	1	0x056c028975123156
+pnorm	-26	10	4	0x312f130cd6fe9d62
+pnorm	-26	10	25	0x3d5f131f49d25271
+pnorm	-25	-10	1	0x35b4b15e0921ea42
+pnorm	-25	-10	4	0x3d4121483257eba0
+pnorm	-25	-10	25	0x3f4d0b6866258a74
+pnorm	-25	0	1	0x23ac7bc2f12d814b
+pnorm	-25	0	4	0x38bf347600ad79a8
+pnorm	-25	0	25	0x3e93f45450a0ca99
+pnorm	-25	10	1	0x08a043612df3f57d
+pnorm	-25	10	4	0x31fb201bce77a1c5
+pnorm	-25	10	25	0x3d8011e98f4af43c
+pnorm	-24	-10	1	0x37039069d35d64e7
+pnorm	-24	-10	4	0x3d941663f31db14b
+pnorm	-24	-10	25	0x3f59eff648baae37
+pnorm	-24	0	1	0x25e21a1f1b91de4b
+pnorm	-24	0	4	0x394bdc9558403b05
+pnorm	-24	0	25	0x3eaa9575c3c1c2c9
+pnorm	-24	10	1	0x0bbbca5c3510333f
+pnorm	-24	10	4	0x32c270cf36213dd4
+pnorm	-24	10	25	0x3d9ff032cc85366a
+pnorm	-23	-10	1	0x383b37f6326beeed
+pnorm	-23	-10	4	0x3de258556ae47e79
+pnorm	-23	-10	25	0x3f66411c374dd496
+pnorm	-23	0	1	0x2800edca4ecdb9c5
+pnorm	-23	0	4	0x39d35fb7c9d4c55c
+pnorm	-23	0	25	0x3ec1037679e55a48
+pnorm	-23	10	1	0x0ec1784d87a84a93
+pnorm	-23	10	4	0x338386e18f1e20f9
+pnorm	-23	10	25	0x3dbe7e507b4a3e2e
+pnorm	-22	-10	1	0x395bdc9558403b05
+pnorm	-22	-10	4	0x3e2a1880fbd087fd
+pnorm	-22	-10	25	0x3f72587930b8d65a
+pnorm	-22	0	1	0x2a074bf2c4ead13d
+pnorm	-22	0	4	0x3a54fbd851b8ba34
+pnorm	-22	0	25	0x3ed4ec5adc461152
+pnorm	-22	10	1	0x11b0290ff8f0ad73
+pnorm	-22	10	4	0x34401a73820dac40
+pnorm	-22	10	25	0x3ddbf8ebbbeee5cd
+pnorm	-21	-10	1	0x3a64fbd851b8ba34
+pnorm	-21	-10	4	0x3e6ce8ec39250975
+pnorm	-21	-10	25	0x3f7d0f8fb3902998
+pnorm	-21	0	1	0x2bf7969669108a81
+pnorm	-21	0	4	0x3ad1b33b85d0e3d4
+pnorm	-21	0	25	0x3ee8b8f6b599c54d
+pnorm	-21	10	1	0x1485ff6d44d3983b
+pnorm	-21	10	4	0x34f4af596e6a2b63
+pnorm	-21	10	25	0x3df8a750e86c01b0
+pnorm	-20	-10	1	0x3b57416846b4d5da
+pnorm	-20	-10	4	0x3ea8f16964c8fd3f
+pnorm	-20	-10	25	0x3f861d5cf8b9c8aa
+pnorm	-20	0	1	0x2dd1928c553065a4
+pnorm	-20	0	4	0x3b47416846b4d5da
+pnorm	-20	0	25	0x3efc10f49e012121
+pnorm	-20	10	1	0x1746080417588184
+pnorm	-20	10	4	0x35a4b15e0921ea42
+pnorm	-20	10	25	0x3e14e0672fda0664
+pnorm	-19	-10	1	0x3c32f67c5e7a9a3a
+pnorm	-19	-10	4	0x3ee0c29a533d0bc5
+pnorm	-19	-10	25	0x3f902b431655456d
+pnorm	-19	0	1	0x2f934373f4b7eed4
+pnorm	-19	0	4	0x3bb7cbbcf79d2a72
+pnorm	-19	0	25	0x3f0e9ce3ff5ca363
+pnorm	-19	10	1	0x19f03c0562a87dff
+pnorm	-19	10	4	0x36501f2a80f4bd41
+pnorm	-19	10	25	0x3e30fc2bffe509ac
+pnorm	-18	-10	1	0x3cf6c0df3a094835
+pnorm	-18	-10	4	0x3f118a98e2c0b4b5
+pnorm	-18	-10	25	0x3f96b7723dea2506
+pnorm	-18	0	1	0x313f130cd6fe9d62
+pnorm	-18	0	4	0x3c22f67c5e7a9a3a
+pnorm	-18	0	25	0x3f200a6782e33117
+pnorm	-18	10	1	0x1c819a83623acdd0
+pnorm	-18	10	4	0x36f39069d35d64e7
+pnorm	-18	10	25	0x3e4a8ddcf6176df4
+pnorm	-17	-10	1	0x3da41663f31db14b
+pnorm	-17	-10	4	0x3f3c9897d147e620
+pnorm	-17	-10	25	0x3f9eaa0806932577
+pnorm	-17	0	1	0x32d270cf36213dd4
+pnorm	-17	0	4	0x3c87899e4c2ad3a6
+pnorm	-17	0	25	0x3f3026a434bdac61
+pnorm	-17	10	1	0x1efc16aa4d10e3e0
+pnorm	-17	10	4	0x37927d6ac5d649bf
+pnorm	-17	10	25	0x3e63f17a3470f624
+pnorm	-16	-10	1	0x3e3a1880fbd087fd
+pnorm	-16	-10	4	0x3f6227213fd77689
+pnorm	-16	-10	25	0x3fa3e2788e32659d
+pnorm	-16	0	1	0x34501a73820dac40
+pnorm	-16	0	4	0x3ce6c0df3a094835
+pnorm	-16	0	25	0x3f3f3fac2bd4b179
+pnorm	-16	10	1	0x21607ce14ac972fb
+pnorm	-16	10	4	0x382b37f6326beeed
+pnorm	-16	10	25	0x3e7cc8269f9d2f77
+pnorm	-15	-10	1	0x3eb8f16964c8fd3f
+pnorm	-15	-10	4	0x3f81f2f0557f5257
+pnorm	-15	-10	25	0x3fa8c71e0b5c1293
+pnorm	-15	0	1	0x35b4b15e0921ea42
+pnorm	-15	0	4	0x3d4121483257eba0
+pnorm	-15	0	25	0x3f4d0b6866258a74
+pnorm	-15	10	1	0x23ac7bc2f12d814b
+pnorm	-15	10	4	0x38bf347600ad79a8
+pnorm	-15	10	25	0x3e93f45450a0ca99
+pnorm	-14	-10	1	0x3f218a98e2c0b4b5
+pnorm	-14	-10	4	0x3f9ba4b436e83ad6
+pnorm	-14	-10	25	0x3fadaa171a03e4da
+pnorm	-14	0	1	0x37039069d35d64e7
+pnorm	-14	0	4	0x3d941663f31db14b
+pnorm	-14	0	25	0x3f59eff648baae37
+pnorm	-14	10	1	0x25e21a1f1b91de4b
+pnorm	-14	10	4	0x394bdc9558403b05
+pnorm	-14	10	25	0x3eaa9575c3c1c2c9
+pnorm	-13	-10	1	0x3f7227213fd77689
+pnorm	-13	-10	4	0x3fb0940856d21e85
+pnorm	-13	-10	25	0x3fb10fa43a541d61
+pnorm	-13	0	1	0x383b37f6326beeed
+pnorm	-13	0	4	0x3de258556ae47e79
+pnorm	-13	0	25	0x3f66411c374dd496
+pnorm	-13	10	1	0x2800edca4ecdb9c5
+pnorm	-13	10	4	0x39d35fb7c9d4c55c
+pnorm	-13	10	25	0x3ec1037679e55a48
+pnorm	-12	-10	1	0x3faba4b436e83ad6
+pnorm	-12	-10	4	0x3fbef8e58e331738
+pnorm	-12	-10	25	0x3fb2dafd89bd3d97
+pnorm	-12	0	1	0x395bdc9558403b05
+pnorm	-12	0	4	0x3e2a1880fbd087fd
+pnorm	-12	0	25	0x3f72587930b8d65a
+pnorm	-12	10	1	0x2a074bf2c4ead13d
+pnorm	-12	10	4	0x3a54fbd851b8ba34
+pnorm	-12	10	25	0x3ed4ec5adc461152
+pnorm	-11	-10	1	0x3fcef8e58e331738
+pnorm	-11	-10	4	0x3fc6883d022086ad
+pnorm	-11	-10	25	0x3fb405798c6492b9
+pnorm	-11	0	1	0x3a64fbd851b8ba34
+pnorm	-11	0	4	0x3e6ce8ec39250975
+pnorm	-11	0	25	0x3f7d0f8fb3902998
+pnorm	-11	10	1	0x2bf7969669108a81
+pnorm	-11	10	4	0x3ad1b33b85d0e3d4
+pnorm	-11	10	25	0x3ee8b8f6b599c54d
+pnorm	-10	-10	1	0x3fd9884533d43651
+pnorm	-10	-10	4	0x3fc9884533d43651
+pnorm	-10	-10	25	0x3fb46d04297691da
+pnorm	-10	0	1	0x3b57416846b4d5da
+pnorm	-10	0	4	0x3ea8f16964c8fd3f
+pnorm	-10	0	25	0x3f861d5cf8b9c8aa
+pnorm	-10	10	1	0x2dd1928c553065a4
+pnorm	-10	10	4	0x3b47416846b4d5da
+pnorm	-10	10	25	0x3efc10f49e012121
+pnorm	-9	-10	1	0x3fcef8e58e331738
+pnorm	-9	-10	4	0x3fc6883d022086ad
+pnorm	-9	-10	25	0x3fb405798c6492b9
+pnorm	-9	0	1	0x3c32f67c5e7a9a3a
+pnorm	-9	0	4	0x3ee0c29a533d0bc5
+pnorm	-9	0	25	0x3f902b431655456d
+pnorm	-9	10	1	0x2f934373f4b7eed4
+pnorm	-9	10	4	0x3bb7cbbcf79d2a72
+pnorm	-9	10	25	0x3f0e9ce3ff5ca363
+pnorm	-8	-10	1	0x3faba4b436e83ad6
+pnorm	-8	-10	4	0x3fbef8e58e331738
+pnorm	-8	-10	25	0x3fb2dafd89bd3d97
+pnorm	-8	0	1	0x3cf6c0df3a094835
+pnorm	-8	0	4	0x3f118a98e2c0b4b5
+pnorm	-8	0	25	0x3f96b7723dea2506
+pnorm	-8	10	1	0x313f130cd6fe9d62
+pnorm	-8	10	4	0x3c22f67c5e7a9a3a
+pnorm	-8	10	25	0x3f200a6782e33117
+pnorm	-7	-10	1	0x3f7227213fd77689
+pnorm	-7	-10	4	0x3fb0940856d21e85
+pnorm	-7	-10	25	0x3fb10fa43a541d61
+pnorm	-7	0	1	0x3da41663f31db14b
+pnorm	-7	0	4	0x3f3c9897d147e620
+pnorm	-7	0	25	0x3f9eaa0806932577
+pnorm	-7	10	1	0x32d270cf36213dd4
+pnorm	-7	10	4	0x3c87899e4c2ad3a6
+pnorm	-7	10	25	0x3f3026a434bdac61
+pnorm	-6	-10	1	0x3f218a98e2c0b4b5
+pnorm	-6	-10	4	0x3f9ba4b436e83ad6
+pnorm	-6	-10	25	0x3fadaa171a03e4da
+pnorm	-6	0	1	0x3e3a1880fbd087fd
+pnorm	-6	0	4	0x3f6227213fd77689
+pnorm	-6	0	25	0x3fa3e2788e32659d
+pnorm	-6	10	1	0x34501a73820dac40
+pnorm	-6	10	4	0x3ce6c0df3a094835
+pnorm	-6	10	25	0x3f3f3fac2bd4b179
+pnorm	-5	-10	1	0x3eb8f16964c8fd3f
+pnorm	-5	-10	4	0x3f81f2f0557f5257
+pnorm	-5	-10	25	0x3fa8c71e0b5c1293
+pnorm	-5	0	1	0x3eb8f16964c8fd3f
+pnorm	-5	0	4	0x3f81f2f0557f5257
+pnorm	-5	0	25	0x3fa8c71e0b5c1293
+pnorm	-5	10	1	0x35b4b15e0921ea42
+pnorm	-5	10	4	0x3d4121483257eba0
+pnorm	-5	10	25	0x3f4d0b6866258a74
+pnorm	-4	-10	1	0x3e3a1880fbd087fd
+pnorm	-4	-10	4	0x3f6227213fd77689
+pnorm	-4	-10	25	0x3fa3e2788e32659d
+pnorm	-4	0	1	0x3f218a98e2c0b4b5
+pnorm	-4	0	4	0x3f9ba4b436e83ad6
+pnorm	-4	0	25	0x3fadaa171a03e4da
+pnorm	-4	10	1	0x37039069d35d64e7
+pnorm	-4	10	4	0x3d941663f31db14b
+pnorm	-4	10	25	0x3f59eff648baae37
+pnorm	-3	-10	1	0x3da41663f31db14b
+pnorm	-3	-10	4	0x3f3c9897d147e620
+pnorm	-3	-10	25	0x3f9eaa0806932577
+pnorm	-3	0	1	0x3f7227213fd77689
+pnorm	-3	0	4	0x3fb0940856d21e85
+pnorm	-3	0	25	0x3fb10fa43a541d61
+pnorm	-3	10	1	0x383b37f6326beeed
+pnorm	-3	10	4	0x3de258556ae47e79
+pnorm	-3	10	25	0x3f66411c374dd496
+pnorm	-2	-10	1	0x3cf6c0df3a094835
+pnorm	-2	-10	4	0x3f118a98e2c0b4b5
+pnorm	-2	-10	25	0x3f96b7723dea2506
+pnorm	-2	0	1	0x3faba4b436e83ad6
+pnorm	-2	0	4	0x3fbef8e58e331738
+pnorm	-2	0	25	0x3fb2dafd89bd3d97
+pnorm	-2	10	1	0x395bdc9558403b05
+pnorm	-2	10	4	0x3e2a1880fbd087fd
+pnorm	-2	10	25	0x3f72587930b8d65a
+pnorm	-1	-10	1	0x3c32f67c5e7a9a3a
+pnorm	-1	-10	4	0x3ee0c29a533d0bc5
+pnorm	-1	-10	25	0x3f902b431655456d
+pnorm	-1	0	1	0x3fcef8e58e331738
+pnorm	-1	0	4	0x3fc6883d022086ad
+pnorm	-1	0	25	0x3fb405798c6492b9
+pnorm	-1	10	1	0x3a64fbd851b8ba34
+pnorm	-1	10	4	0x3e6ce8ec39250975
+pnorm	-1	10	25	0x3f7d0f8fb3902998
+pnorm	0	-10	1	0x3b57416846b4d5da
+pnorm	0	-10	4	0x3ea8f16964c8fd3f
+pnorm	0	-10	25	0x3f861d5cf8b9c8aa
+pnorm	0	0	1	0x3fd9884533d43651
+pnorm	0	0	4	0x3fc9884533d43651
+pnorm	0	0	25	0x3fb46d04297691da
+pnorm	0	10	1	0x3b57416846b4d5da
+pnorm	0	10	4	0x3ea8f16964c8fd3f
+pnorm	0	10	25	0x3f861d5cf8b9c8aa
+pnorm	1	-10	1	0x3a64fbd851b8ba34
+pnorm	1	-10	4	0x3e6ce8ec39250975
+pnorm	1	-10	25	0x3f7d0f8fb3902998
+pnorm	1	0	1	0x3fcef8e58e331738
+pnorm	1	0	4	0x3fc6883d022086ad
+pnorm	1	0	25	0x3fb405798c6492b9
+pnorm	1	10	1	0x3c32f67c5e7a9a3a
+pnorm	1	10	4	0x3ee0c29a533d0bc5
+pnorm	1	10	25	0x3f902b431655456d
+pnorm	2	-10	1	0x395bdc9558403b05
+pnorm	2	-10	4	0x3e2a1880fbd087fd
+pnorm	2	-10	25	0x3f72587930b8d65a
+pnorm	2	0	1	0x3faba4b436e83ad6
+pnorm	2	0	4	0x3fbef8e58e331738
+pnorm	2	0	25	0x3fb2dafd89bd3d97
+pnorm	2	10	1	0x3cf6c0df3a094835
+pnorm	2	10	4	0x3f118a98e2c0b4b5
+pnorm	2	10	25	0x3f96b7723dea2506
+pnorm	3	-10	1	0x383b37f6326beeed
+pnorm	3	-10	4	0x3de258556ae47e79
+pnorm	3	-10	25	0x3f66411c374dd496
+pnorm	3	0	1	0x3f7227213fd77689
+pnorm	3	0	4	0x3fb0940856d21e85
+pnorm	3	0	25	0x3fb10fa43a541d61
+pnorm	3	10	1	0x3da41663f31db14b
+pnorm	3	10	4	0x3f3c9897d147e620
+pnorm	3	10	25	0x3f9eaa0806932577
+pnorm	4	-10	1	0x37039069d35d64e7
+pnorm	4	-10	4	0x3d941663f31db14b
+pnorm	4	-10	25	0x3f59eff648baae37
+pnorm	4	0	1	0x3f218a98e2c0b4b5
+pnorm	4	0	4	0x3f9ba4b436e83ad6
+pnorm	4	0	25	0x3fadaa171a03e4da
+pnorm	4	10	1	0x3e3a1880fbd087fd
+pnorm	4	10	4	0x3f6227213fd77689
+pnorm	4	10	25	0x3fa3e2788e32659d
+pnorm	5	-10	1	0x35b4b15e0921ea42
+pnorm	5	-10	4	0x3d4121483257eba0
+pnorm	5	-10	25	0x3f4d0b6866258a74
+pnorm	5	0	1	0x3eb8f16964c8fd3f
+pnorm	5	0	4	0x3f81f2f0557f5257
+pnorm	5	0	25	0x3fa8c71e0b5c1293
+pnorm	5	10	1	0x3eb8f16964c8fd3f
+pnorm	5	10	4	0x3f81f2f0557f5257
+pnorm	5	10	25	0x3fa8c71e0b5c1293
+pnorm	6	-10	1	0x34501a73820dac40
+pnorm	6	-10	4	0x3ce6c0df3a094835
+pnorm	6	-10	25	0x3f3f3fac2bd4b179
+pnorm	6	0	1	0x3e3a1880fbd087fd
+pnorm	6	0	4	0x3f6227213fd77689
+pnorm	6	0	25	0x3fa3e2788e32659d
+pnorm	6	10	1	0x3f218a98e2c0b4b5
+pnorm	6	10	4	0x3f9ba4b436e83ad6
+pnorm	6	10	25	0x3fadaa171a03e4da
+pnorm	7	-10	1	0x32d270cf36213dd4
+pnorm	7	-10	4	0x3c87899e4c2ad3a6
+pnorm	7	-10	25	0x3f3026a434bdac61
+pnorm	7	0	1	0x3da41663f31db14b
+pnorm	7	0	4	0x3f3c9897d147e620
+pnorm	7	0	25	0x3f9eaa0806932577
+pnorm	7	10	1	0x3f7227213fd77689
+pnorm	7	10	4	0x3fb0940856d21e85
+pnorm	7	10	25	0x3fb10fa43a541d61
+pnorm	8	-10	1	0x313f130cd6fe9d62
+pnorm	8	-10	4	0x3c22f67c5e7a9a3a
+pnorm	8	-10	25	0x3f200a6782e33117
+pnorm	8	0	1	0x3cf6c0df3a094835
+pnorm	8	0	4	0x3f118a98e2c0b4b5
+pnorm	8	0	25	0x3f96b7723dea2506
+pnorm	8	10	1	0x3faba4b436e83ad6
+pnorm	8	10	4	0x3fbef8e58e331738
+pnorm	8	10	25	0x3fb2dafd89bd3d97
+pnorm	9	-10	1	0x2f934373f4b7eed4
+pnorm	9	-10	4	0x3bb7cbbcf79d2a72
+pnorm	9	-10	25	0x3f0e9ce3ff5ca363
+pnorm	9	0	1	0x3c32f67c5e7a9a3a
+pnorm	9	0	4	0x3ee0c29a533d0bc5
+pnorm	9	0	25	0x3f902b431655456d
+pnorm	9	10	1	0x3fcef8e58e331738
+pnorm	9	10	4	0x3fc6883d022086ad
+pnorm	9	10	25	0x3fb405798c6492b9
+pnorm	10	-10	1	0x2dd1928c553065a4
+pnorm	10	-10	4	0x3b47416846b4d5da
+pnorm	10	-10	25	0x3efc10f49e012121
+pnorm	10	0	1	0x3b57416846b4d5da
+pnorm	10	0	4	0x3ea8f16964c8fd3f
+pnorm	10	0	25	0x3f861d5cf8b9c8aa
+pnorm	10	10	1	0x3fd9884533d43651
+pnorm	10	10	4	0x3fc9884533d43651
+pnorm	10	10	25	0x3fb46d04297691da
+pnorm	11	-10	1	0x2bf7969669108a81
+pnorm	11	-10	4	0x3ad1b33b85d0e3d4
+pnorm	11	-10	25	0x3ee8b8f6b599c54d
+pnorm	11	0	1	0x3a64fbd851b8ba34
+pnorm	11	0	4	0x3e6ce8ec39250975
+pnorm	11	0	25	0x3f7d0f8fb3902998
+pnorm	11	10	1	0x3fcef8e58e331738
+pnorm	11	10	4	0x3fc6883d022086ad
+pnorm	11	10	25	0x3fb405798c6492b9
+pnorm	12	-10	1	0x2a074bf2c4ead13d
+pnorm	12	-10	4	0x3a54fbd851b8ba34
+pnorm	12	-10	25	0x3ed4ec5adc461152
+pnorm	12	0	1	0x395bdc9558403b05
+pnorm	12	0	4	0x3e2a1880fbd087fd
+pnorm	12	0	25	0x3f72587930b8d65a
+pnorm	12	10	1	0x3faba4b436e83ad6
+pnorm	12	10	4	0x3fbef8e58e331738
+pnorm	12	10	25	0x3fb2dafd89bd3d97
+pnorm	13	-10	1	0x2800edca4ecdb9c5
+pnorm	13	-10	4	0x39d35fb7c9d4c55c
+pnorm	13	-10	25	0x3ec1037679e55a48
+pnorm	13	0	1	0x383b37f6326beeed
+pnorm	13	0	4	0x3de258556ae47e79
+pnorm	13	0	25	0x3f66411c374dd496
+pnorm	13	10	1	0x3f7227213fd77689
+pnorm	13	10	4	0x3fb0940856d21e85
+pnorm	13	10	25	0x3fb10fa43a541d61
+pnorm	14	-10	1	0x25e21a1f1b91de4b
+pnorm	14	-10	4	0x394bdc9558403b05
+pnorm	14	-10	25	0x3eaa9575c3c1c2c9
+pnorm	14	0	1	0x37039069d35d64e7
+pnorm	14	0	4	0x3d941663f31db14b
+pnorm	14	0	25	0x3f59eff648baae37
+pnorm	14	10	1	0x3f218a98e2c0b4b5
+pnorm	14	10	4	0x3f9ba4b436e83ad6
+pnorm	14	10	25	0x3fadaa171a03e4da
+pnorm	15	-10	1	0x23ac7bc2f12d814b
+pnorm	15	-10	4	0x38bf347600ad79a8
+pnorm	15	-10	25	0x3e93f45450a0ca99
+pnorm	15	0	1	0x35b4b15e0921ea42
+pnorm	15	0	4	0x3d4121483257eba0
+pnorm	15	0	25	0x3f4d0b6866258a74
+pnorm	15	10	1	0x3eb8f16964c8fd3f
+pnorm	15	10	4	0x3f81f2f0557f5257
+pnorm	15	10	25	0x3fa8c71e0b5c1293
+pnorm	16	-10	1	0x21607ce14ac972fb
+pnorm	16	-10	4	0x382b37f6326beeed
+pnorm	16	-10	25	0x3e7cc8269f9d2f77
+pnorm	16	0	1	0x34501a73820dac40
+pnorm	16	0	4	0x3ce6c0df3a094835
+pnorm	16	0	25	0x3f3f3fac2bd4b179
+pnorm	16	10	1	0x3e3a1880fbd087fd
+pnorm	16	10	4	0x3f6227213fd77689
+pnorm	16	10	25	0x3fa3e2788e32659d
+pnorm	17	-10	1	0x1efc16aa4d10e3e0
+pnorm	17	-10	4	0x37927d6ac5d649bf
+pnorm	17	-10	25	0x3e63f17a3470f624
+pnorm	17	0	1	0x32d270cf36213dd4
+pnorm	17	0	4	0x3c87899e4c2ad3a6
+pnorm	17	0	25	0x3f3026a434bdac61
+pnorm	17	10	1	0x3da41663f31db14b
+pnorm	17	10	4	0x3f3c9897d147e620
+pnorm	17	10	25	0x3f9eaa0806932577
+pnorm	18	-10	1	0x1c819a83623acdd0
+pnorm	18	-10	4	0x36f39069d35d64e7
+pnorm	18	-10	25	0x3e4a8ddcf6176df4
+pnorm	18	0	1	0x313f130cd6fe9d62
+pnorm	18	0	4	0x3c22f67c5e7a9a3a
+pnorm	18	0	25	0x3f200a6782e33117
+pnorm	18	10	1	0x3cf6c0df3a094835
+pnorm	18	10	4	0x3f118a98e2c0b4b5
+pnorm	18	10	25	0x3f96b7723dea2506
+pnorm	19	-10	1	0x19f03c0562a87dff
+pnorm	19	-10	4	0x36501f2a80f4bd41
+pnorm	19	-10	25	0x3e30fc2bffe509ac
+pnorm	19	0	1	0x2f934373f4b7eed4
+pnorm	19	0	4	0x3bb7cbbcf79d2a72
+pnorm	19	0	25	0x3f0e9ce3ff5ca363
+pnorm	19	10	1	0x3c32f67c5e7a9a3a
+pnorm	19	10	4	0x3ee0c29a533d0bc5
+pnorm	19	10	25	0x3f902b431655456d
+pnorm	20	-10	1	0x1746080417588184
+pnorm	20	-10	4	0x35a4b15e0921ea42
+pnorm	20	-10	25	0x3e14e0672fda0664
+pnorm	20	0	1	0x2dd1928c553065a4
+pnorm	20	0	4	0x3b47416846b4d5da
+pnorm	20	0	25	0x3efc10f49e012121
+pnorm	20	10	1	0x3b57416846b4d5da
+pnorm	20	10	4	0x3ea8f16964c8fd3f
+pnorm	20	10	25	0x3f861d5cf8b9c8aa
+pnorm	21	-10	1	0x1485ff6d44d3983b
+pnorm	21	-10	4	0x34f4af596e6a2b63
+pnorm	21	-10	25	0x3df8a750e86c01b0
+pnorm	21	0	1	0x2bf7969669108a81
+pnorm	21	0	4	0x3ad1b33b85d0e3d4
+pnorm	21	0	25	0x3ee8b8f6b599c54d
+pnorm	21	10	1	0x3a64fbd851b8ba34
+pnorm	21	10	4	0x3e6ce8ec39250975
+pnorm	21	10	25	0x3f7d0f8fb3902998
+pnorm	22	-10	1	0x11b0290ff8f0ad73
+pnorm	22	-10	4	0x34401a73820dac40
+pnorm	22	-10	25	0x3ddbf8ebbbeee5cd
+pnorm	22	0	1	0x2a074bf2c4ead13d
+pnorm	22	0	4	0x3a54fbd851b8ba34
+pnorm	22	0	25	0x3ed4ec5adc461152
+pnorm	22	10	1	0x395bdc9558403b05
+pnorm	22	10	4	0x3e2a1880fbd087fd
+pnorm	22	10	25	0x3f72587930b8d65a
+pnorm	23	-10	1	0x0ec1784d87a84a93
+pnorm	23	-10	4	0x338386e18f1e20f9
+pnorm	23	-10	25	0x3dbe7e507b4a3e2e
+pnorm	23	0	1	0x2800edca4ecdb9c5
+pnorm	23	0	4	0x39d35fb7c9d4c55c
+pnorm	23	0	25	0x3ec1037679e55a48
+pnorm	23	10	1	0x383b37f6326beeed
+pnorm	23	10	4	0x3de258556ae47e79
+pnorm	23	10	25	0x3f66411c374dd496
+pnorm	24	-10	1	0x0bbbca5c3510333f
+pnorm	24	-10	4	0x32c270cf36213dd4
+pnorm	24	-10	25	0x3d9ff032cc85366a
+pnorm	24	0	1	0x25e21a1f1b91de4b
+pnorm	24	0	4	0x394bdc9558403b05
+pnorm	24	0	25	0x3eaa9575c3c1c2c9
+pnorm	24	10	1	0x37039069d35d64e7
+pnorm	24	10	4	0x3d941663f31db14b
+pnorm	24	10	25	0x3f59eff648baae37
+pnorm	25	-10	1	0x08a043612df3f57d
+pnorm	25	-10	4	0x31fb201bce77a1c5
+pnorm	25	-10	25	0x3d8011e98f4af43c
+pnorm	25	0	1	0x23ac7bc2f12d814b
+pnorm	25	0	4	0x38bf347600ad79a8
+pnorm	25	0	25	0x3e93f45450a0ca99
+pnorm	25	10	1	0x35b4b15e0921ea42
+pnorm	25	10	4	0x3d4121483257eba0
+pnorm	25	10	25	0x3f4d0b6866258a74
+pnorm	26	-10	1	0x056c028975123156
+pnorm	26	-10	4	0x312f130cd6fe9d62
+pnorm	26	-10	25	0x3d5f131f49d25271
+pnorm	26	0	1	0x21607ce14ac972fb
+pnorm	26	0	4	0x382b37f6326beeed
+pnorm	26	0	25	0x3e7cc8269f9d2f77
+pnorm	26	10	1	0x34501a73820dac40
+pnorm	26	10	4	0x3ce6c0df3a094835
+pnorm	26	10	25	0x3f3f3fac2bd4b179
+pnorm	27	-10	1	0x0221bf35e596c740
+pnorm	27	-10	4	0x305bb9577d9757f5
+pnorm	27	-10	25	0x3d3cdddf2e22ed2d
+pnorm	27	0	1	0x1efc16aa4d10e3e0
+pnorm	27	0	4	0x37927d6ac5d649bf
+pnorm	27	0	25	0x3e63f17a3470f624
+pnorm	27	10	1	0x32d270cf36213dd4
+pnorm	27	10	4	0x3c87899e4c2ad3a6
+pnorm	27	10	25	0x3f3026a434bdac61
+pnorm	28	-10	1	0x00000000845eb885
+pnorm	28	-10	4	0x2f834373f4b7eed4
+pnorm	28	-10	25	0x3d19c39cf4d4ac6e
+pnorm	28	0	1	0x1c819a83623acdd0
+pnorm	28	0	4	0x36f39069d35d64e7
+pnorm	28	0	25	0x3e4a8ddcf6176df4
+pnorm	28	10	1	0x313f130cd6fe9d62
+pnorm	28	10	4	0x3c22f67c5e7a9a3a
+pnorm	28	10	25	0x3f200a6782e33117
+pnorm	29	-10	1	0x0000000000000000
+pnorm	29	-10	4	0x2ea4d929a91ecaf6
+pnorm	29	-10	25	0x3cf617e632d50311
+pnorm	29	0	1	0x19f03c0562a87dff
+pnorm	29	0	4	0x36501f2a80f4bd41
+pnorm	29	0	25	0x3e30fc2bffe509ac
+pnorm	29	10	1	0x2f934373f4b7eed4
+pnorm	29	10	4	0x3bb7cbbcf79d2a72
+pnorm	29	10	25	0x3f0e9ce3ff5ca363
+pnorm	30	-10	1	0x0000000000000000
+pnorm	30	-10	4	0x2dc1928c553065a4
+pnorm	30	-10	25	0x3cd233e5c8076cf7
+pnorm	30	0	1	0x1746080417588184
+pnorm	30	0	4	0x35a4b15e0921ea42
+pnorm	30	0	25	0x3e14e0672fda0664
+pnorm	30	10	1	0x2dd1928c553065a4
+pnorm	30	10	4	0x3b47416846b4d5da
+pnorm	30	10	25	0x3efc10f49e012121
+pnorm2	-6.0	-2.0	0.5	0x338858a4
+pnorm2	-6.0	-2.0	1.0	0x390c54c7
+pnorm2	-6.0	-2.0	4.0	0x3cdd25a2
+pnorm2	-6.0	0.0	0.5	0x2516e08d
+pnorm2	-6.0	0.0	1.0	0x31d0c408
+pnorm2	-6.0	0.0	4.0	0x3b11390a
+pnorm2	-6.0	1.5	0.5	0x168206a5
+pnorm2	-6.0	1.5	1.0	0x2a890a42
+pnorm2	-6.0	1.5	4.0	0x3938dc97
+pnorm2	-5.875	-2.0	0.5	0x343670d5
+pnorm2	-5.875	-2.0	1.0	0x39659104
+pnorm2	-5.875	-2.0	4.0	0x3cfa1a7a
+pnorm2	-5.875	0.0	0.5	0x26266ce0
+pnorm2	-5.875	0.0	1.0	0x325b4246
+pnorm2	-5.875	0.0	4.0	0x3b2ed492
+pnorm2	-5.875	1.5	0.5	0x17d0aec3
+pnorm2	-5.875	1.5	1.0	0x2b2d9c42
+pnorm2	-5.875	1.5	4.0	0x39693b29
+pnorm2	-5.75	-2.0	0.5	0x34ec9b8f
+pnorm2	-5.75	-2.0	1.0	0x39b8dc97
+pnorm2	-5.75	-2.0	4.0	0x3d0cdfd2
+pnorm2	-5.75	0.0	0.5	0x2731ed7c
+pnorm2	-5.75	0.0	1.0	0x32e2b592
+pnorm2	-5.75	0.0	4.0	0x3b51a753
+pnorm2	-5.75	1.5	0.5	0x19224ef3
+pnorm2	-5.75	1.5	1.0	0x2bd887ac
+pnorm2	-5.75	1.5	4.0	0x39928dfc
+pnorm2	-5.625	-2.0	0.5	0x3594b538
+pnorm2	-5.625	-2.0	1.0	0x3a128dfc
+pnorm2	-5.625	-2.0	4.0	0x3d1e1486
+pnorm2	-5.625	0.0	0.5	0x28385f58
+pnorm2	-5.625	0.0	1.0	0x3366c751
+pnorm2	-5.625	0.0	4.0	0x3b7a6ed3
+pnorm2	-5.625	1.5	0.5	0x1a74b613
+pnorm2	-5.625	1.5	1.0	0x2c84efc3
+pnorm2	-5.625	1.5	4.0	0x39b77646
+pnorm2	-5.5	-2.0	0.5	0x36352cb9
+pnorm2	-5.5	-2.0	1.0	0x3a64c4bf
+pnorm2	-5.5	-2.0	4.0	0x3d30b22a
+pnorm2	-5.5	0.0	0.5	0x29392c31
+pnorm2	-5.5	0.0	1.0	0x33e74762
+pnorm2	-5.5	0.0	4.0	0x3b94fd2a
+pnorm2	-5.5	1.5	0.5	0x1bb2cc8c
+pnorm2	-5.5	1.5	1.0	0x2d20b320
+pnorm2	-5.5	1.5	4.0	0x39e4c4bf
+pnorm2	-5.375	-2.0	0.5	0x36d5f04f
+pnorm2	-5.375	-2.0	1.0	0x3aafc87b
+pnorm2	-5.375	-2.0	4.0	0x3d44bbe4
+pnorm2	-5.375	0.0	0.5	0x2a34411f
+pnorm2	-5.375	0.0	1.0	0x34642fcf
+pnorm2	-5.375	0.0	4.0	0x3bb09560
+pnorm2	-5.375	1.5	0.5	0x1cfd3dc9
+pnorm2	-5.375	1.5	1.0	0x2dbf3fd1
+pnorm2	-5.375	1.5	4.0	0x3a0e1365
+pnorm2	-5.25	-2.0	0.5	0x3774daf4
+pnorm2	-5.25	-2.0	1.0	0x3b04f9c7
+pnorm2	-5.25	-2.0	4.0	0x3d5a30bc
+pnorm2	-5.25	0.0	0.5	0x2b2a1178
+pnorm2	-5.25	0.0	1.0	0x34dda546
+pnorm2	-5.25	0.0	4.0	0x3bd07916
+pnorm2	-5.25	1.5	0.5	0x1e2dd231
+pnorm2	-5.25	1.5	1.0	0x2e6013e7
+pnorm2	-5.25	1.5	4.0	0x3a2fc87b
+pnorm2	-5.125	-2.0	0.5	0x3807cf0e
+pnorm2	-5.125	-2.0	1.0	0x3b461113
+pnorm2	-5.125	-2.0	4.0	0x3d710b21
+pnorm2	-5.125	0.0	0.5	0x2c1b855c
+pnorm2	-5.125	0.0	1.0	0x3553f444
+pnorm2	-5.125	0.0	4.0	0x3bf52973
+pnorm2	-5.125	1.5	0.5	0x1f674660
+pnorm2	-5.125	1.5	1.0	0x2f013c49
+pnorm2	-5.125	1.5	4.0	0x3a58a3c1
+pnorm2	-5.0	-2.0	0.5	0x38920475
+pnorm2	-5.0	-2.0	1.0	0x3b91390a
+pnorm2	-5.0	-2.0	4.0	0x3d84a043
+pnorm2	-5.0	0.0	0.5	0x2d09d7a8
+pnorm2	-5.0	0.0	1.0	0x35c78b4b
+pnorm2	-5.0	0.0	4.0	0x3c0f9783
+pnorm2	-5.0	1.5	0.5	0x20952037
+pnorm2	-5.0	1.5	1.0	0x2f92c2ab
+pnorm2	-5.0	1.5	4.0	0x3a84f9c7
+pnorm2	-4.875	-2.0	0.5	0x391829c8
+pnorm2	-4.875	-2.0	1.0	0x3bd1a753
+pnorm2	-4.875	-2.0	4.0	0x3d916081
+pnorm2	-4.875	0.0	0.5	0x2decd440
+pnorm2	-4.875	0.0	1.0	0x3638f2bc
+pnorm2	-4.875	0.0	4.0	0x3c278c5e
+pnorm2	-4.875	1.5	0.5	0x21ba6544
+pnorm2	-4.875	1.5	1.0	0x302413f7
+pnorm2	-4.875	1.5	4.0	0x3aa29b79
+pnorm2	-4.75	-2.0	0.5	0x3999b066
+pnorm2	-4.75	-2.0	1.0	0x3c14fd2a
+pnorm2	-4.75	-2.0	4.0	0x3d9ebb89
+pnorm2	-4.75	0.0	0.5	0x2ec530ba
+pnorm2	-4.75	0.0	1.0	0x36a8c323
+pnorm2	-4.75	0.0	4.0	0x3c42bd4a
+pnorm2	-4.75	1.5	0.5	0x22e1cfd0
+pnorm2	-4.75	1.5	1.0	0x30b49854
+pnorm2	-4.75	1.5	4.0	0x3ac61113
+pnorm2	-4.625	-2.0	0.5	0x3a16744c
+pnorm2	-4.625	-2.0	1.0	0x3c507916
+pnorm2	-4.625	-2.0	4.0	0x3daca3b1
+pnorm2	-4.625	0.0	0.5	0x2f9f2272
+pnorm2	-4.625	0.0	1.0	0x37179afe
+pnorm2	-4.625	0.0	4.0	0x3c6175fd
+pnorm2	-4.625	1.5	0.5	0x240492c0
+pnorm2	-4.625	1.5	1.0	0x3143b16d
+pnorm2	-4.625	1.5	4.0	0x3af0516b
+pnorm2	-4.5	-2.0	0.5	0x3a8ec18c
+pnorm2	-4.5	-2.0	1.0	0x3c8f9783
+pnorm2	-4.5	-2.0	4.0	0x3dbb085d
+pnorm2	-4.5	0.0	0.5	0x3078f1a9
+pnorm2	-4.5	0.0	1.0	0x378614d3
+pnorm2	-4.5	0.0	4.0	0x3c820170
+pnorm2	-4.5	1.5	0.5	0x2516e08d
+pnorm2	-4.5	1.5	1.0	0x31d0c408
+pnorm2	-4.5	1.5	4.0	0x3b11390a
+pnorm2	-4.375	-2.0	0.5	0x3b0348c6
+pnorm2	-4.375	-2.0	1.0	0x3cc2bd4a
+pnorm2	-4.375	-2.0	4.0	0x3dc9d600
+pnorm2	-4.375	0.0	0.5	0x313cba74
+pnorm2	-4.375	0.0	1.0	0x37e97d22
+pnorm2	-4.375	0.0	4.0	0x3c9557f4
+pnorm2	-4.375	1.5	0.5	0x26266ce0
+pnorm2	-4.375	1.5	1.0	0x325b4246
+pnorm2	-4.375	1.5	4.0	0x3b2ed492
+pnorm2	-4.25	-2.0	0.5	0x3b6a0a1d
+pnorm2	-4.25	-2.0	1.0	0x3d020170
+pnorm2	-4.25	-2.0	4.0	0x3dd8f631
+pnorm2	-4.25	0.0	0.5	0x320aad05
+pnorm2	-4.25	0.0	1.0	0x3848257f
+pnorm2	-4.25	0.0	4.0	0x3caae3a0
+pnorm2	-4.25	1.5	0.5	0x2731ed7c
+pnorm2	-4.25	1.5	1.0	0x32e2b592
+pnorm2	-4.25	1.5	4.0	0x3b51a753
+pnorm2	-4.125	-2.0	0.5	0x3bca3127
+pnorm2	-4.125	-2.0	1.0	0x3d2ae3a0
+pnorm2	-4.125	-2.0	4.0	0x3de84fce
+pnorm2	-4.125	0.0	0.5	0x32c5867e
+pnorm2	-4.125	0.0	1.0	0x38a8e7d3
+pnorm2	-4.125	0.0	4.0	0x3cc2c7de
+pnorm2	-4.125	1.5	0.5	0x28385f58
+pnorm2	-4.125	1.5	1.0	0x3366c751
+pnorm2	-4.125	1.5	4.0	0x3b7a6ed3
+pnorm2	-4.0	-2.0	0.5	0x3c294dcf
+pnorm2	-4.0	-2.0	1.0	0x3d5d25a2
+pnorm2	-4.0	-2.0	4.0	0x3df7c72c
+pnorm2	-4.0	0.0	0.5	0x338858a4
+pnorm2	-4.0	0.0	1.0	0x390c54c7
+pnorm2	-4.0	0.0	4.0	0x3cdd25a2
+pnorm2	-4.0	1.5	0.5	0x29392c31
+pnorm2	-4.0	1.5	1.0	0x33e74762
+pnorm2	-4.0	1.5	4.0	0x3b94fd2a
+pnorm2	-3.875	-2.0	0.5	0x3c89675a
+pnorm2	-3.875	-2.0	1.0	0x3d8cdfd2
+pnorm2	-3.875	-2.0	4.0	0x3e039f31
+pnorm2	-3.875	0.0	0.5	0x343670d5
+pnorm2	-3.875	0.0	1.0	0x39659104
+pnorm2	-3.875	0.0	4.0	0x3cfa1a7a
+pnorm2	-3.875	1.5	0.5	0x2a34411f
+pnorm2	-3.875	1.5	1.0	0x34642fcf
+pnorm2	-3.875	1.5	4.0	0x3bb09560
+pnorm2	-3.75	-2.0	0.5	0x3cd82a98
+pnorm2	-3.75	-2.0	1.0	0x3db0b22a
+pnorm2	-3.75	-2.0	4.0	0x3e0b4acb
+pnorm2	-3.75	0.0	0.5	0x34ec9b8f
+pnorm2	-3.75	0.0	1.0	0x39b8dc97
+pnorm2	-3.75	0.0	4.0	0x3d0cdfd2
+pnorm2	-3.75	1.5	0.5	0x2b2a1178
+pnorm2	-3.75	1.5	1.0	0x34dda546
+pnorm2	-3.75	1.5	4.0	0x3bd07916
+pnorm2	-3.625	-2.0	0.5	0x3d24cea4
+pnorm2	-3.625	-2.0	1.0	0x3dda30bc
+pnorm2	-3.625	-2.0	4.0	0x3e12d5b4
+pnorm2	-3.625	0.0	0.5	0x3594b538
+pnorm2	-3.625	0.0	1.0	0x3a128dfc
+pnorm2	-3.625	0.0	4.0	0x3d1e1486
+pnorm2	-3.625	1.5	0.5	0x2c1b855c
+pnorm2	-3.625	1.5	1.0	0x3553f444
+pnorm2	-3.625	1.5	4.0	0x3bf52973
+pnorm2	-3.5	-2.0	0.5	0x3d7391b9
+pnorm2	-3.5	-2.0	1.0	0x3e04a043
+pnorm2	-3.5	-2.0	4.0	0x3e1a2eaf
+pnorm2	-3.5	0.0	0.5	0x36352cb9
+pnorm2	-3.5	0.0	1.0	0x3a64c4bf
+pnorm2	-3.5	0.0	4.0	0x3d30b22a
+pnorm2	-3.5	1.5	0.5	0x2d09d7a8
+pnorm2	-3.5	1.5	1.0	0x35c78b4b
+pnorm2	-3.5	1.5	4.0	0x3c0f9783
+pnorm2	-3.375	-2.0	0.5	0x3dae72cb
+pnorm2	-3.375	-2.0	1.0	0x3e1ebb89
+pnorm2	-3.375	-2.0	4.0	0x3e214436
+pnorm2	-3.375	0.0	0.5	0x36d5f04f
+pnorm2	-3.375	0.0	1.0	0x3aafc87b
+pnorm2	-3.375	0.0	4.0	0x3d44bbe4
+pnorm2	-3.375	1.5	0.5	0x2decd440
+pnorm2	-3.375	1.5	1.0	0x3638f2bc
+pnorm2	-3.375	1.5	4.0	0x3c278c5e
+pnorm2	-3.25	-2.0	0.5	0x3df23298
+pnorm2	-3.25	-2.0	1.0	0x3e3b085d
+pnorm2	-3.25	-2.0	4.0	0x3e2804b7
+pnorm2	-3.25	0.0	0.5	0x3774daf4
+pnorm2	-3.25	0.0	1.0	0x3b04f9c7
+pnorm2	-3.25	0.0	4.0	0x3d5a30bc
+pnorm2	-3.25	1.5	0.5	0x2ec530ba
+pnorm2	-3.25	1.5	1.0	0x36a8c323
+pnorm2	-3.25	1.5	4.0	0x3c42bd4a
+pnorm2	-3.125	-2.0	0.5	0x3e22f4ce
+pnorm2	-3.125	-2.0	1.0	0x3e58f631
+pnorm2	-3.125	-2.0	4.0	0x3e2e5ee0
+pnorm2	-3.125	0.0	0.5	0x3807cf0e
+pnorm2	-3.125	0.0	1.0	0x3b461113
+pnorm2	-3.125	0.0	4.0	0x3d710b21
+pnorm2	-3.125	1.5	0.5	0x2f9f2272
+pnorm2	-3.125	1.5	1.0	0x37179afe
+pnorm2	-3.125	1.5	4.0	0x3c6175fd
+pnorm2	-3.0	-2.0	0.5	0x3e5488f8
+pnorm2	-3.0	-2.0	1.0	0x3e77c72c
+pnorm2	-3.0	-2.0	4.0	0x3e3441e8
+pnorm2	-3.0	0.0	0.5	0x38920475
+pnorm2	-3.0	0.0	1.0	0x3b91390a
+pnorm2	-3.0	0.0	4.0	0x3d84a043
+pnorm2	-3.0	1.5	0.5	0x3078f1a9
+pnorm2	-3.0	1.5	1.0	0x378614d3
+pnorm2	-3.0	1.5	4.0	0x3c820170
+pnorm2	-2.875	-2.0	0.5	0x3e8655b1
+pnorm2	-2.875	-2.0	1.0	0x3e8b4acb
+pnorm2	-2.875	-2.0	4.0	0x3e399dd6
+pnorm2	-2.875	0.0	0.5	0x391829c8
+pnorm2	-2.875	0.0	1.0	0x3bd1a753
+pnorm2	-2.875	0.0	4.0	0x3d916081
+pnorm2	-2.875	1.5	0.5	0x313cba74
+pnorm2	-2.875	1.5	1.0	0x37e97d22
+pnorm2	-2.875	1.5	4.0	0x3c9557f4
+pnorm2	-2.75	-2.0	0.5	0x3ea49721
+pnorm2	-2.75	-2.0	1.0	0x3e9a2eaf
+pnorm2	-2.75	-2.0	4.0	0x3e3e63ca
+pnorm2	-2.75	0.0	0.5	0x3999b066
+pnorm2	-2.75	0.0	1.0	0x3c14fd2a
+pnorm2	-2.75	0.0	4.0	0x3d9ebb89
+pnorm2	-2.75	1.5	0.5	0x320aad05
+pnorm2	-2.75	1.5	1.0	0x3848257f
+pnorm2	-2.75	1.5	4.0	0x3caae3a0
+pnorm2	-2.625	-2.0	0.5	0x3ec374b5
+pnorm2	-2.625	-2.0	1.0	0x3ea804b7
+pnorm2	-2.625	-2.0	4.0	0x3e428644
+pnorm2	-2.625	0.0	0.5	0x3a16744c
+pnorm2	-2.625	0.0	1.0	0x3c507916
+pnorm2	-2.625	0.0	4.0	0x3daca3b1
+pnorm2	-2.625	1.5	0.5	0x32c5867e
+pnorm2	-2.625	1.5	1.0	0x38a8e7d3
+pnorm2	-2.625	1.5	4.0	0x3cc2c7de
+pnorm2	-2.5	-2.0	0.5	0x3ee0f7e5
+pnorm2	-2.5	-2.0	1.0	0x3eb441e8
+pnorm2	-2.5	-2.0	4.0	0x3e45f95d
+pnorm2	-2.5	0.0	0.5	0x3a8ec18c
+pnorm2	-2.5	0.0	1.0	0x3c8f9783
+pnorm2	-2.5	0.0	4.0	0x3dbb085d
+pnorm2	-2.5	1.5	0.5	0x338858a4
+pnorm2	-2.5	1.5	1.0	0x390c54c7
+pnorm2	-2.5	1.5	4.0	0x3cdd25a2
+pnorm2	-2.375	-2.0	0.5	0x3efaf867
+pnorm2	-2.375	-2.0	1.0	0x3ebe63ca
+pnorm2	-2.375	-2.0	4.0	0x3e48b308
+pnorm2	-2.375	0.0	0.5	0x3b0348c6
+pnorm2	-2.375	0.0	1.0	0x3cc2bd4a
+pnorm2	-2.375	0.0	4.0	0x3dc9d600
+pnorm2	-2.375	1.5	0.5	0x343670d5
+pnorm2	-2.375	1.5	1.0	0x39659104
+pnorm2	-2.375	1.5	4.0	0x3cfa1a7a
+pnorm2	-2.25	-2.0	0.5	0x3f07ae8b
+pnorm2	-2.25	-2.0	1.0	0x3ec5f95d
+pnorm2	-2.25	-2.0	4.0	0x3e4aab3d
+pnorm2	-2.25	0.0	0.5	0x3b6a0a1d
+pnorm2	-2.25	0.0	1.0	0x3d020170
+pnorm2	-2.25	0.0	4.0	0x3dd8f631
+pnorm2	-2.25	1.5	0.5	0x34ec9b8f
+pnorm2	-2.25	1.5	1.0	0x39b8dc97
+pnorm2	-2.25	1.5	4.0	0x3d0cdfd2
+pnorm2	-2.125	-2.0	0.5	0x3f0e317d
+pnorm2	-2.125	-2.0	1.0	0x3ecaab3d
+pnorm2	-2.125	-2.0	4.0	0x3e4bdc22
+pnorm2	-2.125	0.0	0.5	0x3bca3127
+pnorm2	-2.125	0.0	1.0	0x3d2ae3a0
+pnorm2	-2.125	0.0	4.0	0x3de84fce
+pnorm2	-2.125	1.5	0.5	0x3594b538
+pnorm2	-2.125	1.5	1.0	0x3a128dfc
+pnorm2	-2.125	1.5	4.0	0x3d1e1486
+pnorm2	-2.0	-2.0	0.5	0x3f106ebb
+pnorm2	-2.0	-2.0	1.0	0x3ecc422a
+pnorm2	-2.0	-2.0	4.0	0x3e4c422a
+pnorm2	-2.0	0.0	0.5	0x3c294dcf
+pnorm2	-2.0	0.0	1.0	0x3d5d25a2
+pnorm2	-2.0	0.0	4.0	0x3df7c72c
+pnorm2	-2.0	1.5	0.5	0x36352cb9
+pnorm2	-2.0	1.5	1.0	0x3a64c4bf
+pnorm2	-2.0	1.5	4.0	0x3d30b22a
+pnorm2	-1.875	-2.0	0.5	0x3f0e317d
+pnorm2	-1.875	-2.0	1.0	0x3ecaab3d
+pnorm2	-1.875	-2.0	4.0	0x3e4bdc22
+pnorm2	-1.875	0.0	0.5	0x3c89675a
+pnorm2	-1.875	0.0	1.0	0x3d8cdfd2
+pnorm2	-1.875	0.0	4.0	0x3e039f31
+pnorm2	-1.875	1.5	0.5	0x36d5f04f
+pnorm2	-1.875	1.5	1.0	0x3aafc87b
+pnorm2	-1.875	1.5	4.0	0x3d44bbe4
+pnorm2	-1.75	-2.0	0.5	0x3f07ae8b
+pnorm2	-1.75	-2.0	1.0	0x3ec5f95d
+pnorm2	-1.75	-2.0	4.0	0x3e4aab3d
+pnorm2	-1.75	0.0	0.5	0x3cd82a98
+pnorm2	-1.75	0.0	1.0	0x3db0b22a
+pnorm2	-1.75	0.0	4.0	0x3e0b4acb
+pnorm2	-1.75	1.5	0.5	0x3774daf4
+pnorm2	-1.75	1.5	1.0	0x3b04f9c7
+pnorm2	-1.75	1.5	4.0	0x3d5a30bc
+pnorm2	-1.625	-2.0	0.5	0x3efaf867
+pnorm2	-1.625	-2.0	1.0	0x3ebe63ca
+pnorm2	-1.625	-2.0	4.0	0x3e48b308
+pnorm2	-1.625	0.0	0.5	0x3d24cea4
+pnorm2	-1.625	0.0	1.0	0x3dda30bc
+pnorm2	-1.625	0.0	4.0	0x3e12d5b4
+pnorm2	-1.625	1.5	0.5	0x3807cf0e
+pnorm2	-1.625	1.5	1.0	0x3b461113
+pnorm2	-1.625	1.5	4.0	0x3d710b21
+pnorm2	-1.5	-2.0	0.5	0x3ee0f7e5
+pnorm2	-1.5	-2.0	1.0	0x3eb441e8
+pnorm2	-1.5	-2.0	4.0	0x3e45f95d
+pnorm2	-1.5	0.0	0.5	0x3d7391b9
+pnorm2	-1.5	0.0	1.0	0x3e04a043
+pnorm2	-1.5	0.0	4.0	0x3e1a2eaf
+pnorm2	-1.5	1.5	0.5	0x38920475
+pnorm2	-1.5	1.5	1.0	0x3b91390a
+pnorm2	-1.5	1.5	4.0	0x3d84a043
+pnorm2	-1.375	-2.0	0.5	0x3ec374b5
+pnorm2	-1.375	-2.0	1.0	0x3ea804b7
+pnorm2	-1.375	-2.0	4.0	0x3e428644
+pnorm2	-1.375	0.0	0.5	0x3dae72cb
+pnorm2	-1.375	0.0	1.0	0x3e1ebb89
+pnorm2	-1.375	0.0	4.0	0x3e214436
+pnorm2	-1.375	1.5	0.5	0x391829c8
+pnorm2	-1.375	1.5	1.0	0x3bd1a753
+pnorm2	-1.375	1.5	4.0	0x3d916081
+pnorm2	-1.25	-2.0	0.5	0x3ea49721
+pnorm2	-1.25	-2.0	1.0	0x3e9a2eaf
+pnorm2	-1.25	-2.0	4.0	0x3e3e63ca
+pnorm2	-1.25	0.0	0.5	0x3df23298
+pnorm2	-1.25	0.0	1.0	0x3e3b085d
+pnorm2	-1.25	0.0	4.0	0x3e2804b7
+pnorm2	-1.25	1.5	0.5	0x3999b066
+pnorm2	-1.25	1.5	1.0	0x3c14fd2a
+pnorm2	-1.25	1.5	4.0	0x3d9ebb89
+pnorm2	-1.125	-2.0	0.5	0x3e8655b1
+pnorm2	-1.125	-2.0	1.0	0x3e8b4acb
+pnorm2	-1.125	-2.0	4.0	0x3e399dd6
+pnorm2	-1.125	0.0	0.5	0x3e22f4ce
+pnorm2	-1.125	0.0	1.0	0x3e58f631
+pnorm2	-1.125	0.0	4.0	0x3e2e5ee0
+pnorm2	-1.125	1.5	0.5	0x3a16744c
+pnorm2	-1.125	1.5	1.0	0x3c507916
+pnorm2	-1.125	1.5	4.0	0x3daca3b1
+pnorm2	-1.0	-2.0	0.5	0x3e5488f8
+pnorm2	-1.0	-2.0	1.0	0x3e77c72c
+pnorm2	-1.0	-2.0	4.0	0x3e3441e8
+pnorm2	-1.0	0.0	0.5	0x3e5488f8
+pnorm2	-1.0	0.0	1.0	0x3e77c72c
+pnorm2	-1.0	0.0	4.0	0x3e3441e8
+pnorm2	-1.0	1.5	0.5	0x3a8ec18c
+pnorm2	-1.0	1.5	1.0	0x3c8f9783
+pnorm2	-1.0	1.5	4.0	0x3dbb085d
+pnorm2	-0.875	-2.0	0.5	0x3e22f4ce
+pnorm2	-0.875	-2.0	1.0	0x3e58f631
+pnorm2	-0.875	-2.0	4.0	0x3e2e5ee0
+pnorm2	-0.875	0.0	0.5	0x3e8655b1
+pnorm2	-0.875	0.0	1.0	0x3e8b4acb
+pnorm2	-0.875	0.0	4.0	0x3e399dd6
+pnorm2	-0.875	1.5	0.5	0x3b0348c6
+pnorm2	-0.875	1.5	1.0	0x3cc2bd4a
+pnorm2	-0.875	1.5	4.0	0x3dc9d600
+pnorm2	-0.75	-2.0	0.5	0x3df23298
+pnorm2	-0.75	-2.0	1.0	0x3e3b085d
+pnorm2	-0.75	-2.0	4.0	0x3e2804b7
+pnorm2	-0.75	0.0	0.5	0x3ea49721
+pnorm2	-0.75	0.0	1.0	0x3e9a2eaf
+pnorm2	-0.75	0.0	4.0	0x3e3e63ca
+pnorm2	-0.75	1.5	0.5	0x3b6a0a1d
+pnorm2	-0.75	1.5	1.0	0x3d020170
+pnorm2	-0.75	1.5	4.0	0x3dd8f631
+pnorm2	-0.625	-2.0	0.5	0x3dae72cb
+pnorm2	-0.625	-2.0	1.0	0x3e1ebb89
+pnorm2	-0.625	-2.0	4.0	0x3e214436
+pnorm2	-0.625	0.0	0.5	0x3ec374b5
+pnorm2	-0.625	0.0	1.0	0x3ea804b7
+pnorm2	-0.625	0.0	4.0	0x3e428644
+pnorm2	-0.625	1.5	0.5	0x3bca3127
+pnorm2	-0.625	1.5	1.0	0x3d2ae3a0
+pnorm2	-0.625	1.5	4.0	0x3de84fce
+pnorm2	-0.5	-2.0	0.5	0x3d7391b9
+pnorm2	-0.5	-2.0	1.0	0x3e04a043
+pnorm2	-0.5	-2.0	4.0	0x3e1a2eaf
+pnorm2	-0.5	0.0	0.5	0x3ee0f7e5
+pnorm2	-0.5	0.0	1.0	0x3eb441e8
+pnorm2	-0.5	0.0	4.0	0x3e45f95d
+pnorm2	-0.5	1.5	0.5	0x3c294dcf
+pnorm2	-0.5	1.5	1.0	0x3d5d25a2
+pnorm2	-0.5	1.5	4.0	0x3df7c72c
+pnorm2	-0.375	-2.0	0.5	0x3d24cea4
+pnorm2	-0.375	-2.0	1.0	0x3dda30bc
+pnorm2	-0.375	-2.0	4.0	0x3e12d5b4
+pnorm2	-0.375	0.0	0.5	0x3efaf867
+pnorm2	-0.375	0.0	1.0	0x3ebe63ca
+pnorm2	-0.375	0.0	4.0	0x3e48b308
+pnorm2	-0.375	1.5	0.5	0x3c89675a
+pnorm2	-0.375	1.5	1.0	0x3d8cdfd2
+pnorm2	-0.375	1.5	4.0	0x3e039f31
+pnorm2	-0.25	-2.0	0.5	0x3cd82a98
+pnorm2	-0.25	-2.0	1.0	0x3db0b22a
+pnorm2	-0.25	-2.0	4.0	0x3e0b4acb
+pnorm2	-0.25	0.0	0.5	0x3f07ae8b
+pnorm2	-0.25	0.0	1.0	0x3ec5f95d
+pnorm2	-0.25	0.0	4.0	0x3e4aab3d
+pnorm2	-0.25	1.5	0.5	0x3cd82a98
+pnorm2	-0.25	1.5	1.0	0x3db0b22a
+pnorm2	-0.25	1.5	4.0	0x3e0b4acb
+pnorm2	-0.125	-2.0	0.5	0x3c89675a
+pnorm2	-0.125	-2.0	1.0	0x3d8cdfd2
+pnorm2	-0.125	-2.0	4.0	0x3e039f31
+pnorm2	-0.125	0.0	0.5	0x3f0e317d
+pnorm2	-0.125	0.0	1.0	0x3ecaab3d
+pnorm2	-0.125	0.0	4.0	0x3e4bdc22
+pnorm2	-0.125	1.5	0.5	0x3d24cea4
+pnorm2	-0.125	1.5	1.0	0x3dda30bc
+pnorm2	-0.125	1.5	4.0	0x3e12d5b4
+pnorm2	0.0	-2.0	0.5	0x3c294dcf
+pnorm2	0.0	-2.0	1.0	0x3d5d25a2
+pnorm2	0.0	-2.0	4.0	0x3df7c72c
+pnorm2	0.0	0.0	0.5	0x3f106ebb
+pnorm2	0.0	0.0	1.0	0x3ecc422a
+pnorm2	0.0	0.0	4.0	0x3e4c422a
+pnorm2	0.0	1.5	0.5	0x3d7391b9
+pnorm2	0.0	1.5	1.0	0x3e04a043
+pnorm2	0.0	1.5	4.0	0x3e1a2eaf
+pnorm2	0.125	-2.0	0.5	0x3bca3127
+pnorm2	0.125	-2.0	1.0	0x3d2ae3a0
+pnorm2	0.125	-2.0	4.0	0x3de84fce
+pnorm2	0.125	0.0	0.5	0x3f0e317d
+pnorm2	0.125	0.0	1.0	0x3ecaab3d
+pnorm2	0.125	0.0	4.0	0x3e4bdc22
+pnorm2	0.125	1.5	0.5	0x3dae72cb
+pnorm2	0.125	1.5	1.0	0x3e1ebb89
+pnorm2	0.125	1.5	4.0	0x3e214436
+pnorm2	0.25	-2.0	0.5	0x3b6a0a1d
+pnorm2	0.25	-2.0	1.0	0x3d020170
+pnorm2	0.25	-2.0	4.0	0x3dd8f631
+pnorm2	0.25	0.0	0.5	0x3f07ae8b
+pnorm2	0.25	0.0	1.0	0x3ec5f95d
+pnorm2	0.25	0.0	4.0	0x3e4aab3d
+pnorm2	0.25	1.5	0.5	0x3df23298
+pnorm2	0.25	1.5	1.0	0x3e3b085d
+pnorm2	0.25	1.5	4.0	0x3e2804b7
+pnorm2	0.375	-2.0	0.5	0x3b0348c6
+pnorm2	0.375	-2.0	1.0	0x3cc2bd4a
+pnorm2	0.375	-2.0	4.0	0x3dc9d600
+pnorm2	0.375	0.0	0.5	0x3efaf867
+pnorm2	0.375	0.0	1.0	0x3ebe63ca
+pnorm2	0.375	0.0	4.0	0x3e48b308
+pnorm2	0.375	1.5	0.5	0x3e22f4ce
+pnorm2	0.375	1.5	1.0	0x3e58f631
+pnorm2	0.375	1.5	4.0	0x3e2e5ee0
+pnorm2	0.5	-2.0	0.5	0x3a8ec18c
+pnorm2	0.5	-2.0	1.0	0x3c8f9783
+pnorm2	0.5	-2.0	4.0	0x3dbb085d
+pnorm2	0.5	0.0	0.5	0x3ee0f7e5
+pnorm2	0.5	0.0	1.0	0x3eb441e8
+pnorm2	0.5	0.0	4.0	0x3e45f95d
+pnorm2	0.5	1.5	0.5	0x3e5488f8
+pnorm2	0.5	1.5	1.0	0x3e77c72c
+pnorm2	0.5	1.5	4.0	0x3e3441e8
+pnorm2	0.625	-2.0	0.5	0x3a16744c
+pnorm2	0.625	-2.0	1.0	0x3c507916
+pnorm2	0.625	-2.0	4.0	0x3daca3b1
+pnorm2	0.625	0.0	0.5	0x3ec374b5
+pnorm2	0.625	0.0	1.0	0x3ea804b7
+pnorm2	0.625	0.0	4.0	0x3e428644
+pnorm2	0.625	1.5	0.5	0x3e8655b1
+pnorm2	0.625	1.5	1.0	0x3e8b4acb
+pnorm2	0.625	1.5	4.0	0x3e399dd6
+pnorm2	0.75	-2.0	0.5	0x3999b066
+pnorm2	0.75	-2.0	1.0	0x3c14fd2a
+pnorm2	0.75	-2.0	4.0	0x3d9ebb89
+pnorm2	0.75	0.0	0.5	0x3ea49721
+pnorm2	0.75	0.0	1.0	0x3e9a2eaf
+pnorm2	0.75	0.0	4.0	0x3e3e63ca
+pnorm2	0.75	1.5	0.5	0x3ea49721
+pnorm2	0.75	1.5	1.0	0x3e9a2eaf
+pnorm2	0.75	1.5	4.0	0x3e3e63ca
+pnorm2	0.875	-2.0	0.5	0x391829c8
+pnorm2	0.875	-2.0	1.0	0x3bd1a753
+pnorm2	0.875	-2.0	4.0	0x3d916081
+pnorm2	0.875	0.0	0.5	0x3e8655b1
+pnorm2	0.875	0.0	1.0	0x3e8b4acb
+pnorm2	0.875	0.0	4.0	0x3e399dd6
+pnorm2	0.875	1.5	0.5	0x3ec374b5
+pnorm2	0.875	1.5	1.0	0x3ea804b7
+pnorm2	0.875	1.5	4.0	0x3e428644
+pnorm2	1.0	-2.0	0.5	0x38920475
+pnorm2	1.0	-2.0	1.0	0x3b91390a
+pnorm2	1.0	-2.0	4.0	0x3d84a043
+pnorm2	1.0	0.0	0.5	0x3e5488f8
+pnorm2	1.0	0.0	1.0	0x3e77c72c
+pnorm2	1.0	0.0	4.0	0x3e3441e8
+pnorm2	1.0	1.5	0.5	0x3ee0f7e5
+pnorm2	1.0	1.5	1.0	0x3eb441e8
+pnorm2	1.0	1.5	4.0	0x3e45f95d
+pnorm2	1.125	-2.0	0.5	0x3807cf0e
+pnorm2	1.125	-2.0	1.0	0x3b461113
+pnorm2	1.125	-2.0	4.0	0x3d710b21
+pnorm2	1.125	0.0	0.5	0x3e22f4ce
+pnorm2	1.125	0.0	1.0	0x3e58f631
+pnorm2	1.125	0.0	4.0	0x3e2e5ee0
+pnorm2	1.125	1.5	0.5	0x3efaf867
+pnorm2	1.125	1.5	1.0	0x3ebe63ca
+pnorm2	1.125	1.5	4.0	0x3e48b308
+pnorm2	1.25	-2.0	0.5	0x3774daf4
+pnorm2	1.25	-2.0	1.0	0x3b04f9c7
+pnorm2	1.25	-2.0	4.0	0x3d5a30bc
+pnorm2	1.25	0.0	0.5	0x3df23298
+pnorm2	1.25	0.0	1.0	0x3e3b085d
+pnorm2	1.25	0.0	4.0	0x3e2804b7
+pnorm2	1.25	1.5	0.5	0x3f07ae8b
+pnorm2	1.25	1.5	1.0	0x3ec5f95d
+pnorm2	1.25	1.5	4.0	0x3e4aab3d
+pnorm2	1.375	-2.0	0.5	0x36d5f04f
+pnorm2	1.375	-2.0	1.0	0x3aafc87b
+pnorm2	1.375	-2.0	4.0	0x3d44bbe4
+pnorm2	1.375	0.0	0.5	0x3dae72cb
+pnorm2	1.375	0.0	1.0	0x3e1ebb89
+pnorm2	1.375	0.0	4.0	0x3e214436
+pnorm2	1.375	1.5	0.5	0x3f0e317d
+pnorm2	1.375	1.5	1.0	0x3ecaab3d
+pnorm2	1.375	1.5	4.0	0x3e4bdc22
+pnorm2	1.5	-2.0	0.5	0x36352cb9
+pnorm2	1.5	-2.0	1.0	0x3a64c4bf
+pnorm2	1.5	-2.0	4.0	0x3d30b22a
+pnorm2	1.5	0.0	0.5	0x3d7391b9
+pnorm2	1.5	0.0	1.0	0x3e04a043
+pnorm2	1.5	0.0	4.0	0x3e1a2eaf
+pnorm2	1.5	1.5	0.5	0x3f106ebb
+pnorm2	1.5	1.5	1.0	0x3ecc422a
+pnorm2	1.5	1.5	4.0	0x3e4c422a
+pnorm2	1.625	-2.0	0.5	0x3594b538
+pnorm2	1.625	-2.0	1.0	0x3a128dfc
+pnorm2	1.625	-2.0	4.0	0x3d1e1486
+pnorm2	1.625	0.0	0.5	0x3d24cea4
+pnorm2	1.625	0.0	1.0	0x3dda30bc
+pnorm2	1.625	0.0	4.0	0x3e12d5b4
+pnorm2	1.625	1.5	0.5	0x3f0e317d
+pnorm2	1.625	1.5	1.0	0x3ecaab3d
+pnorm2	1.625	1.5	4.0	0x3e4bdc22
+pnorm2	1.75	-2.0	0.5	0x34ec9b8f
+pnorm2	1.75	-2.0	1.0	0x39b8dc97
+pnorm2	1.75	-2.0	4.0	0x3d0cdfd2
+pnorm2	1.75	0.0	0.5	0x3cd82a98
+pnorm2	1.75	0.0	1.0	0x3db0b22a
+pnorm2	1.75	0.0	4.0	0x3e0b4acb
+pnorm2	1.75	1.5	0.5	0x3f07ae8b
+pnorm2	1.75	1.5	1.0	0x3ec5f95d
+pnorm2	1.75	1.5	4.0	0x3e4aab3d
+pnorm2	1.875	-2.0	0.5	0x343670d5
+pnorm2	1.875	-2.0	1.0	0x39659104
+pnorm2	1.875	-2.0	4.0	0x3cfa1a7a
+pnorm2	1.875	0.0	0.5	0x3c89675a
+pnorm2	1.875	0.0	1.0	0x3d8cdfd2
+pnorm2	1.875	0.0	4.0	0x3e039f31
+pnorm2	1.875	1.5	0.5	0x3efaf867
+pnorm2	1.875	1.5	1.0	0x3ebe63ca
+pnorm2	1.875	1.5	4.0	0x3e48b308
+pnorm2	2.0	-2.0	0.5	0x338858a4
+pnorm2	2.0	-2.0	1.0	0x390c54c7
+pnorm2	2.0	-2.0	4.0	0x3cdd25a2
+pnorm2	2.0	0.0	0.5	0x3c294dcf
+pnorm2	2.0	0.0	1.0	0x3d5d25a2
+pnorm2	2.0	0.0	4.0	0x3df7c72c
+pnorm2	2.0	1.5	0.5	0x3ee0f7e5
+pnorm2	2.0	1.5	1.0	0x3eb441e8
+pnorm2	2.0	1.5	4.0	0x3e45f95d
+pnorm2	2.125	-2.0	0.5	0x32c5867e
+pnorm2	2.125	-2.0	1.0	0x38a8e7d3
+pnorm2	2.125	-2.0	4.0	0x3cc2c7de
+pnorm2	2.125	0.0	0.5	0x3bca3127
+pnorm2	2.125	0.0	1.0	0x3d2ae3a0
+pnorm2	2.125	0.0	4.0	0x3de84fce
+pnorm2	2.125	1.5	0.5	0x3ec374b5
+pnorm2	2.125	1.5	1.0	0x3ea804b7
+pnorm2	2.125	1.5	4.0	0x3e428644
+pnorm2	2.25	-2.0	0.5	0x320aad05
+pnorm2	2.25	-2.0	1.0	0x3848257f
+pnorm2	2.25	-2.0	4.0	0x3caae3a0
+pnorm2	2.25	0.0	0.5	0x3b6a0a1d
+pnorm2	2.25	0.0	1.0	0x3d020170
+pnorm2	2.25	0.0	4.0	0x3dd8f631
+pnorm2	2.25	1.5	0.5	0x3ea49721
+pnorm2	2.25	1.5	1.0	0x3e9a2eaf
+pnorm2	2.25	1.5	4.0	0x3e3e63ca
+pnorm2	2.375	-2.0	0.5	0x313cba74
+pnorm2	2.375	-2.0	1.0	0x37e97d22
+pnorm2	2.375	-2.0	4.0	0x3c9557f4
+pnorm2	2.375	0.0	0.5	0x3b0348c6
+pnorm2	2.375	0.0	1.0	0x3cc2bd4a
+pnorm2	2.375	0.0	4.0	0x3dc9d600
+pnorm2	2.375	1.5	0.5	0x3e8655b1
+pnorm2	2.375	1.5	1.0	0x3e8b4acb
+pnorm2	2.375	1.5	4.0	0x3e399dd6
+pnorm2	2.5	-2.0	0.5	0x3078f1a9
+pnorm2	2.5	-2.0	1.0	0x378614d3
+pnorm2	2.5	-2.0	4.0	0x3c820170
+pnorm2	2.5	0.0	0.5	0x3a8ec18c
+pnorm2	2.5	0.0	1.0	0x3c8f9783
+pnorm2	2.5	0.0	4.0	0x3dbb085d
+pnorm2	2.5	1.5	0.5	0x3e5488f8
+pnorm2	2.5	1.5	1.0	0x3e77c72c
+pnorm2	2.5	1.5	4.0	0x3e3441e8
+pnorm2	2.625	-2.0	0.5	0x2f9f2272
+pnorm2	2.625	-2.0	1.0	0x37179afe
+pnorm2	2.625	-2.0	4.0	0x3c6175fd
+pnorm2	2.625	0.0	0.5	0x3a16744c
+pnorm2	2.625	0.0	1.0	0x3c507916
+pnorm2	2.625	0.0	4.0	0x3daca3b1
+pnorm2	2.625	1.5	0.5	0x3e22f4ce
+pnorm2	2.625	1.5	1.0	0x3e58f631
+pnorm2	2.625	1.5	4.0	0x3e2e5ee0
+pnorm2	2.75	-2.0	0.5	0x2ec530ba
+pnorm2	2.75	-2.0	1.0	0x36a8c323
+pnorm2	2.75	-2.0	4.0	0x3c42bd4a
+pnorm2	2.75	0.0	0.5	0x3999b066
+pnorm2	2.75	0.0	1.0	0x3c14fd2a
+pnorm2	2.75	0.0	4.0	0x3d9ebb89
+pnorm2	2.75	1.5	0.5	0x3df23298
+pnorm2	2.75	1.5	1.0	0x3e3b085d
+pnorm2	2.75	1.5	4.0	0x3e2804b7
+pnorm2	2.875	-2.0	0.5	0x2decd440
+pnorm2	2.875	-2.0	1.0	0x3638f2bc
+pnorm2	2.875	-2.0	4.0	0x3c278c5e
+pnorm2	2.875	0.0	0.5	0x391829c8
+pnorm2	2.875	0.0	1.0	0x3bd1a753
+pnorm2	2.875	0.0	4.0	0x3d916081
+pnorm2	2.875	1.5	0.5	0x3dae72cb
+pnorm2	2.875	1.5	1.0	0x3e1ebb89
+pnorm2	2.875	1.5	4.0	0x3e214436
+pnorm2	3.0	-2.0	0.5	0x2d09d7a8
+pnorm2	3.0	-2.0	1.0	0x35c78b4b
+pnorm2	3.0	-2.0	4.0	0x3c0f9783
+pnorm2	3.0	0.0	0.5	0x38920475
+pnorm2	3.0	0.0	1.0	0x3b91390a
+pnorm2	3.0	0.0	4.0	0x3d84a043
+pnorm2	3.0	1.5	0.5	0x3d7391b9
+pnorm2	3.0	1.5	1.0	0x3e04a043
+pnorm2	3.0	1.5	4.0	0x3e1a2eaf
+pnorm2	3.125	-2.0	0.5	0x2c1b855c
+pnorm2	3.125	-2.0	1.0	0x3553f444
+pnorm2	3.125	-2.0	4.0	0x3bf52973
+pnorm2	3.125	0.0	0.5	0x3807cf0e
+pnorm2	3.125	0.0	1.0	0x3b461113
+pnorm2	3.125	0.0	4.0	0x3d710b21
+pnorm2	3.125	1.5	0.5	0x3d24cea4
+pnorm2	3.125	1.5	1.0	0x3dda30bc
+pnorm2	3.125	1.5	4.0	0x3e12d5b4
+pnorm2	3.25	-2.0	0.5	0x2b2a1178
+pnorm2	3.25	-2.0	1.0	0x34dda546
+pnorm2	3.25	-2.0	4.0	0x3bd07916
+pnorm2	3.25	0.0	0.5	0x3774daf4
+pnorm2	3.25	0.0	1.0	0x3b04f9c7
+pnorm2	3.25	0.0	4.0	0x3d5a30bc
+pnorm2	3.25	1.5	0.5	0x3cd82a98
+pnorm2	3.25	1.5	1.0	0x3db0b22a
+pnorm2	3.25	1.5	4.0	0x3e0b4acb
+pnorm2	3.375	-2.0	0.5	0x2a34411f
+pnorm2	3.375	-2.0	1.0	0x34642fcf
+pnorm2	3.375	-2.0	4.0	0x3bb09560
+pnorm2	3.375	0.0	0.5	0x36d5f04f
+pnorm2	3.375	0.0	1.0	0x3aafc87b
+pnorm2	3.375	0.0	4.0	0x3d44bbe4
+pnorm2	3.375	1.5	0.5	0x3c89675a
+pnorm2	3.375	1.5	1.0	0x3d8cdfd2
+pnorm2	3.375	1.5	4.0	0x3e039f31
+pnorm2	3.5	-2.0	0.5	0x29392c31
+pnorm2	3.5	-2.0	1.0	0x33e74762
+pnorm2	3.5	-2.0	4.0	0x3b94fd2a
+pnorm2	3.5	0.0	0.5	0x36352cb9
+pnorm2	3.5	0.0	1.0	0x3a64c4bf
+pnorm2	3.5	0.0	4.0	0x3d30b22a
+pnorm2	3.5	1.5	0.5	0x3c294dcf
+pnorm2	3.5	1.5	1.0	0x3d5d25a2
+pnorm2	3.5	1.5	4.0	0x3df7c72c
+pnorm2	3.625	-2.0	0.5	0x28385f58
+pnorm2	3.625	-2.0	1.0	0x3366c751
+pnorm2	3.625	-2.0	4.0	0x3b7a6ed3
+pnorm2	3.625	0.0	0.5	0x3594b538
+pnorm2	3.625	0.0	1.0	0x3a128dfc
+pnorm2	3.625	0.0	4.0	0x3d1e1486
+pnorm2	3.625	1.5	0.5	0x3bca3127
+pnorm2	3.625	1.5	1.0	0x3d2ae3a0
+pnorm2	3.625	1.5	4.0	0x3de84fce
+pnorm2	3.75	-2.0	0.5	0x2731ed7c
+pnorm2	3.75	-2.0	1.0	0x32e2b592
+pnorm2	3.75	-2.0	4.0	0x3b51a753
+pnorm2	3.75	0.0	0.5	0x34ec9b8f
+pnorm2	3.75	0.0	1.0	0x39b8dc97
+pnorm2	3.75	0.0	4.0	0x3d0cdfd2
+pnorm2	3.75	1.5	0.5	0x3b6a0a1d
+pnorm2	3.75	1.5	1.0	0x3d020170
+pnorm2	3.75	1.5	4.0	0x3dd8f631
+pnorm2	3.875	-2.0	0.5	0x26266ce0
+pnorm2	3.875	-2.0	1.0	0x325b4246
+pnorm2	3.875	-2.0	4.0	0x3b2ed492
+pnorm2	3.875	0.0	0.5	0x343670d5
+pnorm2	3.875	0.0	1.0	0x39659104
+pnorm2	3.875	0.0	4.0	0x3cfa1a7a
+pnorm2	3.875	1.5	0.5	0x3b0348c6
+pnorm2	3.875	1.5	1.0	0x3cc2bd4a
+pnorm2	3.875	1.5	4.0	0x3dc9d600
+pnorm2	4.0	-2.0	0.5	0x2516e08d
+pnorm2	4.0	-2.0	1.0	0x31d0c408
+pnorm2	4.0	-2.0	4.0	0x3b11390a
+pnorm2	4.0	0.0	0.5	0x338858a4
+pnorm2	4.0	0.0	1.0	0x390c54c7
+pnorm2	4.0	0.0	4.0	0x3cdd25a2
+pnorm2	4.0	1.5	0.5	0x3a8ec18c
+pnorm2	4.0	1.5	1.0	0x3c8f9783
+pnorm2	4.0	1.5	4.0	0x3dbb085d
+pnorm2	4.125	-2.0	0.5	0x240492c0
+pnorm2	4.125	-2.0	1.0	0x3143b16d
+pnorm2	4.125	-2.0	4.0	0x3af0516b
+pnorm2	4.125	0.0	0.5	0x32c5867e
+pnorm2	4.125	0.0	1.0	0x38a8e7d3
+pnorm2	4.125	0.0	4.0	0x3cc2c7de
+pnorm2	4.125	1.5	0.5	0x3a16744c
+pnorm2	4.125	1.5	1.0	0x3c507916
+pnorm2	4.125	1.5	4.0	0x3daca3b1
+pnorm2	4.25	-2.0	0.5	0x22e1cfd0
+pnorm2	4.25	-2.0	1.0	0x30b49854
+pnorm2	4.25	-2.0	4.0	0x3ac61113
+pnorm2	4.25	0.0	0.5	0x320aad05
+pnorm2	4.25	0.0	1.0	0x3848257f
+pnorm2	4.25	0.0	4.0	0x3caae3a0
+pnorm2	4.25	1.5	0.5	0x3999b066
+pnorm2	4.25	1.5	1.0	0x3c14fd2a
+pnorm2	4.25	1.5	4.0	0x3d9ebb89
+pnorm2	4.375	-2.0	0.5	0x21ba6544
+pnorm2	4.375	-2.0	1.0	0x302413f7
+pnorm2	4.375	-2.0	4.0	0x3aa29b79
+pnorm2	4.375	0.0	0.5	0x313cba74
+pnorm2	4.375	0.0	1.0	0x37e97d22
+pnorm2	4.375	0.0	4.0	0x3c9557f4
+pnorm2	4.375	1.5	0.5	0x391829c8
+pnorm2	4.375	1.5	1.0	0x3bd1a753
+pnorm2	4.375	1.5	4.0	0x3d916081
+pnorm2	4.5	-2.0	0.5	0x20952037
+pnorm2	4.5	-2.0	1.0	0x2f92c2ab
+pnorm2	4.5	-2.0	4.0	0x3a84f9c7
+pnorm2	4.5	0.0	0.5	0x3078f1a9
+pnorm2	4.5	0.0	1.0	0x378614d3
+pnorm2	4.5	0.0	4.0	0x3c820170
+pnorm2	4.5	1.5	0.5	0x38920475
+pnorm2	4.5	1.5	1.0	0x3b91390a
+pnorm2	4.5	1.5	4.0	0x3d84a043
+pnorm2	4.625	-2.0	0.5	0x1f674660
+pnorm2	4.625	-2.0	1.0	0x2f013c49
+pnorm2	4.625	-2.0	4.0	0x3a58a3c1
+pnorm2	4.625	0.0	0.5	0x2f9f2272
+pnorm2	4.625	0.0	1.0	0x37179afe
+pnorm2	4.625	0.0	4.0	0x3c6175fd
+pnorm2	4.625	1.5	0.5	0x3807cf0e
+pnorm2	4.625	1.5	1.0	0x3b461113
+pnorm2	4.625	1.5	4.0	0x3d710b21
+pnorm2	4.75	-2.0	0.5	0x1e2dd231
+pnorm2	4.75	-2.0	1.0	0x2e6013e7
+pnorm2	4.75	-2.0	4.0	0x3a2fc87b
+pnorm2	4.75	0.0	0.5	0x2ec530ba
+pnorm2	4.75	0.0	1.0	0x36a8c323
+pnorm2	4.75	0.0	4.0	0x3c42bd4a
+pnorm2	4.75	1.5	0.5	0x3774daf4
+pnorm2	4.75	1.5	1.0	0x3b04f9c7
+pnorm2	4.75	1.5	4.0	0x3d5a30bc
+pnorm2	4.875	-2.0	0.5	0x1cfd3dc9
+pnorm2	4.875	-2.0	1.0	0x2dbf3fd1
+pnorm2	4.875	-2.0	4.0	0x3a0e1365
+pnorm2	4.875	0.0	0.5	0x2decd440
+pnorm2	4.875	0.0	1.0	0x3638f2bc
+pnorm2	4.875	0.0	4.0	0x3c278c5e
+pnorm2	4.875	1.5	0.5	0x36d5f04f
+pnorm2	4.875	1.5	1.0	0x3aafc87b
+pnorm2	4.875	1.5	4.0	0x3d44bbe4
+pnorm2	5.0	-2.0	0.5	0x1bb2cc8c
+pnorm2	5.0	-2.0	1.0	0x2d20b320
+pnorm2	5.0	-2.0	4.0	0x39e4c4bf
+pnorm2	5.0	0.0	0.5	0x2d09d7a8
+pnorm2	5.0	0.0	1.0	0x35c78b4b
+pnorm2	5.0	0.0	4.0	0x3c0f9783
+pnorm2	5.0	1.5	0.5	0x36352cb9
+pnorm2	5.0	1.5	1.0	0x3a64c4bf
+pnorm2	5.0	1.5	4.0	0x3d30b22a
+pnorm2	5.125	-2.0	0.5	0x1a74b613
+pnorm2	5.125	-2.0	1.0	0x2c84efc3
+pnorm2	5.125	-2.0	4.0	0x39b77646
+pnorm2	5.125	0.0	0.5	0x2c1b855c
+pnorm2	5.125	0.0	1.0	0x3553f444
+pnorm2	5.125	0.0	4.0	0x3bf52973
+pnorm2	5.125	1.5	0.5	0x3594b538
+pnorm2	5.125	1.5	1.0	0x3a128dfc
+pnorm2	5.125	1.5	4.0	0x3d1e1486
+pnorm2	5.25	-2.0	0.5	0x19224ef3
+pnorm2	5.25	-2.0	1.0	0x2bd887ac
+pnorm2	5.25	-2.0	4.0	0x39928dfc
+pnorm2	5.25	0.0	0.5	0x2b2a1178
+pnorm2	5.25	0.0	1.0	0x34dda546
+pnorm2	5.25	0.0	4.0	0x3bd07916
+pnorm2	5.25	1.5	0.5	0x34ec9b8f
+pnorm2	5.25	1.5	1.0	0x39b8dc97
+pnorm2	5.25	1.5	4.0	0x3d0cdfd2
+pnorm2	5.375	-2.0	0.5	0x17d0aec3
+pnorm2	5.375	-2.0	1.0	0x2b2d9c42
+pnorm2	5.375	-2.0	4.0	0x39693b29
+pnorm2	5.375	0.0	0.5	0x2a34411f
+pnorm2	5.375	0.0	1.0	0x34642fcf
+pnorm2	5.375	0.0	4.0	0x3bb09560
+pnorm2	5.375	1.5	0.5	0x343670d5
+pnorm2	5.375	1.5	1.0	0x39659104
+pnorm2	5.375	1.5	4.0	0x3cfa1a7a
+pnorm2	5.5	-2.0	0.5	0x168206a5
+pnorm2	5.5	-2.0	1.0	0x2a890a42
+pnorm2	5.5	-2.0	4.0	0x3938dc97
+pnorm2	5.5	0.0	0.5	0x29392c31
+pnorm2	5.5	0.0	1.0	0x33e74762
+pnorm2	5.5	0.0	4.0	0x3b94fd2a
+pnorm2	5.5	1.5	0.5	0x338858a4
+pnorm2	5.5	1.5	1.0	0x390c54c7
+pnorm2	5.5	1.5	4.0	0x3cdd25a2
+pnorm2	5.625	-2.0	0.5	0x151d0c41
+pnorm2	5.625	-2.0	1.0	0x29d4fdfc
+pnorm2	5.625	-2.0	4.0	0x3911f3c9
+pnorm2	5.625	0.0	0.5	0x28385f58
+pnorm2	5.625	0.0	1.0	0x3366c751
+pnorm2	5.625	0.0	4.0	0x3b7a6ed3
+pnorm2	5.625	1.5	0.5	0x32c5867e
+pnorm2	5.625	1.5	1.0	0x38a8e7d3
+pnorm2	5.625	1.5	4.0	0x3cc2c7de
+pnorm2	5.75	-2.0	0.5	0x13b7d975
+pnorm2	5.75	-2.0	1.0	0x2922f418
+pnorm2	5.75	-2.0	4.0	0x38e59104
+pnorm2	5.75	0.0	0.5	0x2731ed7c
+pnorm2	5.75	0.0	1.0	0x32e2b592
+pnorm2	5.75	0.0	4.0	0x3b51a753
+pnorm2	5.75	1.5	0.5	0x320aad05
+pnorm2	5.75	1.5	1.0	0x3848257f
+pnorm2	5.75	1.5	4.0	0x3caae3a0
+pnorm2	5.875	-2.0	0.5	0x12509a6a
+pnorm2	5.875	-2.0	1.0	0x287579b3
+pnorm2	5.875	-2.0	4.0	0x38b3d652
+pnorm2	5.875	0.0	0.5	0x26266ce0
+pnorm2	5.875	0.0	1.0	0x325b4246
+pnorm2	5.875	0.0	4.0	0x3b2ed492
+pnorm2	5.875	1.5	0.5	0x313cba74
+pnorm2	5.875	1.5	1.0	0x37e97d22
+pnorm2	5.875	1.5	4.0	0x3c9557f4
+factorial	0	0x3ff0000000000000
+factorial	1	0x3ff0000000000000
+factorial	5	0x405e000000000000
+factorial	10	0x414baf8000000000
+factorial	20	0x43c0e1b3be415a00
+factorial	25	0x4529a940c33f6121
+factorial	100	0x60bb30964ec395d8
+factorial	170	0x7fa4ab7864418635
+chisq_pvalue_e	0.5	2	0x3fe8ebef9eac820b
+chisq_logp_e	0.5	2	0	0x3fd0000000000000
+chisq_logp_e	0.5	2	1	0x3fbbcb7b1526e50d
+chisq_pvalue_e	1.0	2	0x3fe368b2fc6f960a
+chisq_logp_e	1.0	2	0	0x3fe0000000000000
+chisq_logp_e	1.0	2	1	0x3fcbcb7b1526e50d
+chisq_pvalue_e	3.0	2	0x3fcc8f87724b5c1d
+chisq_logp_e	3.0	2	0	0x3ff8000000000000
+chisq_logp_e	3.0	2	1	0x3fe4d89c4fdd2bca
+chisq_pvalue_e	10.0	2	0x3f7b993fe00d5376
+chisq_logp_e	10.0	2	0	0x4014000000000000
+chisq_logp_e	10.0	2	1	0x40015f2ced384f28
+chisq_pvalue_e	25.0	2	0x3ecf42ed3f68e690
+chisq_logp_e	25.0	2	0	0x4029000000000000
+chisq_logp_e	25.0	2	1	0x4015b6f8288662f3
+chisq_pvalue_e	39.0	2	0x3e2d30deb5f04c13
+chisq_logp_e	39.0	2	0	0x4033800000000000
+chisq_logp_e	39.0	2	1	0x4020efff00e3b394
+chisq_pvalue_e	41.0	2	0x0000000000000000
+chisq_logp_e	41.0	2	0	0x4034800000000000
+chisq_logp_e	41.0	2	1	0x4021ce5ad98ceabd
+chisq_pvalue_e	80.0	2	0x0000000000000000
+chisq_logp_e	80.0	2	0	0x4044000000000000
+chisq_logp_e	80.0	2	1	0x40315f2ced384f28
+chisq_pvalue_e	200.0	2	0x0000000000000000
+chisq_logp_e	200.0	2	0	0x4059000000000000
+chisq_logp_e	200.0	2	1	0x4045b6f8288662f3
+chisq_pvalue_e	0.5	4	0x3fef26eb8657a28e
+chisq_logp_e	0.5	4	0	0x3f9b8041c32b2ee7
+chisq_logp_e	0.5	4	1	0x3f87e316e504e802
+chisq_pvalue_e	1.0	4	0x3fed1d0c7aa7610f
+chisq_logp_e	1.0	4	0	0x3fb833704d019ed0
+chisq_logp_e	1.0	4	1	0x3fa5054a2718b447
+chisq_pvalue_e	3.0	4	0x3fe1d9b4a76f1992
+chisq_logp_e	3.0	4	0	0x3fe2adbf0f1f1f89
+chisq_logp_e	3.0	4	1	0x3fd0395f40f94b93
+chisq_pvalue_e	10.0	4	0x3fa4b2efe809fe99
+chisq_logp_e	10.0	4	0	0x4009aa7a02eaefff
+chisq_logp_e	10.0	4	1	0x3ff64b0b20b4ca52
+chisq_pvalue_e	25.0	4	0x3f0a60782d808289
+chisq_logp_e	25.0	4	0	0x4023cb6c41eec27b
+chisq_logp_e	25.0	4	1	0x40113181f1616273
+chisq_pvalue_e	39.0	4	0x3e72b34eac8df0bd
+chisq_logp_e	39.0	4	0	0x40307ac56f45fc46
+chisq_logp_e	39.0	4	1	0x401ca0c19a50dbb3
+chisq_pvalue_e	41.0	4	0x3e5b849b969fa8d5
+chisq_logp_e	41.0	4	0	0x40316e941535344e
+chisq_logp_e	41.0	4	1	0x401e484af3b4c0dd
+chisq_pvalue_e	80.0	4	0x0000000000000000
+chisq_logp_e	80.0	4	0	0x404224a9aba7153b
+chisq_logp_e	80.0	4	1	0x402f849b0c305cc6
+chisq_pvalue_e	200.0	4	0x0000000000000000
+chisq_logp_e	200.0	4	0	0x4057d8a1dd8e445d
+chisq_logp_e	200.0	4	1	0x4044b66a8e36d9f5
+chisq_pvalue_e	0.5	6	0x3fefee4b034d069e
+chisq_logp_e	0.5	6	0	0x3f61b9e4a8707556
+chisq_logp_e	0.5	6	1	0x3f4ecb20bdd3bb12
+chisq_pvalue_e	1.0	6	0x3fef8a22da3553d0
+chisq_logp_e	1.0	6	0	0x3f8dae140a1f2279
+chisq_logp_e	1.0	6	1	0x3f79c79b6065d1d1
+chisq_pvalue_e	3.0	6	0x3fe9e212bf944b7a
+chisq_logp_e	3.0	6	0	0x3fcb279736dad54e
+chisq_logp_e	3.0	6	1	0x3fb796132facd7aa
+chisq_pvalue_e	10.0	6	0x3fbfe931db0f6880
+chisq_logp_e	10.0	6	0	0x4000a867d183c6bf
+chisq_logp_e	10.0	6	1	0x3fecf007fb6438a3
+chisq_pvalue_e	25.0	6	0x3f3660a853a3d70a
+chisq_logp_e	25.0	6	0	0x401feddef5eba264
+chisq_logp_e	25.0	6	1	0x400bbbbbed52ca6a
+chisq_pvalue_e	39.0	6	0x3ea804553c70d497
+chisq_logp_e	39.0	6	0	0x402c4cc267e57b23
+chisq_logp_e	39.0	6	1	0x401894b7d2acbc51
+chisq_pvalue_e	41.0	6	0x3e93593d65e842ba
+chisq_logp_e	41.0	6	0	0x402e1c1945cfa07b
+chisq_logp_e	41.0	6	1	0x401a272b63223a59
+chisq_pvalue_e	80.0	6	0x0000000000000000
+chisq_logp_e	80.0	6	0	0x4040a1f8e686403c
+chisq_logp_e	80.0	6	1	0x402ce4dafe15c556
+chisq_pvalue_e	200.0	6	0x0000000000000000
+chisq_logp_e	200.0	6	0	0x4056dd9ea5f5293a
+chisq_logp_e	200.0	6	1	0x4043dc63b56aaee2
+chisq_pvalue_e	0.5	10	0x3feffff2225d6b7a
+chisq_logp_e	0.5	10	0	0x3edbbb4b2b20e5d9
+chisq_logp_e	0.5	10	1	0x3ec8165e3b7ae6a5
+chisq_pvalue_e	1.0	10	0x3feffe970c1ff154
+chisq_logp_e	1.0	10	0	0x3f268fbd405b44eb
+chisq_logp_e	1.0	10	1	0x3f1398be4e4674e3
+chisq_pvalue_e	3.0	10	0x3fef67d3702dddca
+chisq_logp_e	3.0	10	0	0x3f93335dddd0e394
+chisq_logp_e	3.0	10	1	0x3f80ad6ee8c13dcc
+chisq_pvalue_e	10.0	10	0x3fdc310abf5d9cc1
+chisq_logp_e	10.0	10	0	0x3fea3c4b3394ddc9
+chisq_logp_e	10.0	10	1	0x3fd6c9b2d9ad5682
+chisq_pvalue_e	25.0	10	0x3f75e52b33f71bea
+chisq_logp_e	25.0	10	0	0x4014ed0e1e1d8723
+chisq_logp_e	25.0	10	1	0x40022d1437fb39a6
+chisq_pvalue_e	39.0	10	0x3efa9f2f1526bffe
+chisq_logp_e	39.0	10	0	0x40252994b6daeb64
+chisq_logp_e	39.0	10	1	0x401261a6a78154ae
+chisq_pvalue_e	41.0	10	0x3ee7a978a14bc2d6
+chisq_logp_e	41.0	10	0	0x4026c8c29bab06e6
+chisq_logp_e	41.0	10	1	0x4013ca45689f4a53
+chisq_pvalue_e	80.0	10	0x0000000000000000
+chisq_logp_e	80.0	10	0	0x403c51f102cf95d9
+chisq_logp_e	80.0	10	1	0x4028993818f7904a
+chisq_pvalue_e	200.0	10	0x0000000000000000
+chisq_logp_e	200.0	10	0	0x40552de2eeef30f2
+chisq_logp_e	200.0	10	1	0x404265640795b016
+chisq_pvalue_e	0.5	20	0x3feffffffffff8a2
+chisq_logp_e	0.5	20	0	0x3d4d780000000364
+chisq_logp_e	0.5	20	1	0x3d3998a298ba9461
+chisq_pvalue_e	1.0	20	0x3fefffffffe880a2
+chisq_logp_e	1.0	20	0	0x3de77f5e0008a089
+chisq_logp_e	1.0	20	1	0x3dd468e1ad70f370
+chisq_pvalue_e	3.0	20	0x3feffff7682bc103
+chisq_logp_e	3.0	20	0	0x3ed12faaccb4e9d2
+chisq_logp_e	3.0	20	1	0x3ebddb01359fdf03
+chisq_pvalue_e	10.0	20	0x3feefb43b9d8c9d3
+chisq_logp_e	10.0	20	0	0x3fa08f9996ce94e8
+chisq_logp_e	10.0	20	1	0x3f8cc4f080f76b55
+chisq_pvalue_e	25.0	20	0x3fc9c87e9411b133
+chisq_logp_e	25.0	20	0	0x3ff9a30d92ee40e1
+chisq_logp_e	25.0	20	1	0x3fe644986dc374f7
+chisq_pvalue_e	39.0	20	0x3f7b4f42f85ba013
+chisq_logp_e	39.0	20	0	0x40140ac7ab840f8c
+chisq_logp_e	39.0	20	1	0x40016889f20e6570
+chisq_pvalue_e	41.0	20	0x3f6e84610e9f96eb
+chisq_logp_e	41.0	20	0	0x40165ed9410dbe36
+chisq_logp_e	41.0	20	1	0x40036e470c74c90e
+chisq_pvalue_e	80.0	20	0x3e2a5cd04a0e5dcf
+chisq_logp_e	80.0	20	0	0x40335b0caa43be70
+chisq_logp_e	80.0	20	1	0x4020cfe6bac53bdd
+chisq_pvalue_e	200.0	20	0x0000000000000000
+chisq_logp_e	200.0	20	0	0x4051d0c55cff919c
+chisq_logp_e	200.0	20	1	0x403ef2dee175bd15
+chisq_pvalue_e	0.5	50	0x3ff0000000000000
+chisq_logp_e	0.5	50	0	0x8000000000000000
+chisq_logp_e	0.5	50	1	0x8000000000000000
+chisq_pvalue_e	1.0	50	0x3ff0000000000000
+chisq_logp_e	1.0	50	0	0x8000000000000000
+chisq_logp_e	1.0	50	1	0x8000000000000000
+chisq_pvalue_e	3.0	50	0x3ff0000000000000
+chisq_logp_e	3.0	50	0	0x8000000000000000
+chisq_logp_e	3.0	50	1	0x8000000000000000
+chisq_pvalue_e	10.0	50	0x3fefffffffea03f6
+chisq_logp_e	10.0	50	0	0x3de5fc0a00078d47
+chisq_logp_e	10.0	50	1	0x3dd31873dec51e72
+chisq_pvalue_e	25.0	50	0x3feff63b40e63aec
+chisq_logp_e	25.0	50	0	0x3f538c7a3431bb6f
+chisq_logp_e	25.0	50	1	0x3f40fad57426bd33
+chisq_pvalue_e	39.0	50	0x3febd46dd9edfa08
+chisq_logp_e	39.0	50	0	0x3fc1df5881b768c4
+chisq_logp_e	39.0	50	1	0x3faf0c308a6c4376
+chisq_pvalue_e	41.0	50	0x3fea0c3b4a21c9de
+chisq_logp_e	41.0	50	0	0x3fca57c3ca90db86
+chisq_logp_e	41.0	50	1	0x3fb6e18f47b9700b
+chisq_pvalue_e	80.0	50	0x3f725c67baaf90b4
+chisq_logp_e	80.0	50	0	0x4015a15203d7565c
+chisq_logp_e	80.0	50	1	0x4002c9a7c5e575e5
+chisq_pvalue_e	200.0	50	0x0000000000000000
+chisq_logp_e	200.0	50	0	0x4045febf815cf299
+chisq_logp_e	200.0	50	1	0x40331ace3dbd1532

@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mse_d4000_w180_noc_128_nomodel_shift",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_noc_128/nomodel_shift",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_noc_128/treat.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--shift",
+    "-100"
+  ],
+  "files": {
+    "gonechrom_mse_d4000_w180_noc_128_nomodel_shift_peaks.narrowPeak": "7e42331d14a024c98f951acd5369bcdde8b8bf27776cc851d990fdcd6e0ddd18",
+    "gonechrom_mse_d4000_w180_noc_128_nomodel_shift_peaks.xls": "5a2dc4a0b0041cbcafc1c1bbcdec71e40029eed15746fe40b460cc47890b4da1",
+    "gonechrom_mse_d4000_w180_noc_128_nomodel_shift_summits.bed": "16607bc7069f27fff8d2832b21aca21fc2d23d4a74bebfdb6b850291acae2f73"
+  },
+  "fixture": "sweep/gonechrom_mse_d4000_w180_noc_128",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:24:34: [32 MB] \n# Command line: callpeak -n gonechrom_mse_d4000_w180_noc_128_nomodel_shift -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_noc_128/nomodel_shift -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_noc_128/treat.bed -f BED --nomodel --extsize 200 --nomodel --extsize 200 --shift -100\n# ARGUMENTS LIST:\n# name = gonechrom_mse_d4000_w180_noc_128_nomodel_shift\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_noc_128/treat.bed']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:24:34: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:24:34: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:24:34: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:24:34: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:24:34: [33 MB] #1  total tags in treatment: 4000 \nINFO  @ 30 Sep 2026 12:24:34: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:24:34: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #1  tags after filtering in treatment: 479 \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #1  Redundant rate of treatment: 0.88 \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #2 Sequencing ends will be shifted towards 5' by 100 bp(s) \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_noc_128/nomodel_shift/gonechrom_mse_d4000_w180_noc_128_nomodel_shift_peaks.xls \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_noc_128/nomodel_shift/gonechrom_mse_d4000_w180_noc_128_nomodel_shift_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_noc_128/nomodel_shift/gonechrom_mse_d4000_w180_noc_128_nomodel_shift_summits.bed \nINFO  @ 30 Sep 2026 12:24:34: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "nomodel_shift",
+  "wall_seconds": 0.201
+}

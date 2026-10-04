@@ -1,0 +1,3 @@
+# effective genome size for this fixture
+chr1	12000
+# sum=12000

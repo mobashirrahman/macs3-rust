@@ -1,0 +1,56 @@
+usage: macs3 bdgdiff [-h] --t1 T1BDG --t2 T2BDG --c1 C1BDG --c2 C2BDG
+                     [-C CUTOFF] [-l MINLEN] [-g MAXGAP] [--d1 DEPTH1]
+                     [--d2 DEPTH2] [--verbose VERBOSE] [--outdir OUTDIR]
+                     (--o-prefix OPREFIX | -o OFILE OFILE OFILE)
+
+options:
+  -h, --help            show this help message and exit
+  --t1 T1BDG            MACS pileup bedGraph for condition 1. Incompatible
+                        with callpeak --SPMR output. REQUIRED
+  --t2 T2BDG            MACS pileup bedGraph for condition 2. Incompatible
+                        with callpeak --SPMR output. REQUIRED
+  --c1 C1BDG            MACS control lambda bedGraph for condition 1.
+                        Incompatible with callpeak --SPMR output. REQUIRED
+  --c2 C2BDG            MACS control lambda bedGraph for condition 2.
+                        Incompatible with callpeak --SPMR output. REQUIRED
+  -C CUTOFF, --cutoff CUTOFF
+                        log10LR cutoff. Regions with signals lower than cutoff
+                        will not be considerred as enriched regions. DEFAULT:
+                        3 (likelihood ratio=1000)
+  -l MINLEN, --min-len MINLEN
+                        Minimum length of differential region. Try bigger
+                        value to remove small regions. DEFAULT: 200
+  -g MAXGAP, --max-gap MAXGAP
+                        Maximum gap to merge nearby differential regions.
+                        Consider a wider gap for broad marks. Maximum gap
+                        should be smaller than minimum length (-g). DEFAULT:
+                        100
+  --d1 DEPTH1, --depth1 DEPTH1
+                        Sequencing depth (# of non-redundant reads in million)
+                        for condition 1. It will be used together with --d2.
+                        See description for --d2 below for how to assign them.
+                        Default: 1
+  --d2 DEPTH2, --depth2 DEPTH2
+                        Sequencing depth (# of non-redundant reads in million)
+                        for condition 2. It will be used together with --d1.
+                        DEPTH1 and DEPTH2 will be used to calculate scaling
+                        factor for each sample, to down-scale larger sample to
+                        the level of smaller one. For example, while comparing
+                        10 million condition 1 and 20 million condition 2, use
+                        --d1 10 --d2 20, then pileup value in bedGraph for
+                        condition 2 will be divided by 2. Default: 1
+  --verbose VERBOSE     Set verbose level of runtime message. 0: only show
+                        critical message, 1: show additional warning message,
+                        2: show process information, 3: show debug messages.
+                        DEFAULT:2
+  --outdir OUTDIR       If specified all output files will be written to that
+                        directory. Default: the current working directory
+  --o-prefix OPREFIX    Output file prefix. Actual files will be named as
+                        PREFIX_cond1.bed, PREFIX_cond2.bed and
+                        PREFIX_common.bed. Mutually exclusive with -o/--ofile.
+  -o OFILE OFILE OFILE, --ofile OFILE OFILE OFILE
+                        Output filenames. Must give three arguments in order:
+                        1. file for unique regions in condition 1; 2. file for
+                        unique regions in condition 2; 3. file for common
+                        regions in both conditions. Note: mutually exclusive
+                        with --o-prefix.

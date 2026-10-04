@@ -1,0 +1,10 @@
+fixture	one_sided_no_reads
+group	se_edge
+genome	mini
+mode	se
+model_capable	0
+treat	chr1	0
+treat_1	chr1	0
+treat	chr2	0
+ctrl	chr1	1
+ctrl	chr2	1

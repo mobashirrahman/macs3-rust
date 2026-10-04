@@ -1,0 +1,11 @@
+fixture	gtiny_mfrag_d4000_w600_noc_160
+group	sweep
+genome	tiny
+mode	frag
+model_capable	0
+treat	chrA	4000
+treat_1	chrA	4000
+treat_2	chrA	2000
+treat	chrB	4000
+treat_1	chrB	4000
+treat_2	chrB	2000

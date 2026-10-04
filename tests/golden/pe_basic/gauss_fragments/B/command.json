@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gauss_fragments_B",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/B",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe",
+    "-f",
+    "BEDPE",
+    "-B"
+  ],
+  "files": {
+    "gauss_fragments_B_control_lambda.bdg": "5d7e9cf65d823a293e55a3cbe200ecd7cded56c9559a307a157831dca9623ac5",
+    "gauss_fragments_B_peaks.narrowPeak": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gauss_fragments_B_peaks.xls": "d0b0c6eb7677c5bf3dff51d81a01eacdbddb84617bdbff299cc08ad3118c051f",
+    "gauss_fragments_B_summits.bed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gauss_fragments_B_treat_pileup.bdg": "fc83c87d7b7c0cd0573014b0b446a6c2e3da93be50cd9c22cd72f80d3c528860"
+  },
+  "fixture": "pe_basic/gauss_fragments",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:03: [32 MB] \n# Command line: callpeak -n gauss_fragments_B -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/B -t /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe -c /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe -f BEDPE -B\n# ARGUMENTS LIST:\n# name = gauss_fragments_B\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:26:03: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:26:03: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:26:03: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 mean fragment size is determined as 100.3 bp from treatment \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 note: mean fragment size in control is 100.4 bp -- value ignored \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 fragment size = 100.3 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  total fragments in treatment: 3000 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  fragments after filtering in treatment: 50 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  Redundant rate of treatment: 0.98 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  total fragments in control: 2500 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  fragments after filtering in control: 50 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  Redundant rate of control: 0.98 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #3 In the peak calling step, the following will be performed simultaneously: \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #3   Write bedGraph files for treatment pileup (after scaling if necessary)... gauss_fragments_B_treat_pileup.bdg \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #3   Write bedGraph files for control lambda (after scaling if necessary)... gauss_fragments_B_control_lambda.bdg \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #3   Pileup will be based on sequencing depth in treatment. \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/B/gauss_fragments_B_peaks.xls \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/B/gauss_fragments_B_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/B/gauss_fragments_B_summits.bed \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "B",
+  "wall_seconds": 0.197
+}

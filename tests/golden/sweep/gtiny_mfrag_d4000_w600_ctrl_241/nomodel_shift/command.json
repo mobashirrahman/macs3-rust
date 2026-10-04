@@ -1,0 +1,38 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_ctrl_241/nomodel_shift",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_ctrl_241/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_ctrl_241/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--shift",
+    "-100"
+  ],
+  "files": {
+    "gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift_peaks.narrowPeak": "dbda88eac44c625906d02c2f116b56840ffd36ce0319d726a036ba0ffaf5fefa",
+    "gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift_peaks.xls": "66e299a3f71421bdbf99065b514aa514d0c1c3823900bc887eb18450692e4187",
+    "gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift_summits.bed": "967bf8343115e72470a847492d6a06a4f3cbe8860f3be035f003dd58678399be"
+  },
+  "fixture": "sweep/gtiny_mfrag_d4000_w600_ctrl_241",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:28:38: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:28:38: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_ctrl_241/nomodel_shift -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_ctrl_241/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_ctrl_241/ctrl.frag -f FRAG --nomodel --extsize 200 --nomodel --extsize 200 --shift -100\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_ctrl_241/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_ctrl_241/ctrl.frag']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:28:38: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:28:38: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:28:38: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #1 note: mean fragment size in control is 169.2 bp -- value ignored \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #1  total fragments in control: 15994 \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:28:38: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:28:38: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:28:38: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_ctrl_241/nomodel_shift/gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift_peaks.xls \nINFO  @ 30 Sep 2026 12:28:38: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_ctrl_241/nomodel_shift/gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:28:38: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_ctrl_241/nomodel_shift/gtiny_mfrag_d4000_w600_ctrl_241_nomodel_shift_summits.bed \nINFO  @ 30 Sep 2026 12:28:38: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "nomodel_shift",
+  "wall_seconds": 0.369
+}

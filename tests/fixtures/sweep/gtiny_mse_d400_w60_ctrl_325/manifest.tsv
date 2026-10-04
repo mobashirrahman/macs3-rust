@@ -1,0 +1,13 @@
+fixture	gtiny_mse_d400_w60_ctrl_325
+group	sweep
+genome	tiny
+mode	se
+model_capable	0
+treat	chrA	400
+treat_1	chrA	400
+treat_2	chrA	200
+treat	chrB	400
+treat_1	chrB	400
+treat_2	chrB	200
+ctrl	chrA	400
+ctrl	chrB	400

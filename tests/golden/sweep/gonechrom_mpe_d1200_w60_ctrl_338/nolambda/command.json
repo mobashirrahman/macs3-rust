@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mpe_d1200_w60_ctrl_338_nolambda",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d1200_w60_ctrl_338/nolambda",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d1200_w60_ctrl_338/treat.bedpe",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d1200_w60_ctrl_338/ctrl.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--nolambda"
+  ],
+  "files": {
+    "gonechrom_mpe_d1200_w60_ctrl_338_nolambda_peaks.narrowPeak": "c8c372056d5d3be85be8759f2b11084f1dc87340d115df2bffc7a57180cb8144",
+    "gonechrom_mpe_d1200_w60_ctrl_338_nolambda_peaks.xls": "d80d43052ce5e4a1b24c45e3f9ce28eb1d8dab76e7a104ad7806c1ead588ffe2",
+    "gonechrom_mpe_d1200_w60_ctrl_338_nolambda_summits.bed": "4e61506283f99242e379c19510c71ff28cc341be684bc1096d6e3e14ce99671f"
+  },
+  "fixture": "sweep/gonechrom_mpe_d1200_w60_ctrl_338",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:21:46: [32 MB] \n# Command line: callpeak -n gonechrom_mpe_d1200_w60_ctrl_338_nolambda -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d1200_w60_ctrl_338/nolambda -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d1200_w60_ctrl_338/treat.bedpe -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d1200_w60_ctrl_338/ctrl.bedpe -f BEDPE --nomodel --extsize 200 --nolambda\n# ARGUMENTS LIST:\n# name = gonechrom_mpe_d1200_w60_ctrl_338_nolambda\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d1200_w60_ctrl_338/treat.bedpe']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d1200_w60_ctrl_338/ctrl.bedpe']\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:21:46: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:21:46: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:21:46: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1 note: mean fragment size in control is 179.2 bp -- value ignored \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1  total fragments in treatment: 1200 \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1  fragments after filtering in treatment: 83 \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1  Redundant rate of treatment: 0.93 \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1  total fragments in control: 1200 \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1  fragments after filtering in control: 1141 \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1  Redundant rate of control: 0.05 \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] # local lambda is disabled! \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #3 !!!! DYNAMIC LAMBDA IS DISABLED !!!! \nINFO  @ 30 Sep 2026 12:21:46: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:21:46: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:21:46: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d1200_w60_ctrl_338/nolambda/gonechrom_mpe_d1200_w60_ctrl_338_nolambda_peaks.xls \nINFO  @ 30 Sep 2026 12:21:46: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d1200_w60_ctrl_338/nolambda/gonechrom_mpe_d1200_w60_ctrl_338_nolambda_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:21:46: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d1200_w60_ctrl_338/nolambda/gonechrom_mpe_d1200_w60_ctrl_338_nolambda_summits.bed \nINFO  @ 30 Sep 2026 12:21:46: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "nolambda",
+  "wall_seconds": 0.184
+}

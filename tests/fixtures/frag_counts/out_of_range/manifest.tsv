@@ -1,0 +1,15 @@
+fixture	out_of_range
+group	frag_counts
+genome	mini
+mode	frag
+model_capable	0
+treat	chr1	16
+treat	chr2	16
+treat	chr10	16
+treat	chrX	16
+treat	chrM	16
+ctrl	chr1	16
+ctrl	chr2	16
+ctrl	chr10	16
+ctrl	chrX	16
+ctrl	chrM	16

@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mfrag_d400_w180_noc_115_default",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/default",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200"
+  ],
+  "files": {
+    "gtiny_mfrag_d400_w180_noc_115_default_peaks.narrowPeak": "6a4c8ec3eccc6ac04813477aa528ac8aa4569342af4a4962338970e87cd85a1f",
+    "gtiny_mfrag_d400_w180_noc_115_default_peaks.xls": "2673c2d25fb11c2c217dbf7eb9fae7b251e30b3d14b07b482b6c3c8c37c8e3ed",
+    "gtiny_mfrag_d400_w180_noc_115_default_summits.bed": "4bb9cefc77329331dabd37b00f0959be7faaea3d00981f70381fe24044d8f727"
+  },
+  "fixture": "sweep/gtiny_mfrag_d400_w180_noc_115",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:29:21: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:29:21: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d400_w180_noc_115_default -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/default -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag -f FRAG --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d400_w180_noc_115_default\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:29:21: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:29:21: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:29:21: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:29:21: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:29:21: [33 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:29:21: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:29:21: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:29:21: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:29:21: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:29:21: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:29:21: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:29:21: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/default/gtiny_mfrag_d400_w180_noc_115_default_peaks.xls \nINFO  @ 30 Sep 2026 12:29:21: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/default/gtiny_mfrag_d400_w180_noc_115_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:29:21: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/default/gtiny_mfrag_d400_w180_noc_115_default_summits.bed \nINFO  @ 30 Sep 2026 12:29:21: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "default",
+  "wall_seconds": 0.161
+}

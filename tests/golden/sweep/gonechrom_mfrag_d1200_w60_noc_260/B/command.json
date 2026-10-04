@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mfrag_d1200_w60_noc_260_B",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_noc_260/B",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_noc_260/treat.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "-B"
+  ],
+  "files": {
+    "gonechrom_mfrag_d1200_w60_noc_260_B_control_lambda.bdg": "88ed60daad2821ab412f065a69e97841f70d77f1d79074cbfeedfb1888084d7f",
+    "gonechrom_mfrag_d1200_w60_noc_260_B_peaks.narrowPeak": "fff33deaca24337ce26035c4ebd8d6d4ed1d0cc34f6c3471b879e92af1f59035",
+    "gonechrom_mfrag_d1200_w60_noc_260_B_peaks.xls": "6f6311b66074106d091eb901a3268801d9bd7814c3e3c2f4c48936c1f4159c21",
+    "gonechrom_mfrag_d1200_w60_noc_260_B_summits.bed": "54b13f5aec7b926aa0e6b609e1d24210c5ca453e2e70ad13f85c9b0ae78cf715",
+    "gonechrom_mfrag_d1200_w60_noc_260_B_treat_pileup.bdg": "80612a248660e31dfe8d3c2ff9145fa15efbf5f041264aacacd36e6f403aba54"
+  },
+  "fixture": "sweep/gonechrom_mfrag_d1200_w60_noc_260",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:19:18: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:19:18: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d1200_w60_noc_260_B -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_noc_260/B -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_noc_260/treat.frag -f FRAG --nomodel --extsize 200 -B\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d1200_w60_noc_260_B\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_noc_260/treat.frag']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:19:18: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:19:18: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:19:18: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:19:18: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:19:18: [33 MB] #1  total fragments in treatment: 4794 \nINFO  @ 30 Sep 2026 12:19:18: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:19:18: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:19:18: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:19:18: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:19:18: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] #3 In the peak calling step, the following will be performed simultaneously: \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] #3   Write bedGraph files for treatment pileup (after scaling if necessary)... gonechrom_mfrag_d1200_w60_noc_260_B_treat_pileup.bdg \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] #3   Write bedGraph files for control lambda (after scaling if necessary)... gonechrom_mfrag_d1200_w60_noc_260_B_control_lambda.bdg \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] #3   Pileup will be based on sequencing depth in treatment. \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_noc_260/B/gonechrom_mfrag_d1200_w60_noc_260_B_peaks.xls \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_noc_260/B/gonechrom_mfrag_d1200_w60_noc_260_B_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_noc_260/B/gonechrom_mfrag_d1200_w60_noc_260_B_summits.bed \nINFO  @ 30 Sep 2026 12:19:18: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "B",
+  "wall_seconds": 0.178
+}

@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mse_d400_w60_noc_083_nomodel_extsize",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w60_noc_083/nomodel_extsize",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w60_noc_083/treat.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--nomodel",
+    "--extsize",
+    "200"
+  ],
+  "files": {
+    "gonechrom_mse_d400_w60_noc_083_nomodel_extsize_peaks.narrowPeak": "fe1161f60431a5027f6f68d1acf7203e4414d3d5a96daa121359b90a9f7b820e",
+    "gonechrom_mse_d400_w60_noc_083_nomodel_extsize_peaks.xls": "f89dd49e5d50ea7f4d12f4883c41366f6fe0b2a0dd4184ffabacc172f6f7c632",
+    "gonechrom_mse_d400_w60_noc_083_nomodel_extsize_summits.bed": "2ab2cddc6be407a2a928d49a3eb59c8180221526e18739b0a48f01674a256cae"
+  },
+  "fixture": "sweep/gonechrom_mse_d400_w60_noc_083",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:25:52: [32 MB] \n# Command line: callpeak -n gonechrom_mse_d400_w60_noc_083_nomodel_extsize -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w60_noc_083/nomodel_extsize -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w60_noc_083/treat.bed -f BED --nomodel --extsize 200 --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gonechrom_mse_d400_w60_noc_083_nomodel_extsize\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w60_noc_083/treat.bed']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:25:52: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:25:52: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #1  total tags in treatment: 400 \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #1  tags after filtering in treatment: 124 \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #1  Redundant rate of treatment: 0.69 \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:25:52: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:25:52: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:25:52: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w60_noc_083/nomodel_extsize/gonechrom_mse_d400_w60_noc_083_nomodel_extsize_peaks.xls \nINFO  @ 30 Sep 2026 12:25:52: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w60_noc_083/nomodel_extsize/gonechrom_mse_d400_w60_noc_083_nomodel_extsize_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:25:52: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w60_noc_083/nomodel_extsize/gonechrom_mse_d400_w60_noc_083_nomodel_extsize_summits.bed \nINFO  @ 30 Sep 2026 12:25:52: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "nomodel_extsize",
+  "wall_seconds": 0.228
+}

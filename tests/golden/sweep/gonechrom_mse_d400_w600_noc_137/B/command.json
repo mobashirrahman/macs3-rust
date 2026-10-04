@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mse_d400_w600_noc_137_B",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w600_noc_137/B",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w600_noc_137/treat.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "-B"
+  ],
+  "files": {
+    "gonechrom_mse_d400_w600_noc_137_B_control_lambda.bdg": "895d0bbaccfd9597b25b8ae92701e8ab2b09ea194228f88cd8a6765d077bb375",
+    "gonechrom_mse_d400_w600_noc_137_B_peaks.narrowPeak": "44937ecbb4609038f2a1c0c85cd529c2578089c150503559873286ae8cd7ac45",
+    "gonechrom_mse_d400_w600_noc_137_B_peaks.xls": "7da98a5245a224274b7a346464a3bca2eac46269c24c4dfb6b2ecb3c1aaa365a",
+    "gonechrom_mse_d400_w600_noc_137_B_summits.bed": "0e6608a33fd912a79bc184c53ce4a240c1f4a4b83541c53659b428615ed67def",
+    "gonechrom_mse_d400_w600_noc_137_B_treat_pileup.bdg": "f0736b55e4920c1f3e78abe93fa59847946b62eed908f2365745ed2670db8612"
+  },
+  "fixture": "sweep/gonechrom_mse_d400_w600_noc_137",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:25:37: [32 MB] \n# Command line: callpeak -n gonechrom_mse_d400_w600_noc_137_B -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w600_noc_137/B -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w600_noc_137/treat.bed -f BED --nomodel --extsize 200 -B\n# ARGUMENTS LIST:\n# name = gonechrom_mse_d400_w600_noc_137_B\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w600_noc_137/treat.bed']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:25:37: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:25:37: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:25:37: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:25:37: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:25:37: [33 MB] #1  total tags in treatment: 400 \nINFO  @ 30 Sep 2026 12:25:37: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:25:37: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #1  tags after filtering in treatment: 337 \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #1  Redundant rate of treatment: 0.16 \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #3 In the peak calling step, the following will be performed simultaneously: \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #3   Write bedGraph files for treatment pileup (after scaling if necessary)... gonechrom_mse_d400_w600_noc_137_B_treat_pileup.bdg \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #3   Write bedGraph files for control lambda (after scaling if necessary)... gonechrom_mse_d400_w600_noc_137_B_control_lambda.bdg \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #3   Pileup will be based on sequencing depth in treatment. \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w600_noc_137/B/gonechrom_mse_d400_w600_noc_137_B_peaks.xls \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w600_noc_137/B/gonechrom_mse_d400_w600_noc_137_B_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w600_noc_137/B/gonechrom_mse_d400_w600_noc_137_B_summits.bed \nINFO  @ 30 Sep 2026 12:25:37: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "B",
+  "wall_seconds": 0.189
+}

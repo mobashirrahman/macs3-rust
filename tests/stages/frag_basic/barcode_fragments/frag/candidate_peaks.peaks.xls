@@ -1,0 +1,2 @@
+chr	start	end	length	abs_summit	pileup	-log10(pvalue)	fold_enrichment	-log10(qvalue)	name
+chrM	101	200	100	121	7989	633.836	1.95522	632.79	stages_peak_1

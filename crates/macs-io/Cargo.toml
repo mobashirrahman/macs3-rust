@@ -1,0 +1,28 @@
+[package]
+name = "macs-io"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "Input parsers and record-dump differential harness for macs3-rs"
+
+[dependencies]
+macs-core = { workspace = true }
+macs-rle = { workspace = true }
+flate2 = { workspace = true }
+
+[lib]
+name = "macs_io"
+path = "src/lib.rs"
+
+[[bin]]
+name = "macs-io-dump"
+path = "src/bin/dump.rs"
+
+[dev-dependencies]
+tempfile = "3"
+macs-pileup = { workspace = true }
+flate2 = { workspace = true }

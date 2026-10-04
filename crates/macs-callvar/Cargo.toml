@@ -1,0 +1,24 @@
+[package]
+name = "macs-callvar"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "macs3-rs: macs-callvar -- call variants in peak regions from BAM files"
+# `vendor/fermi-lite/` lives inside this package precisely so Cargo's default
+# packaging picks it up: `build.rs` compiles those C sources and `src/fermi.rs`
+# `include_str!`s `fml.h`. An `include` list is deliberately NOT set -- the default
+# already covers `src/`, `tests/`, `examples/`, `build.rs` and `vendor/`, and a
+# narrower list silently drops targets (and C sources) at publish time.
+
+[dependencies]
+macs-stats = { workspace = true }
+macs-core = { workspace = true }
+macs-io = { workspace = true }
+macs-track = { workspace = true }
+
+[build-dependencies]
+cc = "1"

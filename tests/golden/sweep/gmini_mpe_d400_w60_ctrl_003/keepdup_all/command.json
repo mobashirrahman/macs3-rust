@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mpe_d400_w60_ctrl_003_keepdup_all",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_ctrl_003/keepdup_all",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_ctrl_003/treat.bedpe",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_ctrl_003/ctrl.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--keep-dup",
+    "all"
+  ],
+  "files": {
+    "gmini_mpe_d400_w60_ctrl_003_keepdup_all_peaks.narrowPeak": "930798ba50ab90a6f071e2774bacdcfd05d6460c544ff90a5ec09c7bda2106d0",
+    "gmini_mpe_d400_w60_ctrl_003_keepdup_all_peaks.xls": "ca1b24116daccd1d75d33bdb58b1e832573fc4efe9a47c2beb9f667eb647cd09",
+    "gmini_mpe_d400_w60_ctrl_003_keepdup_all_summits.bed": "e3d3942fa0e6d01b1eb7554d21ca09dcad092383ec49a276e65cdbd62fba945b"
+  },
+  "fixture": "sweep/gmini_mpe_d400_w60_ctrl_003",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 11:44:25: [32 MB] \n# Command line: callpeak -n gmini_mpe_d400_w60_ctrl_003_keepdup_all -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_ctrl_003/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_ctrl_003/treat.bedpe -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_ctrl_003/ctrl.bedpe -f BEDPE --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gmini_mpe_d400_w60_ctrl_003_keepdup_all\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_ctrl_003/treat.bedpe']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w60_ctrl_003/ctrl.bedpe']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:44:25: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:44:25: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #1 mean fragment size is determined as 150.4 bp from treatment \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #1 note: mean fragment size in control is 100.2 bp -- value ignored \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #1 fragment size = 150.4 \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #1  total fragments in treatment: 400 \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #1  total fragments in control: 400 \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:44:25: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:44:25: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:44:25: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_ctrl_003/keepdup_all/gmini_mpe_d400_w60_ctrl_003_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 11:44:25: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_ctrl_003/keepdup_all/gmini_mpe_d400_w60_ctrl_003_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:44:25: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w60_ctrl_003/keepdup_all/gmini_mpe_d400_w60_ctrl_003_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 11:44:25: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_all",
+  "wall_seconds": 0.167
+}

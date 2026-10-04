@@ -1,0 +1,4 @@
+pscore	qscore	npeaks	lpeaks	avelpeak
+0.90	0.44	1	97	97.00
+0.60	0.22	1	98	98.00
+0.30	0.00	1	100	100.00

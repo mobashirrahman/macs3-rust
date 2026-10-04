@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mse_d4000_w180_ctrl_209_keepdup_all",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_ctrl_209/keepdup_all",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_ctrl_209/treat.bed",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_ctrl_209/ctrl.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--keep-dup",
+    "all"
+  ],
+  "files": {
+    "gonechrom_mse_d4000_w180_ctrl_209_keepdup_all_peaks.narrowPeak": "370363898e12b56e6874b486238e5e18535651da4ba4d26888ad3ec0ac9c2f17",
+    "gonechrom_mse_d4000_w180_ctrl_209_keepdup_all_peaks.xls": "3e81868c56df61bb2e384a076812eae780795d903a548f22944b1bfb9b17cca6",
+    "gonechrom_mse_d4000_w180_ctrl_209_keepdup_all_summits.bed": "7d2faa284e27cd88d53777eed8bb63b364089cbd816c60e80f563af2378fa919"
+  },
+  "fixture": "sweep/gonechrom_mse_d4000_w180_ctrl_209",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:24:27: [32 MB] \n# Command line: callpeak -n gonechrom_mse_d4000_w180_ctrl_209_keepdup_all -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_ctrl_209/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_ctrl_209/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_ctrl_209/ctrl.bed -f BED --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gonechrom_mse_d4000_w180_ctrl_209_keepdup_all\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_ctrl_209/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d4000_w180_ctrl_209/ctrl.bed']\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:24:27: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:24:27: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:24:27: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #1  total tags in treatment: 4000 \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #1  total tags in control: 4000 \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:24:27: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:24:27: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:24:27: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_ctrl_209/keepdup_all/gonechrom_mse_d4000_w180_ctrl_209_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:24:27: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_ctrl_209/keepdup_all/gonechrom_mse_d4000_w180_ctrl_209_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:24:27: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d4000_w180_ctrl_209/keepdup_all/gonechrom_mse_d4000_w180_ctrl_209_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:24:27: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_all",
+  "wall_seconds": 0.14
+}

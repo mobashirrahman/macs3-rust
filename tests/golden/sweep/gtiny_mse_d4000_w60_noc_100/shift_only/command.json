@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mse_d4000_w60_noc_100_shift_only",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_noc_100/shift_only",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_noc_100/treat.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--shift",
+    "-100",
+    "--extsize",
+    "200"
+  ],
+  "files": {
+    "gtiny_mse_d4000_w60_noc_100_shift_only_peaks.narrowPeak": "11eb1364c4bc1c003519f3a6bc41e1b1e2f7eba9295524e0f4280963c1e52767",
+    "gtiny_mse_d4000_w60_noc_100_shift_only_peaks.xls": "9a0ac16eea37352b55ad882751dea1d5ae9a17b1200d04d356493939f483eaf0",
+    "gtiny_mse_d4000_w60_noc_100_shift_only_summits.bed": "978a08a098fe4174d29c3605c45c42218bec6cb7f15d29003d8ae9166e7352d1"
+  },
+  "fixture": "sweep/gtiny_mse_d4000_w60_noc_100",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:33:43: [32 MB] \n# Command line: callpeak -n gtiny_mse_d4000_w60_noc_100_shift_only -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_noc_100/shift_only -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_noc_100/treat.bed -f BED --nomodel --extsize 200 --shift -100 --extsize 200\n# ARGUMENTS LIST:\n# name = gtiny_mse_d4000_w60_noc_100_shift_only\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_noc_100/treat.bed']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:33:43: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:33:43: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #1  total tags in treatment: 4000 \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #1  tags after filtering in treatment: 174 \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #1  Redundant rate of treatment: 0.96 \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #2 Sequencing ends will be shifted towards 5' by 100 bp(s) \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:33:43: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:33:43: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:33:43: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_noc_100/shift_only/gtiny_mse_d4000_w60_noc_100_shift_only_peaks.xls \nINFO  @ 30 Sep 2026 12:33:43: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_noc_100/shift_only/gtiny_mse_d4000_w60_noc_100_shift_only_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:33:43: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_noc_100/shift_only/gtiny_mse_d4000_w60_noc_100_shift_only_summits.bed \nINFO  @ 30 Sep 2026 12:33:43: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "shift_only",
+  "wall_seconds": 0.158
+}

@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mse_d400_w180_noc_110_shift_only",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_110/shift_only",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_110/treat.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--shift",
+    "-100",
+    "--extsize",
+    "200"
+  ],
+  "files": {
+    "gonechrom_mse_d400_w180_noc_110_shift_only_peaks.narrowPeak": "4636571c9a54223da30cbadcdfb1a809ae075707beedc3d782d4d871d8c33315",
+    "gonechrom_mse_d400_w180_noc_110_shift_only_peaks.xls": "bd3e9036b11a2846bb181f77f233878b583cce3673bc499bc84f3c2303d32b4f",
+    "gonechrom_mse_d400_w180_noc_110_shift_only_summits.bed": "93db9323ce6eb16882b30bbba31d7a7b8db55405ad8abc1cc91607dc8c64c38b"
+  },
+  "fixture": "sweep/gonechrom_mse_d400_w180_noc_110",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:25:21: [32 MB] \n# Command line: callpeak -n gonechrom_mse_d400_w180_noc_110_shift_only -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_110/shift_only -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_110/treat.bed -f BED --nomodel --extsize 200 --shift -100 --extsize 200\n# ARGUMENTS LIST:\n# name = gonechrom_mse_d400_w180_noc_110_shift_only\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_110/treat.bed']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:25:21: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:25:21: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #1  total tags in treatment: 400 \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #1  tags after filtering in treatment: 232 \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #1  Redundant rate of treatment: 0.42 \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #2 Sequencing ends will be shifted towards 5' by 100 bp(s) \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:25:21: [33 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:25:21: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_110/shift_only/gonechrom_mse_d400_w180_noc_110_shift_only_peaks.xls \nINFO  @ 30 Sep 2026 12:25:21: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_110/shift_only/gonechrom_mse_d400_w180_noc_110_shift_only_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:25:21: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_110/shift_only/gonechrom_mse_d400_w180_noc_110_shift_only_summits.bed \nINFO  @ 30 Sep 2026 12:25:21: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "shift_only",
+  "wall_seconds": 0.183
+}

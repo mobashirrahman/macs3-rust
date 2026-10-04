@@ -1,0 +1,9 @@
+fixture	gonechrom_mse_d1200_w180_ctrl_200
+group	sweep
+genome	onechrom
+mode	se
+model_capable	0
+treat	chr1	1200
+treat_1	chr1	1200
+treat_2	chr1	600
+ctrl	chr1	1200

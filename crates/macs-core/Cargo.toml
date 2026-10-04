@@ -1,0 +1,16 @@
+[package]
+name = "macs-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "Core genomic types for macs3-rs: coordinates, intervals, chromosome interning, errors"
+
+[dependencies]
+thiserror.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true

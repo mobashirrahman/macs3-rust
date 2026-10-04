@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mpe_d1200_w60_noc_093_spmr",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w60_noc_093/spmr",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d1200_w60_noc_093/treat.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--SPMR"
+  ],
+  "files": {
+    "gmini_mpe_d1200_w60_noc_093_spmr_peaks.narrowPeak": "6d13a24e61f380d6883f09f9f10406a112334ad50791f2c6522796e3835643f2",
+    "gmini_mpe_d1200_w60_noc_093_spmr_peaks.xls": "ba719b255d26e76540bc760d405782374a89c8f5a7d9271e4c8592ea0b8dc49b",
+    "gmini_mpe_d1200_w60_noc_093_spmr_summits.bed": "226aaef89346133240104d42284992f5c3ada6eb0feae0fcc71ed67c058cbb7f"
+  },
+  "fixture": "sweep/gmini_mpe_d1200_w60_noc_093",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 11:43:06: [32 MB] \n# Command line: callpeak -n gmini_mpe_d1200_w60_noc_093_spmr -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w60_noc_093/spmr -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d1200_w60_noc_093/treat.bedpe -f BEDPE --nomodel --extsize 200 --SPMR\n# ARGUMENTS LIST:\n# name = gmini_mpe_d1200_w60_noc_093_spmr\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d1200_w60_noc_093/treat.bedpe']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:43:06: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:43:06: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #1 mean fragment size is determined as 150.6 bp from treatment \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #1 fragment size = 150.6 \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #1  total fragments in treatment: 1200 \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #1  fragments after filtering in treatment: 86 \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #1  Redundant rate of treatment: 0.93 \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:43:06: [33 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:43:06: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w60_noc_093/spmr/gmini_mpe_d1200_w60_noc_093_spmr_peaks.xls \nINFO  @ 30 Sep 2026 11:43:06: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w60_noc_093/spmr/gmini_mpe_d1200_w60_noc_093_spmr_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:43:06: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w60_noc_093/spmr/gmini_mpe_d1200_w60_noc_093_spmr_summits.bed \nINFO  @ 30 Sep 2026 11:43:06: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "spmr",
+  "wall_seconds": 0.174
+}

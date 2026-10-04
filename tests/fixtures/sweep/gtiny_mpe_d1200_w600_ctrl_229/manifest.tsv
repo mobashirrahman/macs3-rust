@@ -1,0 +1,13 @@
+fixture	gtiny_mpe_d1200_w600_ctrl_229
+group	sweep
+genome	tiny
+mode	pe
+model_capable	0
+treat	chrA	1200
+treat_1	chrA	1200
+treat_2	chrA	600
+treat	chrB	1200
+treat_1	chrB	1200
+treat_2	chrB	600
+ctrl	chrA	1200
+ctrl	chrB	1200

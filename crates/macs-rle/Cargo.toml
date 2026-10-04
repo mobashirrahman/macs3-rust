@@ -1,0 +1,17 @@
+[package]
+name = "macs-rle"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "Run-length-encoded genomic signal tracks: the core representation of macs3-rs"
+
+[dependencies]
+macs-core = { workspace = true }
+rayon = { workspace = true }
+
+[dev-dependencies]
+proptest.workspace = true

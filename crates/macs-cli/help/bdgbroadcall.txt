@@ -1,0 +1,42 @@
+usage: macs3 bdgbroadcall [-h] -i IFILE [-c CUTOFFPEAK] [-C CUTOFFLINK]
+                          [-l MINLEN] [-g LVL1MAXGAP] [-G LVL2MAXGAP]
+                          [--no-trackline] [--verbose VERBOSE]
+                          [--outdir OUTDIR] (-o OFILE | --o-prefix OPREFIX)
+
+options:
+  -h, --help            show this help message and exit
+  -i IFILE, --ifile IFILE
+                        MACS score in bedGraph. REQUIRED
+  -c CUTOFFPEAK, --cutoff-peak CUTOFFPEAK
+                        Cutoff for peaks depending on which method you used
+                        for score track. If the file contains qvalue scores
+                        from MACS3, score 2 means qvalue 0.01. Regions with
+                        signals lower than cutoff will not be considerred as
+                        enriched regions. DEFAULT: 2
+  -C CUTOFFLINK, --cutoff-link CUTOFFLINK
+                        Cutoff for linking regions/low abundance regions
+                        depending on which method you used for score track. If
+                        the file contains qvalue scores from MACS3, score 1
+                        means qvalue 0.1, and score 0.3 means qvalue 0.5.
+                        DEFAULT: 1
+  -l MINLEN, --min-length MINLEN
+                        minimum length of peak, better to set it as d value.
+                        DEFAULT: 200
+  -g LVL1MAXGAP, --lvl1-max-gap LVL1MAXGAP
+                        maximum gap between significant peaks, better to set
+                        it as tag size. DEFAULT: 30
+  -G LVL2MAXGAP, --lvl2-max-gap LVL2MAXGAP
+                        maximum linking between significant peaks, better to
+                        set it as 4 times of d value. DEFAULT: 800
+  --no-trackline        Tells MACS not to include trackline with bedGraph
+                        files. The trackline is required by UCSC.
+  --verbose VERBOSE     Set verbose level of runtime message. 0: only show
+                        critical message, 1: show additional warning message,
+                        2: show process information, 3: show debug messages.
+                        DEFAULT:2
+  --outdir OUTDIR       If specified all output files will be written to that
+                        directory. Default: the current working directory
+  -o OFILE, --ofile OFILE
+                        Output file name. Mutually exclusive with --o-prefix.
+  --o-prefix OPREFIX    Output file prefix. Mutually exclusive with
+                        -o/--ofile.

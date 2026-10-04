@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w60_ctrl_331/mfold_3_20",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w60_ctrl_331/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w60_ctrl_331/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--mfold",
+    "3",
+    "20"
+  ],
+  "files": {
+    "gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20_peaks.narrowPeak": "14a965faa3da36c0f485bee95d87fb8dfb711f784083998494be8ca3a9963a2a",
+    "gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20_peaks.xls": "669d007ea6a1cc22f8157ad23b9e6a9a5b2ae4ac2467bd486b469e44f01e33ad",
+    "gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20_summits.bed": "1ec9ad5ed82f00cc4c2aad8c8e98deb2372443b8580f14cca61a24d3082c91c2"
+  },
+  "fixture": "sweep/gtiny_mfrag_d400_w60_ctrl_331",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:29:51: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:29:51: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20 -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w60_ctrl_331/mfold_3_20 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w60_ctrl_331/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w60_ctrl_331/ctrl.frag -f FRAG --nomodel --extsize 200 --mfold 3 20\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w60_ctrl_331/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w60_ctrl_331/ctrl.frag']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [3, 20]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:29:51: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:29:51: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:29:51: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #1 note: mean fragment size in control is 168.4 bp -- value ignored \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #1  total fragments in control: 1597 \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:29:51: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:29:51: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:29:51: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w60_ctrl_331/mfold_3_20/gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20_peaks.xls \nINFO  @ 30 Sep 2026 12:29:51: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w60_ctrl_331/mfold_3_20/gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:29:51: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w60_ctrl_331/mfold_3_20/gtiny_mfrag_d400_w60_ctrl_331_mfold_3_20_summits.bed \nINFO  @ 30 Sep 2026 12:29:51: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "mfold_3_20",
+  "wall_seconds": 0.181
+}

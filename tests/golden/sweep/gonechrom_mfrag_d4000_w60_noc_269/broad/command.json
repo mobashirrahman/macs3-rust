@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mfrag_d4000_w60_noc_269_broad",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w60_noc_269/broad",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w60_noc_269/treat.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--broad",
+    "--broad-cutoff",
+    "0.1",
+    "-q",
+    "0.05"
+  ],
+  "files": {
+    "gonechrom_mfrag_d4000_w60_noc_269_broad_peaks.broadPeak": "b1b366014cc18b83618c98d153719a8753fe96285f6155faaca804e3b3bb5688",
+    "gonechrom_mfrag_d4000_w60_noc_269_broad_peaks.gappedPeak": "b9463efe7848278d964a130b279a6417fd5a8fee3697400f4879260fdc537db7",
+    "gonechrom_mfrag_d4000_w60_noc_269_broad_peaks.xls": "d10fe57acb6b8b6ba78507733e60547596b87bd748f8f5c9f3f6a6dab69a37f9"
+  },
+  "fixture": "sweep/gonechrom_mfrag_d4000_w60_noc_269",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:20:07: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:20:07: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d4000_w60_noc_269_broad -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w60_noc_269/broad -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w60_noc_269/treat.frag -f FRAG --nomodel --extsize 200 --broad --broad-cutoff 0.1 -q 0.05\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d4000_w60_noc_269_broad\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w60_noc_269/treat.frag']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff for narrow/strong regions = 5.00e-02\n# qvalue cutoff for broad/weak regions = 1.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is on\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:20:07: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:20:07: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #3 Call broad peaks with given level1 -log10qvalue cutoff and level2: 1.301030, 1.000000... \nINFO  @ 30 Sep 2026 12:20:07: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:20:07: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:20:07: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w60_noc_269/broad/gonechrom_mfrag_d4000_w60_noc_269_broad_peaks.xls \nINFO  @ 30 Sep 2026 12:20:07: [35 MB] #4 Write broad peak in broadPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w60_noc_269/broad/gonechrom_mfrag_d4000_w60_noc_269_broad_peaks.broadPeak \nINFO  @ 30 Sep 2026 12:20:07: [35 MB] #4 Write broad peak in bed12/gappedPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w60_noc_269/broad/gonechrom_mfrag_d4000_w60_noc_269_broad_peaks.gappedPeak \nINFO  @ 30 Sep 2026 12:20:07: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "broad",
+  "wall_seconds": 0.152
+}

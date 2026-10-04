@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "barcode_fragments_keepdup_auto",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/keepdup_auto",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--keep-dup",
+    "auto"
+  ],
+  "files": {
+    "barcode_fragments_keepdup_auto_peaks.narrowPeak": "65efa5c9607c55cbaa4a189004b304ecb47098be8dcf1c38473f7d47da705064",
+    "barcode_fragments_keepdup_auto_peaks.xls": "271599918dc27bc8a9ca8afa4eb4b7d32f57afa339bdc50a0edc470fae00e4e2",
+    "barcode_fragments_keepdup_auto_summits.bed": "08ce07fc13f56164787c2482b8f226f9f24263fc3dad95d00663673df39acf26"
+  },
+  "fixture": "frag_basic/barcode_fragments",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:18:25: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:18:25: [32 MB] \n# Command line: callpeak -n barcode_fragments_keepdup_auto -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/keepdup_auto -t /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag -f FRAG --keep-dup auto\n# ARGUMENTS LIST:\n# name = barcode_fragments_keepdup_auto\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:18:25: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:18:25: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:18:25: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #1 mean fragment size is determined as 98.3 bp from treatment \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #1 note: mean fragment size in control is 98.3 bp -- value ignored \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #1 fragment size = 98.3 \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #1  total fragments in treatment: 7995 \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #1  total fragments in control: 7995 \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:18:25: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:18:25: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:18:25: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/keepdup_auto/barcode_fragments_keepdup_auto_peaks.xls \nINFO  @ 30 Sep 2026 12:18:25: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/keepdup_auto/barcode_fragments_keepdup_auto_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:18:25: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/keepdup_auto/barcode_fragments_keepdup_auto_summits.bed \nINFO  @ 30 Sep 2026 12:18:25: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_auto",
+  "wall_seconds": 0.223
+}

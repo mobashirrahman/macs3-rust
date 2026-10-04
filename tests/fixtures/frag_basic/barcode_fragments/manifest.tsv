@@ -1,0 +1,15 @@
+fixture	barcode_fragments
+group	frag_basic
+genome	mini
+mode	frag
+model_capable	1
+treat	chr1	2000
+treat	chr2	2000
+treat	chr10	2000
+treat	chrX	2000
+treat	chrM	2000
+ctrl	chr1	2000
+ctrl	chr2	2000
+ctrl	chr10	2000
+ctrl	chrX	2000
+ctrl	chrM	2000

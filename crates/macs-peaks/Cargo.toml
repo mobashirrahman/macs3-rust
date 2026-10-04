@@ -1,0 +1,33 @@
+[package]
+name = "macs-peaks"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "Peak calling: region segmentation, summits, and --call-summits maxima"
+
+[dependencies]
+macs-core = { workspace = true }
+macs-rle = { workspace = true }
+macs-score = { workspace = true }
+macs-stats = { workspace = true }
+rayon = { workspace = true }
+macs-io = { workspace = true }
+macs-pileup = { workspace = true }
+macs-track = { workspace = true }
+thiserror.workspace = true
+
+[[bin]]
+name = "macs-pipeline-e2e"
+path = "src/bin/pipeline_e2e.rs"
+
+[[bin]]
+name = "macs-callpeak-e2e"
+path = "src/bin/callpeak_e2e.rs"
+
+[lib]
+name = "macs_peaks"
+path = "src/lib.rs"

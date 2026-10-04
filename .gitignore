@@ -1,0 +1,6 @@
+/target/
+fuzz/corpus/
+fuzz/artifacts/
+*.log
+.DS_Store
+/tmp/

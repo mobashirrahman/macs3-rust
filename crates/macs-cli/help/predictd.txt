@@ -1,0 +1,69 @@
+usage: macs3 predictd [-h] -i IFILE [IFILE ...]
+                      [-f {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}]
+                      [-g GSIZE] [-s TSIZE] [--bw BW] [--d-min D_MIN]
+                      [-m MFOLD MFOLD] [--outdir OUTDIR] [--rfile RFILE]
+                      [--buffer-size BUFFER_SIZE] [--verbose VERBOSE]
+
+options:
+  -h, --help            show this help message and exit
+  -i IFILE [IFILE ...], --ifile IFILE [IFILE ...]
+                        ChIP-seq alignment file. If multiple files are given
+                        as '-t A B C', then they will all be read and
+                        combined. REQUIRED.
+  -f {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}, --format {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}
+                        Format of tag file, "AUTO", "BED" or "ELAND" or
+                        "ELANDMULTI" or "ELANDEXPORT" or "SAM" or "BAM" or
+                        "BOWTIE" or "BAMPE" or "BEDPE". The default AUTO
+                        option will let MACS decide which format the file is.
+                        However, if you want to decide the average insertion
+                        size/fragment size from PE data such as BEDPE or
+                        BAMPE, please specify the format as BAMPE or BEDPE
+                        since MACS3 won't automatically recognize three two
+                        formats with -f AUTO. Please be aware that in PE mode,
+                        -g, -s, --bw, --d-min, -m, and --rfile have NO effect.
+                        DEFAULT: "AUTO"
+  -g GSIZE, --gsize GSIZE
+                        Effective genome size. It can be 1.0e+9 or 1000000000,
+                        or shortcuts:'hs' for human (2,913,022,398), 'mm' for
+                        mouse (2,652,783,500), 'ce' for C. elegans
+                        (100,286,401) and 'dm' for fruitfly (142,573,017),
+                        Default:hs. The effective genome size numbers for the
+                        above four species are collected from Deeptools https:
+                        //deeptools.readthedocs.io/en/develop/content/feature/
+                        effectiveGenomeSize.html Please refer to deeptools to
+                        define the best genome size you plan to use.
+  -s TSIZE, --tsize TSIZE
+                        Tag size. This will override the auto detected tag
+                        size. DEFAULT: Not set
+  --bw BW               Band width for picking regions to compute fragment
+                        size. This value is only used while building the
+                        shifting model. DEFAULT: 300
+  --d-min D_MIN         Minimum fragment size in basepair. Any predicted
+                        fragment size less than this will be excluded.
+                        DEFAULT: 20
+  -m MFOLD MFOLD, --mfold MFOLD MFOLD
+                        Select the regions within MFOLD range of high-
+                        confidence enrichment ratio against background to
+                        build model. Fold-enrichment in regions must be lower
+                        than upper limit, and higher than the lower limit. Use
+                        as "-m 10 30". DEFAULT:5 50
+  --outdir OUTDIR       If specified all output files will be written to that
+                        directory. Default: the current working directory
+  --rfile RFILE         PREFIX of filename of R script for drawing
+                        X-correlation figure. DEFAULT:'predictd_model.R' and R
+                        file will be predicted_model.R
+  --buffer-size BUFFER_SIZE
+                        Buffer size for incrementally increasing internal
+                        array size to store reads alignment information. In
+                        most cases, you don't have to change this parameter.
+                        However, if there are large number of
+                        chromosomes/contigs/scaffolds in your alignment, it's
+                        recommended to specify a smaller buffer size in order
+                        to decrease memory usage (but it will take longer time
+                        to read alignment files). Minimum memory requested for
+                        reading an alignment file is about # of CHROMOSOME *
+                        BUFFER_SIZE * 8 Bytes. DEFAULT: 100000
+  --verbose VERBOSE     Set verbose level of runtime message. 0: only show
+                        critical message, 1: show additional warning message,
+                        2: show process information, 3: show debug messages.
+                        DEFAULT:2

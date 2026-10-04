@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gauss_fragments_spmr",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/spmr",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe",
+    "-f",
+    "BEDPE",
+    "--SPMR"
+  ],
+  "files": {
+    "gauss_fragments_spmr_peaks.narrowPeak": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gauss_fragments_spmr_peaks.xls": "8cfd7aeb005628da6007458d53972164aa67730c4733047c2ced0f189c95ad5f",
+    "gauss_fragments_spmr_summits.bed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "fixture": "pe_basic/gauss_fragments",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:03: [32 MB] \n# Command line: callpeak -n gauss_fragments_spmr -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/spmr -t /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe -c /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe -f BEDPE --SPMR\n# ARGUMENTS LIST:\n# name = gauss_fragments_spmr\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/treat.bedpe']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/gauss_fragments/ctrl.bedpe']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:26:03: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:26:03: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:26:03: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 mean fragment size is determined as 100.3 bp from treatment \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 note: mean fragment size in control is 100.4 bp -- value ignored \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 fragment size = 100.3 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  total fragments in treatment: 3000 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  fragments after filtering in treatment: 50 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  Redundant rate of treatment: 0.98 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  total fragments in control: 2500 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  fragments after filtering in control: 50 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1  Redundant rate of control: 0.98 \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:03: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/spmr/gauss_fragments_spmr_peaks.xls \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/spmr/gauss_fragments_spmr_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/gauss_fragments/spmr/gauss_fragments_spmr_summits.bed \nINFO  @ 30 Sep 2026 12:26:03: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "spmr",
+  "wall_seconds": 0.23
+}

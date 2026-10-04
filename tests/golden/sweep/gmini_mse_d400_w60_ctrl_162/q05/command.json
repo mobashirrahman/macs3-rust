@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mse_d400_w60_ctrl_162_q05",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mse_d400_w60_ctrl_162/q05",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mse_d400_w60_ctrl_162/treat.bed",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mse_d400_w60_ctrl_162/ctrl.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "-q",
+    "0.5"
+  ],
+  "files": {
+    "gmini_mse_d400_w60_ctrl_162_q05_peaks.narrowPeak": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gmini_mse_d400_w60_ctrl_162_q05_peaks.xls": "5e761320f5b35e06c32d51264fdc1fd6db3187fae204cda9cbce789859d8c7ea",
+    "gmini_mse_d400_w60_ctrl_162_q05_summits.bed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "fixture": "sweep/gmini_mse_d400_w60_ctrl_162",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 11:46:36: [32 MB] \n# Command line: callpeak -n gmini_mse_d400_w60_ctrl_162_q05 -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mse_d400_w60_ctrl_162/q05 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mse_d400_w60_ctrl_162/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mse_d400_w60_ctrl_162/ctrl.bed -f BED --nomodel --extsize 200 -q 0.5\n# ARGUMENTS LIST:\n# name = gmini_mse_d400_w60_ctrl_162_q05\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mse_d400_w60_ctrl_162/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mse_d400_w60_ctrl_162/ctrl.bed']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 11:46:36: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 11:46:36: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 11:46:36: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 11:46:36: [33 MB] #1 tag size is determined as 180 bps \nINFO  @ 30 Sep 2026 11:46:36: [33 MB] #1 tag size = 180.0 \nINFO  @ 30 Sep 2026 11:46:36: [33 MB] #1  total tags in treatment: 400 \nINFO  @ 30 Sep 2026 11:46:36: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 11:46:36: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #1  tags after filtering in treatment: 59 \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #1  Redundant rate of treatment: 0.85 \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #1  total tags in control: 400 \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #1  tags after filtering in control: 129 \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #1  Redundant rate of control: 0.68 \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:46:36: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mse_d400_w60_ctrl_162/q05/gmini_mse_d400_w60_ctrl_162_q05_peaks.xls \nINFO  @ 30 Sep 2026 11:46:36: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mse_d400_w60_ctrl_162/q05/gmini_mse_d400_w60_ctrl_162_q05_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:46:36: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mse_d400_w60_ctrl_162/q05/gmini_mse_d400_w60_ctrl_162_q05_summits.bed \nINFO  @ 30 Sep 2026 11:46:36: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "q05",
+  "wall_seconds": 0.168
+}

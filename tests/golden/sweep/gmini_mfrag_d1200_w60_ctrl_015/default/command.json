@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mfrag_d1200_w60_ctrl_015_default",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_015/default",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_015/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_015/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200"
+  ],
+  "files": {
+    "gmini_mfrag_d1200_w60_ctrl_015_default_peaks.narrowPeak": "15970cf6723fc1f40942a9720c6d7b3d00461aa05c7e854b65787d7f049f904b",
+    "gmini_mfrag_d1200_w60_ctrl_015_default_peaks.xls": "9f63254d428da9e8edaf565a6e53cb5a9188cd1be55062f49619cc60a80bc68c",
+    "gmini_mfrag_d1200_w60_ctrl_015_default_summits.bed": "be2f7af9fb934fc98ffbfdfab6eecbcacedcaac17dcae93c2d7a121278ffaf16"
+  },
+  "fixture": "sweep/gmini_mfrag_d1200_w60_ctrl_015",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 11:40:41: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:40:41: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d1200_w60_ctrl_015_default -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_015/default -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_015/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_015/ctrl.frag -f FRAG --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d1200_w60_ctrl_015_default\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_015/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_015/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:40:41: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:40:41: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:40:41: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #1 mean fragment size is determined as 150.2 bp from treatment \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #1 note: mean fragment size in control is 101.2 bp -- value ignored \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #1 fragment size = 150.2 \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #1  total fragments in treatment: 4794 \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #1  total fragments in control: 4794 \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:40:41: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:40:41: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:40:41: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_015/default/gmini_mfrag_d1200_w60_ctrl_015_default_peaks.xls \nINFO  @ 30 Sep 2026 11:40:41: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_015/default/gmini_mfrag_d1200_w60_ctrl_015_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:40:41: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_015/default/gmini_mfrag_d1200_w60_ctrl_015_default_summits.bed \nINFO  @ 30 Sep 2026 11:40:41: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "default",
+  "wall_seconds": 0.181
+}

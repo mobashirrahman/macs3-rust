@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mfrag_d400_w180_noc_114_scale_to_large",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w180_noc_114/scale_to_large",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w180_noc_114/treat.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--scale-to",
+    "large"
+  ],
+  "files": {
+    "gmini_mfrag_d400_w180_noc_114_scale_to_large_peaks.narrowPeak": "b49ededffc48952cfa25507f737bc93a05cc3f49b32f389d38d9b148e3c43e3d",
+    "gmini_mfrag_d400_w180_noc_114_scale_to_large_peaks.xls": "1231d065581dea09ee90ba5f77637aed93bae96c2c4b4d3ac2f559aa5ded2f1c",
+    "gmini_mfrag_d400_w180_noc_114_scale_to_large_summits.bed": "6e5e72d125cb022ee6b51cbc2c15a3736aee8efb884c7580bfe1387de9a08a89"
+  },
+  "fixture": "sweep/gmini_mfrag_d400_w180_noc_114",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 11:41:56: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:41:56: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d400_w180_noc_114_scale_to_large -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w180_noc_114/scale_to_large -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w180_noc_114/treat.frag -f FRAG --nomodel --extsize 200 --scale-to large\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d400_w180_noc_114_scale_to_large\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w180_noc_114/treat.frag']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Smaller dataset will be scaled towards larger dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:41:56: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:41:56: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:41:56: [33 MB] #1 mean fragment size is determined as 143.1 bp from treatment \nINFO  @ 30 Sep 2026 11:41:56: [33 MB] #1 fragment size = 143.1 \nINFO  @ 30 Sep 2026 11:41:56: [33 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 11:41:56: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:41:56: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:41:56: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:41:56: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:41:56: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:41:56: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:41:56: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w180_noc_114/scale_to_large/gmini_mfrag_d400_w180_noc_114_scale_to_large_peaks.xls \nINFO  @ 30 Sep 2026 11:41:56: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w180_noc_114/scale_to_large/gmini_mfrag_d400_w180_noc_114_scale_to_large_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:41:56: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w180_noc_114/scale_to_large/gmini_mfrag_d400_w180_noc_114_scale_to_large_summits.bed \nINFO  @ 30 Sep 2026 11:41:56: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "scale_to_large",
+  "wall_seconds": 0.152
+}

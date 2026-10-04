@@ -1,0 +1,18 @@
+[package]
+name = "macs-track"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "macs3-rs: macs-track (implementation in progress)"
+
+[dependencies]
+macs-core = { workspace = true }
+macs-rle = { workspace = true }
+macs-stats = { workspace = true }
+
+[dev-dependencies]
+macs-io = { workspace = true }

@@ -1,0 +1,9 @@
+fixture	two_contigs
+group	tiny
+genome	tiny
+mode	se
+model_capable	0
+treat	chrA	120
+treat	chrB	120
+ctrl	chrA	60
+ctrl	chrB	60

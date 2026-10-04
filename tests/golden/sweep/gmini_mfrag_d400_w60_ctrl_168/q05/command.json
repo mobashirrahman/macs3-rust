@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mfrag_d400_w60_ctrl_168_q05",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_ctrl_168/q05",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_ctrl_168/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_ctrl_168/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "-q",
+    "0.5"
+  ],
+  "files": {
+    "gmini_mfrag_d400_w60_ctrl_168_q05_peaks.narrowPeak": "30afcb2e5bbaee2ea394d4aa4b39abcd2596e75bbd5a054da394a2b77323ea4b",
+    "gmini_mfrag_d400_w60_ctrl_168_q05_peaks.xls": "84f08764c01c1cec54f0b5935c65d4ef0e156895b3e7bb85ec6e2cea901c5d51",
+    "gmini_mfrag_d400_w60_ctrl_168_q05_summits.bed": "211a7889fe4f9b11e7a2ce0aead1f9fbba99376943b11d0b8b13b7f4a2d23bc2"
+  },
+  "fixture": "sweep/gmini_mfrag_d400_w60_ctrl_168",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 11:42:16: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:42:16: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d400_w60_ctrl_168_q05 -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_ctrl_168/q05 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_ctrl_168/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_ctrl_168/ctrl.frag -f FRAG --nomodel --extsize 200 -q 0.5\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d400_w60_ctrl_168_q05\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_ctrl_168/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_ctrl_168/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:42:16: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:42:16: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:42:16: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #1 mean fragment size is determined as 150.5 bp from treatment \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #1 note: mean fragment size in control is 103.4 bp -- value ignored \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #1 fragment size = 150.5 \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #1  total fragments in control: 1597 \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:42:16: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:42:16: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:42:16: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_ctrl_168/q05/gmini_mfrag_d400_w60_ctrl_168_q05_peaks.xls \nINFO  @ 30 Sep 2026 11:42:16: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_ctrl_168/q05/gmini_mfrag_d400_w60_ctrl_168_q05_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:42:16: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_ctrl_168/q05/gmini_mfrag_d400_w60_ctrl_168_q05_summits.bed \nINFO  @ 30 Sep 2026 11:42:16: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "q05",
+  "wall_seconds": 0.154
+}

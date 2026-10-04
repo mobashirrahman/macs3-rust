@@ -1,0 +1,15 @@
+[package]
+name = "macs-hmmratac"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "macs3-rs: HMMRATAC digested-signal decomposition and three-state HMM decoding"
+
+[dependencies]
+macs-core = { workspace = true }
+macs-rle = { workspace = true }
+macs-stats = { workspace = true }

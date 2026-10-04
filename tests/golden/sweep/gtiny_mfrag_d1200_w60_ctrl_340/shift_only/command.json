@@ -1,0 +1,37 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mfrag_d1200_w60_ctrl_340_shift_only",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w60_ctrl_340/shift_only",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w60_ctrl_340/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w60_ctrl_340/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--shift",
+    "-100",
+    "--extsize",
+    "200"
+  ],
+  "files": {
+    "gtiny_mfrag_d1200_w60_ctrl_340_shift_only_peaks.narrowPeak": "d7085ce89b1220cf60b20560e8b10d5cc6bd3aacdd59376e4f98ca66ae8dc808",
+    "gtiny_mfrag_d1200_w60_ctrl_340_shift_only_peaks.xls": "e2a1bc78f12d334193a74f762717eef710e9ef12575f99daa84772c80f41ac60",
+    "gtiny_mfrag_d1200_w60_ctrl_340_shift_only_summits.bed": "5c2bcf86241654d69b4e9fba7ecbb6095896ef5845f63e5bd0aa248fbdafdbea"
+  },
+  "fixture": "sweep/gtiny_mfrag_d1200_w60_ctrl_340",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:27:57: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:27:57: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d1200_w60_ctrl_340_shift_only -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w60_ctrl_340/shift_only -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w60_ctrl_340/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w60_ctrl_340/ctrl.frag -f FRAG --nomodel --extsize 200 --shift -100 --extsize 200\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d1200_w60_ctrl_340_shift_only\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w60_ctrl_340/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d1200_w60_ctrl_340/ctrl.frag']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:27:57: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:27:57: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:27:57: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #1 note: mean fragment size in control is 169.6 bp -- value ignored \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #1  total fragments in treatment: 4794 \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #1  total fragments in control: 4794 \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:27:57: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:27:57: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:27:57: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:27:57: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w60_ctrl_340/shift_only/gtiny_mfrag_d1200_w60_ctrl_340_shift_only_peaks.xls \nINFO  @ 30 Sep 2026 12:27:57: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w60_ctrl_340/shift_only/gtiny_mfrag_d1200_w60_ctrl_340_shift_only_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:27:57: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d1200_w60_ctrl_340/shift_only/gtiny_mfrag_d1200_w60_ctrl_340_shift_only_summits.bed \nINFO  @ 30 Sep 2026 12:27:57: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "shift_only",
+  "wall_seconds": 0.162
+}

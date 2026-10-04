@@ -1,0 +1,25 @@
+fixture	gmini_mpe_d4000_w180_ctrl_372
+group	sweep
+genome	mini
+mode	pe
+model_capable	0
+treat	chr1	4000
+treat_1	chr1	4000
+treat_2	chr1	2000
+treat	chr2	4000
+treat_1	chr2	4000
+treat_2	chr2	2000
+treat	chr10	4000
+treat_1	chr10	4000
+treat_2	chr10	2000
+treat	chrX	4000
+treat_1	chrX	4000
+treat_2	chrX	2000
+treat	chrM	4000
+treat_1	chrM	4000
+treat_2	chrM	2000
+ctrl	chr1	4000
+ctrl	chr2	4000
+ctrl	chr10	4000
+ctrl	chrX	4000
+ctrl	chrM	4000

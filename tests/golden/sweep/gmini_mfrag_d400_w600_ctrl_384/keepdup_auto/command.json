@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mfrag_d400_w600_ctrl_384_keepdup_auto",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_auto",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--keep-dup",
+    "auto"
+  ],
+  "files": {
+    "gmini_mfrag_d400_w600_ctrl_384_keepdup_auto_peaks.narrowPeak": "1454ed88fd6483b3162c04653581555877099083b325b318f9a6bf1b1f2b3e8e",
+    "gmini_mfrag_d400_w600_ctrl_384_keepdup_auto_peaks.xls": "ee7620ce7c356310de2d0bbd8c4cd0de2e674a393c9168c5b199f5d484a93b4a",
+    "gmini_mfrag_d400_w600_ctrl_384_keepdup_auto_summits.bed": "1542ef4eedea57e31236c0f7c525e9a2ca75c8474d889cd50a2c32f0e3b6fcad"
+  },
+  "fixture": "sweep/gmini_mfrag_d400_w600_ctrl_384",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 11:42:06: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:42:06: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d400_w600_ctrl_384_keepdup_auto -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_auto -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/ctrl.frag -f FRAG --nomodel --extsize 200 --keep-dup auto\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d400_w600_ctrl_384_keepdup_auto\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:42:06: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:42:06: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:42:06: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1 mean fragment size is determined as 112.2 bp from treatment \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1 note: mean fragment size in control is 94.8 bp -- value ignored \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1 fragment size = 112.2 \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1  total fragments in control: 1597 \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:42:06: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_auto/gmini_mfrag_d400_w600_ctrl_384_keepdup_auto_peaks.xls \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_auto/gmini_mfrag_d400_w600_ctrl_384_keepdup_auto_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_auto/gmini_mfrag_d400_w600_ctrl_384_keepdup_auto_summits.bed \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_auto",
+  "wall_seconds": 0.165
+}

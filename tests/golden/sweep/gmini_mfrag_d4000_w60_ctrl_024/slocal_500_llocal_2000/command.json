@@ -1,0 +1,37 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w60_ctrl_024/slocal_500_llocal_2000",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w60_ctrl_024/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w60_ctrl_024/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--slocal",
+    "500",
+    "--llocal",
+    "2000"
+  ],
+  "files": {
+    "gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000_peaks.narrowPeak": "686d9bd82129a113ec11a36ec414c4690f639e2ffb8923c93859ce66242130e8",
+    "gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000_peaks.xls": "36a0821c23c76658dd68edf836b54d2eb1d88b742144998da39af89d06732a1a",
+    "gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000_summits.bed": "d3975e97012b92d2592143a7e8eb64fbb9e2f623d364580aeaf1fc2b24943958"
+  },
+  "fixture": "sweep/gmini_mfrag_d4000_w60_ctrl_024",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 11:41:28: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:41:28: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000 -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w60_ctrl_024/slocal_500_llocal_2000 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w60_ctrl_024/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w60_ctrl_024/ctrl.frag -f FRAG --nomodel --extsize 200 --slocal 500 --llocal 2000\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w60_ctrl_024/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d4000_w60_ctrl_024/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 500 bps and 2000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:41:28: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:41:28: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:41:28: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #1 mean fragment size is determined as 150.1 bp from treatment \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #1 note: mean fragment size in control is 99.6 bp -- value ignored \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #1 fragment size = 150.1 \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #1  total fragments in control: 15994 \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:41:28: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:41:28: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:41:28: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w60_ctrl_024/slocal_500_llocal_2000/gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000_peaks.xls \nINFO  @ 30 Sep 2026 11:41:28: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w60_ctrl_024/slocal_500_llocal_2000/gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:41:28: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d4000_w60_ctrl_024/slocal_500_llocal_2000/gmini_mfrag_d4000_w60_ctrl_024_slocal_500_llocal_2000_summits.bed \nINFO  @ 30 Sep 2026 11:41:28: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "slocal_500_llocal_2000",
+  "wall_seconds": 0.246
+}

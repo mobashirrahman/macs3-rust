@@ -1,0 +1,15 @@
+fixture	dup_rate_0.0
+group	se_dup
+genome	mini
+mode	se
+model_capable	0
+treat	chr1	3000
+treat	chr2	3000
+treat	chr10	3000
+treat	chrX	3000
+treat	chrM	3000
+ctrl	chr1	1200
+ctrl	chr2	1200
+ctrl	chr10	1200
+ctrl	chrX	1200
+ctrl	chrM	1200

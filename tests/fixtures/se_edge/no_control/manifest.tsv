@@ -1,0 +1,7 @@
+fixture	no_control
+group	se_edge
+genome	mini
+mode	se
+model_capable	0
+treat	chr1	3000
+treat	chr2	2500

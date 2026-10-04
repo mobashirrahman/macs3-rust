@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mfrag_d1200_w60_ctrl_177_nolambda",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_177/nolambda",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_177/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_177/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--nolambda"
+  ],
+  "files": {
+    "gmini_mfrag_d1200_w60_ctrl_177_nolambda_peaks.narrowPeak": "d9fbcda5969971f7373429566b419f2c3d32963453247dfcb81bf8d6e0c89592",
+    "gmini_mfrag_d1200_w60_ctrl_177_nolambda_peaks.xls": "07ba0b2ee278763c9882c8d2dba32106bb6adc272a5ad143472f5b3be444c22b",
+    "gmini_mfrag_d1200_w60_ctrl_177_nolambda_summits.bed": "7e857ccd8a56b18cdd72c6248c24f8a2016bcaa29736915bb1d48df7cf260ed5"
+  },
+  "fixture": "sweep/gmini_mfrag_d1200_w60_ctrl_177",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 11:40:46: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:40:46: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d1200_w60_ctrl_177_nolambda -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_177/nolambda -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_177/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_177/ctrl.frag -f FRAG --nomodel --extsize 200 --nolambda\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d1200_w60_ctrl_177_nolambda\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_177/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_ctrl_177/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:40:46: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:40:46: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:40:46: [32 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #1 mean fragment size is determined as 150.4 bp from treatment \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #1 note: mean fragment size in control is 98.4 bp -- value ignored \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #1 fragment size = 150.4 \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #1  total fragments in treatment: 4794 \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #1  total fragments in control: 4794 \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] # local lambda is disabled! \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #3 !!!! DYNAMIC LAMBDA IS DISABLED !!!! \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:40:46: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:40:46: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_177/nolambda/gmini_mfrag_d1200_w60_ctrl_177_nolambda_peaks.xls \nINFO  @ 30 Sep 2026 11:40:46: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_177/nolambda/gmini_mfrag_d1200_w60_ctrl_177_nolambda_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:40:46: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_ctrl_177/nolambda/gmini_mfrag_d1200_w60_ctrl_177_nolambda_summits.bed \nINFO  @ 30 Sep 2026 11:40:46: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "nolambda",
+  "wall_seconds": 0.142
+}

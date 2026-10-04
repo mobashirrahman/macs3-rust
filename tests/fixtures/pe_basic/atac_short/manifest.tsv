@@ -1,0 +1,15 @@
+fixture	atac_short
+group	pe_basic
+genome	mini
+mode	pe
+model_capable	1
+treat	chr1	3000
+treat	chr2	3000
+treat	chr10	3000
+treat	chrX	3000
+treat	chrM	3000
+ctrl	chr1	3200
+ctrl	chr2	3200
+ctrl	chr10	3200
+ctrl	chrX	3200
+ctrl	chrM	3200

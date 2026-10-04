@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mpe_d1200_w180_noc_282_call_summits",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w180_noc_282/call_summits",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d1200_w180_noc_282/treat.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--call-summits"
+  ],
+  "files": {
+    "gmini_mpe_d1200_w180_noc_282_call_summits_peaks.narrowPeak": "afdb7d6c7ce67d8999d4d08d31dc4653713a754d1a78e63bd1dd11ac727d540b",
+    "gmini_mpe_d1200_w180_noc_282_call_summits_peaks.xls": "6916e4c8ed7bc48a6f651aae3fd281e37294062726423733f40f250fc777bbf8",
+    "gmini_mpe_d1200_w180_noc_282_call_summits_summits.bed": "6224b1a25537677f55377b8fa9a941a97af6a4d407945460a1e73f6faea431a3"
+  },
+  "fixture": "sweep/gmini_mpe_d1200_w180_noc_282",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 11:42:39: [32 MB] \n# Command line: callpeak -n gmini_mpe_d1200_w180_noc_282_call_summits -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w180_noc_282/call_summits -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d1200_w180_noc_282/treat.bedpe -f BEDPE --nomodel --extsize 200 --call-summits\n# ARGUMENTS LIST:\n# name = gmini_mpe_d1200_w180_noc_282_call_summits\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d1200_w180_noc_282/treat.bedpe']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n# Searching for subpeak summits is on\n \nINFO  @ 30 Sep 2026 11:42:39: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:42:39: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:42:39: [32 MB] #1 mean fragment size is determined as 143.4 bp from treatment \nINFO  @ 30 Sep 2026 11:42:39: [32 MB] #1 fragment size = 143.4 \nINFO  @ 30 Sep 2026 11:42:39: [32 MB] #1  total fragments in treatment: 1200 \nINFO  @ 30 Sep 2026 11:42:39: [32 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 11:42:39: [32 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #1  fragments after filtering in treatment: 154 \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #1  Redundant rate of treatment: 0.87 \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #3 Going to call summits inside each peak ... \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:42:39: [33 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:42:39: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w180_noc_282/call_summits/gmini_mpe_d1200_w180_noc_282_call_summits_peaks.xls \nINFO  @ 30 Sep 2026 11:42:39: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w180_noc_282/call_summits/gmini_mpe_d1200_w180_noc_282_call_summits_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:42:39: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d1200_w180_noc_282/call_summits/gmini_mpe_d1200_w180_noc_282_call_summits_summits.bed \nINFO  @ 30 Sep 2026 11:42:39: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "call_summits",
+  "wall_seconds": 0.169
+}

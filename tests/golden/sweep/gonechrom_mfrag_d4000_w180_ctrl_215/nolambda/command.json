@@ -1,0 +1,34 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mfrag_d4000_w180_ctrl_215_nolambda",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/nolambda",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--nolambda"
+  ],
+  "files": {
+    "gonechrom_mfrag_d4000_w180_ctrl_215_nolambda_peaks.narrowPeak": "25ed74904bb9bd4b1fe524ee104ed70d583430b52270d2771163076b49fb87f0",
+    "gonechrom_mfrag_d4000_w180_ctrl_215_nolambda_peaks.xls": "df85b1352862ebf82ed974bb11814f064e422a6ebc7d5f2ce790a6ec4da70671",
+    "gonechrom_mfrag_d4000_w180_ctrl_215_nolambda_summits.bed": "ca70aa3fddca2837f56ac809f051dbe9227b7be3c118389d3e2c4f457dba2753"
+  },
+  "fixture": "sweep/gonechrom_mfrag_d4000_w180_ctrl_215",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:19:24: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:19:24: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d4000_w180_ctrl_215_nolambda -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/nolambda -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/ctrl.frag -f FRAG --nomodel --extsize 200 --nolambda\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d4000_w180_ctrl_215_nolambda\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/ctrl.frag']\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:19:24: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:19:24: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:19:24: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #1 note: mean fragment size in control is 178.7 bp -- value ignored \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #1  total fragments in control: 15994 \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] # local lambda is disabled! \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #3 !!!! DYNAMIC LAMBDA IS DISABLED !!!! \nINFO  @ 30 Sep 2026 12:19:24: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:19:24: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:19:24: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/nolambda/gonechrom_mfrag_d4000_w180_ctrl_215_nolambda_peaks.xls \nINFO  @ 30 Sep 2026 12:19:24: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/nolambda/gonechrom_mfrag_d4000_w180_ctrl_215_nolambda_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:19:24: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d4000_w180_ctrl_215/nolambda/gonechrom_mfrag_d4000_w180_ctrl_215_nolambda_summits.bed \nINFO  @ 30 Sep 2026 12:19:24: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "nolambda",
+  "wall_seconds": 0.216
+}

@@ -1,0 +1,1 @@
+{"$message_type":"unused_extern","lint_level":"force-warn","unused_extern_names":["arbitrary","macs_core","macs_io","macs_pileup","macs_rle","macs_stats","macs_track"]}

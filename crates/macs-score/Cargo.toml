@@ -1,0 +1,19 @@
+[package]
+name = "macs-score"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/macs3-rs"
+description = "MACS3-compatible p-score, q-score and the AFDR p->q table for macs3-rs"
+
+[dependencies]
+macs-core = { workspace = true }
+macs-rle = { workspace = true }
+macs-stats = { workspace = true }
+rayon = { workspace = true }
+
+[dev-dependencies]
+proptest.workspace = true

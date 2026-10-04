@@ -1,0 +1,65 @@
+fixture	realistic
+group	se_model
+genome	mid
+mode	se
+model_capable	0
+treat	chr1	192
+treat_1	chr1	2000
+treat	chr2	192
+treat_1	chr2	2000
+treat	chr3	192
+treat_1	chr3	2000
+treat	chr4	192
+treat_1	chr4	2000
+treat	chr5	192
+treat_1	chr5	2000
+treat	chr6	192
+treat_1	chr6	2000
+treat	chr7	192
+treat_1	chr7	2000
+treat	chr8	192
+treat_1	chr8	2000
+treat	chr9	192
+treat_1	chr9	2000
+treat	chr10	192
+treat_1	chr10	2000
+treat	chr11	192
+treat_1	chr11	2000
+treat	chr12	192
+treat_1	chr12	2000
+treat	chr13	192
+treat_1	chr13	2000
+treat	chr14	192
+treat_1	chr14	2000
+treat	chr15	192
+treat_1	chr15	2000
+treat	chr16	192
+treat_1	chr16	2000
+treat	chr17	192
+treat_1	chr17	2000
+treat	chr18	192
+treat_1	chr18	2000
+treat	chr19	192
+treat_1	chr19	2000
+treat	chr20	192
+treat_1	chr20	2000
+ctrl	chr1	2000
+ctrl	chr2	2000
+ctrl	chr3	2000
+ctrl	chr4	2000
+ctrl	chr5	2000
+ctrl	chr6	2000
+ctrl	chr7	2000
+ctrl	chr8	2000
+ctrl	chr9	2000
+ctrl	chr10	2000
+ctrl	chr11	2000
+ctrl	chr12	2000
+ctrl	chr13	2000
+ctrl	chr14	2000
+ctrl	chr15	2000
+ctrl	chr16	2000
+ctrl	chr17	2000
+ctrl	chr18	2000
+ctrl	chr19	2000
+ctrl	chr20	2000

@@ -1,0 +1,68 @@
+# cargo-fuzz project: L6, the nightly fuzz layer.
+#
+# Deliberately *excluded* from the workspace: cargo-fuzz builds against a sanitizer
+# and needs nightly, so these targets must never be part of a normal
+# `cargo build --workspace`. The workspace lists `exclude = ["fuzz"]`.
+[package]
+name = "macs3-rs-fuzz"
+version = "0.1.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+arbitrary = { version = "1", features = ["derive"] }
+macs-io = { path = "../crates/macs-io" }
+macs-track = { path = "../crates/macs-track" }
+macs-core = { path = "../crates/macs-core" }
+macs-rle = { path = "../crates/macs-rle" }
+macs-pileup = { path = "../crates/macs-pileup" }
+macs-score = { path = "../crates/macs-score" }
+macs-stats = { path = "../crates/macs-stats" }
+
+[[bin]]
+name = "parse_bed"
+path = "fuzz_targets/parse_bed.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "parse_bedpe"
+path = "fuzz_targets/parse_bedpe.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "parse_frag"
+path = "fuzz_targets/parse_frag.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "parse_bedgraph"
+path = "fuzz_targets/parse_bedgraph.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pileup_pipeline"
+path = "fuzz_targets/pileup_pipeline.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "pqtable_pipeline"
+path = "fuzz_targets/pqtable_pipeline.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]

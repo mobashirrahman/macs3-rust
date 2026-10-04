@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/keepdup_all",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--keep-dup",
+    "all"
+  ],
+  "files": {
+    "gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all_peaks.narrowPeak": "9062b356699e7f47992808e49d233f680607eebf2b4f55a04e837d5642576be6",
+    "gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all_peaks.xls": "e3e6c983d1f71b0ab986d6f03c8c7e67dbed208ef352a3a4af75b26146eae1e9",
+    "gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all_summits.bed": "4b7b0b9fb24c33a9ae4b61ddbfe0b2acae41cc236f409dcc671a7e17bbe9eafa"
+  },
+  "fixture": "sweep/gonechrom_mfrag_d1200_w60_ctrl_179",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:19:07: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/ctrl.frag -f FRAG --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/ctrl.frag']\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:19:07: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:19:07: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:19:07: [32 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #1 note: mean fragment size in control is 179.2 bp -- value ignored \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #1  total fragments in treatment: 4794 \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #1  total fragments in control: 4794 \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:19:07: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:19:07: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:19:07: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/keepdup_all/gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:19:07: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/keepdup_all/gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:19:07: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d1200_w60_ctrl_179/keepdup_all/gonechrom_mfrag_d1200_w60_ctrl_179_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:19:07: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_all",
+  "wall_seconds": 0.185
+}

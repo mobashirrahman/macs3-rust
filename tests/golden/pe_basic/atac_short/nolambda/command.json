@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "atac_short_nolambda",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/atac_short/nolambda",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/atac_short/treat.bedpe",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/atac_short/ctrl.bedpe",
+    "-f",
+    "BEDPE",
+    "--nolambda"
+  ],
+  "files": {
+    "atac_short_nolambda_peaks.narrowPeak": "ea7f1180650101163b9e3657015d9c83046bba8129cb6424a87ced2c7cea2e36",
+    "atac_short_nolambda_peaks.xls": "a61e6ad5adbaca445a1e878c4311f2568a746ef0750bb65b9e5c492a5b1cddca",
+    "atac_short_nolambda_summits.bed": "2f77c3b15adc411b7ccd7d76164d1c917df530d894b2bba2d8b065b014afe784"
+  },
+  "fixture": "pe_basic/atac_short",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:25:58: [32 MB] \n# Command line: callpeak -n atac_short_nolambda -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/atac_short/nolambda -t /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/atac_short/treat.bedpe -c /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/atac_short/ctrl.bedpe -f BEDPE --nolambda\n# ARGUMENTS LIST:\n# name = atac_short_nolambda\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/atac_short/treat.bedpe']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/atac_short/ctrl.bedpe']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:25:58: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:25:58: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:25:58: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:25:58: [33 MB] #1 mean fragment size is determined as 76.8 bp from treatment \nINFO  @ 30 Sep 2026 12:25:58: [33 MB] #1 note: mean fragment size in control is 76.7 bp -- value ignored \nINFO  @ 30 Sep 2026 12:25:58: [33 MB] #1 fragment size = 76.8 \nINFO  @ 30 Sep 2026 12:25:58: [33 MB] #1  total fragments in treatment: 3000 \nINFO  @ 30 Sep 2026 12:25:58: [33 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:25:58: [33 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #1  fragments after filtering in treatment: 967 \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #1  Redundant rate of treatment: 0.68 \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #1  total fragments in control: 3200 \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #1  fragments after filtering in control: 969 \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #1  Redundant rate of control: 0.70 \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] # local lambda is disabled! \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #3 !!!! DYNAMIC LAMBDA IS DISABLED !!!! \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:25:58: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:25:58: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/atac_short/nolambda/atac_short_nolambda_peaks.xls \nINFO  @ 30 Sep 2026 12:25:58: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/atac_short/nolambda/atac_short_nolambda_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:25:58: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/pe_basic/atac_short/nolambda/atac_short_nolambda_summits.bed \nINFO  @ 30 Sep 2026 12:25:58: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "nolambda",
+  "wall_seconds": 0.189
+}

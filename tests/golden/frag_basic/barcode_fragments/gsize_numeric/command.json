@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "barcode_fragments_gsize_numeric",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/gsize_numeric",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag",
+    "-f",
+    "FRAG"
+  ],
+  "files": {
+    "barcode_fragments_gsize_numeric_peaks.narrowPeak": "e9d469d99cedaa0b4f0c46a9a4beb780d62506c6087db96078f198e4734e4847",
+    "barcode_fragments_gsize_numeric_peaks.xls": "5885b9980da85f02964eba33aa172581d3e7294b96fa43299f0f701bd82fd888",
+    "barcode_fragments_gsize_numeric_summits.bed": "8cdeb7a92458f54c9a61f0aac7653df5d6365eeb6967f221dcfb668809a3b99a"
+  },
+  "fixture": "frag_basic/barcode_fragments",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:18:28: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:18:28: [32 MB] \n# Command line: callpeak -n barcode_fragments_gsize_numeric -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/gsize_numeric -t /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag -f FRAG\n# ARGUMENTS LIST:\n# name = barcode_fragments_gsize_numeric\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:18:28: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:18:28: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:18:28: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #1 mean fragment size is determined as 98.3 bp from treatment \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #1 note: mean fragment size in control is 98.3 bp -- value ignored \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #1 fragment size = 98.3 \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #1  total fragments in treatment: 7995 \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #1  total fragments in control: 7995 \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:18:28: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:18:28: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:18:28: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/gsize_numeric/barcode_fragments_gsize_numeric_peaks.xls \nINFO  @ 30 Sep 2026 12:18:28: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/gsize_numeric/barcode_fragments_gsize_numeric_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:18:28: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/gsize_numeric/barcode_fragments_gsize_numeric_summits.bed \nINFO  @ 30 Sep 2026 12:18:28: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "gsize_numeric",
+  "wall_seconds": 0.213
+}

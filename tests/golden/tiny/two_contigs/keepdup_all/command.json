@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "two_contigs_keepdup_all",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/tiny/two_contigs/keepdup_all",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/tiny/two_contigs/treat.bed",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/tiny/two_contigs/ctrl.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--keep-dup",
+    "all"
+  ],
+  "files": {
+    "two_contigs_keepdup_all_peaks.narrowPeak": "b900028067040ab1b691d29a8e2071d795438996b7958c22a6a14aa13c505cae",
+    "two_contigs_keepdup_all_peaks.xls": "c4a40e6261a5630e79838d6710dc2236bf1b8fe121d489a605e8dd3a153c9a2e",
+    "two_contigs_keepdup_all_summits.bed": "d4fef54793248c5c52cd9f65b43646de46cb442a342d61e6efcd38019fc04baf"
+  },
+  "fixture": "tiny/two_contigs",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:34:33: [32 MB] \n# Command line: callpeak -n two_contigs_keepdup_all -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/tiny/two_contigs/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/tiny/two_contigs/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/tiny/two_contigs/ctrl.bed -f BED --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = two_contigs_keepdup_all\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/tiny/two_contigs/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/tiny/two_contigs/ctrl.bed']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:34:33: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:34:33: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #1  total tags in treatment: 120 \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #1  total tags in control: 60 \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:34:33: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:34:33: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:34:33: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:34:33: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/tiny/two_contigs/keepdup_all/two_contigs_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:34:33: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/tiny/two_contigs/keepdup_all/two_contigs_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:34:33: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/tiny/two_contigs/keepdup_all/two_contigs_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:34:33: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_all",
+  "wall_seconds": 0.184
+}

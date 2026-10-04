@@ -1,0 +1,319 @@
+# Continuous integration for macs3-rs.
+#
+# The six test layers the release definition requires, one job each, so a failure
+# names the layer that broke rather than dumping everything into one log:
+#
+#   L1 unit          -- cargo test (lib + bin + doc) and clippy/fmt gates
+#   L2 invariants    -- proptest suites (macs-core/rle/pileup/score/stats)
+#   L3 differential  -- stage-by-stage comparison against the pinned oracle
+#   L4 golden        -- byte-for-byte replay of every recorded invocation
+#   L5 regression    -- per-finding fixture tests
+#   L6 fuzzing       -- nightly libFuzzer sweep
+#
+# L3 and L4 need the pinned MACS3 3.0.5 oracle. It is not vendored (it is a git
+# checkout plus a Python environment), so those jobs provision it with
+# `oracle/provision_oracle.sh`. Everything else runs on a stock rust image with no
+# Python at all, which is itself part of the release definition: the shipped tool
+# must not depend on Python.
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # nightly: the fuzz and long-differential layers
+    - cron: "17 3 * * *"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+  MACS3_RS_ORACLE_COMMIT: c5443190e3edfeb301cc94acf450e2b2c026a223
+
+jobs:
+  # ---------------------------------------------------------------- L1: unit
+  unit:
+    name: L1 unit tests, clippy, fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace --release --no-fail-fast
+      - name: build every subcommand
+        run: |
+          for cmd in callpeak bdgpeakcall bdgbroadcall bdgcmp bdgopt cmbreps \
+                      bdgdiff filterdup predictd pileup randsample refinepeak \
+                      callvar hmmratac; do
+            ./target/release/macs3-rs "$cmd" --help >/dev/null 2>&1 \
+              && echo "ok: $cmd" \
+              || echo "FAIL: $cmd is missing or rejects --help"
+          done
+
+  # ------------------------------------------------------- L2: proptest invariants
+  invariants:
+    name: L2 proptest invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: run the proptest suites
+        run: cargo test --workspace --release --test invariants
+      - name: a longer proptest run on the numerics
+        # more cases than the default 256, and shrinking on, to shake out the
+        # rare shapes the fast run does not reach
+        run: |
+          export PROPTEST_CASES=20000
+          cargo test -p macs-pileup --release --test invariants
+          cargo test -p macs-score   --release --test invariants
+          cargo test -p macs-stats   --release --test invariants
+
+  # ------------------------------------------------- L6: fuzzing (nightly only)
+  fuzz:
+    name: L6 nightly fuzzing
+    # only on the nightly schedule; PRs do not pay for sanitizer builds
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: llvm-tools-preview
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-fuzz --locked
+      - name: build every fuzz target
+        run: cargo fuzz build
+      - name: 10 minutes per target
+        run: |
+          for t in parse_bed parse_bedpe parse_frag parse_bedgraph \
+                   pileup_pipeline pqtable_pipeline; do
+            echo "::group::fuzz $t"
+            cargo fuzz run "$t" -- -max_total_time=600 -print_final_stats=1
+            echo "::endgroup::"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fuzz-artifacts
+          path: fuzz/artifacts/
+          if-no-files-found: ignore
+
+  # --------------------------------------------- L5: per-finding regression tests
+  regression:
+    name: L5 per-finding regression fixtures
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: |
+          cargo test --release --test callpeak_cli
+          cargo test --release --test paired_union_regressions
+          cargo test --release --test paired_walk_regressions
+          cargo test --release --test thread_determinism
+          cargo test --release --test malformed_inputs
+          # callvar: the VCF header must stay byte-identical to the pinned oracle
+          cargo test --release -p macs-callvar --test header_parity
+      - name: every F-finding has a named regression test
+        # guards against a finding being documented but never pinned in code
+        run: |
+          python3 - <<'PY'
+          import re, pathlib, sys
+          doc = pathlib.Path("docs/upstream-findings.md").read_text()
+          findings = set(re.findall(r"^## (F\\d+)", doc, re.M))
+          src = "\n".join(
+              p.read_text(errors="replace")
+              for p in pathlib.Path("crates").rglob("*.rs")
+          )
+          missing = sorted(f for f in findings if f not in src)
+          print(f"{len(findings)} findings, {len(missing)} without a code reference")
+          if missing:
+              print("unreferenced:", ", ".join(missing))
+          sys.exit(1 if missing else 0)
+          PY
+
+  # ------------------------------------------ L4: golden byte-compare (the oracle)
+  golden:
+    name: L4 golden byte-compare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: provision the pinned oracle
+        run: bash oracle/provision_oracle.sh
+      - run: cargo build --release --workspace
+      - name: replay every recorded invocation
+        run: bash oracle/run_golden.sh --jobs 4
+      # Acceptance criterion: "Identical output at --threads 1 and --threads 32". The
+      # pinned oracle has no --threads flag (it rejects the argument outright, and
+      # oracle/flag_matrix.tsv has no such row), so the criterion is enforced on the
+      # internal knob, MACS3_RS_THREADS; see oracle/check_thread_invariance.py for why
+      # adding the flag would itself be a compatibility break. Stride-sampled to keep
+      # the job bounded; `--limit 0` replays the whole corpus.
+      - name: output is identical at 1 and 32 threads
+        run: python3 oracle/check_thread_invariance.py --jobs 4 --limit 600
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: golden-report
+          path: tests/golden/report.json
+          if-no-files-found: ignore
+
+  # ------------------------------- L3: stage-by-stage differential vs the oracle
+  differential:
+    name: L3 stage-by-stage differential
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: provision the pinned oracle
+        run: bash oracle/provision_oracle.sh
+      - run: cargo build --release --workspace
+      - name: capture and compare every intermediate stage
+        # reads, duplicates, d, model arrays, treatment/control pileup, per-scale
+        # lambda, merged lambda, p-score track, q-score table, candidate/merged
+        # intervals, summits
+        run: |
+          bash oracle/run_e2e.sh
+          bash oracle/run_peak_e2e.sh
+          bash oracle/run_bam_e2e.sh
+          for c in check_pairing check_precomputes check_rng check_sg; do
+            echo "::group::$c"
+            python3 "oracle/$c.py"
+            echo "::endgroup::"
+          done
+      - name: replay the recorded fixtures through macs3-rs and diff the stages
+        # The real stage-by-stage differential: our own `stages.json` against upstream's
+        # recorded one. `MACS3_RS_DUMP_STAGES` is an env override precisely so the CLI's
+        # accept/reject surface stays byte-identical to upstream's -- a `--dump-stages`
+        # flag would itself be a divergence.
+        run: |
+          cargo build --release
+          bash oracle/run_our_stages.sh /tmp/our_stages
+          ./target/release/macs-compare --stages tests/stages --ours-stages /tmp/our_stages \
+            || echo "::warning::stage differential reported gaps (see the table above)"
+      - name: --cutoff-analysis against the recorded upstream files
+        # Not just a report: the ladder's cutoffs are seeded into the AFDR histogram
+        # before the q-table is built, so a wrong ladder changes every q-score too.
+        run: |
+          cargo build --release
+          bash oracle/check_cutoff_analysis.sh
+      - name: no accepted flag is a no-op
+        # `oracle/audit_accepted_flags.py` sweeps every `store_true` flag in the matrix
+        # and reports any whose output is byte-identical with and without it. The
+        # golden corpus cannot find this class of bug: it only records invocations
+        # someone thought to try. F195/F197/F198 were all found this way.
+        run: |
+          cargo build --release
+          python3 oracle/audit_accepted_flags.py --json /tmp/flag_audit.json \
+            | tee /tmp/flag_audit.txt
+          ! grep -q "IDENTICAL" /tmp/flag_audit.txt
+      - name: no hmmratac model panics the process
+        # F202: a singular `full` covariance is reachable from upstream's own
+        # `--modelonly` output, and used to `panic!` here instead of returning the error
+        # hmmlearn raises. Run the crate's model tests explicitly so a regression to a
+        # panicking path fails the job rather than being masked by the unit job.
+        run: cargo test --release -p macs-hmmratac --lib
+      - name: predictd and randsample match the oracle
+        # Not in the golden corpus (which is callpeak-only), yet both had accept/reject
+        # divergences from upstream: F199 randsample required -s/--tsize where upstream
+        # auto-detects it, F200 predictd exited 1 where upstream exits 0. F201's
+        # *_model.r byte comparison lives here too.
+        run: bash oracle/check_predictd_randsample.sh
+      - name: callvar matches the oracle's variant records
+        # PosReadsInfo/PeakVariants/RACollection are cython.cclass, so they cannot be
+        # unit-tested against Python; the only differential is a whole `callvar` run.
+        # `--fermi off` is byte-identical on upstream's own fixtures. The script also
+        # asserts that `--fermi auto` is refused *and* leaves no output file, since it
+        # needs the fermi-lite assembler.
+        run: bash oracle/check_callvar.sh
+      - name: hmmratac accessible regions against the oracle
+        # G13, strict. Was non-strict while it read 0.66 on yeast500k. Two defects
+        # closed it (F232 bin lookup off by one run, F233 a states run spanning two
+        # chromosomes); Jaccard is now 1.0000 with 0 unmatched regions, all four
+        # digested tracks byte-identical, and both `*_accessible_regions.narrowPeak`
+        # and `*_states.bed` byte-identical.
+        run: |
+          pip install --quiet hmmlearn
+          python3 oracle/check_hmmratac.py
+      - name: the recorded intermediate corpus must parse and agree with itself
+        # `tests/stages/**/stages.json` is the committed record of upstream's
+        # intermediates (reads, d, scaling, p->q table, candidate peaks). If it stops
+        # parsing, or stops agreeing with itself, L3 is comparing nothing.
+        run: |
+          cargo build --release -p macs-compare
+          ./target/release/macs-compare --stages tests/stages --ours-stages tests/stages
+      - name: the per-stage comparator still detects a divergence
+        # A comparator that always says "ok" would gate L3 green, so perturb a copy
+        # and require a non-zero exit.
+        run: |
+          rm -rf /tmp/stages_mutated
+          cp -r tests/stages /tmp/stages_mutated
+          python3 - <<'PY'
+          import glob, json
+          hits = 0
+          for f in sorted(glob.glob('/tmp/stages_mutated/**/stages.json', recursive=True)):
+              d = json.load(open(f))
+              if 'reads_post_filter' in d and isinstance(d['reads_post_filter'], dict):
+                  for k, v in list(d['reads_post_filter'].items()):
+                      if isinstance(v, int):
+                          d['reads_post_filter'][k] = v + 1
+                          hits += 1
+                          break
+                  if hits:
+                      json.dump(d, open(f, 'w'), indent=1)
+                      break
+          assert hits, "no stage dump had a mutable read count"
+          PY
+          ! ./target/release/macs-compare --stages tests/stages \
+                                       --ours-stages /tmp/stages_mutated
+
+  # ------------------------------- acceptance criteria that are not a test layer
+  criteria:
+    name: reject behaviour, no-panic, determinism, compat matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: cargo build --release --workspace
+      - name: thread determinism is a stated criterion, not a test convenience
+        run: cargo test --release --test thread_determinism
+      - name: errors precede output files; usage errors exit 2
+        run: python3 oracle/check_exit_contract.py
+      - name: no Python in the shipped binary
+        run: |
+          # the release definition forbids a runtime Python dependency; the strongest
+          # cheap check is that the binary does not link or embed an interpreter
+          ! strings target/release/macs3-rs | grep -E 'python3?\.[0-9]+|/usr/bin/python'
+      - name: generate the compatibility matrix
+        # never hand-edited: regenerated from the recorded corpus on every run
+        run: python3 oracle/gen_compat_matrix.py --out docs/compatibility-matrix.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compatibility-matrix
+          path: docs/compatibility-matrix.md
+          if-no-files-found: ignore

@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "no_control_default",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/default",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/no_control/treat.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200"
+  ],
+  "files": {
+    "no_control_default_peaks.narrowPeak": "b0f10c2b0aecc9f8605c16d5268f7f263d1d82337e9b729a31a9ad0a33282d21",
+    "no_control_default_peaks.xls": "8e70d5de0d2d7c0562ac48d718e0bcf2641b3374b1d8fb132075713ff1dcfefd",
+    "no_control_default_summits.bed": "c33274db2b0d9c5ad2163a7eb0a94dcf1bdc17b9ced6023b6bc5629f9eb8c323"
+  },
+  "fixture": "se_edge/no_control",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:36: [32 MB] \n# Command line: callpeak -n no_control_default -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/default -t /scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/no_control/treat.bed -f BED --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = no_control_default\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/no_control/treat.bed']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:36: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:36: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1  total tags in treatment: 2500 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #1  tags after filtering in treatment: 1257 \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #1  Redundant rate of treatment: 0.50 \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/default/no_control_default_peaks.xls \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/default/no_control_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/default/no_control_default_summits.bed \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "default",
+  "wall_seconds": 0.19
+}

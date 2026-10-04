@@ -1,0 +1,60 @@
+usage: macs3 randsample [-h] -i IFILE [IFILE ...] (-p PERCENTAGE | -n NUMBER)
+                        [--seed SEED] [-o OUTPUTFILE] [--outdir OUTDIR]
+                        [-s TSIZE]
+                        [-f {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}]
+                        [--buffer-size BUFFER_SIZE] [--verbose VERBOSE]
+
+options:
+  -h, --help            show this help message and exit
+  -i IFILE [IFILE ...], --ifile IFILE [IFILE ...]
+                        Alignment file. If multiple files are given as '-t A B
+                        C', then they will all be read and combined. REQUIRED.
+  -p PERCENTAGE, --percentage PERCENTAGE
+                        Percentage of tags you want to keep. Input 80.0 for
+                        80%. This option can't be used at the same time with
+                        -n/--num. If the setting is 100, it will keep all the
+                        reads and convert any format that MACS3 supports into
+                        BED or BEDPE (if input is BAMPE) format. REQUIRED
+  -n NUMBER, --number NUMBER
+                        Number of tags you want to keep. Input 8000000 or 8e+6
+                        for 8 million. This option can't be used at the same
+                        time with -p/--percent. Note that the number of tags
+                        in output is approximate as the number specified here.
+                        REQUIRED
+  --seed SEED           Set the random seed while down sampling data. Must be
+                        a non-negative integer in order to be effective. If
+                        you want more reproducible results, please specify a
+                        random seed and record it.DEFAULT: not set
+  -o OUTPUTFILE, --ofile OUTPUTFILE
+                        Output BED file name. If not specified, will write to
+                        standard output. Note, if the input format is BAMPE or
+                        BEDPE, the output will be in BEDPE format. DEFAULT:
+                        stdout
+  --outdir OUTDIR       If specified all output files will be written to that
+                        directory. Default: the current working directory
+  -s TSIZE, --tsize TSIZE
+                        Tag size. This will override the auto detected tag
+                        size. DEFAULT: Not set
+  -f {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}, --format {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}
+                        Format of tag file, "AUTO", "BED" or "ELAND" or
+                        "ELANDMULTI" or "ELANDEXPORT" or "SAM" or "BAM" or
+                        "BOWTIE" or "BAMPE" or "BEDPE". The default AUTO
+                        option will macs3 randsample decide which format the
+                        file is. Please check the definition in README file if
+                        you choose ELAND/ELANDMULTI/ELANDEXPORT/SAM/BAM/BOWTIE
+                        or BAMPE/BEDPE. DEFAULT: "AUTO"
+  --buffer-size BUFFER_SIZE
+                        Buffer size for incrementally increasing internal
+                        array size to store reads alignment information. In
+                        most cases, you don't have to change this parameter.
+                        However, if there are large number of
+                        chromosomes/contigs/scaffolds in your alignment, it's
+                        recommended to specify a smaller buffer size in order
+                        to decrease memory usage (but it will take longer time
+                        to read alignment files). Minimum memory requested for
+                        reading an alignment file is about # of CHROMOSOME *
+                        BUFFER_SIZE * 8 Bytes. DEFAULT: 100000
+  --verbose VERBOSE     Set verbose level. 0: only show critical message, 1:
+                        show additional warning message, 2: show process
+                        information, 3: show debug messages. If you want to
+                        know where are the duplicate reads, use 3. DEFAULT:2

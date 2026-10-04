@@ -1,0 +1,15 @@
+fixture	gauss_fragments
+group	pe_basic
+genome	mini
+mode	pe
+model_capable	1
+treat	chr1	3000
+treat	chr2	3000
+treat	chr10	3000
+treat	chrX	3000
+treat	chrM	3000
+ctrl	chr1	2500
+ctrl	chr2	2500
+ctrl	chr10	2500
+ctrl	chrX	2500
+ctrl	chrM	2500

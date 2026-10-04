@@ -1,0 +1,77 @@
+usage: macs3 filterdup [-h] -i IFILE [IFILE ...]
+                       [-f {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}]
+                       [-g GSIZE] [-s TSIZE] [-p PVALUE]
+                       [--keep-dup KEEPDUPLICATES] [--buffer-size BUFFER_SIZE]
+                       [--verbose VERBOSE] [--outdir OUTDIR] [-o OUTPUTFILE]
+                       [-d]
+
+options:
+  -h, --help            show this help message and exit
+  -i IFILE [IFILE ...], --ifile IFILE [IFILE ...]
+                        Alignment file. If multiple files are given as '-t A B
+                        C', then they will all be read and combined. REQUIRED.
+  -f {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}, --format {AUTO,BAM,SAM,BED,ELAND,ELANDMULTI,ELANDEXPORT,BOWTIE,BAMPE,BEDPE}
+                        Format of tag file, "AUTO", "BED", "ELAND",
+                        "ELANDMULTI", "ELANDEXPORT", "SAM", "BAM", "BOWTIE",
+                        "BAMPE", or "BEDPE". The default AUTO option will let
+                        MACS3 guess which format the file is. Please check the
+                        definition in README file for each specific format.
+                        DEFAULT: "AUTO"
+  -g GSIZE, --gsize GSIZE
+                        Effective genome size. It can be 1.0e+9 or 1000000000,
+                        or shortcuts:'hs' for human (2,913,022,398), 'mm' for
+                        mouse (2,652,783,500), 'ce' for C. elegans
+                        (100,286,401) and 'dm' for fruitfly (142,573,017),
+                        Default:hs. The effective genome size numbers for the
+                        above four species are collected from Deeptools https:
+                        //deeptools.readthedocs.io/en/develop/content/feature/
+                        effectiveGenomeSize.html Please refer to deeptools to
+                        define the best genome size you plan to use.
+  -s TSIZE, --tsize TSIZE
+                        Tag size. This will override the auto detected tag
+                        size. DEFAULT: Not set
+  -p PVALUE, --pvalue PVALUE
+                        Pvalue cutoff for binomial distribution test.
+                        DEFAULT:1e-5
+  --keep-dup KEEPDUPLICATES
+                        It controls the 'macs3 filterdup' behavior towards
+                        duplicate tags/pairs at the exact same location -- the
+                        same coordination and the same strand. The 'auto'
+                        option makes 'macs3 filterdup' calculate the maximum
+                        tags at the exact same location based on binomal
+                        distribution using given -p as pvalue cutoff; and the
+                        'all' option keeps every tags (useful if you only want
+                        to convert formats). If an integer is given, at most
+                        this number of tags will be kept at the same location.
+                        Note, MACS3 callpeak function uses KEEPDUPLICATES=1 as
+                        default. Note, if you've used samtools or picard to
+                        flag reads as 'PCR/Optical duplicate' in bit 1024,
+                        MACS3 will still read them although the reads may be
+                        decided by MACS3 as duplicate later. Default: auto
+  --buffer-size BUFFER_SIZE
+                        Buffer size for incrementally increasing internal
+                        array size to store reads alignment information. In
+                        most cases, you don't have to change this parameter.
+                        However, if there are large number of
+                        chromosomes/contigs/scaffolds in your alignment, it's
+                        recommended to specify a smaller buffer size in order
+                        to decrease memory usage (but it will take longer time
+                        to read alignment files). Minimum memory requested for
+                        reading an alignment file is about # of CHROMOSOME *
+                        BUFFER_SIZE * 8 Bytes. DEFAULT: 100000
+  --verbose VERBOSE     Set verbose level. 0: only show critical message, 1:
+                        show additional warning message, 2: show process
+                        information, 3: show debug messages. If you want to
+                        know where are the duplicate reads, use 3. DEFAULT:2
+  --outdir OUTDIR       If specified all output files will be written to that
+                        directory. Default: the current working directory
+  -o OUTPUTFILE, --ofile OUTPUTFILE
+                        Output BED file name. If not specified, will write to
+                        standard output. Note, if the input format is BAMPE or
+                        BEDPE, the output will be in BEDPE format. DEFAULT:
+                        stdout
+  -d, --dry-run         When set, filterdup will only output numbers instead
+                        of writing output files, including maximum allowable
+                        duplicates, total number of reads before filtering,
+                        total number of reads after filtering, and redundant
+                        rate. Default: not set

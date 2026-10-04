@@ -1,0 +1,37 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "very_shallow_slocal_500_llocal_2000",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/slocal_500_llocal_2000",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/treat.bed",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/ctrl.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--slocal",
+    "500",
+    "--llocal",
+    "2000"
+  ],
+  "files": {
+    "very_shallow_slocal_500_llocal_2000_peaks.narrowPeak": "f14820c6447ecda399ae8d5ad67340d75b2acad6cd7c1802409efdd7dd9a9eef",
+    "very_shallow_slocal_500_llocal_2000_peaks.xls": "c0b8d0246fad7768c2390148e279938763ef0ef223da068a78ab0d7b93c51e33",
+    "very_shallow_slocal_500_llocal_2000_summits.bed": "db781738bb242bf3dcfea3f2f0ece53930ad74c3ca3711cab7acaaff24ba4c89"
+  },
+  "fixture": "se_edge/very_shallow",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:44: [32 MB] \n# Command line: callpeak -n very_shallow_slocal_500_llocal_2000 -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/slocal_500_llocal_2000 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/ctrl.bed -f BED --nomodel --extsize 200 --slocal 500 --llocal 2000\n# ARGUMENTS LIST:\n# name = very_shallow_slocal_500_llocal_2000\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/ctrl.bed']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 500 bps and 2000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:44: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:44: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:44: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:26:44: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:26:44: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:26:44: [33 MB] #1  total tags in treatment: 12 \nINFO  @ 30 Sep 2026 12:26:44: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:26:44: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #1  tags after filtering in treatment: 12 \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #1  Redundant rate of treatment: 0.00 \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #1  total tags in control: 5 \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #1  tags after filtering in control: 5 \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #1  Redundant rate of control: 0.00 \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/slocal_500_llocal_2000/very_shallow_slocal_500_llocal_2000_peaks.xls \nINFO  @ 30 Sep 2026 12:26:44: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/slocal_500_llocal_2000/very_shallow_slocal_500_llocal_2000_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:44: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/slocal_500_llocal_2000/very_shallow_slocal_500_llocal_2000_summits.bed \nINFO  @ 30 Sep 2026 12:26:44: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "slocal_500_llocal_2000",
+  "wall_seconds": 0.164
+}

@@ -1,0 +1,99 @@
+//! Command line interface for `macs3-rs`.
+//!
+//! The compatibility target is `macs3` itself: same subcommands, same flags, same
+//! defaults, same exit codes, same behaviour on invalid input. The flag surface is
+//! auto-derived from upstream argparse into `oracle/flag_matrix.tsv`, which is the
+//! authoritative list — *not* upstream's `--help` text, which documents several
+//! flags that do not exist (F23).
+//!
+//! # Exit codes
+//!
+//! | code | meaning |
+//! |---|---|
+//! | 0 | success |
+//! | 2 | a usage error, as argparse produces |
+//! | 1 | everything else: upstream's `sys.exit()`, or an input the pipeline rejected |
+//!
+//! See [`error`] for the failure taxonomy and for why Python tracebacks are not
+//! reproduced.
+
+#![forbid(unsafe_code)]
+#![deny(missing_debug_implementations)]
+
+pub mod commands;
+pub mod error;
+pub mod flags;
+pub mod help;
+
+pub use error::{CliError, FailureKind, NO_COMMON_CHROMOSOMES};
+pub use flags::{flag_specs, parse as parse_flags, FlagSpec, Options, UsageError};
+
+/// The MACS3 version this port targets.
+pub const TARGET_VERSION: &str = "3.0.5";
+
+/// The program name, as it appears in usage output.
+pub const PROGRAM: &str = "macs3-rs";
+
+/// The 14 subcommands, in the order upstream registers them.
+///
+/// The list is checked against `oracle/flag_matrix.tsv` so a subcommand cannot be
+/// dropped without a test failing.
+pub const SUBCOMMANDS: [&str; 14] = [
+    "callpeak",
+    "bdgpeakcall",
+    "bdgbroadcall",
+    "bdgcmp",
+    "bdgopt",
+    "cmbreps",
+    "bdgdiff",
+    "filterdup",
+    "predictd",
+    "pileup",
+    "randsample",
+    "refinepeak",
+    "hmmratac",
+    "callvar",
+];
+
+/// `true` if `name` is one of the 14 subcommands.
+pub fn is_subcommand(name: &str) -> bool {
+    SUBCOMMANDS.contains(&name)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn there_are_fourteen_subcommands_and_they_are_unique() {
+        assert_eq!(SUBCOMMANDS.len(), 14);
+        let mut sorted = SUBCOMMANDS.to_vec();
+        sorted.sort_unstable();
+        let unique = sorted.len();
+        sorted.dedup();
+        assert_eq!(sorted.len(), unique, "duplicate subcommand in the list");
+    }
+
+    #[test]
+    fn every_objective_subcommand_is_present() {
+        for name in [
+            "callpeak",
+            "bdgpeakcall",
+            "bdgbroadcall",
+            "bdgcmp",
+            "bdgopt",
+            "cmbreps",
+            "bdgdiff",
+            "filterdup",
+            "predictd",
+            "pileup",
+            "randsample",
+            "refinepeak",
+            "callvar",
+            "hmmratac",
+        ] {
+            assert!(is_subcommand(name), "{name} missing");
+        }
+        assert!(!is_subcommand("nonsense"));
+    }
+}

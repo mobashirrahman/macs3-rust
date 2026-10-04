@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "very_shallow_B",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/B",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/treat.bed",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/ctrl.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "-B"
+  ],
+  "files": {
+    "very_shallow_B_control_lambda.bdg": "a35aa8da8548bcfdaec002707c9d245605b721186e7e82159ee13e2a00650c5d",
+    "very_shallow_B_peaks.narrowPeak": "f12de65b58a6f7251eab405aab43ae399695de42a9f4094d0cce74b675790aae",
+    "very_shallow_B_peaks.xls": "2897709067b1c61b653522a420418e9b80fa6f5d2ed6441b00929125b045ff4a",
+    "very_shallow_B_summits.bed": "5c7e7836947588b131075489cf919aa62fdce00db5a342e5f817a3849f99b1f7",
+    "very_shallow_B_treat_pileup.bdg": "bbeef7c3532fd2526fcfe59e2f9efc4803b6b3128e54561e8c83f5af7d4cbb1c"
+  },
+  "fixture": "se_edge/very_shallow",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:45: [32 MB] \n# Command line: callpeak -n very_shallow_B -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/B -t /scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/ctrl.bed -f BED --nomodel --extsize 200 -B\n# ARGUMENTS LIST:\n# name = very_shallow_B\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/very_shallow/ctrl.bed']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:45: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:45: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:45: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:26:45: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:26:45: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:26:45: [33 MB] #1  total tags in treatment: 12 \nINFO  @ 30 Sep 2026 12:26:45: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:26:45: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #1  tags after filtering in treatment: 12 \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #1  Redundant rate of treatment: 0.00 \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #1  total tags in control: 5 \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #1  tags after filtering in control: 5 \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #1  Redundant rate of control: 0.00 \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #3 In the peak calling step, the following will be performed simultaneously: \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #3   Write bedGraph files for treatment pileup (after scaling if necessary)... very_shallow_B_treat_pileup.bdg \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #3   Write bedGraph files for control lambda (after scaling if necessary)... very_shallow_B_control_lambda.bdg \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #3   Pileup will be based on sequencing depth in control. \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/B/very_shallow_B_peaks.xls \nINFO  @ 30 Sep 2026 12:26:45: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/B/very_shallow_B_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:45: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/very_shallow/B/very_shallow_B_summits.bed \nINFO  @ 30 Sep 2026 12:26:45: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "B",
+  "wall_seconds": 0.153
+}

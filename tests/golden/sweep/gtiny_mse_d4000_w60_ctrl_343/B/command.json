@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mse_d4000_w60_ctrl_343_B",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_ctrl_343/B",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_ctrl_343/treat.bed",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_ctrl_343/ctrl.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "-B"
+  ],
+  "files": {
+    "gtiny_mse_d4000_w60_ctrl_343_B_control_lambda.bdg": "36022d6531f4959dd50cbbbe99931dab622c1f13622b342141023cea23924cb7",
+    "gtiny_mse_d4000_w60_ctrl_343_B_peaks.narrowPeak": "e00c52b5b6950d52c42db86dd0e12082fd706cb9c9c50d2ae01b6df3acd23ba3",
+    "gtiny_mse_d4000_w60_ctrl_343_B_peaks.xls": "dd650eee4a446c557c4f37d2b5b0c3c616b4ae77ba0743d3efe05bd746d3a6a7",
+    "gtiny_mse_d4000_w60_ctrl_343_B_summits.bed": "d2dfdc3f42845aebb5f4c1b8f004bd332a4e2c9038953ccdf07ef97f9536b49a",
+    "gtiny_mse_d4000_w60_ctrl_343_B_treat_pileup.bdg": "b43b116e735484e2551eed0f03acf6af7ad496126606d529220032232c0be6f8"
+  },
+  "fixture": "sweep/gtiny_mse_d4000_w60_ctrl_343",
+  "mode": "se",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:33:42: [32 MB] \n# Command line: callpeak -n gtiny_mse_d4000_w60_ctrl_343_B -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_ctrl_343/B -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_ctrl_343/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_ctrl_343/ctrl.bed -f BED --nomodel --extsize 200 -B\n# ARGUMENTS LIST:\n# name = gtiny_mse_d4000_w60_ctrl_343_B\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_ctrl_343/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w60_ctrl_343/ctrl.bed']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:33:42: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:33:42: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:33:42: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1  total tags in treatment: 4000 \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1  tags after filtering in treatment: 177 \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1  Redundant rate of treatment: 0.96 \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1  total tags in control: 4000 \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1  tags after filtering in control: 2046 \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1  Redundant rate of control: 0.49 \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #3 In the peak calling step, the following will be performed simultaneously: \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #3   Write bedGraph files for treatment pileup (after scaling if necessary)... gtiny_mse_d4000_w60_ctrl_343_B_treat_pileup.bdg \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #3   Write bedGraph files for control lambda (after scaling if necessary)... gtiny_mse_d4000_w60_ctrl_343_B_control_lambda.bdg \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #3   Pileup will be based on sequencing depth in treatment. \nINFO  @ 30 Sep 2026 12:33:42: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:33:42: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_ctrl_343/B/gtiny_mse_d4000_w60_ctrl_343_B_peaks.xls \nINFO  @ 30 Sep 2026 12:33:42: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_ctrl_343/B/gtiny_mse_d4000_w60_ctrl_343_B_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:33:42: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w60_ctrl_343/B/gtiny_mse_d4000_w60_ctrl_343_B_summits.bed \nINFO  @ 30 Sep 2026 12:33:42: [35 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "B",
+  "wall_seconds": 0.172
+}

@@ -1,0 +1,11 @@
+fixture	gtiny_mse_d1200_w600_noc_307
+group	sweep
+genome	tiny
+mode	se
+model_capable	0
+treat	chrA	1200
+treat_1	chrA	1200
+treat_2	chrA	600
+treat	chrB	1200
+treat_1	chrB	1200
+treat_2	chrB	600

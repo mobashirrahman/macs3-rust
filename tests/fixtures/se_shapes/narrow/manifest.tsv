@@ -1,0 +1,15 @@
+fixture	narrow
+group	se_shapes
+genome	mini
+mode	se
+model_capable	0
+treat	chr1	4000
+treat	chr2	4000
+treat	chr10	4000
+treat	chrX	4000
+treat	chrM	4000
+ctrl	chr1	250
+ctrl	chr2	250
+ctrl	chr10	250
+ctrl	chrX	250
+ctrl	chrM	250

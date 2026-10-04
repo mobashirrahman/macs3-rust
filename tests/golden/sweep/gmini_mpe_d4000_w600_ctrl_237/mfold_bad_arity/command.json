@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mpe_d4000_w600_ctrl_237_mfold_bad_arity",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d4000_w600_ctrl_237/mfold_bad_arity",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d4000_w600_ctrl_237/treat.bedpe",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d4000_w600_ctrl_237/ctrl.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--mfold",
+    "2",
+    "4",
+    "8"
+  ],
+  "files": {},
+  "fixture": "sweep/gmini_mpe_d4000_w600_ctrl_237",
+  "mode": "pe",
+  "returncode": 2,
+  "stderr_tail": "usage: macs3 [-h] [--version]\n             {callpeak,bdgpeakcall,bdgbroadcall,bdgcmp,bdgopt,cmbreps,bdgdiff,filterdup,predictd,pileup,randsample,refinepeak,callvar,hmmratac}\n             ...\nmacs3: error: unrecognized arguments: 8\n",
+  "stdout_tail": "",
+  "variant": "mfold_bad_arity",
+  "wall_seconds": 0.041
+}

@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gmini_mfrag_d400_w600_ctrl_384_keepdup_all",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_all",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--keep-dup",
+    "all"
+  ],
+  "files": {
+    "gmini_mfrag_d400_w600_ctrl_384_keepdup_all_peaks.narrowPeak": "adbf98ea7bb2b4064e0cbc99bca64ad10be64094822fc37f97c83cead7f6a247",
+    "gmini_mfrag_d400_w600_ctrl_384_keepdup_all_peaks.xls": "226affdc06ff06b7f55f60a36af3cecfcde8d4a3025dac0d74a4b8d94ce39b94",
+    "gmini_mfrag_d400_w600_ctrl_384_keepdup_all_summits.bed": "055206ef4e9f956464b252b08b61a9fa7f9f80411817d9550028cbdd8536e457"
+  },
+  "fixture": "sweep/gmini_mfrag_d400_w600_ctrl_384",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 11:42:06: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d400_w600_ctrl_384_keepdup_all -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/ctrl.frag -f FRAG --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d400_w600_ctrl_384_keepdup_all\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w600_ctrl_384/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:42:06: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:42:06: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:42:06: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1 mean fragment size is determined as 112.2 bp from treatment \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1 note: mean fragment size in control is 94.8 bp -- value ignored \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1 fragment size = 112.2 \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1  total fragments in control: 1597 \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:42:06: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:42:06: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_all/gmini_mfrag_d400_w600_ctrl_384_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_all/gmini_mfrag_d400_w600_ctrl_384_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w600_ctrl_384/keepdup_all/gmini_mfrag_d400_w600_ctrl_384_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 11:42:06: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "keepdup_all",
+  "wall_seconds": 0.172
+}

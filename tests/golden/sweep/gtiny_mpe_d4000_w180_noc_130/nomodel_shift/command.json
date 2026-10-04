@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gtiny_mpe_d4000_w180_noc_130_nomodel_shift",
+    "-g",
+    "3500",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_noc_130/nomodel_shift",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_noc_130/treat.bedpe",
+    "-f",
+    "BEDPE",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--shift",
+    "-100"
+  ],
+  "files": {
+    "gtiny_mpe_d4000_w180_noc_130_nomodel_shift_peaks.narrowPeak": "d1faff056a58d16d6b4855cef65f865c156deef5aab126154effb2fcccc55c44",
+    "gtiny_mpe_d4000_w180_noc_130_nomodel_shift_peaks.xls": "6908db9e00e84b942850368374c2c56ca9be1f97275878110769c1d7d106f439",
+    "gtiny_mpe_d4000_w180_noc_130_nomodel_shift_summits.bed": "ffe111e747b93fc4aa64ff8f54dae17e093743c6a0f9b1af3fa37e8d05c2aed1"
+  },
+  "fixture": "sweep/gtiny_mpe_d4000_w180_noc_130",
+  "mode": "pe",
+  "returncode": 0,
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:30:55: [32 MB] \n# Command line: callpeak -n gtiny_mpe_d4000_w180_noc_130_nomodel_shift -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_noc_130/nomodel_shift -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_noc_130/treat.bedpe -f BEDPE --nomodel --extsize 200 --nomodel --extsize 200 --shift -100\n# ARGUMENTS LIST:\n# name = gtiny_mpe_d4000_w180_noc_130_nomodel_shift\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mpe_d4000_w180_noc_130/treat.bedpe']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:30:55: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:30:55: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #1  total fragments in treatment: 4000 \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #1  fragments after filtering in treatment: 253 \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #1  Redundant rate of treatment: 0.94 \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:30:55: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:30:55: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:30:55: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:30:55: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_noc_130/nomodel_shift/gtiny_mpe_d4000_w180_noc_130_nomodel_shift_peaks.xls \nINFO  @ 30 Sep 2026 12:30:55: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_noc_130/nomodel_shift/gtiny_mpe_d4000_w180_noc_130_nomodel_shift_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:30:55: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mpe_d4000_w180_noc_130/nomodel_shift/gtiny_mpe_d4000_w180_noc_130_nomodel_shift_summits.bed \nINFO  @ 30 Sep 2026 12:30:55: [34 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "nomodel_shift",
+  "wall_seconds": 0.195
+}

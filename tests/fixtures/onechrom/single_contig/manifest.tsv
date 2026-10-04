@@ -1,0 +1,7 @@
+fixture	single_contig
+group	onechrom
+genome	onechrom
+mode	se
+model_capable	0
+treat	chr1	500
+ctrl	chr1	250

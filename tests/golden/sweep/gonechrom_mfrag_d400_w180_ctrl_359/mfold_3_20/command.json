@@ -1,0 +1,36 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20",
+    "-g",
+    "12000",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w180_ctrl_359/mfold_3_20",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w180_ctrl_359/treat.frag",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w180_ctrl_359/ctrl.frag",
+    "-f",
+    "FRAG",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--mfold",
+    "3",
+    "20"
+  ],
+  "files": {
+    "gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20_peaks.narrowPeak": "d2e671541bccf3045ed2fe429b97b7060a76a2c93ce4b49128c783c9f9b5a2fe",
+    "gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20_peaks.xls": "81d4a5cd3df7439a236c99dac957bc345feff8b36816d26b77f01141a848a716",
+    "gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20_summits.bed": "4db8fe0f3570abef489e4d82ea1ffffd3c7e2c2f1ea85b11251349c65840b854"
+  },
+  "fixture": "sweep/gonechrom_mfrag_d400_w180_ctrl_359",
+  "mode": "frag",
+  "returncode": 0,
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:20:18: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:20:18: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20 -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w180_ctrl_359/mfold_3_20 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w180_ctrl_359/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w180_ctrl_359/ctrl.frag -f FRAG --nomodel --extsize 200 --mfold 3 20\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w180_ctrl_359/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w180_ctrl_359/ctrl.frag']\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [3, 20]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:20:18: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:20:18: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:20:18: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #1 note: mean fragment size in control is 178.1 bp -- value ignored \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #1  total fragments in control: 1597 \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:20:18: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:20:18: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:20:18: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w180_ctrl_359/mfold_3_20/gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20_peaks.xls \nINFO  @ 30 Sep 2026 12:20:18: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w180_ctrl_359/mfold_3_20/gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:20:18: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w180_ctrl_359/mfold_3_20/gonechrom_mfrag_d400_w180_ctrl_359_mfold_3_20_summits.bed \nINFO  @ 30 Sep 2026 12:20:18: [36 MB] Done! \n",
+  "stdout_tail": "",
+  "variant": "mfold_3_20",
+  "wall_seconds": 0.186
+}

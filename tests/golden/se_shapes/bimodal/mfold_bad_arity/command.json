@@ -1,0 +1,33 @@
+{
+  "command": [
+    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "callpeak",
+    "-n",
+    "bimodal_mfold_bad_arity",
+    "-g",
+    "48200",
+    "--outdir",
+    "/scratch/mdra00001/MACS3-rust/tests/golden/se_shapes/bimodal/mfold_bad_arity",
+    "-t",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_shapes/bimodal/treat.bed",
+    "-c",
+    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_shapes/bimodal/ctrl.bed",
+    "-f",
+    "BED",
+    "--nomodel",
+    "--extsize",
+    "200",
+    "--mfold",
+    "2",
+    "4",
+    "8"
+  ],
+  "files": {},
+  "fixture": "se_shapes/bimodal",
+  "mode": "se",
+  "returncode": 2,
+  "stderr_tail": "usage: macs3 [-h] [--version]\n             {callpeak,bdgpeakcall,bdgbroadcall,bdgcmp,bdgopt,cmbreps,bdgdiff,filterdup,predictd,pileup,randsample,refinepeak,callvar,hmmratac}\n             ...\nmacs3: error: unrecognized arguments: 8\n",
+  "stdout_tail": "",
+  "variant": "mfold_bad_arity",
+  "wall_seconds": 0.042
+}
