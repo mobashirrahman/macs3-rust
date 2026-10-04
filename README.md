@@ -76,11 +76,11 @@ run on real CTCF ChIP-seq data (5.0 M + 5.0 M reads, and the yeast ATAC BAM).
   `# alternative fragment length(s)` and all five outputs match on real data
 - `callpeak` paired-end with `-f BEDPE` and `-f BAMPE`, narrow and broad
 - `callpeak -f FRAG`, with and without `--barcodes`
-- `predictd`, single-end and both paired-end modes
-- `refinepeak`
-- `pileup`, single-end and paired-end (BEDPE/BAMPE)
-- `filterdup`, single-end and paired-end (BEDPE/BAMPE)
-- `randsample`, single-end and paired-end (BEDPE/BAMPE single-chromosome byte-identical)
+- `predictd`, single-end (BED/BAM/SAM) and both paired-end modes
+- `refinepeak` (single-end BED/BAM/SAM; paired-end is SE-only upstream)
+- `pileup`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE/FRAG)
+- `filterdup`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE)
+- `randsample`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE single-chromosome byte-identical)
 - `callvar`, both `-F off` and `-F auto`
 - the `bdgopt` / `bdgcmp` / `cmbreps` / `bdgdiff` bedGraph family
 - `bdgpeakcall`, `bdgbroadcall`, gzipped input throughout
@@ -97,6 +97,18 @@ run on real CTCF ChIP-seq data (5.0 M + 5.0 M reads, and the yeast ATAC BAM).
 | `hmmratac` | 43 output files not produced: BAM input now loads and `--model` inference is byte-identical, but hmmlearn self-training is unimplemented so the *default* invocation refuses |
 | `hmmratac` | 43 output files not produced: hmmlearn Baum-Welch self-training unimplemented (see below) |
 
+
+## Input formats
+
+Single-end `BED`, `BAM`, `SAM`, `ELAND`, `BOWTIE` and paired-end `BEDPE`, `BAMPE`,
+`FRAG` are supported where upstream supports them. Two notes:
+
+- Upstream's SAM parser crashes on any minus-strand read (`TypeError` in CIGAR
+  parsing), making `-f SAM` effectively unusable upstream. This port parses SAM
+  correctly and is byte-identical on inputs upstream can handle.
+- SE BAM 5' ends use the exclusive rightmost directly, matching
+  `bam_fw_binary_parse`; BAMPE fragments use `abs(TLEN)` with leftmost-only
+  proper pairs, matching `bampe_pe_binary_parse`. No `.bai` index is required.
 
 ## Performance
 
