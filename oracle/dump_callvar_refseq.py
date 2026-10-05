@@ -28,21 +28,21 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-ENV_LOCK = os.path.join(HERE, "ENV.lock")
+sys.path.insert(0, HERE)
+from oracle_env import oracle_python, require_src  # noqa: E402
+from run_golden import MACS3_SRC_TOKEN  # noqa: E402
 
 
-def load_env_lock():
+def oracle_env():
+    """The environment and interpreter the oracle's own code must run under.
+
+    `sys.executable` is deliberately not used: it is whatever ran this script,
+    which on a clean machine has no MACS3 extensions installed.
+    """
     env = dict(os.environ)
-    macs3_init = None
-    with open(ENV_LOCK) as fh:
-        for line in fh:
-            if line.startswith("MACS3_PATH="):
-                macs3_init = line.split("=", 1)[1].strip()
-    if not macs3_init:
-        raise SystemExit(f"{ENV_LOCK} has no MACS3_PATH")
-    src = os.path.dirname(os.path.dirname(macs3_init))
+    src = require_src()
     env["PYTHONPATH"] = src
-    return env, src
+    return env, oracle_python() or sys.executable, src
 
 
 def main():
@@ -96,12 +96,12 @@ with open(peaks) as fh:
 print(json.dumps(out))
 '''
 
-    env, src = load_env_lock()
+    env, python, src = oracle_env()
     with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False) as fh:
         fh.write(body)
         script = fh.name
     try:
-        proc = subprocess.run([sys.executable, script, args.peaks, args.tbam,
+        proc = subprocess.run([python, script, args.peaks, args.tbam,
                                args.cbam, "1"],
                               capture_output=True, text=True, env=env, cwd=src)
         if proc.returncode != 0:
@@ -114,7 +114,11 @@ print(json.dumps(out))
     stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
     lines = [
         "# macs3-rs L4 golden -- upstream's own RACollection peak consensus.",
-        f"# oracle source: {src}",
+        # The checkout's location is per-machine (`MACS3_SRC`, then
+        # `oracle/ENV.provisioned`), so the recording names the token rather than a
+        # path: a committed golden that carries one writer's `/home/...` is a false
+        # claim about every other machine.
+        f"# oracle source: {MACS3_SRC_TOKEN}",
         f"# peaks: {len(recs)} (read-covered ones only)   generated: {stamp}",
         "# fields: chrom left right RAs_left RAs_right count_T count_C ext_len refseq_hex ext_hex",
         "# refseq_hex is peak_refseq, i.e. the slice [left-start : right-start] of",

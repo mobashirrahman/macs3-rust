@@ -8,13 +8,17 @@
 //!
 //! Regenerating the oracle side needs `PYTHONPATH` pointing at the pinned
 //! source; the comparison itself is pure `diff`.
+//!
+//! Neither the pinned checkout nor its interpreter is vendored, so both are located
+//! through the environment (see `tests/oracle/mod.rs`) and the two oracle-side tests
+//! skip, loudly, where there is no reference installed.
 
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+mod oracle;
+
 const RUST: &str = env!("CARGO_BIN_EXE_macs3-rs");
-const ORACLE_MACS: &str = "/scratch/mdra00001/tmp/opencode/macs3-src/bin/macs3";
-const SRC: &str = "/scratch/mdra00001/tmp/opencode/macs3-src";
 
 const METHODS: [&str; 8] = [
     "ppois", "qpois", "subtract", "logFE", "FE", "logLR", "slogLR", "max",
@@ -58,12 +62,18 @@ fn write_bedgraph(path: &Path, seed: u64, nchrom: u64, nseg: u64, vmax: f64, zer
     std::fs::write(path, s).expect("write bedGraph");
 }
 
-fn run_oracle(args: &[&str], outdir: &Path) -> bool {
-    Command::new("python3")
-        .arg(ORACLE_MACS)
+/// Run the oracle's `macs3` under the pinned interpreter, with the pinned source on
+/// `PYTHONPATH`.
+///
+/// The interpreter has to be the oracle virtualenv's, not whatever `python3` the host
+/// has first on PATH: `bdgcmp`'s output is float formatting all the way down, so an
+/// unpinned NumPy is a different answer rather than an error.
+fn run_oracle(bin: &Path, python: &Path, src: &Path, args: &[&str], outdir: &Path) -> bool {
+    Command::new(python)
+        .arg(bin)
         .args(args)
         .current_dir(outdir)
-        .env("PYTHONPATH", SRC)
+        .env("PYTHONPATH", src)
         .output()
         .map(|o| o.status.success())
         .unwrap_or(false)
@@ -91,6 +101,13 @@ fn tmpdir(tag: &str, seed: u64) -> PathBuf {
 /// `bdgcmp`: every method at two pseudocounts must be byte-identical.
 #[test]
 fn bdgcmp_matches_oracle_byte_for_byte() {
+    let Some(oracle) = oracle::require("bdgcmp_matches_oracle_byte_for_byte") else {
+        return;
+    };
+    let Some((bin, python)) = oracle::entry_point("bdgcmp_matches_oracle_byte_for_byte", &oracle)
+    else {
+        return;
+    };
     for seed in 1..=6u64 {
         let d = tmpdir("cmp", seed);
         write_bedgraph(&d.join("t.bdg"), seed, 2, 30, 20.0, 0.10);
@@ -100,6 +117,9 @@ fn bdgcmp_matches_oracle_byte_for_byte() {
                 let tag = pc.replace('.', "");
                 assert!(
                     run_oracle(
+                        bin,
+                        python,
+                        &oracle.src,
                         &[
                             "bdgcmp",
                             "-t",
@@ -153,6 +173,13 @@ fn bdgcmp_matches_oracle_byte_for_byte() {
 /// `bdgdiff`: cond1/cond2/common BED must be byte-identical at three depth scalings.
 #[test]
 fn bdgdiff_matches_oracle_byte_for_byte() {
+    let Some(oracle) = oracle::require("bdgdiff_matches_oracle_byte_for_byte") else {
+        return;
+    };
+    let Some((bin, python)) = oracle::entry_point("bdgdiff_matches_oracle_byte_for_byte", &oracle)
+    else {
+        return;
+    };
     for seed in 20..=25u64 {
         let d = tmpdir("diff", seed);
         for (name, sd, vmax, zf) in [
@@ -173,7 +200,10 @@ fn bdgdiff_matches_oracle_byte_for_byte() {
             ];
             base.extend_from_slice(extra);
             base.extend_from_slice(&["--o-prefix", "X"]);
-            assert!(run_oracle(&base, &d), "oracle bdgdiff failed (seed {seed})");
+            assert!(
+                run_oracle(bin, python, &oracle.src, &base, &d),
+                "oracle bdgdiff failed (seed {seed})"
+            );
             // rename so the peak-name prefix matches, since it is user-supplied
             for (src, dst) in [("cond1", "u1"), ("cond2", "u2"), ("common", "u3")] {
                 let _ = std::fs::rename(

@@ -18,6 +18,13 @@ import sys
 import tempfile
 import os
 
+# NumPy lives in the oracle virtualenv, so this re-execs under the provisioned
+# interpreter rather than whichever `python3` happens to be first on PATH.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import ensure_oracle_python  # noqa: E402
+
+ensure_oracle_python()
+
 import numpy as np
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

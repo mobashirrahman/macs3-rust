@@ -13,11 +13,25 @@ set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BAM="$ROOT/tests/fixtures/bam/reads.bam"
 GOLDEN="$ROOT/tests/golden/bam"
-PY="${MACS3_ORACLE_PYTHON:-${MACS3_VENV:-/scratch/mdra00001/tmp/opencode/macs3-venv}/bin/python}"
+# `dump_bam_region.py` imports MACS3 in-process, so it has to run on the provisioned
+# virtualenv's interpreter. Resolved like oracle_env.py: environment first, then
+# `oracle/ENV.provisioned`, then the default provisioning location.
+env_value() {
+  awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print; exit }' "$2" 2>/dev/null
+}
+VENV="${MACS3_VENV:-$(env_value MACS3_VENV "$ROOT/oracle/ENV.provisioned")}"
+[ -n "$VENV" ] || VENV="$ROOT/.oracle/venv"
+PY="${MACS3_ORACLE_PYTHON:-$VENV/bin/python}"
 DUMP="$ROOT/target/debug/macs-io-dump"
 
 REGENERATE=0
 [ "${1:-}" = "--regenerate" ] && REGENERATE=1
+
+if [ ! -x "$PY" ]; then
+  echo "no provisioned MACS3 interpreter at $PY"
+  echo "  run 'bash oracle/provision_oracle.sh', or set MACS3_VENV/MACS3_ORACLE_PYTHON"
+  exit 2
+fi
 
 if [ ! -f "$BAM" ]; then
   echo "fixture missing: $BAM"

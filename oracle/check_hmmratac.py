@@ -18,6 +18,9 @@ import subprocess
 import sys
 import tempfile
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import require_python, require_src  # noqa: E402
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
@@ -83,28 +86,19 @@ def main():
     ap.add_argument("--outdir", default=None)
     args = ap.parse_args()
 
-    def env_record(filename, key):
-        path = os.path.join(HERE, filename)
-        if not os.path.exists(path):
-            return None
-        with open(path) as fh:
-            for line in fh:
-                if line.startswith(key + "="):
-                    return line.split("=", 1)[1].strip()
-        return None
-
-    src = args.oracle_src or os.environ.get("MACS3_SRC")
-    if src is None:
-        p = env_record("ENV.provisioned", "MACS3_PATH") or env_record("ENV.lock", "MACS3_PATH")
-        src = os.path.dirname(os.path.dirname(p)) if p else "/scratch/mdra00001/tmp/opencode/macs3-src"
-    venv = args.venv or os.environ.get("MACS3_VENV") or env_record("ENV.provisioned", "MACS3_VENV")
-    venv = venv or "/scratch/mdra00001/tmp/opencode/macs3-venv"
+    # Resolved by oracle_env.py: environment, then oracle/ENV.provisioned, then the
+    # default provisioning location. A path baked into this script would resolve to
+    # nothing on CI -- or, worse, to some other machine's checkout.
+    src = require_src(args.oracle_src or None)
+    oracle_python = require_python(
+        os.path.join(args.venv, "bin", "python") if args.venv else None
+    )
     args.input = args.input or os.environ.get("MACS3_HMM_INPUT")
     if not args.input:
         candidates = ("/tmp/atr/yeast_500k_SRR1822137.bedpe.gz",
                       os.path.join(src, "test/yeast_500k_SRR1822137.bedpe.gz"))
         args.input = next((p for p in candidates if os.path.exists(p)), candidates[-1])
-    for p in (args.input, os.path.join(venv, "bin", "python"), args.binary):
+    for p in (args.input, oracle_python, args.binary):
         if not os.path.exists(p):
             print(f"missing required path: {p}", file=sys.stderr)
             return 2
@@ -117,7 +111,6 @@ def main():
     os.makedirs(u_dir, exist_ok=True)
 
     env = dict(os.environ, PYTHONPATH=src)
-    oracle_python = os.path.join(venv, "bin", "python")
     model = args.model
     if model is None:
         # Generate a fresh pinned model when the caller has not supplied one.

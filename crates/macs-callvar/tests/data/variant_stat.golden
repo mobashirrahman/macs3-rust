@@ -1,5 +1,5 @@
 # macs3-rs L4 golden -- MACS3/Signal/VariantStat.py via the pinned .so
-# oracle source: /scratch/mdra00001/tmp/opencode/macs3-src
+# oracle source: <MACS3_SRC>
 # cases: 410   generated: 2026-10-02T06:23:23Z
 # all floats are %.17g and must match bit-for-bit (fixed-order summation)
 # fields: name top1_T top1_C top2_T top2_C (comma-joined base qualities) homo_lnL homo_BIC heter_noas_lnL heter_noas_BIC heter_as_lnL heter_as_BIC gq12 gq_eq gq_far gq_near assig12 assig_eq assig_far assig_near

@@ -60,9 +60,12 @@ import shutil
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import oracle_bin, oracle_src  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ORACLE_SRC = os.environ.get("MACS3_SRC", "/scratch/mdra00001/tmp/opencode/macs3-src")
-ORACLE_MACS3 = os.path.join(os.environ.get("MACS3_VENV", "/scratch/mdra00001/tmp/opencode/macs3-venv"), "bin", "macs3")
+ORACLE_SRC = oracle_src()
+ORACLE_MACS3 = oracle_bin()
 OURS = os.path.join(ROOT, "target", "release", "macs3-rs")
 
 MAXRSS_RE = re.compile(r"Maximum resident set size \(kbytes\):\s*(\d+)")
@@ -204,8 +207,9 @@ def main() -> int:
     if not os.path.exists(OURS):
         print(f"build first: cargo build --release ({OURS} missing)", file=sys.stderr)
         return 2
-    if not os.path.exists(ORACLE_MACS3):
-        print(f"oracle missing: {ORACLE_MACS3}", file=sys.stderr)
+    if not ORACLE_MACS3:
+        print("oracle missing: run `bash oracle/provision_oracle.sh`, or point "
+              "MACS3_ORACLE_BIN at a provisioned `macs3`", file=sys.stderr)
         return 2
 
     profiles = {

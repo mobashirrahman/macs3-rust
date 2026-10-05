@@ -1,9 +1,13 @@
 /target/
+# cargo-fuzz builds here, and 2730 compiled objects were tracked in it at one
+# point: the whole dependency graph's debug and release output, plus the
+# libFuzzer binaries that only exist for this machine's toolchain.
+/fuzz/target/
 fuzz/corpus/
 fuzz/artifacts/
 *.log
 .DS_Store
 /tmp/
-/.oracle/
+/.oracle
 /oracle/ENV.provisioned
 __pycache__/

@@ -27,7 +27,10 @@ Usage:
 import os
 import sys
 
-sys.path.insert(0, os.environ.get("MACS3_SRC", "/scratch/mdra00001/tmp/opencode/macs3-src"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import require_src  # noqa: E402
+
+sys.path.insert(0, require_src())
 
 import MACS3.Signal.CallPeakUnit as _cpu  # noqa: E402
 
@@ -107,7 +110,7 @@ def main():
     _cpu.CallerFromAlignments = Spy
     import MACS3.Signal.PeakDetect  # noqa: F401  (must follow the patch)
 
-    src = os.environ.get("MACS3_SRC", "/scratch/mdra00001/tmp/opencode/macs3-src")
+    src = require_src()
     loader = importlib.machinery.SourceFileLoader("macs3_bin", os.path.join(src, "bin", "macs3"))
     spec = importlib.util.spec_from_loader(loader.name, loader)
     mod = importlib.util.module_from_spec(spec)

@@ -59,6 +59,13 @@ import os
 import re
 import sys
 
+# NumPy lives in the oracle virtualenv, so this re-execs under the provisioned
+# interpreter rather than whichever `python3` happens to be first on PATH.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import ensure_oracle_python, require_src  # noqa: E402
+
+ensure_oracle_python()
+
 import numpy as np
 
 
@@ -498,7 +505,9 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--log", default="",
                     help="oracle log to parse duplicate counts and rates from")
-    ap.add_argument("--macs3-src", default=os.environ.get("MACS3_SRC", "/scratch/mdra00001/tmp/opencode/macs3-src"))
+    ap.add_argument("--macs3-src", default=None,
+                    help="the pinned MACS3 checkout; default: the provisioned one "
+                         "(MACS3_SRC, then oracle/ENV.provisioned)")
     args, extra = ap.parse_known_args()
     # Anything not claimed above is passed through to MACS3 verbatim. A bare `--`
     # separator is dropped if the caller used one.
@@ -508,7 +517,7 @@ def main():
     os.makedirs(args.out, exist_ok=True)
 
     argv_args, argv_text = build_args(
-        args.macs3_src, args.fixture_dir, args.mode, extra, args.out)
+        args.macs3_src or require_src(), args.fixture_dir, args.mode, extra, args.out)
 
     from MACS3.Commands import callpeak_cmd
     from MACS3.Signal import PeakDetect as pd_mod

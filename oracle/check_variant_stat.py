@@ -29,28 +29,22 @@ import subprocess
 import sys
 import tempfile
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-ENV_LOCK = os.path.join(HERE, "ENV.lock")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import oracle_python, require_src  # noqa: E402
+from run_golden import MACS3_SRC_TOKEN  # noqa: E402
 
 
-def load_env_lock():
+def oracle_env():
     """Run the pinned oracle's Python so the comparison uses *its* NumPy/`.so`.
 
-    The root is derived from `ENV.lock`'s `MACS3_PATH` the same way
-    `oracle/check_predictd_randsample.sh` does -- `MACS3_PATH` points at
-    `.../MACS3/__init__.py`, so the importable root is two levels up.
+    `sys.executable` is deliberately not used: it is whatever ran this script,
+    which on a clean machine is a Python without MACS3's compiled extensions
+    installed and therefore without the numbers this file records.
     """
     env = dict(os.environ)
-    macs3_init = None
-    with open(ENV_LOCK) as fh:
-        for line in fh:
-            if line.startswith("MACS3_PATH="):
-                macs3_init = line.split("=", 1)[1].strip()
-    if not macs3_init:
-        raise SystemExit(f"{ENV_LOCK} has no MACS3_PATH")
-    oracle_src = os.path.dirname(os.path.dirname(macs3_init))
-    env["PYTHONPATH"] = oracle_src
-    return env, oracle_src
+    src = require_src()
+    env["PYTHONPATH"] = src
+    return env, oracle_python() or sys.executable, src
 
 
 def gen_cases(rng, n_bulk):
@@ -137,8 +131,8 @@ print(json.dumps(out))
         fh.write(body)
         script = fh.name
     try:
-        env, oracle_src = load_env_lock()
-        proc = subprocess.run([sys.executable, script],
+        env, python, oracle_src = oracle_env()
+        proc = subprocess.run([python, script],
                               input=__import__("json").dumps(cases),
                               capture_output=True, text=True, env=env)
         if proc.returncode != 0:
@@ -153,7 +147,11 @@ print(json.dumps(out))
     stamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
     lines = [
         "# macs3-rs L4 golden -- MACS3/Signal/VariantStat.py via the pinned .so",
-        f"# oracle source: {oracle_src}",
+        # The checkout's location is per-machine (`MACS3_SRC`, then
+        # `oracle/ENV.provisioned`), so the recording names the token rather than a
+        # path: a committed golden that carries one writer's `/home/...` is a false
+        # claim about every other machine.
+        f"# oracle source: {MACS3_SRC_TOKEN}",
         f"# cases: {len(records)}   generated: {stamp}",
         "# all floats are %.17g and must match bit-for-bit (fixed-order summation)",
         "# fields: name top1_T top1_C top2_T top2_C (comma-joined base qualities) "

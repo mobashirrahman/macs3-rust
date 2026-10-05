@@ -1,5 +1,5 @@
 # macs3-rs L4 golden -- upstream's own RACollection peak consensus.
-# oracle source: /scratch/mdra00001/tmp/opencode/macs3-src
+# oracle source: <MACS3_SRC>
 # peaks: 10 (read-covered ones only)   generated: 2026-10-02T07:05:42Z
 # fields: chrom left right RAs_left RAs_right count_T count_C ext_len refseq_hex ext_hex
 # refseq_hex is peak_refseq, i.e. the slice [left-start : right-start] of

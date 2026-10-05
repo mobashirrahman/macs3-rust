@@ -863,7 +863,7 @@ pub fn se_setup(
     // and therefore over-states every p-score. `--nolambda` empties both lists,
     // which is the one-element `lambda_bg` array of `CallPeakUnit.py:621`.
     let (scales, factors) = if ctrl.is_none() {
-        if cfg.nolambda || cfg.llocal <= 0 {
+        if cfg.nolambda {
             (Vec::new(), Vec::new())
         } else {
             (
@@ -875,10 +875,11 @@ pub fn se_setup(
         control_scale_factors(ratio, to_control, cfg.extsize, cfg.slocal, cfg.llocal)
     };
     let lscales = LambdaScales {
-        d: scales[0],
+        // --nolambda without a control leaves both scale lists empty.
+        d: scales.first().copied().unwrap_or(0),
         slocal: *scales.get(1).unwrap_or(&0),
         llocal: *scales.get(2).unwrap_or(&0),
-        d_factor: factors[0],
+        d_factor: factors.first().copied().unwrap_or(0.0),
         slocal_factor: factors.get(1).copied().unwrap_or(0.0),
         llocal_factor: factors.get(2).copied().unwrap_or(0.0),
     };
@@ -1075,7 +1076,7 @@ pub fn build_one_se_chromosome(
             // `-B` control track then had hundreds of runs instead of upstream's
             // single constant row, and `--nolambda` called no peaks at all
             // (`se_basic/gauss_two_peaks`, `se_dup/dup_rate_*`).
-            _ if cfg.nolambda || lscales.d <= 0 => {
+            _ if cfg.nolambda || lscales.d == 0 => {
                 // F164: see the paired-end note -- `push(t.end(), ..)` on a track
                 // that already starts at `t.end()` is a no-op, so the control came
                 // out empty.

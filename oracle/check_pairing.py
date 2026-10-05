@@ -36,6 +36,17 @@ import subprocess
 import sys
 import tempfile
 
+# NumPy lives in the oracle virtualenv, so this re-execs under the provisioned
+# interpreter rather than whichever `python3` happens to be first on PATH.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import ensure_oracle_python, oracle_bin  # noqa: E402
+
+ensure_oracle_python()
+
+# `provision_oracle.sh` puts the venv on PATH, but a bare `macs3` on PATH is luck,
+# not a contract: resolve the entry point the same way as everything else.
+ORACLE_BIN = oracle_bin()
+
 import numpy as np
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -137,9 +148,12 @@ def main():
     if not args.skip_cutoff:
         fixture = os.path.join(REPO, "tests", "fixtures", "se_model", "realistic",
                                "treat.bed")
-        if os.path.exists(fixture) and shutil.which("macs3"):
+        if os.path.exists(fixture) and ORACLE_BIN:
             out = tempfile.mkdtemp(prefix="macs3_nolambda_")
-            cmd = ["macs3", "callpeak", "-n", "nl", "-g", "1000000",
+            # `sys.executable` is the provisioned interpreter by now (see
+            # ensure_oracle_python), and the entry point is launched through it rather
+            # than executed: the checkout's copy is not executable.
+            cmd = [sys.executable, ORACLE_BIN, "callpeak", "-n", "nl", "-g", "1000000",
                    "--outdir", out, "-t", fixture, "-f", "BED",
                    "--nomodel", "--extsize", "200", "--nolambda", "--bdg"]
             r = subprocess.run(cmd, capture_output=True, text=True)
@@ -176,7 +190,8 @@ def main():
             shutil.rmtree(out, ignore_errors=True)
         else:
             failures.append(
-                "fixture or macs3 unavailable; cannot check the --nolambda extent"
+                f"fixture or oracle entry point unavailable ({ORACLE_BIN}); "
+                f"cannot check the --nolambda extent"
             )
 
     # ---- 3. the p-value histogram -> q table ---------------------------
@@ -188,12 +203,12 @@ def main():
     cutoffs = sorted(glob.glob(os.path.join(REPO, "tests", "golden", "**",
                                             "*_cutoff_analysis.txt"), recursive=True))
     cutoff_payloads = []
-    if not cutoffs and shutil.which("macs3") and not args.skip_cutoff:
+    if not cutoffs and ORACLE_BIN and not args.skip_cutoff:
         # no golden variant writes one yet, so produce one the same way as above
         fixture = os.path.join(REPO, "tests", "fixtures", "se_model", "realistic",
                                "treat.bed")
         out = tempfile.mkdtemp(prefix="macs3_cutoff_")
-        subprocess.run(["macs3", "callpeak", "-n", "cut", "-g", "1000000",
+        subprocess.run([sys.executable, ORACLE_BIN, "callpeak", "-n", "cut", "-g", "1000000",
                         "--outdir", out, "-t", fixture, "-f", "BED",
                         "--nomodel", "--extsize", "200", "--cutoff-analysis"],
                        capture_output=True, text=True)

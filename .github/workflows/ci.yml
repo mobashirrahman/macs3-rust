@@ -12,9 +12,15 @@
 #
 # L3 and L4 need the pinned MACS3 3.0.5 oracle. It is not vendored (it is a git
 # checkout plus a Python environment), so those jobs provision it with
-# `oracle/provision_oracle.sh`. Everything else runs on a stock rust image with no
-# Python at all, which is itself part of the release definition: the shipped tool
-# must not depend on Python.
+# `oracle/provision_oracle.sh`, which exports MACS3_SRC, MACS3_VENV,
+# MACS3_ORACLE_BIN and MACS3_ORACLE_PYTHON for the steps that follow. Everything
+# else runs on a stock rust image with no Python at all, which is itself part of the
+# release definition: the shipped tool must not depend on Python.
+#
+# A test that needs the live oracle finds it through those variables (falling back
+# to `oracle/ENV.provisioned`) and skips, loudly, where there is none -- so L1 runs
+# on a machine with no MACS3 installed, and the differential tests it therefore
+# skips are run for real in L3, against a freshly provisioned oracle.
 
 name: ci
 
@@ -42,6 +48,12 @@ jobs:
   unit:
     name: L1 unit tests, clippy, fmt
     runs-on: ubuntu-latest
+    env:
+      # This layer deliberately runs with no MACS3 reference at all: the tests that
+      # need one resolve it from the environment and skip here, which is the point.
+      # Saying so explicitly keeps a stray MACS3_SRC on a self-hosted runner from
+      # turning this job into an undeclared differential run.
+      MACS3_RS_NO_ORACLE: "1"
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -50,7 +62,8 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets -- -D warnings
-      - run: cargo test --workspace --release --no-fail-fast
+      - name: unit tests (oracle-backed tests skip; see the note at the top)
+        run: cargo test --workspace --release --no-fail-fast
       - name: build every subcommand
         run: |
           for cmd in callpeak bdgpeakcall bdgbroadcall bdgcmp bdgopt cmbreps \
@@ -146,6 +159,10 @@ jobs:
         run: bash oracle/provision_oracle.sh
       - run: cargo build --release --workspace
       - name: replay every recorded invocation
+        # Both scripts here are stdlib-only -- they drive `macs3-rs` and diff its
+        # bytes against the committed recordings, and never import the oracle -- so
+        # the runner's own Python is the right one. What the oracle contributes to
+        # this layer is already committed as those recordings.
         run: bash oracle/run_golden.sh --jobs 4
       # Acceptance criterion: "Identical output at --threads 1 and --threads 32". The
       # pinned oracle has no --threads flag (it rejects the argument outright, and
@@ -154,6 +171,7 @@ jobs:
       # adding the flag would itself be a compatibility break. Stride-sampled to keep
       # the job bounded; `--limit 0` replays the whole corpus.
       - name: output is identical at 1 and 32 threads
+        # stdlib-only, as above.
         run: python3 oracle/check_thread_invariance.py --jobs 4 --limit 600
       - uses: actions/upload-artifact@v4
         if: always()
@@ -175,25 +193,58 @@ jobs:
           python-version: "3.12"
       - name: provision the pinned oracle
         run: bash oracle/provision_oracle.sh
+      - name: check the provisioned interpreter before anything depends on it
+        # NumPy and MACS3's compiled extensions exist only in the oracle virtualenv.
+        # `provision_oracle.sh` puts it on PATH, but a bare `python3` resolving to
+        # something else fails deep inside a differential with a ModuleNotFoundError
+        # that says nothing about the port, so name the interpreter explicitly and
+        # prove it can import both before the first step that needs it.
+        run: |
+          set -euo pipefail
+          py="${MACS3_ORACLE_PYTHON:-${MACS3_VENV:?provision_oracle.sh exported no MACS3_VENV}/bin/python}"
+          "$py" -c 'import sys, numpy, MACS3; print(sys.version.split()[0], "numpy", numpy.__version__, MACS3.__file__, file=sys.stderr)'
+          echo "ORACLE_PY=$py" >> "$GITHUB_ENV"
       - run: cargo build --release --workspace
+      - name: the crate-level differentials, against the provisioned oracle
+        # These live under `cargo test`, so L1 runs them with no reference installed
+        # and they skip there. This is where they run for real: each one locates the
+        # oracle through MACS3_SRC/MACS3_ORACLE_BIN and compares against it.
+        run: |
+          cargo test --release -p macs-callvar --test peak_refseq_diff -- --nocapture
+          cargo test --release -p macs-cli      --test bdgcmp_cli      -- --nocapture
+          cargo test --release -p macs-model    --test paired_peaks_vs_upstream -- --nocapture
+          cargo test --release -p macs-stats    --test parity_vectors -- --nocapture
       - name: capture and compare every intermediate stage
         # reads, duplicates, d, model arrays, treatment/control pileup, per-scale
         # lambda, merged lambda, p-score track, q-score table, candidate/merged
-        # intervals, summits
+        # intervals, summits. The three harness scripts resolve the provisioned
+        # interpreter themselves (oracle/oracle_env.py is the shared rule).
         run: |
           bash oracle/run_e2e.sh
           bash oracle/run_peak_e2e.sh
           bash oracle/run_bam_e2e.sh
+      - name: pairing, pre-computes and RNG against the oracle
+        # These three import NumPy, and two import MACS3 itself, in-process. Under
+        # the runner's Python that is a ModuleNotFoundError before a single assertion
+        # runs -- which is a broken gate, not a passing one.
+        #
+        # The Rust probes they compare against are cargo *examples*, and
+        # `cargo build` does not build those: without this line the checks fail on a
+        # missing `target/debug/examples/pairdump` on a fresh runner.
+        run: |
+          cargo build --workspace --examples
           for c in check_pairing check_precomputes check_rng check_sg; do
             echo "::group::$c"
-            python3 "oracle/$c.py"
+            "$ORACLE_PY" "oracle/$c.py"
             echo "::endgroup::"
           done
       - name: fresh SE, BEDPE, and BAMPE summit outputs match the pinned oracle
+        # stdlib only: it execs the oracle's own `macs3`, which carries a pinned
+        # shebang, so the interpreter running this script does not affect the numbers.
         run: >-
           python3 oracle/check_real_summit_bytes.py
           --source "$MACS3_SRC"
-          --oracle "$MACS3_VENV/bin/macs3"
+          --oracle "$MACS3_ORACLE_BIN"
       - name: recorded intermediate stages match the pinned oracle
         # The real stage-by-stage differential: our own `stages.json` against upstream's
         # recorded one. `MACS3_RS_DUMP_STAGES` is an env override precisely so the CLI's
@@ -215,6 +266,7 @@ jobs:
         # and reports any whose output is byte-identical with and without it. The
         # golden corpus cannot find this class of bug: it only records invocations
         # someone thought to try. F195/F197/F198 were all found this way.
+        # stdlib only -- it drives `macs3-rs`, never the oracle.
         run: |
           cargo build --release
           python3 oracle/audit_accepted_flags.py --json /tmp/flag_audit.json \
@@ -230,9 +282,13 @@ jobs:
         # Not in the golden corpus (which is callpeak-only), yet both had accept/reject
         # divergences from upstream: F199 randsample required -s/--tsize where upstream
         # auto-detects it, F200 predictd exited 1 where upstream exits 0. F201's
-        # *_model.r byte comparison lives here too.
+        # *_model.r byte comparison lives here too. The script resolves the
+        # provisioned interpreter itself: those bytes are only identical against the
+        # pinned NumPy, and upstream's `bin/macs3` is launched with it explicitly.
         run: bash oracle/check_predictd_randsample.sh
       - name: callvar matches the oracle's variant records
+        # Resolves MACS3_SRC/MACS3_VENV (then oracle/ENV.provisioned) itself; the
+        # oracle side runs on the provisioned interpreter, not the runner's.
         run: |
           bash oracle/check_callvar.sh
           bash oracle/check_callvar.sh --fermi
@@ -242,10 +298,12 @@ jobs:
         # closed it (F232 bin lookup off by one run, F233 a states run spanning two
         # chromosomes); Jaccard is now 1.0000 with 0 unmatched regions, all four
         # digested tracks byte-identical, and both `*_accessible_regions.narrowPeak`
-        # and `*_states.bed` byte-identical.
+        # and `*_states.bed` byte-identical. The script itself is stdlib-only and
+        # launches the oracle under the provisioned interpreter it resolves.
         run: |
           python3 oracle/check_hmmratac.py
       - name: Gaussian and Poisson self-training against the pinned oracle
+        # stdlib-only driver; the oracle runs under the interpreter it resolves.
         run: python3 oracle/check_hmm_training.py
       - name: the recorded intermediate corpus must parse and agree with itself
         # `tests/stages/**/stages.json` is the committed record of upstream's
@@ -256,7 +314,8 @@ jobs:
           ./target/release/macs-compare --stages tests/stages --ours-stages tests/stages
       - name: the per-stage comparator still detects a divergence
         # A comparator that always says "ok" would gate L3 green, so perturb a copy
-        # and require a non-zero exit.
+        # and require a non-zero exit. The inline Python is stdlib-only (glob/json),
+        # so the runner's Python is the right interpreter for it.
         run: |
           rm -rf /tmp/stages_mutated
           cp -r tests/stages /tmp/stages_mutated
@@ -294,6 +353,8 @@ jobs:
       - name: thread determinism is a stated criterion, not a test convenience
         run: cargo test --release --test thread_determinism
       - name: errors precede output files; usage errors exit 2
+        # This layer never provisions an oracle, and does not need one: the script is
+        # stdlib-only and drives `macs3-rs`.
         run: python3 oracle/check_exit_contract.py
       - name: no Python in the shipped binary
         run: |
@@ -301,7 +362,8 @@ jobs:
           # cheap check is that the binary does not link or embed an interpreter
           ! strings target/release/macs3-rs | grep -E 'python3?\.[0-9]+|/usr/bin/python'
       - name: generate the compatibility matrix
-        # never hand-edited: regenerated from the recorded corpus on every run
+        # never hand-edited: regenerated from the recorded corpus on every run.
+        # stdlib-only, like the step above.
         run: python3 oracle/gen_compat_matrix.py --out docs/compatibility-matrix.md
       - uses: actions/upload-artifact@v4
         if: always()

@@ -15,14 +15,16 @@
 //! `count_T`/`count_C` are deliberately excluded: this dump applies
 //! `remove_outliers` on our side, and the consensus is built *before* that step, so the
 //! counts legitimately differ by the number of outliers removed.
+//!
+//! The oracle's own BAMs come from the pinned checkout, which is located through the
+//! environment and is not vendored, so the test skips (loudly, on stderr) where there
+//! is none. See `tests/oracle/mod.rs`.
 
 use macs_callvar::ra_collection_dump::{dump_peak_records, DumpOptions};
-use std::path::Path;
+
+mod oracle;
 
 const GOLDEN: &str = "tests/data/callvar_peak_refseq.golden";
-
-/// The oracle's test data, read out of the pinned tree so no BAM is committed.
-const ORACLE_SRC: &str = "/scratch/mdra00001/tmp/opencode/macs3-src";
 
 struct GoldenPeak {
     chrom: String,
@@ -61,13 +63,20 @@ fn golden() -> Vec<GoldenPeak> {
 
 #[test]
 fn peak_consensus_is_byte_identical_to_the_oracle() {
-    let peaks_file = format!("{ORACLE_SRC}/test/callvar_testing.narrowPeak");
-    let tbam = format!("{ORACLE_SRC}/test/CTCF_PE_ChIP_chr22_50k.bam");
-    let cbam = format!("{ORACLE_SRC}/test/CTCF_PE_CTRL_chr22_50k.bam");
+    // Upstream's own test data is read out of the pinned tree, so no BAM is
+    // committed here and the fixture cannot drift from the oracle's.
+    let Some(oracle) = oracle::require("peak_consensus_is_byte_identical_to_the_oracle") else {
+        return;
+    };
+    let test_dir = oracle.test_dir();
+    let peaks_file = test_dir.join("callvar_testing.narrowPeak");
+    let tbam = test_dir.join("CTCF_PE_ChIP_chr22_50k.bam");
+    let cbam = test_dir.join("CTCF_PE_CTRL_chr22_50k.bam");
     for p in [&peaks_file, &tbam, &cbam] {
         assert!(
-            Path::new(p).exists(),
-            "{p} missing -- the oracle tree is required for this differential"
+            p.exists(),
+            "{} missing -- the oracle tree is incomplete for this differential",
+            p.display()
         );
     }
 
@@ -75,9 +84,9 @@ fn peak_consensus_is_byte_identical_to_the_oracle() {
     assert_eq!(g.len(), 10, "upstream's fixture has 10 read-covered peaks");
 
     let ours = dump_peak_records(&DumpOptions {
-        peaks: Path::new(&peaks_file),
-        tbam: Path::new(&tbam),
-        cbam: Some(Path::new(&cbam)),
+        peaks: &peaks_file,
+        tbam: &tbam,
+        cbam: Some(&cbam),
         max_duplicate: 1,
     })
     .expect("dump_peak_records");

@@ -1,5 +1,5 @@
 import json,os,subprocess,glob,sys,re
-root='/scratch/mdra00001/MACS3-rust'
+root=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 rows=[]
 for xls in sorted(glob.glob(f'{root}/tests/golden/*/*/default/*_peaks.xls')):
     fx='/'.join(xls.split('/tests/golden/')[1].split('/')[:2])

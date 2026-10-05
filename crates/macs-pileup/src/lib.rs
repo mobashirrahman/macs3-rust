@@ -147,9 +147,11 @@ impl SingleEndParams {
     /// This is `pileup_a_chromosome(..., directional=False)`, which MACS uses for
     /// the **control** track.
     pub fn bidirectional(d: i64, end_shift: i64, rlength: Coord, scale_factor: f32) -> Self {
+        // Upstream uses Python floor division, including negative local windows.
+        let half = d.div_euclid(2);
         SingleEndParams {
-            five_shift: d / 2 - end_shift,
-            three_shift: end_shift + d - d / 2,
+            five_shift: half - end_shift,
+            three_shift: end_shift + d - half,
             rlength,
             scale_factor,
             baseline_value: 0.0,

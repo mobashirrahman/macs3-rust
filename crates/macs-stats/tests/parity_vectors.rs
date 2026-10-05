@@ -20,6 +20,8 @@
 use macs_stats::*;
 use std::collections::BTreeMap;
 
+mod oracle;
+
 /// A parsed golden row.
 #[derive(Debug, Clone)]
 struct Row {
@@ -232,8 +234,18 @@ fn oracle_lock_is_present() {
         "the golden vectors must come from MACS3 3.0.5, got:\n{text}"
     );
     assert!(
-        text.contains("MACS3_PATH="),
-        "ENV.lock must record the source tree"
+        text.contains("MACS3_COMMIT="),
+        "the pin must be a commit, not a version claim: an oracle built from an \
+         unrecorded tree is not checkable"
+    );
+    assert!(
+        !text
+            .lines()
+            .filter(|line| !line.trim_start().starts_with('#'))
+            .any(|line| line.contains("/home/") || line.contains("/scratch/")),
+        "ENV.lock records what the pin is, never where it happens to live on one \
+         machine's disk; a checkout must be located through MACS3_SRC or \
+         oracle/ENV.provisioned:\n{text}"
     );
 }
 
@@ -244,8 +256,14 @@ fn oracle_lock_is_present() {
 /// now observes the real pipeline from the outside, so the instrumentation is
 /// gone. This test is the gate that keeps it gone: it runs the same check a
 /// reviewer would, and fails loudly if the tree is re-dirtied.
+///
+/// There is nothing to check on a machine with no oracle provisioned -- the script
+/// answers that too -- so it skips there rather than failing.
 #[test]
 fn oracle_tree_is_unmodified() {
+    let Some(_oracle) = oracle::require("oracle_tree_is_unmodified") else {
+        return;
+    };
     let repo = concat!(env!("CARGO_MANIFEST_DIR"), "/../..");
     let script = format!("{repo}/oracle/verify_oracle_clean.sh");
     assert!(

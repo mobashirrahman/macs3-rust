@@ -175,6 +175,12 @@ if [ -n "${GITHUB_ENV:-}" ]; then
     echo "MACS3_VENV=$VENV"
     echo "MACS3_BUILD_MANIFEST=$MANIFEST"
     echo "MACS3_ORACLE_DIR=$DEST"
+    # The entry point and the interpreter that can import it. Later steps and the
+    # crate tests read these rather than looking for a `macs3` on PATH or assuming a
+    # checkout location: the venv's console script carries an absolute shebang, so it
+    # only works on the machine that built it.
+    echo "MACS3_ORACLE_BIN=$VENV/bin/macs3"
+    echo "MACS3_ORACLE_PYTHON=$VENV/bin/python"
     echo "PYTHON=$VENV/bin/python"
     echo "OPENBLAS_CORETYPE=$OPENBLAS_CORETYPE"
     echo "PATH=$VENV/bin:$PATH"

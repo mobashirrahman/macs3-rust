@@ -23,27 +23,14 @@
 //! ```
 //!
 //! The oracle tree is not vendored (see `oracle/ENV.lock`), so the test locates
-//! it through `MACS3_PATH`, skips with a clear message when it is absent, and
+//! it through the environment, skips with a clear message when it is absent, and
 //! never silently passes.
 
 use macs_core::{Result, Strand};
 use macs_model::{ModelOptions, PeakModel};
 use macs_track::SingleEndTrackBuilder;
 
-/// The oracle source tree recorded in `oracle/ENV.lock`.
-fn oracle_tree() -> Option<std::path::PathBuf> {
-    let lock = concat!(env!("CARGO_MANIFEST_DIR"), "/../../oracle/ENV.lock");
-    let text = std::fs::read_to_string(lock).ok()?;
-    for line in text.lines() {
-        if let Some(rest) = line.strip_prefix("MACS3_PATH=") {
-            // MACS3_PATH points at <oracle>/MACS3/__init__.py; upstream's test data
-            // (including the CTCF fixtures) is a sibling of MACS3/, i.e. <oracle>/test.
-            let p = std::path::PathBuf::from(rest);
-            return p.parent().and_then(|d| d.parent()).map(|d| d.join("test"));
-        }
-    }
-    None
-}
+mod oracle;
 
 fn load_se(path: &std::path::Path) -> Result<SingleEndTrackBuilder> {
     let mut r = macs_io::open_maybe_gzip(path).expect("open");
@@ -71,10 +58,10 @@ fn load_se(path: &std::path::Path) -> Result<SingleEndTrackBuilder> {
 /// with `total = 49622`, `bw = 300`, `gsize = 52e6`, `--mfold 5 50`.
 #[test]
 fn paired_peak_counts_match_upstream_on_ctcf() {
-    let Some(testdir) = oracle_tree() else {
-        eprintln!("skipping: oracle tree not recorded in ENV.lock");
+    let Some(oracle) = oracle::require("paired_peak_counts_match_upstream_on_ctcf") else {
         return;
     };
+    let testdir = oracle.test_dir();
     let chip = testdir.join("CTCF_SE_ChIP_chr22_50k.bed.gz");
     if !chip.exists() {
         eprintln!("skipping: {} not present", chip.display());

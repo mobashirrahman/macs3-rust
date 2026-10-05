@@ -46,8 +46,13 @@ fn read_peaks(path: &Path) -> Result<Vec<BedPeak>> {
             name: f[3].to_string(),
         });
     }
-    // upstream sorts the peaks before processing
-    out.sort_by(|a, b| (a.chrom.as_str(), a.start, a.end).cmp(&(b.chrom.as_str(), b.start, b.end)));
+    // `peaks.sort()` (`PeakIO.py:357-369`) groups by chromosome name and then
+    // sorts each group by **start only**, with Python's stable `list.sort`, so
+    // peaks sharing a start keep their order in the `--bedfile`. Sorting by
+    // `(chrom, start, end)` here would reorder them, because the cursor that
+    // `collect_region_tags` carries across peaks makes the emitted order
+    // observable. `sort_by` is stable, so `(chrom, start)` reproduces both.
+    out.sort_by(|a, b| (a.chrom.as_str(), a.start).cmp(&(b.chrom.as_str(), b.start)));
     Ok(out)
 }
 

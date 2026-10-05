@@ -20,6 +20,9 @@ import subprocess
 import sys
 import tempfile
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import require_python, require_src  # noqa: E402
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 MODEL_ATOL = 1e-8
@@ -28,28 +31,8 @@ MIN_ACCESSIBLE_BASE_JACCARD = 0.98
 
 
 def oracle_source(explicit):
-    if explicit or os.environ.get("MACS3_SRC"):
-        return explicit or os.environ["MACS3_SRC"]
-    for record in ("ENV.provisioned", "ENV.lock"):
-        path = os.path.join(HERE, record)
-        if os.path.exists(path):
-            with open(path) as fh:
-                for line in fh:
-                    if line.startswith("MACS3_PATH="):
-                        return os.path.dirname(os.path.dirname(line.split("=", 1)[1].strip()))
-    return "/scratch/mdra00001/tmp/opencode/macs3-src"
-
-
-def oracle_venv(explicit):
-    if explicit or os.environ.get("MACS3_VENV"):
-        return explicit or os.environ["MACS3_VENV"]
-    path = os.path.join(HERE, "ENV.provisioned")
-    if os.path.exists(path):
-        with open(path) as fh:
-            for line in fh:
-                if line.startswith("MACS3_VENV="):
-                    return line.split("=", 1)[1].strip()
-    return "/scratch/mdra00001/tmp/opencode/macs3-venv"
+    """The pinned checkout, or exit saying how to get one. See oracle_env.py."""
+    return require_src(explicit or None)
 
 
 def run(command, cwd=None, env=None):
@@ -183,7 +166,9 @@ def main():
         candidates = ("/tmp/atr/yeast_500k_SRR1822137.bedpe.gz",
                       os.path.join(src, "test/yeast_500k_SRR1822137.bedpe.gz"))
         args.input = next((p for p in candidates if os.path.exists(p)), candidates[-1])
-    oracle_python = os.path.join(oracle_venv(args.venv), "bin", "python")
+    oracle_python = require_python(
+        os.path.join(args.venv, "bin", "python") if args.venv else None
+    )
     for path in (args.input, oracle_python, args.binary):
         if not os.path.exists(path):
             print(f"missing required path: {path}", file=sys.stderr)

@@ -22,11 +22,26 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-LOCK="$ROOT/oracle/ENV.lock"
-[ ! -f "$ROOT/oracle/ENV.provisioned" ] || LOCK="$ROOT/oracle/ENV.provisioned"
 GOLDEN="$ROOT/crates/macs-callvar/tests/data/callvar_variants.golden"
 GOLDEN_NOFERMI="$ROOT/crates/macs-callvar/tests/data/callvar_variants_nofermi.golden"
 BIN="$ROOT/target/release/macs3-rs"
+
+# The oracle is located through the environment and then through
+# `oracle/ENV.provisioned`, never through a path baked into this script: the
+# recorded location belongs to whichever machine last provisioned, and on CI that
+# machine is the runner.
+env_value() {
+  awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print; exit }' "$2" 2>/dev/null
+}
+PROVISIONED="$ROOT/oracle/ENV.provisioned"
+ORACLE_SRC="${MACS3_SRC:-$(env_value MACS3_SRC "$PROVISIONED")}"
+[ -n "$ORACLE_SRC" ] || ORACLE_SRC="$ROOT/.oracle/macs3-src"
+VENV="${MACS3_VENV:-$(env_value MACS3_VENV "$PROVISIONED")}"
+[ -n "$VENV" ] || VENV="$ROOT/.oracle/venv"
+# `bin/macs3` has an `#!/usr/bin/env python` shebang, so it is launched with the
+# provisioned interpreter explicitly: its NumPy and the compiled extensions live in
+# that virtualenv, and a bare `python3` is the runner's.
+ORACLE_PY="${MACS3_ORACLE_PYTHON:-$VENV/bin/python}"
 
 KEEP=0
 REGEN=0
@@ -43,12 +58,11 @@ for a in "$@"; do
     esac
 done
 
-MACS3_INIT="${MACS3_PATH:-$(awk -F= '/^MACS3_PATH=/{print $2}' "$LOCK")}"
-if [ -z "$MACS3_INIT" ]; then
-    echo "no MACS3_PATH in $LOCK" >&2
-    exit 1
+if [ ! -x "$ORACLE_PY" ] || [ ! -d "$ORACLE_SRC/MACS3" ]; then
+    echo "no provisioned MACS3 oracle (interpreter $ORACLE_PY, source $ORACLE_SRC)" >&2
+    echo "  run 'bash oracle/provision_oracle.sh', or set MACS3_SRC and MACS3_VENV" >&2
+    exit 2
 fi
-ORACLE_SRC="$(dirname "$(dirname "$MACS3_INIT")")"
 
 if [ ! -x "$BIN" ]; then
     echo "building macs3-rs ..."
@@ -67,7 +81,7 @@ for f in "$PEAKS" "$TBAM" "$CBAM"; do
 done
 
 echo "== oracle callvar =="
-( cd "$ORACLE_SRC" && PYTHONPATH="$ORACLE_SRC" python3 bin/macs3 callvar \
+( cd "$ORACLE_SRC" && PYTHONPATH="$ORACLE_SRC" "$ORACLE_PY" bin/macs3 callvar \
     -F "$FERMI_MODE" -b "$PEAKS" -t "$TBAM" -c "$CBAM" -o "$WORK/oracle.vcf" ) > "$WORK/oracle.log" 2>&1
 ORACLE_RC=$?
 if [ "$ORACLE_RC" -ne 0 ]; then

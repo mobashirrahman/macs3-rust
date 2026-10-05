@@ -107,6 +107,34 @@ fn lookup_pinv(window_size: usize) -> Option<&'static [f64]> {
     map.get(&window_size).map(|v| v.as_slice())
 }
 
+/// The contiguous double dot product used by the pinned NumPy convolution.
+///
+/// NumPy's `DOUBLE_dot` calls OpenBLAS `ddot`. With the oracle's
+/// `OPENBLAS_CORETYPE=Haswell`, `ddot_kernel_8` accumulates sixteen lanes with
+/// fused multiply-add, folds each four-lane group across its halves, then adds
+/// the groups and the two remaining lanes. The scalar tail uses separate
+/// multiplication and addition. A sequential sum changes the signs of tiny
+/// derivatives and therefore the detected summit. `mul_add` preserves the
+/// oracle's rounding on machines without a hardware FMA instruction too.
+fn numpy_dot(coefficients: &[f64], signal: &[f64]) -> f64 {
+    let full = coefficients.len() / 16 * 16;
+    let mut lanes = [0.0f64; 16];
+    for base in (0..full).step_by(16) {
+        for lane in 0..16 {
+            lanes[lane] = coefficients[base + lane].mul_add(signal[base + lane], lanes[lane]);
+        }
+    }
+    let even = ((lanes[0] + lanes[2]) + (lanes[4] + lanes[6]))
+        + ((lanes[8] + lanes[10]) + (lanes[12] + lanes[14]));
+    let odd = ((lanes[1] + lanes[3]) + (lanes[5] + lanes[7]))
+        + ((lanes[9] + lanes[11]) + (lanes[13] + lanes[15]));
+    let mut sum = even + odd;
+    for k in full..coefficients.len() {
+        sum += coefficients[k] * signal[k];
+    }
+    sum
+}
+
 /// Smooth with a quadratic Savitzky-Golay filter and return the first derivative.
 ///
 /// Follows upstream exactly: reflect the edges inward, convolve the reversed
@@ -159,11 +187,7 @@ pub fn savitzky_golay_order2_deriv1(signal: &[f32], window_size: usize) -> Vec<f
     let out_len = padded.len() + 1 - w;
     let mut out = vec![0.0f64; out_len];
     for (i, slot) in out.iter_mut().enumerate() {
-        let mut acc = 0.0f64;
-        for k in 0..w {
-            acc += m[k] * padded[i + k];
-        }
-        *slot = acc;
+        *slot = numpy_dot(&m, &padded[i..i + w]);
     }
     out
 }

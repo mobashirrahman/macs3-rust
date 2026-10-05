@@ -23,6 +23,28 @@ OURS="$ROOT/target/release/macs3-rs"
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
+# The oracle is located through the environment and then through
+# `oracle/ENV.provisioned` -- never through a path baked into this script, since the
+# recorded location belongs to whichever machine last provisioned and on CI that is
+# the runner.
+env_value() {
+  awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print; exit }' "$2" 2>/dev/null
+}
+PROVISIONED="$ROOT/oracle/ENV.provisioned"
+ORACLE_SRC="${MACS3_SRC:-$(env_value MACS3_SRC "$PROVISIONED")}"
+[ -n "$ORACLE_SRC" ] || ORACLE_SRC="$ROOT/.oracle/macs3-src"
+VENV="${MACS3_VENV:-$(env_value MACS3_VENV "$PROVISIONED")}"
+[ -n "$VENV" ] || VENV="$ROOT/.oracle/venv"
+# Run upstream under the pinned interpreter: `*_model.r` and the randsample draws are
+# only byte-identical against the pinned NumPy, and a bare `python3` is whatever the
+# host has first on PATH -- on a clean runner, nothing that can import MACS3 at all.
+ORACLE_PY="${MACS3_ORACLE_PYTHON:-$VENV/bin/python}"
+if [ ! -x "$ORACLE_PY" ] || [ ! -d "$ORACLE_SRC/MACS3" ]; then
+  echo "no provisioned MACS3 oracle (interpreter $ORACLE_PY, source $ORACLE_SRC)" >&2
+  echo "  run 'bash oracle/provision_oracle.sh', or set MACS3_SRC and MACS3_VENV" >&2
+  exit 2
+fi
+
 pass=0
 fail=0
 
@@ -36,7 +58,7 @@ for i in $(seq 1 40); do
 done >> "$WORK/se.bed"
 
 # 150 sites of paired +/- clusters: enough for PeakModel to fit (>= 100 paired peaks).
-python3 - "$WORK/model.bed" <<'PYEOF'
+"$ORACLE_PY" - "$WORK/model.bed" <<'PYEOF'
 import random, sys
 random.seed(5)
 with open(sys.argv[1], 'w') as f:
@@ -95,18 +117,6 @@ run_case() {
 		printf '  FAIL     %s -- %s\n' "$name" "$detail"
 	fi
 }
-
-# The pinned oracle root, derived from ENV.lock's MACS3_PATH so the checker follows
-# the lockfile rather than a path baked into the script.
-LOCK="$ROOT/oracle/ENV.lock"
-[ ! -f "$ROOT/oracle/ENV.provisioned" ] || LOCK="$ROOT/oracle/ENV.provisioned"
-ORACLE_SRC="${MACS3_SRC:-$(dirname "$(dirname "$(grep '^MACS3_PATH=' "$LOCK" | cut -d= -f2-)")")}"
-# Run upstream under the pinned interpreter when one is provisioned: `*_model.r` is
-# only byte-identical against the pinned NumPy, and a bare `python3` is whatever the
-# host has first on PATH.
-ORACLE_PY="python3"
-VENV="$(grep '^MACS3_VENV=' "$LOCK" | cut -d= -f2-)"
-[ -z "$VENV" ] || [ ! -x "$VENV/bin/python" ] || ORACLE_PY="$VENV/bin/python"
 
 echo "predictd / randsample oracle comparison"
 

@@ -595,9 +595,9 @@ fn row(genome: &Genome, chrom: ChromId, start: Coord, end: Coord, value: f32) ->
 ///
 /// Takes the raw treatment pileup and control pileup plus the pseudocount, and
 /// reproduces `get_pscore(int(p[i] + pseudocount), c[i] + pseudocount)`
-/// (`ScoreTrack.py:451-453`). The treatment add is widened to `f64` before the
-/// integer truncation -- see [`pseudocounted_inputs`](crate::pseudocounted_inputs) for why the
-/// `f32` rounding of that sum gives the wrong count.
+/// (`ScoreTrack.py:451-453`). The treatment sum is formed and truncated in
+/// `f32` -- see [`pseudocounted_inputs`](crate::pseudocounted_inputs) for why the
+/// `f64` rounding of that sum gives the wrong count.
 ///
 /// Returns [`MacsError::Rejected`] when the control pileup plus pseudocount is
 /// not positive. With `bdgcmp -p 0` and a control track containing explicit
@@ -1265,10 +1265,15 @@ mod tests {
     #[test]
     fn pscore_counts_a_sum_that_rounds_up_in_f32() {
         // 19.899999618530273 + 0.10000000149011612 == 20.0 in f32 but
-        // 19.999999620020389 in f64, and upstream counts the latter
+        // 19.999999620020389 in f64, and upstream adds in f32 (`np.float32 +
+        // python float` keeps the float32 width under NEP 50), so it counts 20
         let (observed, _) = crate::pseudocounted_inputs(19.9, 5.0, 0.1);
-        assert_eq!(observed, 19, "must not round the sum up to 20");
-        assert_eq!((19.9f32 + 0.1f32) as i64, 20, "f32 addition would give 20");
+        assert_eq!(observed, 20);
+        assert_eq!(
+            (f64::from(19.9f32) + f64::from(0.1f32)) as i64,
+            19,
+            "f64 addition would give 19"
+        );
     }
 
     /// At `-p 0`, zero-valued inputs fail exactly where upstream fails, so the

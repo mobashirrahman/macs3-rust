@@ -43,17 +43,11 @@ subcommand\tflag\ttype"""
 
 
 def oracle_bin() -> pathlib.Path:
-    """Locate the oracle's `bin/macs3` via `oracle/ENV.lock`."""
-    repo = pathlib.Path(__file__).resolve().parent.parent
-    lock = repo / "oracle" / "ENV.lock"
-    for line in lock.read_text().splitlines():
-        if line.startswith("MACS3_PATH="):
-            init = pathlib.Path(line.split("=", 1)[1])
-            # MACS3_PATH is <oracle>/MACS3/__init__.py; bin/macs3 is <oracle>/bin/macs3
-            cand = init.parent.parent / "bin" / "macs3"
-            if cand.exists():
-                return cand
-    sys.exit("oracle/ENV.lock does not record a usable MACS3_PATH")
+    """The provisioned oracle's `bin/macs3`, or exit saying how to get one."""
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+    from oracle_env import require_bin
+
+    return pathlib.Path(require_bin())
 
 
 def regions(src: str):

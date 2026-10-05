@@ -130,6 +130,67 @@ fn check_type(
     )))
 }
 
+/// `re.match(r'^-\d+$|^-\d*\.\d+$', token)`: does `token` spell a negative number?
+///
+/// This is argparse's `_negative_number_matcher` (`argparse.py:1420`) and it is
+/// deliberately narrow. `-1`, `-0.35` and `-.5` match; `-1.`, `-1e-3` and `-9x`
+/// do **not**, because the second alternative needs a digit after the dot
+/// and there is no exponent branch.
+fn is_negative_number(token: &str) -> bool {
+    let Some(rest) = token.strip_prefix('-') else {
+        return false;
+    };
+    match rest.split_once('.') {
+        // `^-\d+$`: digits only, and at least one.
+        None => !rest.is_empty() && rest.bytes().all(|b| b.is_ascii_digit()),
+        // `^-\d*\.\d+$`: the integer part may be empty, the fraction may not.
+        Some((int, frac)) => {
+            int.bytes().all(|b| b.is_ascii_digit())
+                && !frac.is_empty()
+                && frac.bytes().all(|b| b.is_ascii_digit())
+        }
+    }
+}
+
+/// Would argparse consume `token` as a **value**, or treat it as an option?
+///
+/// This is `_parse_optional` (`argparse.py:2276-2334`) in full: it returns
+/// `None`, and `_parse_known_args` marks the token `A` (an argument) instead of
+/// `O` (an option). A token is a value when it is empty, does not start with a
+/// prefix character, is the lone `-`, **looks like a negative number and the
+/// parser declares no option that looks like one**, or contains a space;
+/// otherwise it is an option, known or not.
+///
+/// The negative-number clause is what makes `bdgopt -p -0.35` work: `-0.35` is
+/// the *value* of `--extra-param`, not an unknown flag, so argparse accepts it
+/// and MACS3 runs. No flag anywhere in `flag_matrix.tsv` matches
+/// `is_negative_number` -- not even a program-level one -- so every subparser's
+/// `_has_negative_number_optionals` (`argparse.py:1533-1535`) is empty and the
+/// clause always fires. `-9x` matches neither regex and stays an option, so it is
+/// still the "unrecognized arguments" usage error, exit 2.
+fn token_is_value(specs: &[FlagSpec], subcommand: &str, token: &str) -> bool {
+    if token.is_empty() || !token.starts_with('-') || token == "-" {
+        return true;
+    }
+    // a registered option string, or `--flag=value`, is an option before any of
+    // the negative-number rules are consulted
+    let name = token.split_once('=').map_or(token, |(n, _)| n);
+    if specs
+        .iter()
+        .any(|s| s.subcommand == subcommand && s.flag == name)
+    {
+        return false;
+    }
+    if is_negative_number(token)
+        && !specs
+            .iter()
+            .any(|s| s.subcommand == subcommand && is_negative_number(&s.flag))
+    {
+        return true;
+    }
+    token.contains(' ')
+}
+
 /// Parse the matrix. Called once; the result is a `const`-friendly static table
 /// so tests can assert against the same data the binary uses.
 pub fn flag_specs() -> Vec<FlagSpec> {
@@ -287,7 +348,7 @@ pub fn parse(subcommand: &str, args: &[String]) -> Result<Options, UsageError> {
             // does not take; argparse would treat them as extra positionals
             break;
         }
-        if !a.starts_with('-') || a == "-" {
+        if token_is_value(&specs, subcommand, a) {
             return Err(UsageError(format!("error: unrecognized argument: {a}")));
         }
         let (name, inline) = match a.split_once('=') {
@@ -344,6 +405,13 @@ pub fn parse(subcommand: &str, args: &[String]) -> Result<Options, UsageError> {
                     let v = args.get(i).cloned().ok_or_else(|| {
                         UsageError(format!("error: argument {name}: expected {k} arguments"))
                     })?;
+                    if !token_is_value(&specs, subcommand, &v) {
+                        // argparse's `-*A{k}-*` pattern cannot match an `O`, so an
+                        // option where a value belongs is "expected k arguments"
+                        return Err(UsageError(format!(
+                            "error: argument {name}: expected {k} arguments"
+                        )));
+                    }
                     vals.push(v);
                 }
                 // step past the last value, so the outer loop does not re-read it
@@ -361,7 +429,10 @@ pub fn parse(subcommand: &str, args: &[String]) -> Result<Options, UsageError> {
             _ => {
                 // nargs `+` / `*` consume a variable number of following
                 // tokens (cmbreps takes several `--ifile`, bdgopt several
-                // `--extra-param`); everything else takes exactly one.
+                // `--extra-param`); everything else takes exactly one. In both
+                // cases a token stops the run only when argparse would read it
+                // as an option, so `bdgopt -p -0.35` keeps `-0.35` as a value --
+                // see [`token_is_value`].
                 if spec.nargs == "+" || spec.nargs == "*" {
                     let mut vals: Vec<String> = Vec::new();
                     if let Some(v) = inline {
@@ -369,12 +440,8 @@ pub fn parse(subcommand: &str, args: &[String]) -> Result<Options, UsageError> {
                         i += 1;
                     } else {
                         i += 1; // step past the flag itself
-                        while i < args.len() {
-                            let nxt = &args[i];
-                            if nxt.starts_with('-') && nxt.len() > 1 {
-                                break;
-                            }
-                            vals.push(nxt.clone());
+                        while i < args.len() && token_is_value(&specs, subcommand, &args[i]) {
+                            vals.push(args[i].clone());
                             i += 1;
                         }
                     }
@@ -398,9 +465,18 @@ pub fn parse(subcommand: &str, args: &[String]) -> Result<Options, UsageError> {
                         v
                     }
                     None => {
-                        let v = args.get(i + 1).cloned().ok_or_else(|| {
-                            UsageError(format!("error: argument {display}: expected one argument"))
-                        })?;
+                        // argparse's `-*A-*` pattern needs an `A` where the value
+                        // goes, so an unknown flag here is "expected one
+                        // argument" (`callpeak --shift -1e-3`) rather than an
+                        // invalid-value complaint about the flag itself.
+                        let v = match args.get(i + 1) {
+                            Some(v) if token_is_value(&specs, subcommand, v) => v.clone(),
+                            _ => {
+                                return Err(UsageError(format!(
+                                    "error: argument {display}: expected one argument"
+                                )))
+                            }
+                        };
                         i += 2;
                         v
                     }

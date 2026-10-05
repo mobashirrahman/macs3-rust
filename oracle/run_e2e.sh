@@ -11,14 +11,29 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-VENV="${MACS3_VENV:-/scratch/mdra00001/tmp/opencode/macs3-venv}"
 WORK="${E2E_WORK:-/tmp/e2e_work}"
-MACS3_SRC="${MACS3_SRC:-/scratch/mdra00001/tmp/opencode/macs3-src}"
 # Must match the golden runs, which fix -g at 2e6 for every fixture.
 GSIZE="${E2E_GSIZE:-2000000}"
 
-# shellcheck disable=SC1091
-source "$VENV/bin/activate"
+# `dump_stages.py` imports NumPy and drives MACS3 in-process, so it must run on the
+# provisioned virtualenv's interpreter -- a bare `python3` has neither on a clean
+# machine, and where it does have NumPy its version is the host's rather than the
+# pinned one. Resolve it the same way oracle_env.py does: environment first, then
+# `oracle/ENV.provisioned`, then the default provisioning location.
+env_value() {
+  awk -F= -v key="$1" '$1 == key { sub(/^[^=]*=/, ""); print; exit }' "$2" 2>/dev/null
+}
+PROVISIONED="$ROOT/oracle/ENV.provisioned"
+MACS3_SRC="${MACS3_SRC:-$(env_value MACS3_SRC "$PROVISIONED")}"
+VENV="${MACS3_VENV:-$(env_value MACS3_VENV "$PROVISIONED")}"
+[ -n "$VENV" ] || VENV="$ROOT/.oracle/venv"
+[ -n "$MACS3_SRC" ] || MACS3_SRC="$ROOT/.oracle/macs3-src"
+PY="${MACS3_ORACLE_PYTHON:-$VENV/bin/python}"
+if [ ! -x "$PY" ] || [ ! -d "$MACS3_SRC/MACS3" ]; then
+    echo "run_e2e: no provisioned MACS3 oracle (interpreter $PY, source $MACS3_SRC)" >&2
+    echo "  run 'bash oracle/provision_oracle.sh', or set MACS3_SRC and MACS3_VENV" >&2
+    exit 2
+fi
 
 declare -a FIXTURES=()
 if [ "${1:-}" = "--all" ]; then
@@ -58,7 +73,7 @@ for fx in "${FIXTURES[@]}"; do
     # case -- those are covered by the error-parity gate instead.
     golden="$ROOT/tests/golden/$fx/default/command.json"
     if [ -f "$golden" ]; then
-        rc=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['returncode'])" "$golden")
+        rc=$("$PY" -c "import json,sys;print(json.load(open(sys.argv[1]))['returncode'])" "$golden")
         if [ "$rc" != "0" ]; then
             echo "SKIP $fx (golden rc=$rc -- upstream rejects this fixture)"
             skip=$((skip + 1)); continue
@@ -70,7 +85,7 @@ for fx in "${FIXTURES[@]}"; do
 
     # The golden runs use `-g <gsize> --nomodel --extsize 200`, so the toy
     # 1 Mb genomes never attempt model building (which needs >=100 paired peaks).
-    if ! python3 "$ROOT/oracle/dump_stages.py" "$dir" se --out "$out" \
+    if ! "$PY" "$ROOT/oracle/dump_stages.py" "$dir" se --out "$out" \
             --macs3-src "$MACS3_SRC" -- -g "$GSIZE" --nomodel --extsize 200 --bdg \
             >"$out/stages.log" 2>&1; then
         echo "FAIL $fx  (upstream stage dump failed; see $out/stages.log)"

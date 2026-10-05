@@ -110,15 +110,12 @@ fn the_kernel_is_the_oracles_pinv_bit_for_bit() {
     }
 }
 
-/// The residual this test does **not** pin: upstream's `maxima` on this array returns
-/// `[147]` while ours returns `[147, 148]`. The arrays and the coefficients now agree;
-/// what is left is the summation order inside `numpy.convolve`, which is not part of
-/// the documented semantics of `np.convolve` and which no closed form reproduces. The
+/// Upstream's `maxima` on this array returns `[147]`. A sequential convolution sum
+/// returns `[147, 148]` even with the correct coefficients. The
 /// second maximum sits one base from the first, so `enforce_peakyness` sees two maxima
 /// with `minima == [147]`, builds a threshold of `41 + sqrt(41)` -- above every value in
 /// the window -- and rejects both, sending the peak to the plain-summit fallback
-/// (`71546983` instead of the sub-peak at `71546972`). Measured: 12 of the 69,439
-/// `--call-summits` summits on the 5 M-read fixture, and 12 of 40,824 in model mode.
+/// (`71546983` instead of the sub-peak at `71546972`).
 #[test]
 fn the_zero_crossing_of_this_peak_is_one_bit_decided() {
     let signal: Vec<f32> = PEAKDATA.iter().map(|v| *v as f32).collect();
@@ -126,8 +123,5 @@ fn the_zero_crossing_of_this_peak_is_one_bit_decided() {
     assert_eq!(signal[147], 41.0, "the summit's chunk carries pileup 41");
     assert_eq!(signal[148], 41.0);
     let offsets = sg::maxima(&signal, SMOOTH_LEN);
-    assert!(
-        offsets == vec![147] || offsets == vec![147, 148],
-        "the maximum must sit on the summit chunk, got {offsets:?}"
-    );
+    assert_eq!(offsets, vec![147]);
 }

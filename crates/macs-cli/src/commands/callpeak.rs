@@ -907,6 +907,11 @@ pub fn run(o: &Options) -> Result<()> {
             .map(|v| -(v as f32).log10()),
     };
     let extsize = o.int("extsize").unwrap_or(0);
+    if ctrl_paths.is_empty() && !cfg_common.nolambda && cfg_common.llocal == 0 {
+        // PeakDetect's no-control branch divides d by lregion (or the
+        // treatment length by lregion in paired-end mode).
+        return Err(MacsError::InvalidParameter("float division by zero".into()));
+    }
 
     // `# alternative fragment length(s) may be ...` is emitted into the xls header only
     // when a `PeakModel` was actually fitted (`PeakIO.py` writes it from

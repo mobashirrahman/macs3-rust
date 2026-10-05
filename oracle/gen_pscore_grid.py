@@ -7,9 +7,15 @@ upper tail of a Poisson, in log10 space. Writes a TSV of (k, lam, value) that
 
 Usage: oracle/gen_pscore_grid.py > crates/macs-score/tests/pscore_grid.tsv
 """
+import os
 import sys
 
-sys.path.insert(0, "/scratch/mdra00001/tmp/opencode/macs3-src")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from oracle_env import ensure_oracle_python, require_src  # noqa: E402
+
+ensure_oracle_python()
+sys.path.insert(0, require_src())
+
 from MACS3.Signal.Prob import poisson_cdf  # noqa: E402
 
 print("# k\tlambda\tupstream_get_pscore")

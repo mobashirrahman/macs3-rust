@@ -170,27 +170,38 @@ pub fn pscore(cache: Option<&mut PScoreCache>, observed: u32, expectation: f32) 
 /// So the treatment side is **truncated to an integer**, and the lambda side
 /// stays `f32`.
 ///
-/// # The pseudocount is added in `f64`, not `f32`
+/// # The pseudocount is added in `f32`, not `f64`
 ///
-/// This is not a choice -- it is observable. Both operands are `f32`, but the
-/// sum is computed in double before the `int` cast. Rounding the sum to `f32`
-/// first changes the count:
+/// This is not a choice -- it is observable, and it is the *narrow* add. The
+/// generated C for `ScoreTrack.py:452` is
+///
+/// ```c
+/// __pyx_t_2 = __Pyx_GetItemInt(p, i, ...);          /* np.float32 scalar */
+/// __pyx_t_4 = PyFloat_FromDouble(self->pseudocount); /* python float   */
+/// __pyx_t_8 = PyNumber_Add(__pyx_t_2, __pyx_t_4);
+/// __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_8);         /* truncate       */
+/// ```
+///
+/// so the sum is `np.float32 + python float`, which under NEP 50 keeps the
+/// `float32` width, and only then is it truncated to `int`. Rounding the sum to
+/// `f64` first changes the count:
 ///
 /// ```text
 /// treat = 19.9f32 = 19.899999618530273
 /// pseudocount = 0.1f32 = 0.10000000149011612
-/// f32 sum = 20.0                  -> count 20, pscore 7.09102   (wrong)
-/// f64 sum = 19.999999620020389    -> count 19, pscore 6.46191   (upstream)
+/// f32 sum = 20.0                  -> count 20   (upstream)
+/// f64 sum = 19.999999620020389    -> count 19   (wrong)
 /// ```
+///
+/// `bdgcmp -m ppois` on `chr1 0 100 9.9` with `-p 0.1` scores 18.64095
+/// (count 10), not the 16.59923 that the `f64` sum gives (count 9).
 ///
 /// The peak caller's counts are integral, so `f32` and `f64` addition agree
 /// there and the difference only shows up for bedGraph scores with fractional
-/// pileup values (`bdgcmp -m ppois`). Verified against upstream on a
-/// fractional fixture: 3 of 59 rows differ under `f32` addition, 0 under
-/// `f64`.
+/// pileup values.
 #[inline]
 pub fn pseudocounted_inputs(treat: f32, lambda: f32, pseudocount: f32) -> (u32, f32) {
-    let observed = (f64::from(treat) + f64::from(pseudocount)) as i64;
+    let observed = (treat + pseudocount) as i64;
     let expectation = lambda + pseudocount;
     // a negative depth is impossible, but a saturated u32 cast must not wrap
     let observed = observed.clamp(0, u32::MAX as i64) as u32;
