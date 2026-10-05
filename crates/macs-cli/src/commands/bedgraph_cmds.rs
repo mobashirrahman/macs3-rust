@@ -32,27 +32,39 @@ pub fn bdgopt(o: &Options) -> Result<()> {
                 .ok_or_else(|| {
                     MacsError::InvalidParameter(format!("--method {method} needs -p/--extra-param"))
                 })?
-                .parse::<f32>()
+                .parse::<f64>()
                 .map_err(|_| MacsError::InvalidParameter("-p must be a number".into()))?;
             let m = method.clone();
-            track.apply_func(move |x| match m.as_str() {
-                "multiply" => x * p,
-                "add" => x + p,
-                "max" => {
-                    if x > p {
-                        x
-                    } else {
-                        p
+            // `-p` is a Python float upstream (`float(options.extraparam[0])`,
+            // `bdgopt_cmd.py:47`) and the value handed to the lambda is an
+            // `array.array('f')` element, which indexes as a **Python float**
+            // (`BedGraph.py:138-139` builds the tracks with `array.array`, not
+            // numpy). So the arithmetic is `double * double` and only the store
+            // back into the `f` array narrows -- computing in `f32` first is a
+            // different bit pattern: with `x=48.0, p=1.7` upstream prints
+            // 81.60000 (`f32(48.0 * 1.7)`) while the `f32` product rounds to
+            // 81.60001.
+            track.apply_func(move |x| {
+                let x = f64::from(x);
+                match m.as_str() {
+                    "multiply" => (x * p) as f32,
+                    "add" => (x + p) as f32,
+                    "max" => {
+                        if x > p {
+                            x as f32
+                        } else {
+                            p as f32
+                        }
                     }
-                }
-                "min" => {
-                    if x < p {
-                        x
-                    } else {
-                        p
+                    "min" => {
+                        if x < p {
+                            x as f32
+                        } else {
+                            p as f32
+                        }
                     }
+                    _ => x as f32,
                 }
-                _ => x,
             })
         }
         other => {

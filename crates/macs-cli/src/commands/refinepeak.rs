@@ -51,27 +51,103 @@ fn read_peaks(path: &Path) -> Result<Vec<BedPeak>> {
     Ok(out)
 }
 
-fn counter(pos: &[u32], lo: i64, hi: i64) -> HashMap<i64, i64> {
+fn counter(pos: &[u32]) -> HashMap<i64, i64> {
     let mut m: HashMap<i64, i64> = HashMap::new();
     for &p in pos {
-        let p = p as i64;
-        if p >= lo && p <= hi {
-            *m.entry(p).or_insert(0) += 1;
-        }
+        *m.entry(i64::from(p)).or_insert(0) += 1;
     }
     m
 }
 
+/// The tags of one peak's window, as `compute_region_tags_from_peaks` hands them
+/// to `find_summit` (`FixWidthTrack.py:663-691`).
+///
+/// This is **not** "every tag in `[startpos, endpos]`". Upstream walks a single
+/// forward cursor per chromosome and strand, keeps it across peaks, and rewinds
+/// it by less than `window_size` afterwards (`FixWidthTrack.py:695-704`):
+///
+/// ```text
+/// for i in range(prev_i, plus.shape[0]):
+///     pos = plus[i]
+///     if pos < startpos:   continue
+///     elif pos > endpos:   prev_i = i; break
+///     else:                temp.append(pos)
+/// ...
+/// for i in range(prev_i, 0, -1):
+///     if plus[prev_i] - plus[i] >= window_size: break
+/// prev_i = i
+/// ```
+///
+/// Two consequences have to be reproduced verbatim, because both decide which
+/// tags a later peak sees:
+///
+/// 1. `range(prev_i, 0, -1)` never visits index `0`, so a rewind that does not
+///    `break` leaves `prev_i == 1` -- index 0 of that strand is dropped for
+///    every later peak on the chromosome.
+/// 2. When the rewind loop body never runs (`prev_i == 0`) the assignment reads
+///    the collection loop's own loop variable, which is the `break` index, or
+///    the last index if the collection loop ran off the end. It is not a
+///    no-op, so `prev_i` can jump forward past the tags a later peak needs.
+///
+/// On the 5 M-read CTCF fixture this is worth 24 of 36769 refined summits: peak
+/// 1436 (`chr1 86968634 86968834`) gets 1 plus and 3 minus tags instead of 5 and
+/// 7, so MACS3 reports `2.8284271247461903` (which fails the `--cutoff`) where a
+/// stateless window reports `5.745966692414834`.
+///
+/// `cursor` is the per-chromosome, per-strand index carried between peaks.
+fn collect_region_tags(
+    tags: &[u32],
+    startpos: i64,
+    endpos: i64,
+    w: i64,
+    cursor: &mut usize,
+) -> Vec<u32> {
+    let mut out = Vec::new();
+    let mut i = *cursor;
+    while i < tags.len() {
+        let pos = i64::from(tags[i]);
+        if pos < startpos {
+            i += 1;
+        } else if pos > endpos {
+            *cursor = i;
+            break;
+        } else {
+            out.push(tags[i]);
+            i += 1;
+        }
+    }
+    if *cursor == 0 {
+        // the rewind loop is `range(0, 0, -1)`: empty, so it re-assigns the
+        // index the collection loop stopped on. `i` is already that index when
+        // it broke, and one past the end when it exhausted the array (upstream
+        // leaves it on the last index).
+        *cursor = i.min(tags.len().saturating_sub(1));
+    } else {
+        // walk back to the first index within `w` of the cursor; upstream's
+        // `range` stops at 1, never 0.
+        let mut j = *cursor;
+        loop {
+            if i64::from(tags[*cursor]) - i64::from(tags[j]) >= w {
+                *cursor = j;
+                break;
+            }
+            if j <= 1 {
+                *cursor = 1;
+                break;
+            }
+            j -= 1;
+        }
+    }
+    out
+}
+
 /// `find_summit`: running WTD over the window, returning `(best_pos, best_val)`.
 fn find_summit(plus: &[u32], minus: &[u32], peak_start: i64, peak_end: i64, w: i64) -> (i64, f64) {
-    // The counters hold tags in `[peak_start, peak_end]` only -- the same window
-    // upstream's `compute_region_tags_from_peaks` collects into `rt_plus`/`rt_minus`.
-    // The `w`-expansion happens inside `sum_le`/`sum_ge`, not here. Counting
-    // `[peak_start-w, peak_end+w]` instead pulled in tags outside the window, which
-    // inflated the edge-bin sums and moved the WTD maximum (2.83 vs 0.00 on a peak
-    // with no plus-strand tags in range).
-    let watson = counter(plus, peak_start, peak_end);
-    let crick = counter(minus, peak_start, peak_end);
+    // The counters hold the tags `collect_region_tags` returned, i.e. those
+    // inside `[peak_start, peak_end]`. The `w`-expansion happens inside
+    // `sum_le`/`sum_ge`, not here.
+    let watson = counter(plus);
+    let crick = counter(minus);
     let sum_le = |c: &HashMap<i64, i64>, pos: i64| -> i64 {
         c.iter()
             .filter(|&(x, _)| *x <= pos && *x >= pos - w)
@@ -94,7 +170,9 @@ fn find_summit(plus: &[u32], minus: &[u32], peak_start: i64, peak_end: i64, w: i
     let mut best_val = f64::MIN;
     let mut best_pos = peak_start;
     for j in peak_start..=peak_end {
-        let v = 2.0 * ((wl as f64) * (cr as f64)).sqrt() - (wr as f64) - (cl as f64);
+        // `(watson_left * crick_right)**0.5` is `pow(x, 0.5)`, not `sqrt`
+        // (`refinepeak_cmd.py:88`), and `powf` is the same libm call.
+        let v = 2.0 * ((wl as f64) * (cr as f64)).powf(0.5) - (wr as f64) - (cl as f64);
         if v > best_val {
             best_val = v;
             best_pos = j;
@@ -126,21 +204,12 @@ pub fn refinepeak(o: &Options) -> Result<()> {
 
     // Group tags by chromosome once.
     //
-    // The vectors hold **every** tag on the chromosome, unfiltered. Filtering to a
-    // peak's window happens inside `counter`, per peak. Pre-filtering here is wrong
-    // for two independent reasons:
-    //
-    // 1. The window `find_summit` needs is `[pk.start-2w, pk.end+2w]`, not
-    //    `[pk.start-w, pk.end+w]`, because it scans an already-expanded window with
-    //    an internal half-width-`w` slide. A narrower pre-filter truncated the edge
-    //    bins (2 of 730 scores wrong on CTCF data).
-    // 2. Accumulating per-peak windows into one per-chromosome vector double-counts
-    //    every tag in the overlap of two peaks' windows. Widening the window to fix
-    //    (1) made (2) worse instead (different peaks broke). There is no correct
-    //    pre-filter width; the filter belongs per peak.
-    //
-    // Upstream keeps the full arrays (`Counter(plus)` over everything) and filters
-    // inside `left_sum`/`right_sum`, so this matches it exactly.
+    // The vectors hold **every** tag on the chromosome, unfiltered: upstream
+    // keeps the full `plus`/`minus` arrays and only ever *indexes* into them
+    // (`FixWidthTrack.py:661,671-690`). The per-peak window is applied by
+    // `collect_region_tags` below, and that function has to see the same
+    // indices upstream does -- the cursor it carries is an index into these
+    // arrays, so any pre-filtering would move it.
     let mut by_chrom: HashMap<String, (Vec<u32>, Vec<u32>)> = HashMap::new();
     for pk in &peaks {
         let Some(chrom) = track.genome().get(pk.chrom.as_bytes()) else {
@@ -154,16 +223,23 @@ pub fn refinepeak(o: &Options) -> Result<()> {
         });
     }
 
+    // `compute_region_tags_from_peaks` walks chromosomes in name order and peaks
+    // in ascending start order (`FixWidthTrack.py:659,665`), which is the order
+    // `peaks` is already in, and carries `prev_i`/`prev_j` across the peaks of a
+    // chromosome -- so both cursors reset when the chromosome changes.
+    let mut cursors: HashMap<&str, (usize, usize)> = HashMap::new();
     let mut out = String::new();
     for pk in &peaks {
-        let (plus, minus) = match by_chrom.get(&pk.chrom) {
-            Some(v) => v,
-            None => continue,
+        let Some(tags) = by_chrom.get(&pk.chrom) else {
+            continue;
         };
+        let (prev_i, prev_j) = cursors.entry(pk.chrom.as_str()).or_insert((0, 0));
         // the window over which find_summit runs
         let ps = pk.start - w;
         let pe = pk.end + w;
-        let (best_pos, best_val) = find_summit(plus, minus, ps, pe, w);
+        let rt_plus = collect_region_tags(&tags.0, ps, pe, w, prev_i);
+        let rt_minus = collect_region_tags(&tags.1, ps, pe, w, prev_j);
+        let (best_pos, best_val) = find_summit(&rt_plus, &rt_minus, ps, pe, w);
         let tag = if best_val > cutoff { "R" } else { "F" };
         if !out.is_empty() {
             out.push('\n');

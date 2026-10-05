@@ -429,24 +429,31 @@ impl ScoreTrack2 {
         Ok(())
     }
 
-    /// `compute_foldenrichment` (`ScoreTrack.py:599-621`).
+    /// `compute_foldenrichment` (`ScoreTrack.py:624-645`).
     ///
-    /// Unlike every other score here, the pseudocount is added in `f64` and the
-    /// division runs in `f64`, with a single narrowing to `f32` at the end.
-    /// Upstream writes `(p[i] + pseudocount)/(c[i] + pseudocount)` with numpy
-    /// `float32` array elements and a `cython.float` pseudocount, and that
-    /// mixed-type expression is evaluated in double before being stored back
-    /// into the `float32` score array. Verified against upstream: with
-    /// `treat=13.4`, `ctrl=6.3`, `pseudocount=0.1`, upstream scores
-    /// `2.109374761581421`, which is `f32((f64(13.4) + f64(0.1)) / (f64(6.3) + f64(0.1)))`;
-    /// adding in `f32` first gives `13.5/6.4 = 2.109375`, a different bit
-    /// pattern that prints as `2.10938` instead of `2.10937`.
+    /// The whole expression stays in `f32`, pseudocount add *and* division.
+    /// `p` and `c` are `float32` numpy arrays (`add_chromosome`,
+    /// `ScoreTrack.py:236-247`) and `p[i]` yields a **numpy scalar**, not a
+    /// Python float (numpy >= 2), so Cython's
+    /// `__Pyx__PyNumber_Add_object_float` fast path is skipped and the add
+    /// lands in `numpy.float32.__add__`: under NEP 50 a Python float is a
+    /// "weak" operand, so `np.float32 + <py float>` is computed and returned
+    /// in `float32`, and the quotient of two such scalars is a `float32` too.
+    ///
+    /// The `f64` reading of `(p[i] + pseudocount)/(c[i] + pseudocount)` looks
+    /// right from the generated C alone -- `PyNumber_Add`/`PyNumber_TrueDivide`
+    /// on boxed doubles -- but it is not what the pinned build does. Verified
+    /// against the reference on 500 random `(treat, ctrl)` pairs and on values
+    /// chosen to separate the two by whole `f32` ulps: with
+    /// `treat=79539840.0`, `ctrl=4.7123`, `pseudocount=0.1` upstream scores
+    /// `16528447.0`, which is `f32((f32(t) + f32(0.1)) / f32(f32(c) + f32(0.1)))`
+    /// -- the `f64` add keeps the `0.1` and yields `16528446.0`.
     fn compute_foldenrichment(&mut self) {
-        let pc = f64::from(self.pseudocount);
+        let pc = self.pseudocount;
         for chrom in self.chroms_sorted() {
             let e = self.data.get_mut(&chrom).expect("present");
             for i in 0..e.pos.len() {
-                e.score[i] = ((f64::from(e.treat[i]) + pc) / (f64::from(e.ctrl[i]) + pc)) as f32;
+                e.score[i] = (e.treat[i] + pc) / (e.ctrl[i] + pc);
             }
         }
         self.scoring_method = ScoreMethod::FE;
@@ -685,10 +692,7 @@ pub fn score_value(
         ScoreMethod::LogLR => log_lr_asym(treat + pseudocount, ctrl + pseudocount),
         ScoreMethod::SymLogLR => log_lr_sym(treat + pseudocount, ctrl + pseudocount),
         ScoreMethod::LogFE => logfe_interval(treat, ctrl, pseudocount)?,
-        ScoreMethod::FE => {
-            let pc = f64::from(pseudocount);
-            ((f64::from(treat) + pc) / (f64::from(ctrl) + pc)) as f32
-        }
+        ScoreMethod::FE => (treat + pseudocount) / (ctrl + pseudocount),
         ScoreMethod::Max => treat.max(ctrl),
         ScoreMethod::Q | ScoreMethod::SPMR | ScoreMethod::None => return Ok(None),
     }))
