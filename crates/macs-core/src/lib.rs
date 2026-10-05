@@ -31,7 +31,7 @@ pub use peak::Peak;
 pub use strand::Strand;
 
 /// 0-based genomic offset. See module docs for the BED convention.
-pub type Coord = u64;
+pub type Coord = u32;
 
 /// Length of a genomic span.
 pub type Len = u64;

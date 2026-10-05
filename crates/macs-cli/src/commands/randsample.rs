@@ -78,13 +78,13 @@ pub fn randsample(o: &Options) -> Result<()> {
     for chrom in pos.chroms_sorted() {
         let name = String::from_utf8_lossy(track.genome().name(chrom));
         for &p in pos.strand(chrom, Strand::Plus) {
-            out.push_str(&format!("{name}\t{p}\t{}\t.\t.\t+\n", p + fw as u64));
+            out.push_str(&format!("{name}\t{p}\t{}\t.\t.\t+\n", p + fw as u32));
         }
         for &p in pos.strand(chrom, Strand::Minus) {
             // Upstream writes negative starts verbatim (`chrIV -11 39`); it does
             // not clamp at zero. `saturating_sub` hid every minus-strand tag within
             // `fw` of the contig start behind a `0`, diverging on real data.
-            let lo = p as i64 - i64::from(fw);
+            let lo = i64::from(p) - i64::from(fw);
             out.push_str(&format!("{name}\t{lo}\t{p}\t.\t.\t-\n"));
         }
     }
@@ -110,7 +110,7 @@ pub fn randsample(o: &Options) -> Result<()> {
 fn randsample_pe(o: &crate::Options, paths: &[String], format: &str) -> Result<()> {
     use std::collections::BTreeMap;
 
-    let mut frags: BTreeMap<Vec<u8>, Vec<(u64, u64)>> = BTreeMap::new();
+    let mut frags: BTreeMap<Vec<u8>, Vec<(u32, u32)>> = BTreeMap::new();
     let track = super::input::load_fragment_files(paths, format)?;
     for chrom in track.chroms() {
         let name = track.genome().name(chrom).to_vec();
@@ -152,7 +152,7 @@ fn randsample_pe(o: &crate::Options, paths: &[String], format: &str) -> Result<(
         spans.sort_unstable();
     }
     let mut rng = macs_stats::randomstate_from_seed_sequence(seed as u64);
-    type Spans = Vec<(u64, u64)>;
+    type Spans = Vec<(u32, u32)>;
     let mut sampled: Vec<(Vec<u8>, Spans)> = Vec::new();
     let mut kept_total = 0u64;
     for (chrom, spans) in &frags {
@@ -162,7 +162,7 @@ fn randsample_pe(o: &crate::Options, paths: &[String], format: &str) -> Result<(
         let num = macs_track::retained_count(spans.len() as f64 * f64::from(pct_f32));
         let mut idx: Vec<usize> = (0..spans.len()).collect();
         rng.shuffle(&mut idx);
-        let mut kept: Vec<(u64, u64)> = idx.into_iter().take(num).map(|i| spans[i]).collect();
+        let mut kept: Vec<(u32, u32)> = idx.into_iter().take(num).map(|i| spans[i]).collect();
         kept.sort_unstable();
         kept_total += kept.len() as u64;
         sampled.push((chrom.clone(), kept));

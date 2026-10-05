@@ -81,7 +81,7 @@ pub struct Span<'a, T> {
 impl<T> Span<'_, T> {
     /// Number of bases covered.
     pub fn len(&self) -> Len {
-        self.end - self.start
+        (self.end - self.start).into()
     }
 
     /// Always false: spans are non-empty by construction.
@@ -536,7 +536,7 @@ impl<T: Copy + PartialEq> SignalTrack<T> {
 
     /// Number of covered bases: `cursor() - start()`.
     pub fn covered_len(&self) -> Len {
-        self.cursor() - self.start
+        (self.cursor() - self.start).into()
     }
 
     /// `sum(f(value) * length)` over the covered region.
@@ -623,7 +623,7 @@ impl<T: Copy + PartialEq> SignalTrack<T> {
         let mut h: HashMap<u64, u64> = HashMap::with_capacity(self.runs.len());
         let mut at = self.start;
         for r in &self.runs {
-            *h.entry(r.value.to_key()).or_insert(0) += r.end - at;
+            *h.entry(r.value.to_key()).or_insert(0) += u64::from(r.end - at);
             at = r.end;
         }
         h
@@ -996,7 +996,7 @@ mod tests {
 
     const C: ChromId = ChromId(0);
 
-    fn track(runs: &[(u64, f32)], end: u64) -> SignalTrack<f32> {
+    fn track(runs: &[(u32, f32)], end: u32) -> SignalTrack<f32> {
         SignalTrack::from_runs(
             C,
             0,
@@ -1006,12 +1006,12 @@ mod tests {
     }
 
     /// `(start, value)` of every run — the compact, canonical view.
-    fn spans(t: &SignalTrack<f32>) -> Vec<(u64, f32)> {
+    fn spans(t: &SignalTrack<f32>) -> Vec<(u32, f32)> {
         t.spans().collect()
     }
 
     /// `(position, value)` at every base — the dense view.
-    fn dense(t: &SignalTrack<f32>) -> Vec<(u64, f32)> {
+    fn dense(t: &SignalTrack<f32>) -> Vec<(u32, f32)> {
         t.dense().collect()
     }
 
@@ -1113,7 +1113,7 @@ mod tests {
         assert_eq!(t.value_at(150), Some(1.0));
         assert_eq!(t.value_at(179), Some(1.0));
         assert_eq!(t.value_at(180), None);
-        assert_eq!(t.value_at(u64::MAX), None);
+        assert_eq!(t.value_at(u32::MAX), None);
     }
 
     #[test]
@@ -1128,9 +1128,9 @@ mod tests {
     #[test]
     fn lookup_is_correct_for_a_long_track() {
         // a track with many runs must binary-search correctly at every boundary
-        let runs: Vec<Run<f32>> = (1..500).map(|i| Run::new(i * 3, i as f32)).collect();
+        let runs: Vec<Run<f32>> = (1..500u32).map(|i| Run::new(i * 3, i as f32)).collect();
         let t = SignalTrack::from_runs(C, 0, 1500, runs);
-        for i in 1..500u64 {
+        for i in 1..500u32 {
             let run_start = (i - 1) * 3;
             assert_eq!(t.value_at(run_start), Some(i as f32), "at {run_start}");
             assert_eq!(t.value_at(run_start + 1), Some(i as f32));
@@ -1334,13 +1334,13 @@ mod tests {
         let d = a.sub(&b);
         assert_eq!(
             d.spans().collect::<Vec<_>>(),
-            vec![(0u64, 4.0f64), (10, 2.0)],
+            vec![(0u32, 4.0f64), (10, 2.0)],
             "a-b is 4 on [0,10) and 2 on [10,20)"
         );
         let s = a.scale(2.0);
         assert_eq!(
             s.spans().collect::<Vec<_>>(),
-            vec![(0u64, 10.0f64), (10, 6.0)]
+            vec![(0u32, 10.0f64), (10, 6.0)]
         );
     }
 

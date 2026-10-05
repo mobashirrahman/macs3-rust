@@ -140,8 +140,8 @@ pub fn bdgdiff(o: &Options) -> Result<()> {
     let t2 = required(o, "t2bdg", "--t2")?;
     let c2 = required(o, "c2bdg", "--c2")?;
     let cutoff = o.float("cutoff").unwrap_or(3.0) as f32;
-    let minlen = o.int("minlen").unwrap_or(200).max(0) as u64;
-    let maxgap = o.int("maxgap").unwrap_or(100).max(0) as u64;
+    let minlen = o.int("minlen").unwrap_or(200).max(0) as u32;
+    let maxgap = o.int("maxgap").unwrap_or(100).max(0) as u32;
     if maxgap >= minlen {
         return Err(MacsError::InvalidParameter(format!(
             "MAXGAP should be smaller than MINLEN! Your input is MAXGAP = {maxgap} and MINLEN = {minlen}"
@@ -276,7 +276,7 @@ fn write_diff_bed(
     let mut n_peak = 0usize;
     for chrom in chroms {
         let list = &by_chrom[&chrom];
-        let mut ends: Vec<u64> = list.iter().map(|p| p.end).collect();
+        let mut ends: Vec<u32> = list.iter().map(|p| p.end).collect();
         ends.sort_unstable();
         ends.dedup();
         for end in ends {

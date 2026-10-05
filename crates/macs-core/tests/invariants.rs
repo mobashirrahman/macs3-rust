@@ -15,26 +15,26 @@ proptest! {
     /// Upstream does emit empty intervals (zero-length fragments), so this must be a
     /// normalisation rather than an assertion.
     #[test]
-    fn interval_never_has_a_negative_length(a in 0u64..5000, b in 0u64..5000) {
+    fn interval_never_has_a_negative_length(a in 0u32..5000, b in 0u32..5000) {
         let iv = Interval::new(a, b);
         prop_assert!(iv.start() <= iv.end());
-        prop_assert_eq!(iv.len(), iv.end() - iv.start());
+        prop_assert_eq!(iv.len(), u64::from(iv.end() - iv.start()));
         prop_assert!(!iv.is_empty() || iv.start() == iv.end());
     }
 
     /// `len` is half-open: `[a, b)` has length `b - a`, and a zero-length interval is
     /// empty. This is the BED convention; the XLS convention is handled at the writer.
     #[test]
-    fn length_is_half_open(a in 0u64..5000, b in 0u64..5000) {
+    fn length_is_half_open(a in 0u32..5000, b in 0u32..5000) {
         let (lo, hi) = (a.min(b), a.max(b));
         let iv = Interval::new(lo, hi);
-        prop_assert_eq!(iv.len(), hi - lo);
+        prop_assert_eq!(iv.len(), u64::from(hi - lo));
         prop_assert_eq!(iv.is_empty(), lo == hi);
     }
 
     /// `contains` is half-open at both ends and agrees with `start <= pos < end`.
     #[test]
-    fn contains_is_half_open(a in 0u64..5000, d in 0u64..200, pos in 0u64..6000) {
+    fn contains_is_half_open(a in 0u32..5000, d in 0u32..200, pos in 0u32..6000) {
         let iv = Interval::new(a, a + d);
         prop_assert_eq!(iv.contains(pos), pos >= a && pos < a + d);
         prop_assert!(!iv.contains(a + d), "end must be exclusive");
@@ -45,8 +45,8 @@ proptest! {
     /// input. The peak-merging walk relies on this to bound its candidate set.
     #[test]
     fn overlap_len_is_bounded_by_both_inputs(
-        a in 0u64..3000, b in 0u64..3000,
-        c in 0u64..3000, d in 0u64..3000,
+        a in 0u32..3000, b in 0u32..3000,
+        c in 0u32..3000, d in 0u32..3000,
     ) {
         let (x, y) = (Interval::new(a, a + b), Interval::new(c, c + d));
         let ov = x.overlap_len(&y);
@@ -59,8 +59,8 @@ proptest! {
     /// Merging is idempotent and produces sorted, non-overlapping intervals.
     #[test]
     fn merge_intervals_is_sorted_and_disjoint(
-        ivs in prop::collection::vec((0u64..2000, 1u64..300), 0..40),
-        max_gap in 0u64..200,
+        ivs in prop::collection::vec((0u32..2000, 1u32..300), 0..40),
+        max_gap in 0u32..200,
     ) {
         let mut v: Vec<Interval> =
             ivs.iter().map(|(s, l)| Interval::new(*s, s + l)).collect();
@@ -82,8 +82,8 @@ proptest! {
     /// Merging never loses covered bases: the total length is at least the input's.
     #[test]
     fn merge_never_loses_coverage(
-        ivs in prop::collection::vec((0u64..2000, 1u64..300), 0..40),
-        max_gap in 0u64..200,
+        ivs in prop::collection::vec((0u32..2000, 1u32..300), 0..40),
+        max_gap in 0u32..200,
     ) {
         let v: Vec<Interval> =
             ivs.iter().map(|(s, l)| Interval::new(*s, s + l)).collect();
@@ -134,8 +134,8 @@ proptest! {
     /// exactly when they overlap or touch.
     #[test]
     fn union_and_gap_are_consistent(
-        a in 0u64..3000, b in 0u64..500,
-        c in 0u64..3000, d in 0u64..500,
+        a in 0u32..3000, b in 0u32..500,
+        c in 0u32..3000, d in 0u32..500,
     ) {
         let (x, y) = (Interval::new(a, a + b), Interval::new(c, c + d));
         let (u1, u2) = (x.union(&y), y.union(&x));
@@ -157,7 +157,7 @@ proptest! {
             "gap {} disagrees with adjacency {} for {:?} vs {:?}",
             g, touching, x, y);
         if !touching {
-            prop_assert_eq!(g, u1.len() - x.len() - y.len(),
+            prop_assert_eq!(g, u32::try_from(u1.len() - x.len() - y.len()).unwrap(),
                 "gap {} inconsistent with the union length", g);
         }
     }

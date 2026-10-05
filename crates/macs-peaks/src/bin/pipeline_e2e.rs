@@ -53,7 +53,7 @@ fn load_bed(path: &Path) -> Result<SingleEndTrack> {
         if rec.pos < 0 || rec.chrom.is_empty() {
             continue;
         }
-        b.push(&rec.chrom, rec.pos as u64, rec.strand);
+        b.push(&rec.chrom, rec.pos as u32, rec.strand);
     }
     b.finalize();
     let mut t = b.build();
@@ -64,7 +64,7 @@ fn load_bed(path: &Path) -> Result<SingleEndTrack> {
 }
 
 /// A parsed bedGraph: `(chrom, start, end, value)` runs in file order.
-type BedGraph = BTreeMap<String, Vec<(u64, u64, f64)>>;
+type BedGraph = BTreeMap<String, Vec<(u32, u32, f64)>>;
 
 fn load_bedgraph(path: &Path) -> Result<BedGraph> {
     let file = std::fs::File::open(path).map_err(|e| {
@@ -73,7 +73,7 @@ fn load_bedgraph(path: &Path) -> Result<BedGraph> {
             format!("{}: {e}", path.display()),
         ))
     })?;
-    let mut out: BTreeMap<String, Vec<(u64, u64, f64)>> = BTreeMap::new();
+    let mut out: BTreeMap<String, Vec<(u32, u32, f64)>> = BTreeMap::new();
     for line in BufReader::new(file).lines() {
         let line = line?;
         if line.is_empty() || line.starts_with("track") {
@@ -84,8 +84,8 @@ fn load_bedgraph(path: &Path) -> Result<BedGraph> {
             continue;
         }
         let (Ok(start), Ok(end), Ok(v)) = (
-            f[1].parse::<u64>(),
-            f[2].parse::<u64>(),
+            f[1].parse::<u32>(),
+            f[2].parse::<u32>(),
             f[3].parse::<f64>(),
         ) else {
             continue;
@@ -171,7 +171,7 @@ fn run() -> Result<()> {
     // means endpoints are only clipped at zero. The fixtures carry a
     // `genome.txt`, but `--gsize` is what `callpeak` is given here, so mirror
     // upstream and leave the right edge unclipped.
-    let rlength = u64::MAX / 2;
+    let rlength: u32 = u32::MAX / 2;
 
     // lambda_bg = treat_sum / gsize when scaling treatment to control, which is
     // what `callpeak` does when the control is larger (the default for
@@ -380,7 +380,7 @@ fn control_scale_factors(
 /// sparse ChIP pileup.
 fn build_treat_bedgraph(
     track: &SingleEndTrack,
-    rlength: u64,
+    rlength: u32,
     extsize: i64,
     scale: f32,
 ) -> BedGraph {
@@ -394,7 +394,7 @@ fn build_treat_bedgraph(
             &SingleEndParams::directional(extsize, 0, rlength, scale),
         );
         let mut runs = Vec::new();
-        let mut prev = 0u64;
+        let mut prev = 0u32;
         for r in t.runs() {
             runs.push((prev, r.end, f64::from(r.value)));
             prev = r.end;
@@ -408,13 +408,13 @@ fn build_treat_bedgraph(
 #[allow(clippy::too_many_arguments)]
 fn build_ctrl_bedgraph(
     ctrl: Option<&SingleEndTrack>,
-    rlength: u64,
+    rlength: u32,
     scales: &LambdaScales,
     lambda_bg: f32,
     treat_sum: f64,
     control_sum: f64,
     gsize: f64,
-    limit: u64,
+    limit: u32,
 ) -> BedGraph {
     let mut out: BedGraph = BTreeMap::new();
     let Some(c) = ctrl else {
@@ -439,7 +439,7 @@ fn build_ctrl_bedgraph(
         }
         let Some(t) = combined else { continue };
         let mut runs = Vec::new();
-        let mut prev = 0u64;
+        let mut prev = 0u32;
         for r in t.runs() {
             // stop where the pairing would have stopped
             if r.end > limit {
@@ -509,7 +509,7 @@ fn compare_graph(
         }
 
         // every start from either side refines both step functions
-        let mut bounds: Vec<u64> = w.iter().map(|(s, _, _)| *s).collect();
+        let mut bounds: Vec<u32> = w.iter().map(|(s, _, _)| *s).collect();
         bounds.extend(g.iter().map(|(s, _, _)| *s));
         bounds.retain(|b| *b < common_end);
         bounds.sort_unstable();
@@ -542,7 +542,7 @@ fn compare_graph(
 }
 
 /// The value a run list reports at `pos`, if `pos` is covered by it.
-fn value_at(runs: &[(u64, u64, f64)], pos: u64) -> Option<f64> {
+fn value_at(runs: &[(u32, u32, f64)], pos: u32) -> Option<f64> {
     runs.iter()
         .find(|(s, e, _)| pos >= *s && pos < *e)
         .map(|(_, _, v)| *v)

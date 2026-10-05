@@ -32,7 +32,7 @@ pub use driver::{
     combine_control_scales, nolambda_control, pair_for_chromosome, pair_treat_ctrl, LambdaScale,
     LambdaScales, PairedSignal,
 };
-pub use merge::{over_two_pv_array, pointwise_max, track_from_pv, Reducer};
+pub use merge::{over_max_tracks, over_two_pv_array, pointwise_max, track_from_pv, Reducer};
 
 /// [`over_two_pv_array`] as a track-to-track operation, for callers that already
 /// hold [`SignalTrack`]s. The merged track's span ends wherever the merge stopped,

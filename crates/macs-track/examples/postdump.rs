@@ -23,7 +23,7 @@ fn main() {
         if rec.pos < 0 || rec.chrom.is_empty() {
             continue;
         }
-        b.push(&rec.chrom, rec.pos as u64, rec.strand);
+        b.push(&rec.chrom, rec.pos as u32, rec.strand);
     }
     b.finalize();
     let mut t = b.build();

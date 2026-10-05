@@ -13,7 +13,48 @@ use std::process::ExitCode;
 
 use macs_cli::{is_subcommand, parse_flags, PROGRAM, SUBCOMMANDS, TARGET_VERSION};
 
+/// Cap glibc's per-thread malloc arenas to one, then hand off to the real entry.
+///
+/// The pipeline is chromosome-parallel, so every rayon worker gets its own malloc
+/// arena and freed blocks are retained per-arena instead of being returned to the
+/// OS. That is a *fragmentation* cost, not a working-set one, and it is large:
+/// measured on the 5 M-read fixture (SE `--SPMR`, release, 24 chromosomes), peak
+/// RSS is 237 MB with the default arena count and 177 MB with one arena, at
+/// unchanged wall clock (7.88 s vs 7.81 s).
+///
+/// The setting cannot be applied in-process: glibc reads `MALLOC_ARENA_MAX` through
+/// its tunables machinery during `ptmalloc_init`, which runs before `main` -- the
+/// Rust runtime itself allocates first, so a `set_var` here is always too late
+/// (verified: it left RSS at 237 MB). Re-executing the same binary with the
+/// variable set is the standard way around that, and `CommandExt::exec` *replaces*
+/// the process image rather than forking, so there is no extra process, no
+/// double-wait, and the exit status, argv and stdio all pass through unchanged.
+///
+/// A user-supplied `MALLOC_ARENA_MAX` wins, and the presence of the variable on the
+/// re-exec'd image is what terminates the recursion.
+#[cfg(unix)]
+fn cap_malloc_arenas() {
+    use std::os::unix::process::CommandExt as _;
+    if std::env::var_os("MALLOC_ARENA_MAX").is_some() {
+        return;
+    }
+    let Ok(exe) = std::env::current_exe() else {
+        return;
+    };
+    let err = std::process::Command::new(exe)
+        .args(std::env::args_os().skip(1))
+        .env("MALLOC_ARENA_MAX", "1")
+        .exec();
+    // `exec` only returns on failure; fall through and run normally in that case
+    // rather than refusing to start.
+    let _ = err;
+}
+
+#[cfg(not(unix))]
+fn cap_malloc_arenas() {}
+
 fn main() -> ExitCode {
+    cap_malloc_arenas();
     let argv: Vec<String> = std::env::args().skip(1).collect();
 
     if argv.is_empty() {

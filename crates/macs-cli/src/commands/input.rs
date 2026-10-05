@@ -230,8 +230,8 @@ pub fn load_fragment_files(paths: &[String], format: &str) -> Result<FragmentTra
             for fragment in &records {
                 builder.push(
                     &fragment.chrom,
-                    u64::from(fragment.start),
-                    u64::from(fragment.start + fragment.len),
+                    fragment.start,
+                    fragment.start + fragment.len,
                 );
             }
         } else {
@@ -249,7 +249,7 @@ pub fn load_fragment_files(paths: &[String], format: &str) -> Result<FragmentTra
                 if record.chrom.is_empty() || record.left < 0 || record.right < record.left {
                     continue;
                 }
-                builder.push(&record.chrom, record.left as u64, record.right as u64);
+                builder.push(&record.chrom, record.left as u32, record.right as u32);
             }
         }
     }
@@ -351,7 +351,7 @@ fn load_legacy(path: &Path, format: &str) -> Result<(SingleEndTrack, f64)> {
         };
         let pos = pos + if strand == Strand::Minus { length } else { 0 };
         if pos >= 0 && !chrom.is_empty() {
-            builder.push(chrom, pos as u64, strand);
+            builder.push(chrom, pos as u32, strand);
         }
     }
     builder.finalize();
@@ -384,7 +384,7 @@ pub fn load_single_end_bed(path: &Path) -> Result<SingleEndTrack> {
         if rec.pos < 0 || rec.chrom.is_empty() {
             continue;
         }
-        b.push(&rec.chrom, rec.pos as u64, rec.strand);
+        b.push(&rec.chrom, rec.pos as u32, rec.strand);
     }
     b.finalize();
     Ok(b.build())
@@ -404,7 +404,7 @@ pub fn load_single_end_bam(path: &Path) -> Result<(SingleEndTrack, f64)> {
         } else {
             macs_core::Strand::Plus
         };
-        b.push(&t.chrom, u64::from(t.pos), strand);
+        b.push(&t.chrom, t.pos, strand);
     }
     b.finalize();
     Ok((b.build(), mean_qlen))
@@ -437,7 +437,7 @@ pub fn load_single_end_sam(path: &Path) -> Result<(SingleEndTrack, f64)> {
             qsum += rec.seqlen as u64;
             qn += 1;
         }
-        b.push(&rec.chrom, rec.pos as u64, rec.strand);
+        b.push(&rec.chrom, rec.pos as u32, rec.strand);
     }
     b.finalize();
     let mean_qlen = if qn > 0 { qsum as f64 / qn as f64 } else { 0.0 };

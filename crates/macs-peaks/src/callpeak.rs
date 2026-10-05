@@ -775,7 +775,7 @@ pub fn se_setup(
     ctrl: Option<&SingleEndTrack>,
     cfg: &SeConfig,
 ) -> (SeSignalSetup, f32, Vec<Vec<u8>>) {
-    let rlength = u64::MAX / 2;
+    let rlength: Coord = u32::MAX / 2;
     let t_total = treat.total() as f64;
     let c_total = ctrl.map_or(0.0, |c| c.total() as f64);
     let treat_sum = t_total * cfg.extsize as f64;
@@ -1052,24 +1052,27 @@ pub fn build_one_se_chromosome(
                 ))
             }
             None => {
-                let mut combined: Option<SignalTrack<f32>> = None;
+                // Fold the scales in one pass (`over_max_tracks`) rather than
+                // pairwise: the pairwise form holds two scale tracks and the merge
+                // result at once, which is the single-end peak RSS driver.
+                let mut built: Vec<SignalTrack<f32>> = Vec::new();
                 for scale in lscales.as_pairs() {
-                    let p = macs_pileup::pileup_from_positions(
+                    built.push(macs_pileup::pileup_from_positions(
                         chrom,
                         treat.positions().strand(chrom, Strand::Plus),
                         treat.positions().strand(chrom, Strand::Minus),
                         &SingleEndParams::bidirectional(scale.d, 0, rlength, scale.scale_factor)
                             .with_baseline(lambda_bg),
-                    );
-                    combined = Some(match combined {
-                        None => p,
-                        Some(prev) => crate::over_two_pv_array_track(&prev, &p),
-                    });
+                    ));
                 }
-                combined
+                let refs: Vec<&SignalTrack<f32>> = built.iter().collect();
+                crate::over_max_tracks(&refs)
             }
             Some(c) => {
                 let cc = c.genome().get(name)?;
+                // Fold pairwise. An N-way fold that keeps all scale tracks alive at
+                // once costs *more* peak than the chain, because a merge only needs
+                // the accumulator, the next scale and the result.
                 let mut combined: Option<SignalTrack<f32>> = None;
                 for scale in lscales.as_pairs() {
                     let p = macs_pileup::pileup_from_positions(
@@ -1162,6 +1165,63 @@ pub fn se_pscore_track(sig: &ChromSignals, cache: &mut PScoreCache) -> macs_rle:
         Some(l) => retadd_pscore(&sig.treat, l, cache),
         None => crate::over_two_pv_array_track(&sig.treat, &sig.treat),
     }
+}
+
+/// [`se_pscore_track`] folded straight into a histogram, without ever building the
+/// per-chromosome p-score track.
+///
+/// The track exists only to be histogrammed (and, with `--cutoff-analysis`, scanned
+/// for cutoff totals). On the shipping path that is pure overhead: for chr1 of the
+/// 5 M-read fixture it is 2.2 M runs = **18 MB** held alongside the 20 MB signal
+/// track, and that pair is what sets the single-end peak RSS.
+///
+/// Exactness: [`macs_score::PScoreHistogram::add_track_from`] walks a track's spans
+/// adding `(value, end - prev)` with `prev` starting at `origin`. Streaming adds one
+/// entry per union step instead. Two consecutive steps carrying the same score land
+/// in the same bucket either way -- integer addition, same total -- which is the only
+/// way the two can differ, so the histograms are identical.
+///
+/// The no-control branch mirrors `se_pscore_track`, which for a missing control pair
+/// is `over_two_pv_array_track(treat, treat)`: the pointwise max of a track with
+/// itself is the track, so the "scores" here are the treatment **values**, not
+/// p-scores. That is upstream's behaviour and the golden gate pins it.
+pub fn se_pscore_histogram_streaming(
+    sig: &ChromSignals,
+    origin: i64,
+    cache: &mut PScoreCache,
+) -> macs_score::PScoreHistogram {
+    let mut hist = macs_score::PScoreHistogram::new();
+    let mut prev = origin;
+    match &sig.ctrl {
+        Some(l) => {
+            let (p1s, p2s) = (sig.treat.runs(), l.runs());
+            let (mut i1, mut i2) = (0usize, 0usize);
+            let mut last: Option<Coord> = None;
+            while i1 < p1s.len() && i2 < p2s.len() {
+                let (r1, r2) = (&p1s[i1], &p2s[i2]);
+                let pos = r1.end.min(r2.end);
+                if last != Some(pos) {
+                    let obs = (r1.value as i64).clamp(0, u32::MAX as i64) as u32;
+                    hist.add(cache.get(obs, r2.value), pos as i64 - prev);
+                    prev = pos as i64;
+                    last = Some(pos);
+                }
+                if r1.end <= r2.end {
+                    i1 += 1;
+                }
+                if r2.end <= r1.end {
+                    i2 += 1;
+                }
+            }
+        }
+        None => {
+            for r in sig.treat.runs() {
+                hist.add(r.value, r.end as i64 - prev);
+                prev = r.end as i64;
+            }
+        }
+    }
+    hist
 }
 
 /// The same track, reduced to a histogram fragment so pass 1 can drop it.
@@ -1351,7 +1411,7 @@ pub fn paired_union(
 
 /// `pileup_from_fragments`'s third argument is the track **length**, which clamps
 /// fragment endpoints. It is not the fragment length `d`.
-const RLENGTH: Coord = u64::MAX / 2;
+const RLENGTH: Coord = u32::MAX / 2;
 
 /// Paired-end peak calling: fragment pileups for treatment and control.
 ///
@@ -1795,7 +1855,7 @@ fn run_callpeak_pe_selected(
 
     PeResult {
         signals,
-        d,
+        d: d as Coord,
         paired_boundaries: false,
         lambda_bg,
         coord_shift,
@@ -1827,6 +1887,22 @@ pub struct CutoffStats {
 impl CutoffStats {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    /// Add another chromosome's totals.
+    ///
+    /// The maps hold `u64` counters, so integer addition is exact and
+    /// order-independent; merging per chromosome in chromosome order reproduces the
+    /// single sequential pass that `accumulate_cutoffs` would have made over all of
+    /// them. Lets a caller fold the totals inside a parallel worker and merge later,
+    /// instead of retaining each chromosome's p-score track to fold at the end.
+    pub fn merge(&mut self, other: &CutoffStats) {
+        for (k, v) in &other.npeaks {
+            *self.npeaks.entry(*k).or_insert(0) += v;
+        }
+        for (k, v) in &other.lpeaks {
+            *self.lpeaks.entry(*k).or_insert(0) += v;
+        }
     }
 }
 
@@ -1921,7 +1997,7 @@ pub fn accumulate_cutoffs(
             } else {
                 let len = chunk_end.saturating_sub(chunk_start);
                 if len >= min_length {
-                    total_l += len;
+                    total_l += u64::from(len);
                     total_p += 1;
                 }
                 chunk_start = s;
@@ -1933,7 +2009,7 @@ pub fn accumulate_cutoffs(
         if !above.is_empty() {
             let len = chunk_end.saturating_sub(chunk_start);
             if len >= min_length {
-                total_l += len;
+                total_l += u64::from(len);
                 total_p += 1;
             }
         }
@@ -2063,7 +2139,7 @@ pub fn bedgraph_cutoff_analysis(
                 } else {
                     let len = ce.saturating_sub(cs);
                     if len >= min_length {
-                        tl += len;
+                        tl += u64::from(len);
                         tp += 1;
                     }
                     cs = s;
@@ -2073,7 +2149,7 @@ pub fn bedgraph_cutoff_analysis(
             }
             let len = ce.saturating_sub(cs);
             if len >= min_length {
-                tl += len;
+                tl += u64::from(len);
                 tp += 1;
             }
             lpeaks[n_idx] += tl;

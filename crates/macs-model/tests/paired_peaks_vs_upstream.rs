@@ -61,7 +61,7 @@ fn load_se(path: &std::path::Path) -> Result<SingleEndTrackBuilder> {
         if rec.pos < 0 || rec.chrom.is_empty() {
             continue;
         }
-        b.push(&rec.chrom, rec.pos as u64, rec.strand);
+        b.push(&rec.chrom, rec.pos as u32, rec.strand);
     }
     b.finalize();
     Ok(b)

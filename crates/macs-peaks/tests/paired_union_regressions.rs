@@ -11,7 +11,7 @@ use macs_rle::SignalTrack;
 
 const C: ChromId = ChromId(0);
 
-fn track(runs: &[(u64, f32)]) -> SignalTrack<f32> {
+fn track(runs: &[(u32, f32)]) -> SignalTrack<f32> {
     let mut t = SignalTrack::empty(C, 0, runs.last().map(|r| r.0).unwrap_or(0));
     for &(end, v) in runs {
         t.push(end, v);

@@ -470,7 +470,7 @@ mod tests {
         let mut treat = Vec::new();
         let mut ctrl = Vec::new();
         for i in 0..600u64 {
-            pos.push((i + 1) * 10);
+            pos.push((i as u32 + 1) * 10);
             let x = i as f32;
             let background = 5.0 + x * 0.01;
             let t1 = (x - 175.0).abs();
@@ -533,9 +533,9 @@ mod tests {
 
     #[test]
     fn call_chromosome_pairs_its_inputs_first() {
-        let tp = [0u64, 200, 400, 600, 800];
+        let tp = [0u32, 200, 400, 600, 800];
         let tv = [1.0f32, 9.0, 12.0, 9.0, 1.0];
-        let cp = [0u64, 200, 400, 600, 800];
+        let cp = [0u32, 200, 400, 600, 800];
         let cv = [1.0f32, 1.0, 1.0, 1.0, 1.0];
         let params = CallParams {
             // F260: unit-test call sites; the shipped path takes this

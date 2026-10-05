@@ -3,7 +3,7 @@
 use macs_peaks::pair_treat_ctrl;
 
 /// One pairing case: treatment and control, each a position/value pair.
-type Case = (Vec<u64>, Vec<f32>, Vec<u64>, Vec<f32>);
+type Case = (Vec<u32>, Vec<f32>, Vec<u32>, Vec<f32>);
 
 fn main() {
     // (treat_pos, treat_val, ctrl_pos, ctrl_val) -- kept in step with CASES in
@@ -29,7 +29,7 @@ fn main() {
     for (tp, tv, cp, cv) in cases {
         let p = pair_treat_ctrl(&tp, &tv, &cp, &cv);
         // hand-rolled JSON: no serde dependency in this crate
-        let arr = |v: &Vec<u64>| {
+        let arr = |v: &Vec<u32>| {
             v.iter()
                 .map(|x| x.to_string())
                 .collect::<Vec<_>>()

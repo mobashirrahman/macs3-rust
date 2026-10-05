@@ -36,7 +36,7 @@ fn parse_list(s: &str) -> Vec<i64> {
 /// Upstream's pv array is right-endpoint indexed: `v[i]` is the value on
 /// `[pos[i-1], pos[i])`. So to compare against upstream we evaluate our track on
 /// the region *just below* each breakpoint, not at it.
-fn upstream_value(t: &SignalTrack<f32>, pos: u64) -> f32 {
+fn upstream_value(t: &SignalTrack<f32>, pos: u32) -> f32 {
     if pos == 0 {
         // the first breakpoint closes the empty region before the contig
         return t.value_at_or(0, 0.0);
@@ -93,17 +93,17 @@ fn bit_exact_pileup_parity_with_macs3() {
         let t: SignalTrack<f32> = match row.func.as_str() {
             "pn" | "pn_junction" => {
                 // args: rlength five_shift three_shift scale baseline plus minus
-                let rlength: u64 = a[0].parse().expect("rlength");
+                let rlength: u32 = a[0].parse().expect("rlength");
                 let five: i64 = a[1].parse().expect("five_shift");
                 let three: i64 = a[2].parse().expect("three_shift");
                 let scale: f32 = a[3].parse().expect("scale");
                 let baseline: f32 = a[4].parse().expect("baseline");
-                let plus: Vec<u64> = a[5]
+                let plus: Vec<u32> = a[5]
                     .split(',')
                     .filter(|x| !x.trim().is_empty())
                     .map(|x| x.trim().parse().expect("plus pos"))
                     .collect();
-                let minus: Vec<u64> = a[6]
+                let minus: Vec<u32> = a[6]
                     .split(',')
                     .filter(|x| !x.trim().is_empty())
                     .map(|x| x.trim().parse().expect("minus pos"))
@@ -123,19 +123,19 @@ fn bit_exact_pileup_parity_with_macs3() {
             }
             "lr" => {
                 // args: rlength scale lefts rights
-                let rlength: u64 = a[0].parse().expect("rlength");
+                let rlength: u32 = a[0].parse().expect("rlength");
                 let scale: f32 = a[1].parse().expect("scale");
-                let ls: Vec<u64> = a[2]
+                let ls: Vec<u32> = a[2]
                     .split(',')
                     .filter(|x| !x.trim().is_empty())
                     .map(|x| x.trim().parse().expect("l"))
                     .collect();
-                let rs: Vec<u64> = a[3]
+                let rs: Vec<u32> = a[3]
                     .split(',')
                     .filter(|x| !x.trim().is_empty())
                     .map(|x| x.trim().parse().expect("r"))
                     .collect();
-                let frags: Vec<(u64, u64)> = ls.into_iter().zip(rs).collect();
+                let frags: Vec<(u32, u32)> = ls.into_iter().zip(rs).collect();
                 pileup_from_fragments(C, &frags, rlength, scale, 0.0)
             }
             other => {
@@ -156,7 +156,7 @@ fn bit_exact_pileup_parity_with_macs3() {
                 break;
             }
             let want = row.val[i];
-            let got = upstream_value(&t, p as u64);
+            let got = upstream_value(&t, p as u32);
             if got.to_bits() != want.to_bits() {
                 value_mismatch = Some(format!(
                     "at {p}: got {got:?} (0x{:08x}) want {want:?} (0x{:08x})",
@@ -259,7 +259,7 @@ fn coincident_start_and_end_emits_no_breakpoint() {
     // the pv array is (positions=[5, 155], values=[0.0, 1.0]), i.e. the track
     // below is 0.0 on [0,5) and 1.0 on [5,155)
     let (pos, val) = t.to_breakpoints();
-    assert_eq!(pos, vec![5u64, 155]);
+    assert_eq!(pos, vec![5u32, 155]);
     assert_eq!(val, vec![0.0f32, 1.0]);
 
     // ...and that is the true depth, not an artefact
@@ -275,7 +275,7 @@ fn coincident_start_and_end_emits_no_breakpoint() {
     let q = SingleEndParams::directional(50, 0, 1000, 1.0);
     let u = pileup_from_positions(C, &[5, 60, 115], &[], &q);
     let (pos, val) = u.to_breakpoints();
-    assert_eq!(pos, vec![5u64, 55, 60, 110, 115, 165]);
+    assert_eq!(pos, vec![5u32, 55, 60, 110, 115, 165]);
     assert_eq!(val, vec![0.0f32, 1.0, 0.0, 1.0, 0.0, 1.0]);
 
     // and partially overlapping fragments stack; the middle junction at 55 is
@@ -285,7 +285,7 @@ fn coincident_start_and_end_emits_no_breakpoint() {
     let w = pileup_from_positions(C, &[5, 30, 55], &[], &r);
     let (pos, val) = w.to_breakpoints();
     // [5,30)=1, [30,80)=2, [80,105)=1
-    assert_eq!(pos, vec![5u64, 30, 80, 105]);
+    assert_eq!(pos, vec![5u32, 30, 80, 105]);
     assert_eq!(val, vec![0.0f32, 1.0, 2.0, 1.0]);
     assert_eq!(w.value_at_or(60, -1.0), 2.0);
 }

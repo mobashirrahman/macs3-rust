@@ -90,9 +90,7 @@ impl FragmentTrack {
         // time -- the target had never been built, because the manifest pointed at a
         // file that did not exist.
         self.length = self.length.wrapping_add(
-            frag.end
-                .saturating_sub(frag.start)
-                .wrapping_mul(u64::from(count)),
+            u64::from(frag.end.saturating_sub(frag.start)).wrapping_mul(u64::from(count)),
         );
         self.total += 1;
     }
@@ -318,7 +316,7 @@ pub fn filter_frag_dup(track: &mut FragmentTrack, maxnum: i64) -> Result<u64> {
             if f == frags[read - 1] {
                 run += 1;
                 if run > cap.max(1) {
-                    removed_len += f.end.saturating_sub(f.start);
+                    removed_len += u64::from(f.end.saturating_sub(f.start));
                     continue;
                 }
             } else {
@@ -343,7 +341,7 @@ pub fn filter_frag_dup(track: &mut FragmentTrack, maxnum: i64) -> Result<u64> {
 mod tests {
     use super::*;
 
-    fn f(start: u64, end: u64) -> Fragment {
+    fn f(start: u32, end: u32) -> Fragment {
         Fragment { start, end }
     }
 
@@ -443,19 +441,20 @@ mod tests {
     #[test]
     fn a_huge_count_on_a_long_fragment_does_not_overflow() {
         let mut b = FragTrackBuilder::new();
-        // `push_with_count` clamps to u16::MAX, and 1.8e19 * 65535 ~ 1.2e24 is well past
-        // u64::MAX -- so this overflows before the clamp even matters.
+        // `push_with_count` clamps to u16::MAX, and u32::MAX * 65535 is past u64::MAX's
+        // 2^64 by two orders of magnitude only when the fragment length is near 2^32;
+        // with `Coord = u32` the widest possible fragment is u32::MAX, which is the
+        // value used here -- the accumulation is still exact in u64, so this pins the
+        // no-panic contract rather than the old wrapping one.
         let count = u32::from(u16::MAX);
-        b.push_with_count(b"chr1", 0, 18_000_000_000_000_000_000u64, count);
+        let long = u32::MAX;
+        b.push_with_count(b"chr1", 0, long, count);
         b.finalize();
         let t = b.build();
         // Wrapping is the documented behaviour (it is what the C original does); what
         // matters is that asking for the average length does not panic.
         let _ = t.average_template_length();
         assert_eq!(t.total(), 1);
-        assert_eq!(
-            t.length(),
-            18_000_000_000_000_000_000u64.wrapping_mul(u64::from(count))
-        );
+        assert_eq!(t.length(), u64::from(long).wrapping_mul(u64::from(count)));
     }
 }

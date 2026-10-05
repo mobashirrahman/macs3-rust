@@ -51,7 +51,7 @@ fn read_peaks(path: &Path) -> Result<Vec<BedPeak>> {
     Ok(out)
 }
 
-fn counter(pos: &[u64], lo: i64, hi: i64) -> HashMap<i64, i64> {
+fn counter(pos: &[u32], lo: i64, hi: i64) -> HashMap<i64, i64> {
     let mut m: HashMap<i64, i64> = HashMap::new();
     for &p in pos {
         let p = p as i64;
@@ -63,7 +63,7 @@ fn counter(pos: &[u64], lo: i64, hi: i64) -> HashMap<i64, i64> {
 }
 
 /// `find_summit`: running WTD over the window, returning `(best_pos, best_val)`.
-fn find_summit(plus: &[u64], minus: &[u64], peak_start: i64, peak_end: i64, w: i64) -> (i64, f64) {
+fn find_summit(plus: &[u32], minus: &[u32], peak_start: i64, peak_end: i64, w: i64) -> (i64, f64) {
     // The counters hold tags in `[peak_start, peak_end]` only -- the same window
     // upstream's `compute_region_tags_from_peaks` collects into `rt_plus`/`rt_minus`.
     // The `w`-expansion happens inside `sum_le`/`sum_ge`, not here. Counting
@@ -141,7 +141,7 @@ pub fn refinepeak(o: &Options) -> Result<()> {
     //
     // Upstream keeps the full arrays (`Counter(plus)` over everything) and filters
     // inside `left_sum`/`right_sum`, so this matches it exactly.
-    let mut by_chrom: HashMap<String, (Vec<u64>, Vec<u64>)> = HashMap::new();
+    let mut by_chrom: HashMap<String, (Vec<u32>, Vec<u32>)> = HashMap::new();
     for pk in &peaks {
         let Some(chrom) = track.genome().get(pk.chrom.as_bytes()) else {
             continue;

@@ -1364,13 +1364,13 @@ mod tests {
         track.push(11, 3.0);
         let sig = [&track; 4];
         // bins at 0, 10 and 20; the last is past the end of the track
-        let bins = vec![(chrom, 0u64, 1i32), (chrom, 10, 1), (chrom, 20, 1)];
+        let bins = vec![(chrom, 0u32, 1i32), (chrom, 10, 1), (chrom, 20, 1)];
         let got = extract_value_hmmr(&sig, &bins);
         // bin 0 -> run ending at 8 (value 1.0); bin 10 -> run ending at 10 (value 2.0);
         // bin 20 has no run with end >= 20, so the walk stops and emits nothing.
         assert_eq!(
             got.iter().map(|b| (b.pos, b.values[0])).collect::<Vec<_>>(),
-            vec![(0u64, 1.0f32), (10u64, 2.0f32)]
+            vec![(0u32, 1.0f32), (10u32, 2.0f32)]
         );
     }
 
@@ -1378,7 +1378,7 @@ mod tests {
     #[test]
     fn states_path_starts_a_new_run_on_a_new_chromosome() {
         let model = model();
-        let mk = |end: u64, probs: [f64; 3]| ProbRow { end, probs };
+        let mk = |end: u32, probs: [f64; 3]| ProbRow { end, probs };
         let rows = vec![
             (ChromId(7), mk(1000, [0.9, 0.05, 0.05])),
             // next chromosome starts at 0 with the same winning label
@@ -1408,7 +1408,7 @@ mod tests {
     #[test]
     fn pileup_emits_leading_zero_run() {
         // the mapping is keyed by fragment length R - L, which is 100 here
-        let mapping: BTreeMap<Coord, f32> = [(100, 1.0f32)].into_iter().collect();
+        let mapping: BTreeMap<Coord, f32> = [(100u32, 1.0f32)].into_iter().collect();
         let runs = pileup_from_lr_hmmratac(&[(100, 200)], &mapping);
         assert_eq!(runs, vec![(100, 0.0), (200, 1.0)]);
     }
@@ -1479,9 +1479,9 @@ mod tests {
         // 10 and closes it at 110. The leading `[0, 10)` zero-depth run is emitted
         // too, because `pre_z` starts at -10000 (F230) rather than 0 -- that is
         // exactly what makes upstream's digested tracks begin at position 0.
-        let wm: BTreeMap<Coord, f32> = [(100u64, 1.0f32)].into_iter().collect();
+        let wm: BTreeMap<Coord, f32> = [(100u32, 1.0f32)].into_iter().collect();
         let d = pileup_from_lr_hmmratac(&[(10, 110)], &wm);
-        assert_eq!(d, vec![(10u64, 0.0f32), (110u64, 1.0f32)]);
+        assert_eq!(d, vec![(10u32, 0.0f32), (110u32, 1.0f32)]);
     }
 
     /// F204: `pileup_PV` merges consecutive runs of equal value instead of emitting one
@@ -1490,23 +1490,23 @@ mod tests {
     /// contain `chr1 510 1680 0.00000` -- 170 bins as one line.
     #[test]
     fn the_hmm_pileup_merges_adjacent_equal_runs() {
-        let wm: BTreeMap<Coord, f32> = [(100u64, 1.0f32)].into_iter().collect();
+        let wm: BTreeMap<Coord, f32> = [(100u32, 1.0f32)].into_iter().collect();
 
         // Abutting fragments: 1.0 over [10,110) and 1.0 over [110,210) have the *same*
         // value, so `pileup_PV` merges them into one run instead of emitting two.
         // Each expectation carries the leading zero-depth run (F230).
         let d = pileup_from_lr_hmmratac(&[(10, 110), (110, 210)], &wm);
-        assert_eq!(d, vec![(10u64, 0.0f32), (210u64, 1.0f32)]);
+        assert_eq!(d, vec![(10u32, 0.0f32), (210u32, 1.0f32)]);
 
         // Overlapping fragments give depth 2.0 in the middle, so three runs.
         let d = pileup_from_lr_hmmratac(&[(10, 110), (50, 150)], &wm);
         assert_eq!(
             d,
             vec![
-                (10u64, 0.0f32),
-                (50u64, 1.0f32),
-                (110u64, 2.0f32),
-                (150u64, 1.0f32)
+                (10u32, 0.0f32),
+                (50u32, 1.0f32),
+                (110u32, 2.0f32),
+                (150u32, 1.0f32)
             ]
         );
     }
@@ -1516,15 +1516,15 @@ mod tests {
     /// hundreds of bins. Dropping them would splice unrelated runs together.
     #[test]
     fn the_hmm_pileup_keeps_zero_depth_gaps() {
-        let wm: BTreeMap<Coord, f32> = [(100u64, 1.0f32)].into_iter().collect();
+        let wm: BTreeMap<Coord, f32> = [(100u32, 1.0f32)].into_iter().collect();
         let d = pileup_from_lr_hmmratac(&[(10, 110), (200, 300)], &wm);
         assert_eq!(
             d,
             vec![
-                (10u64, 0.0f32),
-                (110u64, 1.0f32),
-                (200u64, 0.0f32),
-                (300u64, 1.0f32)
+                (10u32, 0.0f32),
+                (110u32, 1.0f32),
+                (200u32, 0.0f32),
+                (300u32, 1.0f32)
             ]
         );
     }
@@ -1537,7 +1537,7 @@ mod tests {
     fn the_hmm_pileup_of_an_unweighted_fragment_is_one_zero_run() {
         let wm: BTreeMap<Coord, f32> = BTreeMap::new();
         let d = pileup_from_lr_hmmratac(&[(10, 110)], &wm);
-        assert_eq!(d, vec![(110u64, 0.0f32)]);
+        assert_eq!(d, vec![(110u32, 0.0f32)]);
     }
 
     #[test]

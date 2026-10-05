@@ -255,7 +255,7 @@ impl ScoreTrack2 {
                 let v = pscore_interval(e.treat[i], e.ctrl[i], pc);
                 score.push(v);
                 let len = e.pos[i] - prev_pos;
-                *self.pvalue_stat.entry(macs_score_key(v)).or_insert(0) += len;
+                *self.pvalue_stat.entry(macs_score_key(v)).or_insert(0) += u64::from(len);
                 prev_pos = e.pos[i];
             }
             self.data.get_mut(&chrom).expect("present").score = score;
@@ -970,7 +970,7 @@ impl TwoScores {
         let mut sum_v: f64 = 0.0;
         for &(s, e, v) in group {
             sum_v += f64::from(v) * (e - s) as f64;
-            ln += e - s;
+            ln += u64::from(e - s);
         }
         Some(DiffPeak {
             chrom,

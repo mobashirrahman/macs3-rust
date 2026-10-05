@@ -289,7 +289,7 @@ mod tests {
     use super::*;
     use macs_core::Strand;
 
-    fn track(rows: &[(&[u8], u64, Strand)]) -> SingleEndTrack {
+    fn track(rows: &[(&[u8], u32, Strand)]) -> SingleEndTrack {
         let mut b = SingleEndTrackBuilder::new();
         for (c, p, st) in rows {
             b.push(c, *p, *st);

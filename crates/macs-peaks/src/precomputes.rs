@@ -191,7 +191,7 @@ pub fn chromosome_cutoff_stats(
             } else {
                 let len = region[region.len() - 1].1 - region[0].0;
                 if len >= min_length {
-                    total_l += len;
+                    total_l += u64::from(len);
                     total_p += 1;
                 }
                 region = vec![(starts[i], ends[i])];
@@ -200,7 +200,7 @@ pub fn chromosome_cutoff_stats(
         }
         let len = region[region.len() - 1].1 - region[0].0;
         if len >= min_length {
-            total_l += len;
+            total_l += u64::from(len);
             total_p += 1;
         }
 
@@ -342,7 +342,7 @@ mod tests {
         // a *Python* float scalar is weak and would be cast down to f32, giving
         // equality and `False`. Upstream holds numpy.float64, so the run is
         // counted. Narrowing the cutoff to f32 would silently drop it.
-        let pos = vec![0u64, 1000, 2000];
+        let pos = vec![0u32, 1000, 2000];
         let score = vec![0.3f32, 0.3, 0.3];
         assert!(
             f64::from(0.3f32) > 0.3,
@@ -359,7 +359,7 @@ mod tests {
     #[test]
     fn a_score_exactly_equal_in_f64_does_not_clear_the_cutoff() {
         // the comparison really is strict once both sides are the same type
-        let pos = vec![0u64, 1000, 2000];
+        let pos = vec![0u32, 1000, 2000];
         let score = vec![9.9f32, 9.9, 9.9]; // f32(9.9) widens to 9.899999618...
         let s = chromosome_cutoff_stats(&pos, &score, 50, 200);
         assert_eq!(
@@ -372,7 +372,7 @@ mod tests {
     #[test]
     fn a_single_above_cutoff_region_is_counted_once() {
         // one run well above 0.3, well over min_length
-        let pos = vec![0u64, 500, 1000, 1500, 2000, 2500];
+        let pos = vec![0u32, 500, 1000, 1500, 2000, 2500];
         let score = vec![0.0f32, 0.0, 5.0, 0.0, 0.0, 0.0];
         let s = chromosome_cutoff_stats(&pos, &score, 50, 200);
         assert_eq!(s.npeaks_at(0.3), 1);
@@ -385,7 +385,7 @@ mod tests {
 
     #[test]
     fn regions_below_min_length_are_not_counted() {
-        let pos = vec![0u64, 100];
+        let pos = vec![0u32, 100];
         let score = vec![0.0f32, 5.0];
         let s = chromosome_cutoff_stats(&pos, &score, 50, 200);
         assert_eq!(s.npeaks_at(0.3), 0, "100 < 200");
@@ -395,7 +395,7 @@ mod tests {
     #[test]
     fn nearby_runs_merge_and_far_runs_split() {
         // two runs 40bp apart (merge, max_gap 50) and one 400bp away (split)
-        let pos = vec![0u64, 200, 400, 1200, 1400];
+        let pos = vec![0u32, 200, 400, 1200, 1400];
         let score = vec![0.0f32, 5.0, 5.0, 0.0, 5.0];
         let s = chromosome_cutoff_stats(&pos, &score, 50, 200);
         assert_eq!(
@@ -441,9 +441,9 @@ mod tests {
 
     #[test]
     fn pre_computes_aggregates_histogram_and_stats() {
-        let a_pos = [0u64, 500, 1000];
+        let a_pos = [0u32, 500, 1000];
         let a_score = [0.0f32, 5.0, 0.0];
-        let b_pos = [0u64, 400, 800];
+        let b_pos = [0u32, 400, 800];
         let b_score = [0.0f32, 6.0, 0.0];
         let (hist, stats) = pre_computes(&[(&a_pos, &a_score), (&b_pos, &b_score)], 50, 200);
         assert_eq!(hist.total(), 1000 + 800);

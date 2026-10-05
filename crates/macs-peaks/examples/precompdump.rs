@@ -4,7 +4,7 @@ use macs_peaks::{chromosome_cutoff_stats, cutoff_ladder};
 
 fn main() {
     // (name, pos, score) triples exercising the merge/split paths
-    let cases: Vec<(&str, Vec<u64>, Vec<f32>)> = vec![
+    let cases: Vec<(&str, Vec<u32>, Vec<f32>)> = vec![
         ("single_run", vec![0, 500], vec![0.0, 5.0]),
         ("two_merged", vec![0, 200, 400], vec![0.0, 5.0, 5.0]),
         (

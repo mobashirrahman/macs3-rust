@@ -293,7 +293,7 @@ pub fn close_peak_for_broad_region(
         sum_pileup += c.treat as f64 * l as f64;
         sum_q += q as f64 * l as f64;
         sum_fc += fc * l as f64;
-        total_len += l;
+        total_len += u64::from(l);
     }
     if total_len == 0 {
         return Err(Reject::NoSummit);
@@ -312,7 +312,7 @@ pub fn close_peak_for_broad_region(
             macs_score::pscore(sc, c.treat as u32, c.ctrl)
         };
         sum_p += p as f64 * l as f64;
-        total += l;
+        total += u64::from(l);
     }
     let mean_p = (sum_p / total.max(1) as f64) as f32;
     let _ = scores;

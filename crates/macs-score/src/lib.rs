@@ -75,5 +75,5 @@ pub fn score_from_key(k: u32) -> f32 {
 /// `docs/upstream-findings.md`): a run of length `n` contributes `n`.
 #[inline]
 pub fn run_length(start: Coord, end: Coord) -> u64 {
-    end.saturating_sub(start)
+    end.saturating_sub(start).into()
 }

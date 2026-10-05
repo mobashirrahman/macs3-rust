@@ -61,7 +61,7 @@ fn load_bedpe(path: &Path) -> Result<(macs_track::FragmentTrack, f64)> {
         if s < 0 || e < s {
             continue;
         }
-        b.push(t[0], s as u64, e as u64);
+        b.push(t[0], s as u32, e as u32);
     }
     b.finalize();
     let mut t = b.build();
@@ -97,7 +97,7 @@ fn load_bed(path: &Path) -> Result<SingleEndTrack> {
         if rec.pos < 0 || rec.chrom.is_empty() {
             continue;
         }
-        b.push(&rec.chrom, rec.pos as u64, rec.strand);
+        b.push(&rec.chrom, rec.pos as u32, rec.strand);
     }
     b.finalize();
     let mut t = b.build();
@@ -341,7 +341,7 @@ fn run() -> Result<std::process::ExitCode> {
         None
     };
 
-    let rlength = u64::MAX / 2;
+    let rlength: u32 = u32::MAX / 2;
     let t_total = treat.total() as f64;
     let c_total = ctrl.as_ref().map(|c| c.total()).unwrap_or(0) as f64;
     let treat_sum = t_total * a.extsize as f64;
@@ -834,7 +834,7 @@ fn finish(
         if let Ok(out) = std::env::var("CALLPEAK_TREATDUMP") {
             use std::fmt::Write as _;
             let mut t = String::new();
-            let mut prev = 0u64;
+            let mut prev = 0u32;
             for r in s.treat.runs() {
                 let _ = writeln!(t, "{}\t{}\t{}", prev, r.end, r.value);
                 prev = r.end;
@@ -959,7 +959,7 @@ fn finish(
         // the steps where only the control pointer advanced, which changes which
         // positions clear the cutoff. Reinstating it needs the score array derived
         // from the emitted triples rather than sampled from a separate track.
-        let mut lo = 0u64;
+        let mut lo = 0u32;
         for &p in ends.iter() {
             pos.push(p);
             qpos.push(containing(q, lo)); // F84: same end-indexed rule as treat/ctrl

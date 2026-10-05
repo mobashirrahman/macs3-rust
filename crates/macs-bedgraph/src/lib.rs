@@ -425,8 +425,8 @@ impl BedGraph {
             let _ = chrom;
             let mut pre: Coord = 0;
             for r in t.runs() {
-                *stat.entry(r.value.to_bits()).or_insert(0) += r.end.saturating_sub(pre);
-                total += r.end.saturating_sub(pre);
+                *stat.entry(r.value.to_bits()).or_insert(0) += u64::from(r.end.saturating_sub(pre));
+                total += u64::from(r.end.saturating_sub(pre));
                 pre = r.end;
             }
         }
@@ -519,7 +519,7 @@ impl BedGraph {
         }
         for (chrom, t) in self.iter_sorted() {
             let cname = String::from_utf8_lossy(self.genome.name(chrom));
-            let mut pre = 0u64;
+            let mut pre = 0u32;
             for r in t.runs() {
                 out.push_str(&format!("{}\t{}\t{}\t{:.5}\n", cname, pre, r.end, r.value));
                 pre = r.end;

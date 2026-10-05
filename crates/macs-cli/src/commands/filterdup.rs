@@ -114,13 +114,13 @@ pub fn filterdup(o: &Options) -> Result<()> {
     for chrom in pos.chroms_sorted() {
         let name = String::from_utf8_lossy(track.genome().name(chrom));
         for &p in pos.strand(chrom, Strand::Plus) {
-            out.push_str(&format!("{name}\t{p}\t{}\t.\t.\t+\n", p + fw as u64));
+            out.push_str(&format!("{name}\t{p}\t{}\t.\t.\t+\n", p + fw as u32));
         }
         for &p in pos.strand(chrom, Strand::Minus) {
             // Upstream writes negative starts verbatim (`chrIV -11 39`); it does
             // not clamp at zero. `saturating_sub` hid every minus-strand tag within
             // `fw` of the contig start behind a `0`, diverging on real data.
-            let lo = p as i64 - fw;
+            let lo = i64::from(p) - fw;
             out.push_str(&format!("{name}\t{lo}\t{p}\t.\t.\t-\n"));
         }
     }
@@ -146,7 +146,7 @@ pub fn filterdup(o: &Options) -> Result<()> {
 fn filterdup_pe(o: &crate::Options, paths: &[String], format: &str) -> Result<()> {
     use std::collections::BTreeMap;
 
-    let mut frags: BTreeMap<Vec<u8>, Vec<(u64, u64)>> = BTreeMap::new();
+    let mut frags: BTreeMap<Vec<u8>, Vec<(u32, u32)>> = BTreeMap::new();
     let track = super::input::load_fragment_files(paths, format)?;
     for chrom in track.chroms() {
         let name = track.genome().name(chrom).to_vec();
@@ -212,7 +212,7 @@ fn filterdup_pe(o: &crate::Options, paths: &[String], format: &str) -> Result<()
     chroms.sort_by(|a, b| track.genome().name(*a).cmp(track.genome().name(*b)));
     for chrom in chroms {
         let name = String::from_utf8_lossy(track.genome().name(chrom));
-        let mut spans: Vec<(u64, u64)> = track
+        let mut spans: Vec<(u32, u32)> = track
             .frags(chrom)
             .iter()
             .map(|f| (f.start, f.end))

@@ -26,7 +26,7 @@ use proptest::prelude::*;
 /// read hanging off the left edge covers `[0, x + d - d/2)`, i.e. *less* than `d`.
 /// Deriving `end` from an already-clamped `start` (the tempting shortcut) silently
 /// over-counts exactly those edge reads, which is the off-by-one this guards.
-fn naive_se(plus: &[u64], minus: &[u64], d: i64, rlength: i64) -> Vec<(i64, i64)> {
+fn naive_se(plus: &[u32], minus: &[u32], d: i64, rlength: i64) -> Vec<(i64, i64)> {
     let mut depth = vec![0i64; rlength as usize];
     let clamp = |v: i64| v.clamp(0, rlength);
     for &x in plus.iter().chain(minus.iter()) {
@@ -45,7 +45,7 @@ fn naive_se(plus: &[u64], minus: &[u64], d: i64, rlength: i64) -> Vec<(i64, i64)
 }
 
 fn params(d: i64, rlength: i64) -> SingleEndParams {
-    SingleEndParams::centred(d, rlength as u64, 1.0)
+    SingleEndParams::centred(d, rlength as u32, 1.0)
 }
 
 proptest! {
@@ -60,8 +60,8 @@ proptest! {
     fn sweep_equals_brute_force(
         d in 1i64..40,
         rlength in 200i64..2000,
-        plus in prop::collection::vec(0u64..2000, 0..60),
-        minus in prop::collection::vec(0u64..2000, 0..60),
+        plus in prop::collection::vec(0u32..2000, 0..60),
+        minus in prop::collection::vec(0u32..2000, 0..60),
     ) {
         let rlength = rlength.max(*plus.iter().max().unwrap_or(&0) as i64 + 1)
             .max(*minus.iter().max().unwrap_or(&0) as i64 + 1);
@@ -74,7 +74,7 @@ proptest! {
         );
         // compare at every position, not just the breakpoints
         for (x, want) in &expect {
-            prop_assert_eq!(t.value_at_or(*x as u64, 0.0) as i64, *want,
+            prop_assert_eq!(t.value_at_or(*x as u32, 0.0) as i64, *want,
                 "depth mismatch at {} for d={} rlength={}", x, d, rlength);
         }
     }
@@ -87,8 +87,8 @@ proptest! {
     fn integral_is_covered_bases(
         d in 1i64..40,
         rlength in 500i64..3000,
-        plus in prop::collection::vec(0u64..3000, 0..80),
-        minus in prop::collection::vec(0u64..3000, 0..80),
+        plus in prop::collection::vec(0u32..3000, 0..80),
+        minus in prop::collection::vec(0u32..3000, 0..80),
     ) {
         let rlength = rlength.max(*plus.iter().max().unwrap_or(&0) as i64 + 1)
             .max(*minus.iter().max().unwrap_or(&0) as i64 + 1);
@@ -113,7 +113,7 @@ proptest! {
         rlength in 300i64..1500,
         n in 0usize..200,
         shift in -60i64..60,
-        pos in prop::collection::vec(0u64..1500, 0..200),
+        pos in prop::collection::vec(0u32..1500, 0..200),
     ) {
         let n = n.min(pos.len());
         let reads = &pos[..n];
@@ -123,8 +123,8 @@ proptest! {
         let t = pileup_from_positions(ChromId(0), reads, &[], &p);
         let cap = n as f32;
         for x in 0..rlength.min(1500) {
-            prop_assert!(t.value_at_or(x as u64, 0.0) <= cap,
-                "depth {} > {} reads at {}", t.value_at_or(x as u64, 0.0), n, x);
+            prop_assert!(t.value_at_or(x as u32, 0.0) <= cap,
+                "depth {} > {} reads at {}", t.value_at_or(x as u32, 0.0), n, x);
         }
     }
 
@@ -136,8 +136,8 @@ proptest! {
     fn unit_weights_match_unweighted(
         d in 1i64..40,
         rlength in 500i64..2000,
-        plus in prop::collection::vec(0u64..2000, 0..60),
-        minus in prop::collection::vec(0u64..2000, 0..60),
+        plus in prop::collection::vec(0u32..2000, 0..60),
+        minus in prop::collection::vec(0u32..2000, 0..60),
     ) {
         let rlength = rlength.max(*plus.iter().max().unwrap_or(&0) as i64 + 1)
             .max(*minus.iter().max().unwrap_or(&0) as i64 + 1);
@@ -148,7 +148,7 @@ proptest! {
         );
         prop_assert_eq!(a.runs().len(), b.runs().len());
         for x in 0..rlength {
-            prop_assert_eq!(a.value_at_or(x as u64, 0.0), b.value_at_or(x as u64, 0.0),
+            prop_assert_eq!(a.value_at_or(x as u32, 0.0), b.value_at_or(x as u32, 0.0),
                 "unit weight diverged at {}", x);
         }
     }
@@ -156,8 +156,8 @@ proptest! {
     /// Scaling is linear in `scale_factor`, before the baseline floor.
     #[test]
     fn scaling_is_linear(
-        rlength in 500u64..2000,
-        plus in prop::collection::vec(0u64..2000, 1..50),
+        rlength in 500u32..2000,
+        plus in prop::collection::vec(0u32..2000, 1..50),
     ) {
         let mut one = params(200, rlength as i64);
         one.scale_factor = 1.0;
@@ -174,7 +174,7 @@ proptest! {
     fn sweep_agrees_with_naive_quick_pileup(
         ext in 1i64..40,
         rlength in 500i64..2000,
-        plus in prop::collection::vec(0u64..2000, 0..40),
+        plus in prop::collection::vec(0u32..2000, 0..40),
     ) {
         let rlength = rlength.max(*plus.iter().max().unwrap_or(&0) as i64 + 1);
         // `naive_quick_pileup` uses the symmetric window `[x - ext, x + ext)`, so
@@ -188,9 +188,9 @@ proptest! {
         let fast = pileup_from_positions(ChromId(0), &plus, &[], &p);
         let mut all = plus.clone();
         all.sort_unstable();
-        let slow = naive_quick_pileup(ChromId(0), &all, ext, rlength as u64);
+        let slow = naive_quick_pileup(ChromId(0), &all, ext, rlength as u32);
         for x in 0..rlength {
-            prop_assert_eq!(fast.value_at_or(x as u64, 0.0), slow.value_at_or(x as u64, 0.0),
+            prop_assert_eq!(fast.value_at_or(x as u32, 0.0), slow.value_at_or(x as u32, 0.0),
                 "sweep vs naive at {} (ext={})", x, ext);
         }
     }
@@ -203,12 +203,12 @@ proptest! {
         rlength in 800i64..2000,
         lo in 0i64..2000,
         hi in 0i64..2000,
-        plus in prop::collection::vec(0u64..2000, 0..60),
+        plus in prop::collection::vec(0u32..2000, 0..60),
     ) {
         let rlength = rlength.max(*plus.iter().max().unwrap_or(&0) as i64 + 1);
         let t = pileup_from_positions(ChromId(0), &plus, &[], &params(d, rlength));
         let (lo, hi) = (lo.min(hi), lo.max(hi));
-        let slice = restrict(&t, Interval::new(lo as u64, hi as u64));
+        let slice = restrict(&t, Interval::new(lo as u32, hi as u32));
         let expect = naive_se(&plus, &[], d, rlength).iter()
             .filter(|(x, _)| *x >= lo && *x < hi)
             .map(|(_, v)| *v as f64).sum::<f64>();
@@ -226,7 +226,7 @@ proptest! {
     fn pileup_is_order_independent(
         d in 1i64..40,
         rlength in 800i64..2000,
-        pos in prop::collection::vec(0u64..2000, 0..80),
+        pos in prop::collection::vec(0u32..2000, 0..80),
     ) {
         let mut shuffled = pos.clone();
         // deterministic shuffle so a failure is reproducible from the seed
@@ -238,7 +238,7 @@ proptest! {
         let b = pileup_from_positions(ChromId(0), &shuffled, &[], &params(d, rlength));
         prop_assert_eq!(a.integral(), b.integral());
         for x in 0..rlength {
-            prop_assert_eq!(a.value_at_or(x as u64, 0.0), b.value_at_or(x as u64, 0.0));
+            prop_assert_eq!(a.value_at_or(x as u32, 0.0), b.value_at_or(x as u32, 0.0));
         }
     }
 
@@ -253,9 +253,9 @@ proptest! {
     fn non_centred_minus_is_the_mirror(
         five in 0i64..30,
         three in 1i64..60,
-        rlength in 500u64..2000,
-        plus in prop::collection::vec(0u64..2000, 0..30),
-        minus in prop::collection::vec(0u64..2000, 0..30),
+        rlength in 500u32..2000,
+        plus in prop::collection::vec(0u32..2000, 0..30),
+        minus in prop::collection::vec(0u32..2000, 0..30),
     ) {
         let mut mirrored = SingleEndParams {
             five_shift: five,
@@ -272,9 +272,9 @@ proptest! {
 
         // mirror: a minus read at `x` covers `[x - three, x + five)`. The plus window
         // is `[y - five, y + three)`, so `y = x + five - three` makes them identical.
-        let shifted: Vec<u64> = minus
+        let shifted: Vec<u32> = minus
             .iter()
-            .map(|&x| (x as i64 + five - three).max(0) as u64)
+            .map(|&x| (x as i64 + five - three).max(0) as u32)
             .collect();
         let m = pileup_from_positions(ChromId(0), &[], &minus, &mirrored);
         let sh = pileup_from_positions(ChromId(0), &shifted, &[], &mirrored);
@@ -282,7 +282,7 @@ proptest! {
         // applied per endpoint, so a read that hangs off the left edge covers less
         // than its window and no shift can reproduce that. Compare the interior,
         // which is where every real peak lives.
-        let margin = (five + three) as u64;
+        let margin = (five + three) as u32;
         for x in margin..rlength {
             prop_assert_eq!(m.value_at_or(x, 0.0), sh.value_at_or(x, 0.0),
                 "minus window is not the plus mirror at {}", x);
@@ -306,7 +306,7 @@ proptest! {
     #[test]
     fn empty_input_is_empty_track(
         d in 1i64..200,
-        rlength in 1u64..100_000,
+        rlength in 1u32..100_000,
     ) {
         let t: SignalTrack<f32> =
             pileup_from_positions(ChromId(0), &[], &[], &params(d, rlength as i64));

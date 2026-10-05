@@ -51,7 +51,7 @@ impl Interval {
     /// Number of bases covered. Saturating, so a malformed input cannot wrap.
     #[inline]
     pub fn len(&self) -> Len {
-        self.end.saturating_sub(self.start)
+        self.end.saturating_sub(self.start).into()
     }
 
     /// True when the interval covers no base.
@@ -83,7 +83,9 @@ impl Interval {
     /// Length of the intersection, zero if disjoint.
     #[inline]
     pub fn overlap_len(&self, other: &Interval) -> Len {
-        min(self.end, other.end).saturating_sub(max(self.start, other.start))
+        min(self.end, other.end)
+            .saturating_sub(max(self.start, other.start))
+            .into()
     }
 
     /// Smallest interval containing both.
@@ -202,7 +204,7 @@ mod tests {
         assert_eq!(merge_intervals(&[a, touching], 0).len(), 1);
 
         // The three-way boundary test required by gate G6.
-        for (g, expect_merged) in [(49u64, true), (50, true), (51, false)] {
+        for (g, expect_merged) in [(49u32, true), (50, true), (51, false)] {
             let ivs = [a, Interval::new(100 + g, 200)];
             let merged = merge_intervals(&ivs, 50);
             assert_eq!(merged.len() == 1, expect_merged, "gap={g}");
@@ -222,7 +224,7 @@ mod tests {
 
     #[test]
     fn pad_right_saturates() {
-        let iv = Interval::new(u64::MAX - 2, u64::MAX);
-        assert_eq!(iv.pad_right(10).end(), u64::MAX);
+        let iv = Interval::new(u32::MAX - 2, u32::MAX);
+        assert_eq!(iv.pad_right(10).end(), u32::MAX);
     }
 }

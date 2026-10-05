@@ -107,7 +107,7 @@ pub fn naive_quick_pileup(sorted_poss: &[Coord], extension: i64) -> (Vec<Coord>,
     if sorted_poss.is_empty() {
         return (Vec::new(), Vec::new());
     }
-    let e = extension.max(0) as u64;
+    let e = extension.max(0) as u32;
     let mut starts: Vec<Coord> = sorted_poss.iter().map(|&p| p.saturating_sub(e)).collect();
     let mut ends: Vec<Coord> = sorted_poss.iter().map(|&p| p + e).collect();
     starts.sort_unstable();
@@ -799,11 +799,11 @@ mod tests {
     fn synth(n: usize, d: i64) -> SingleEndTrack {
         let mut b = SingleEndTrackBuilder::new();
         for i in 0..n {
-            let c = (1000 + i * 1000) as u64;
-            for k in 0..12u64 {
+            let c = (1000 + i * 1000) as u32;
+            for k in 0..12u32 {
                 let p = c + (k * 7 % 80);
                 b.push(b"chr1", p, Strand::Plus);
-                b.push(b"chr1", p + d as u64, Strand::Minus);
+                b.push(b"chr1", (p as i64 + d) as u32, Strand::Minus);
             }
         }
         b.finalize();

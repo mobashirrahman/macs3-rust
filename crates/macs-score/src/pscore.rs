@@ -411,7 +411,7 @@ mod tests {
 
     const C: ChromId = ChromId(0);
 
-    fn const_track(runs: &[(u64, f32)], end: u64) -> SignalTrack<f32> {
+    fn const_track(runs: &[(u32, f32)], end: u32) -> SignalTrack<f32> {
         SignalTrack::from_runs(
             C,
             0,

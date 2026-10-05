@@ -323,8 +323,8 @@ mod tests {
         // 200 fragments near 200 (mono) and 200 near 400 (tri)
         let mut data = Vec::new();
         for i in 0..100 {
-            data.push(200 + (i % 7) as u64);
-            data.push(400 + (i % 11) as u64);
+            data.push(200 + (i % 7) as u32);
+            data.push(400 + (i % 11) as u32);
         }
         let p = EmParams {
             max_iter: 60,

@@ -347,7 +347,7 @@ mod tests {
         // The one-entry control sits at the treatment's *last* breakpoint, so the
         // merge walks the treatment to that point carrying lambda_bg throughout.
         // It does not collapse to a single entry.
-        let treat_pos = [10u64, 20, 30];
+        let treat_pos = [10u32, 20, 30];
         let treat_val = [1.0f32, 5.0, 2.0];
         let (cpos, cval) = nolambda_control(&treat_pos, 0.75);
         assert_eq!(cpos, vec![30], "control is anchored at the last breakpoint");
@@ -437,7 +437,7 @@ mod tests {
         use macs_core::ChromId;
         use macs_rle::Run;
         let mk = |vals: &[f32]| {
-            let ends: Vec<Coord> = (1..=vals.len() as u64 * 10).step_by(10).collect();
+            let ends: Vec<Coord> = (1..=vals.len() as u32 * 10).step_by(10).collect();
             let runs: Vec<Run<f32>> = ends
                 .iter()
                 .zip(vals)
@@ -457,7 +457,7 @@ mod tests {
     fn a_single_scale_passes_through() {
         use macs_core::ChromId;
         use macs_rle::Run;
-        let runs = vec![Run::new(10u64, 7.0f32), Run::new(20, 8.0)];
+        let runs = vec![Run::new(10u32, 7.0f32), Run::new(20, 8.0)];
         let a = SignalTrack::from_runs(ChromId(0), 0, 20, runs);
         let m = combine_control_scales(&[a]);
         assert_eq!(m.len(), 2);

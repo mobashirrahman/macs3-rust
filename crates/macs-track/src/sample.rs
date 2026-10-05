@@ -353,10 +353,10 @@ mod tests {
         // This byte-sorted-first chromosome rounds 1 * 0.5 to zero (ties-even)
         // and must not consume any MT19937 draws before chrA/chrB are sampled.
         builder.push_with_count(b"chr0", 0, 200, 1);
-        for (chrom, base) in [(b"chrB".as_slice(), 0u64), (b"chrA".as_slice(), 1000u64)] {
+        for (chrom, base) in [(b"chrB".as_slice(), 0u32), (b"chrA".as_slice(), 1000u32)] {
             for (index, count) in [1u32, 2, 3, 4, 5, 6].into_iter().enumerate() {
-                let start = base + index as u64 * 1000;
-                let length = 100 + index as u64 * 10;
+                let start = base + index as u32 * 1000;
+                let length = 100 + index as u32 * 10;
                 builder.push_with_count(chrom, start, start + length, count);
             }
         }

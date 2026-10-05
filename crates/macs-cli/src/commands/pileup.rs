@@ -52,7 +52,7 @@ pub fn pileup(o: &Options) -> Result<()> {
     let both = o.flag("bothdirection");
     // upstream passes `extsize * 2` and symmetric shifts for --both-direction
     let d = if both { extsize * 2 } else { extsize };
-    let rlength = u64::MAX / 2;
+    let rlength: u32 = u32::MAX / 2;
     let baseline = 0.0f32;
 
     let ofile = o.get("outputfile").unwrap_or("pileup.bedGraph");
@@ -80,7 +80,7 @@ pub fn pileup(o: &Options) -> Result<()> {
             &params,
         );
         let name = String::from_utf8_lossy(track.genome().name(chrom));
-        let mut pre = 0u64;
+        let mut pre = 0u32;
         for r in t.runs() {
             let v = r.value.max(baseline);
             out.push_str(&format!("{name}\t{pre}\t{}\t{v:.5}\n", r.end));
@@ -101,7 +101,7 @@ fn pileup_pe(o: &Options, paths: &[String], format: &str) -> Result<()> {
     use std::collections::BTreeMap;
 
     // Collect (start, end) per chromosome name, preserving input order within each.
-    let mut frags: BTreeMap<Vec<u8>, Vec<(u64, u64)>> = BTreeMap::new();
+    let mut frags: BTreeMap<Vec<u8>, Vec<(u32, u32)>> = BTreeMap::new();
     let track = super::input::load_fragment_files(paths, format)?;
     for chrom in track.chroms() {
         let name = track.genome().name(chrom).to_vec();
@@ -129,11 +129,11 @@ fn pileup_pe(o: &Options, paths: &[String], format: &str) -> Result<()> {
             // Use a dummy id; the track is only read for its runs, never interned.
             macs_core::ChromId(0),
             spans,
-            u64::MAX / 2,
+            u32::MAX / 2,
             1.0,
             0.0,
         );
-        let mut pre = 0u64;
+        let mut pre = 0u32;
         for r in t.runs() {
             out.push_str(&format!("{cname}\t{pre}\t{}\t{:.5}\n", r.end, r.value));
             pre = r.end;
@@ -174,7 +174,7 @@ fn pileup_frag(o: &Options, paths: &[String]) -> Result<()> {
     };
     let max_count = o.int("maxcount").unwrap_or(0).max(0) as u32;
 
-    let mut frags: BTreeMap<Vec<u8>, Vec<(u64, u64, u32)>> = BTreeMap::new();
+    let mut frags: BTreeMap<Vec<u8>, Vec<(u32, u32, u32)>> = BTreeMap::new();
     for path in paths {
         use std::io::BufRead;
         let mut r = std::io::BufReader::new(macs_io::open_maybe_gzip(Path::new(path))?);
@@ -204,8 +204,8 @@ fn pileup_frag(o: &Options, paths: &[String]) -> Result<()> {
                 continue;
             }
             frags.entry(rec.chrom.clone()).or_default().push((
-                rec.left as u64,
-                rec.right as u64,
+                rec.left as u32,
+                rec.right as u32,
                 count,
             ));
         }
@@ -217,16 +217,16 @@ fn pileup_frag(o: &Options, paths: &[String]) -> Result<()> {
     let mut out = String::new();
     for (name, spans) in &frags {
         let cname = String::from_utf8_lossy(name);
-        let weighted: Vec<(u64, u64, f32)> =
+        let weighted: Vec<(u32, u32, f32)> =
             spans.iter().map(|(s, e, c)| (*s, *e, *c as f32)).collect();
         let t = macs_pileup::pileup_from_weighted_fragments(
             macs_core::ChromId(0),
             &weighted,
-            u64::MAX / 2,
+            u32::MAX / 2,
             1.0,
             0.0,
         );
-        let mut pre = 0u64;
+        let mut pre = 0u32;
         for r in t.runs() {
             out.push_str(&format!("{cname}\t{pre}\t{}\t{:.5}\n", r.end, r.value));
             pre = r.end;

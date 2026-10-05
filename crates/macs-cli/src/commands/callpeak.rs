@@ -253,6 +253,24 @@ pub fn rss_kb() -> u64 {
         .unwrap_or(0)
 }
 
+/// Peak resident set size (`VmHWM`), in kB.
+///
+/// `rss_kb` reads `statm`'s *current* RSS, which falls as memory is freed, so a
+/// trace built on it misses transients -- the `--SPMR` run showed 152 MB at every
+/// checkpoint while `/usr/bin/time` measured a 266 MB peak. `VmHWM` is monotonic,
+/// which is what a peak-memory trace needs.
+pub fn hwm_kb() -> u64 {
+    std::fs::read_to_string("/proc/self/status")
+        .ok()
+        .and_then(|t| {
+            t.lines()
+                .find_map(|l| l.strip_prefix("VmHWM:"))
+                .and_then(|v| v.split_whitespace().next())
+                .and_then(|v| v.parse::<u64>().ok())
+        })
+        .unwrap_or(0)
+}
+
 fn py_e(v: f64, prec: usize) -> String {
     let s = format!("{v:.*e}", prec);
     // Rust: "4.82e4" / "1e-9"; Python: "4.82e+04" / "1.00e-09"
@@ -396,7 +414,7 @@ fn load_se_text(path: &Path) -> Result<(SingleEndTrack, f64)> {
         if rec.pos < 0 || rec.chrom.is_empty() {
             continue;
         }
-        b.push(&rec.chrom, rec.pos as u64, rec.strand);
+        b.push(&rec.chrom, rec.pos as u32, rec.strand);
         // F192: `BEDParser.tlen_parse_line` is `atoi(col3) - atoi(col2)` -- a *signed*
         // difference between the two columns exactly as written, with no strand
         // handling at all -- and `GenericParser.d` only accumulates it
@@ -537,8 +555,8 @@ fn load_pe_text(
             n_rows += 1;
             b.push_with_count(
                 &rec.chrom,
-                rec.left as u64,
-                rec.right as u64,
+                rec.left as u32,
+                rec.right as u32,
                 rec.count.unwrap_or(1),
             );
         } else {
@@ -550,7 +568,7 @@ fn load_pe_text(
             }
             sum_len += (rec.right - rec.left) as f64;
             n_rows += 1;
-            b.push(&rec.chrom, rec.left as u64, rec.right as u64);
+            b.push(&rec.chrom, rec.left as u32, rec.right as u32);
         }
     }
     b.finalize();
@@ -938,7 +956,7 @@ pub fn run(o: &Options) -> Result<()> {
     let rss_trace = std::env::var("MACS3_RS_RSS_TRACE").is_ok();
     let t_start = std::time::Instant::now();
     if rss_trace {
-        eprintln!("rss[entry] {} kB", rss_kb());
+        eprintln!("rss[entry] {} kB", hwm_kb());
     }
     let mut sdump = StageDump::from_env();
     let sdump_on = sdump.enabled();
@@ -949,7 +967,11 @@ pub fn run(o: &Options) -> Result<()> {
     let mut lambda_ladder: Option<String> = None;
     let mut se_source: Option<SeSignalSource> = None;
     let mut pe_source: Option<PeSignalSource> = None;
-    let mut stream_bdg: Option<(tempfile::NamedTempFile, tempfile::NamedTempFile)> = None;
+    // `-B` bodies, one file pair per chromosome in chromosome order. Per-chromosome
+    // files let the parallel q-table pass stream text straight to disk instead of
+    // buffering a chromosome's string per worker; the final write concatenates them,
+    // which is the same byte sequence the single shared file held.
+    let mut stream_bdg: Option<Vec<(tempfile::NamedTempFile, tempfile::NamedTempFile)>> = None;
     let mut se_signal_spool: Option<tempfile::NamedTempFile> = None;
     let tempdir = callpeak_tempdir(o);
     let (signals, d, paired_boundaries, lambda_bg, coord_shift) = if is_pe {
@@ -983,7 +1005,7 @@ pub fn run(o: &Options) -> Result<()> {
                 sum += summary.d * summary.n as f64;
                 n += summary.n as f64;
                 for fr in &frags {
-                    b.push(&fr.chrom, u64::from(fr.start), u64::from(fr.start + fr.len));
+                    b.push(&fr.chrom, fr.start, fr.start + fr.len);
                 }
             }
             b.finalize();
@@ -1013,11 +1035,7 @@ pub fn run(o: &Options) -> Result<()> {
                     for path in &ctrl_paths {
                         let (frags, _) = macs_io::bam::bampe_fragments(Path::new(path))?;
                         for fr in &frags {
-                            cb.push(
-                                &fr.chrom,
-                                u64::from(fr.start),
-                                u64::from(fr.start) + u64::from(fr.len),
-                            );
+                            cb.push(&fr.chrom, fr.start, fr.start + fr.len);
                         }
                     }
                     cb.finalize();
@@ -1281,6 +1299,13 @@ pub fn run(o: &Options) -> Result<()> {
     } else {
         let infer_tsize = o.int("tsize").unwrap_or(0) == 0;
         let (mut treat, mean_treat) = pool_se(&treat_paths, &format, infer_tsize)?;
+        if rss_trace {
+            eprintln!(
+                "rss[after treat load] {} kB t={:.2}s",
+                hwm_kb(),
+                t_start.elapsed().as_secs_f64()
+            );
+        }
         if sdump_on {
             sdump_pre = Some(stagedump::pre_json_se(&treat));
         }
@@ -1345,6 +1370,13 @@ pub fn run(o: &Options) -> Result<()> {
             return Err(MacsError::InvalidParameter(
                 "--extsize is required when the model cannot be fitted".into(),
             ));
+        }
+        if rss_trace {
+            eprintln!(
+                "rss[before model] {} kB t={:.2}s",
+                hwm_kb(),
+                t_start.elapsed().as_secs_f64()
+            );
         }
         // #2 Build Peak Model (`callpeak_cmd.py:159-210`).
         //
@@ -1516,7 +1548,7 @@ pub fn run(o: &Options) -> Result<()> {
             stagedump::record_tracks(&mut sdump, &signal_tracks(&sigs), &[], 0);
             record_lambda_merged_stage(&mut sdump, &sigs, 0, spmr_denominator(o, t1, c1));
         }
-        (sigs, ext.trunc().max(1.0) as u64, false, lambda_bg, 0i64)
+        (sigs, ext.trunc().max(1.0) as u32, false, lambda_bg, 0i64)
     };
     let _ = names_of;
     stagedump::record_duplicates(
@@ -1552,14 +1584,8 @@ pub fn run(o: &Options) -> Result<()> {
         let mut cut_stats = macs_peaks::callpeak::CutoffStats::new();
         let spool = tempfile::NamedTempFile::new_in(&tempdir)?;
         let mut spool_writer = BufWriter::new(spool.as_file());
-        let mut stream_bodies = if o.flag("store_bdg") {
-            Some((
-                tempfile::NamedTempFile::new_in(&tempdir)?,
-                tempfile::NamedTempFile::new_in(&tempdir)?,
-            ))
-        } else {
-            None
-        };
+        let mut stream_body_files: Vec<(tempfile::NamedTempFile, tempfile::NamedTempFile)> =
+            Vec::new();
         let denominator: f64 = if o.flag("do_SPMR") {
             if t1 as f64 <= c1 as f64 * 2.0 {
                 t1 as f64 / 1e6
@@ -1584,7 +1610,7 @@ pub fn run(o: &Options) -> Result<()> {
         // order, and the histogram merge and cutoff accumulation stay serial in
         // chromosome order. The histogram buckets are `i64`, so even a reordered
         // merge would be exact.
-        const CHUNK: usize = 3;
+        const CHUNK: usize = 2;
         for names in source.names.chunks(CHUNK) {
             let prepared: Vec<Option<PreparedChrom>> = {
                 use rayon::prelude::*;
@@ -1593,37 +1619,70 @@ pub fn run(o: &Options) -> Result<()> {
                     .map(|name_bytes| {
                         let signal = source.chromosome(name_bytes)?;
                         let mut cache = PScoreCache::new();
-                        let ptrack = macs_peaks::callpeak::se_pscore_track(&signal, &mut cache);
-                        let mut hist = macs_score::PScoreHistogram::new();
-                        hist.add_track_from(&ptrack, 0);
-                        let mut spool_bytes: Vec<u8> = Vec::new();
-                        spool_bytes.push(1);
-                        write_signal_track(&mut spool_bytes, &signal.treat).ok()?;
-                        if let Some(ctrl) = &signal.ctrl {
-                            spool_bytes.push(1);
-                            write_signal_track(&mut spool_bytes, ctrl).ok()?;
-                        } else {
-                            spool_bytes.push(0);
+                        // `--cutoff-analysis` is the only consumer that needs the dense
+                        // p-score track, so it is the only path that builds one. The
+                        // shipping path folds the same scores straight into the
+                        // histogram (`se_pscore_histogram_streaming`), saving the
+                        // 18 MB/chromosome track that used to sit alongside the signal.
+                        let mut cut = macs_peaks::callpeak::CutoffStats::new();
+                        let hist = match &ladder {
+                            Some(ladder) => {
+                                let ptrack =
+                                    macs_peaks::callpeak::se_pscore_track(&signal, &mut cache);
+                                let mut h = macs_score::PScoreHistogram::new();
+                                h.add_track_from(&ptrack, 0);
+                                macs_peaks::callpeak::accumulate_cutoffs(
+                                    &mut cut,
+                                    &ptrack,
+                                    ladder,
+                                    tsize.max(1) as macs_core::Coord,
+                                    d,
+                                );
+                                h
+                            }
+                            None => macs_peaks::callpeak::se_pscore_histogram_streaming(
+                                &signal, 0, &mut cache,
+                            ),
+                        };
+                        let spool = tempfile::NamedTempFile::new_in(&tempdir).ok()?;
+                        {
+                            let mut sw = std::io::BufWriter::new(spool.as_file());
+                            sw.write_all(&[1]).ok()?;
+                            write_signal_track(&mut sw, &signal.treat).ok()?;
+                            if let Some(ctrl) = &signal.ctrl {
+                                sw.write_all(&[1]).ok()?;
+                                write_signal_track(&mut sw, ctrl).ok()?;
+                            } else {
+                                sw.write_all(&[0]).ok()?;
+                            }
+                            sw.flush().ok()?;
                         }
                         let body = if o.flag("store_bdg") && signal.ctrl.is_some() {
-                            let mut t_body = String::new();
-                            let mut c_body = String::new();
-                            append_paired_bdg_signal(
-                                &signal,
-                                coord_shift,
-                                denominator,
-                                &mut t_body,
-                                &mut c_body,
-                            );
-                            Some((t_body, c_body))
+                            let tf = tempfile::NamedTempFile::new_in(&tempdir).ok()?;
+                            let cf = tempfile::NamedTempFile::new_in(&tempdir).ok()?;
+                            {
+                                let mut tw = std::io::BufWriter::new(tf.as_file());
+                                let mut cw = std::io::BufWriter::new(cf.as_file());
+                                write_paired_bdg_signal(
+                                    &mut tw,
+                                    &mut cw,
+                                    &signal,
+                                    coord_shift,
+                                    denominator,
+                                )
+                                .ok()?;
+                                tw.flush().ok()?;
+                                cw.flush().ok()?;
+                            }
+                            Some((tf, cf))
                         } else {
                             None
                         };
                         Some(PreparedChrom {
                             hist,
-                            spool_bytes,
+                            spool,
                             body,
-                            ptrack,
+                            cut,
                         })
                     })
                     .collect()
@@ -1633,22 +1692,30 @@ pub fn run(o: &Options) -> Result<()> {
                     spool_writer.write_all(&[0])?;
                     continue;
                 };
-                spool_writer.write_all(&entry.spool_bytes)?;
+                std::io::copy(
+                    &mut std::fs::File::open(entry.spool.path())?,
+                    &mut spool_writer,
+                )?;
                 histogram.merge_owned(entry.hist);
-                if let Some(ladder) = &ladder {
-                    macs_peaks::callpeak::accumulate_cutoffs(
-                        &mut cut_stats,
-                        &entry.ptrack,
-                        ladder,
-                        tsize.max(1) as macs_core::Coord,
-                        d,
+                if rss_trace {
+                    eprintln!(
+                        "  chunk {} hwm={} kB spool={} hist_entries={}",
+                        String::from_utf8_lossy(
+                            names.first().map(|v| v.as_slice()).unwrap_or(b"?")
+                        ),
+                        hwm_kb(),
+                        std::fs::metadata(entry.spool.path())
+                            .map(|m| m.len())
+                            .unwrap_or(0),
+                        histogram.len()
                     );
                 }
-                if let (Some((tfile, cfile)), Some((t_body, c_body))) =
-                    (&mut stream_bodies, &entry.body)
-                {
-                    tfile.write_all(t_body.as_bytes())?;
-                    cfile.write_all(c_body.as_bytes())?;
+                // The worker already folded this chromosome's cutoff totals; merging
+                // is a short-vector add, and the counters are `u64`, so the serial
+                // order is the only ordering that matters and it is chromosome order.
+                cut_stats.merge(&entry.cut);
+                if let Some(pair) = entry.body {
+                    stream_body_files.push(pair);
                 }
             }
         }
@@ -1666,7 +1733,7 @@ pub fn run(o: &Options) -> Result<()> {
         } else {
             macs_peaks::callpeak::CutoffStats::default()
         };
-        stream_bdg = stream_bodies;
+        stream_bdg = Some(stream_body_files);
         se_signal_spool = Some(spool);
         (table, Vec::new(), cut_stats)
     } else if let Some(source) = &mut pe_source {
@@ -1749,7 +1816,13 @@ pub fn run(o: &Options) -> Result<()> {
         } else {
             macs_peaks::callpeak::CutoffStats::default()
         };
-        stream_bdg = stream_bodies;
+        // The paired-end branch writes its two bodies to one shared pair,
+        // chromosome by chromosome; wrap it so both branches produce the same
+        // `Vec` shape the final concatenation consumes.
+        stream_bdg = Some(match stream_bodies {
+            Some(pair) => vec![pair],
+            None => Vec::new(),
+        });
         se_signal_spool = Some(spool);
         (table, Vec::new(), cut_stats)
     } else {
@@ -1776,12 +1849,12 @@ pub fn run(o: &Options) -> Result<()> {
     if rss_trace {
         eprintln!(
             "rss[signals built] {} kB t={:.2}s",
-            rss_kb(),
+            hwm_kb(),
             t_start.elapsed().as_secs_f64()
         );
         eprintln!(
             "rss[after qtable] {} kB t={:.2}s",
-            rss_kb(),
+            hwm_kb(),
             t_start.elapsed().as_secs_f64()
         );
     }
@@ -1977,6 +2050,13 @@ pub fn run(o: &Options) -> Result<()> {
                 .collect()
         })
     };
+    if rss_trace {
+        eprintln!(
+            "rss[after peak pass] {} kB t={:.2}s",
+            hwm_kb(),
+            t_start.elapsed().as_secs_f64()
+        );
+    }
     for (name, called, bad) in per_chrom {
         // F172: upstream raises `ZeroDivisionError: float division` from
         // `PeakDetect.__call_peaks_w_control` when the control lambda is zero at
@@ -2125,19 +2205,24 @@ pub fn run(o: &Options) -> Result<()> {
     // from the paired union walk (`chr_pos_treat_ctrl`), not from the raw
     // pileups -- see `write_paired_bdg`.
     if o.flag("store_bdg") {
-        if let Some((treat_temp, ctrl_temp)) = stream_bdg.take() {
+        if let Some(pairs) = stream_bdg.take() {
             // Keep the full bedGraph bodies on disk until all chromosome calls
             // have passed validation. A zero-lambda error therefore leaves no
             // final bedGraph behind, and the streaming path never buffers the
             // genome-wide text in RAM.
-            std::fs::copy(
-                treat_temp.path(),
+            use std::io::Write as _;
+            let mut tf = std::io::BufWriter::new(std::fs::File::create(
                 outdir.join(format!("{name}_treat_pileup.bdg")),
-            )?;
-            std::fs::copy(
-                ctrl_temp.path(),
+            )?);
+            let mut cf = std::io::BufWriter::new(std::fs::File::create(
                 outdir.join(format!("{name}_control_lambda.bdg")),
-            )?;
+            )?);
+            for (t, c) in &pairs {
+                std::io::copy(&mut std::fs::File::open(t.path())?, &mut tf)?;
+                std::io::copy(&mut std::fs::File::open(c.path())?, &mut cf)?;
+            }
+            tf.flush()?;
+            cf.flush()?;
         } else {
             write_paired_bdg(
                 o,
@@ -2156,6 +2241,13 @@ pub fn run(o: &Options) -> Result<()> {
         }
     }
 
+    if rss_trace {
+        eprintln!(
+            "rss[end] {} kB t={:.2}s",
+            hwm_kb(),
+            t_start.elapsed().as_secs_f64()
+        );
+    }
     eprintln!(
         "callpeak: {} peaks written to {}",
         rows.len(),
@@ -2241,12 +2333,19 @@ struct SpmrDenom {
 struct PreparedChrom {
     /// This chromosome's p-score histogram, merged into the run-wide one in order.
     hist: macs_score::PScoreHistogram,
-    /// The spool record, already serialised (marker + treatment + optional control).
-    spool_bytes: Vec<u8>,
-    /// Streamed bedGraph bodies for `-B`, when the control exists.
-    body: Option<(String, String)>,
-    /// The p-score track, still needed for `--cutoff-analysis`.
-    ptrack: macs_rle::SignalTrack<f32>,
+    /// The spool record (marker + treatment + optional control), already streamed to
+    /// disk. Held as a `NamedTempFile` for the same reason as `body`: the record is
+    /// the chromosome's runs at 12 bytes each (~29 MB for chr1 here), and one per
+    /// worker sets the window's peak.
+    spool: tempfile::NamedTempFile,
+    /// Per-chromosome `-B` bedGraph bodies, already streamed to disk. Held as
+    /// `NamedTempFile`s (which unlink on drop) until the final concatenation.
+    body: Option<(tempfile::NamedTempFile, tempfile::NamedTempFile)>,
+    /// This chromosome's `--cutoff-analysis` totals, accumulated **inside** the
+    /// worker so the dense p-score track does not have to be retained. Holding the
+    /// track pinned one per chromosome in the window (~18 MB on the 5 M-read
+    /// fixture); the totals are two short vectors.
+    cut: macs_peaks::callpeak::CutoffStats,
 }
 
 struct SeSignalSource {
@@ -2508,7 +2607,11 @@ fn spmr_denominator(o: &Options, treat_total: u64, ctrl_total: u64) -> f64 {
 
 /// Store raw RLE runs so the peak pass can reuse the first pass's pileups
 /// without holding every chromosome in memory or recomputing the pileup.
-/// Coordinates are u64 and values are written as their exact f32 bit pattern.
+///
+/// Coordinates are `u32` (the width of [`macs_core::Coord`]) and values are the
+/// exact f32 bit pattern, so the record is 3 x 4 + 8 = 20 bytes per run against
+/// 28 for the earlier u64 encoding. On the 5 M-read fixture the spool is ~500 MB
+/// across chromosomes, so the narrowing is a real saving, not just tidiness.
 fn write_signal_track<W: std::io::Write>(
     writer: &mut W,
     track: &macs_rle::SignalTrack<f32>,
@@ -2527,24 +2630,24 @@ fn read_signal_track<R: std::io::Read>(
     reader: &mut R,
     chrom: ChromId,
 ) -> std::io::Result<macs_rle::SignalTrack<f32>> {
-    let mut coord_buf = [0u8; 8];
-    reader.read_exact(&mut coord_buf)?;
-    let start = u64::from_le_bytes(coord_buf);
-    reader.read_exact(&mut coord_buf)?;
-    let end = u64::from_le_bytes(coord_buf);
-    reader.read_exact(&mut coord_buf)?;
-    let run_count = usize::try_from(u64::from_le_bytes(coord_buf)).map_err(|_| {
+    let mut c4 = [0u8; 4];
+    let mut c8 = [0u8; 8];
+    reader.read_exact(&mut c4)?;
+    let start = u32::from_le_bytes(c4);
+    reader.read_exact(&mut c4)?;
+    let end = u32::from_le_bytes(c4);
+    reader.read_exact(&mut c8)?;
+    let run_count = usize::try_from(u64::from_le_bytes(c8)).map_err(|_| {
         std::io::Error::new(std::io::ErrorKind::InvalidData, "too many signal runs")
     })?;
     let mut runs = Vec::with_capacity(run_count);
     for _ in 0..run_count {
-        reader.read_exact(&mut coord_buf)?;
-        let run_end = u64::from_le_bytes(coord_buf);
-        let mut value_buf = [0u8; 4];
-        reader.read_exact(&mut value_buf)?;
+        reader.read_exact(&mut c4)?;
+        let run_end = u32::from_le_bytes(c4);
+        reader.read_exact(&mut c4)?;
         runs.push(macs_rle::Run::new(
             run_end,
-            f32::from_bits(u32::from_le_bytes(value_buf)),
+            f32::from_bits(u32::from_le_bytes(c4)),
         ));
     }
     Ok(macs_rle::SignalTrack::from_runs_exact(
@@ -2723,6 +2826,83 @@ fn append_paired_bdg_signal(
     let pos: Vec<i64> = raw_pos.iter().map(|p| shift(*p)).collect();
     coalesce_into(treat_body, &signal.name, &pos, &treat, denominator);
     coalesce_into(ctrl_body, &signal.name, &pos, &control, denominator);
+}
+
+/// Streaming form of [`append_paired_bdg_signal`].
+///
+/// Writes the same bytes straight to two writers instead of accumulating two
+/// `String`s for the whole chromosome. The `-B` bodies are ~38 MB per chromosome
+/// on the 5 M-read fixture (71 MB for chr1), and the parallel q-table pass holds
+/// one chromosome per worker -- so those strings, not the tracks, set that pass's
+/// peak. Formatting stays parallel; only the bytes move.
+fn write_paired_bdg_signal<W: std::io::Write, V: std::io::Write>(
+    treat_w: &mut W,
+    ctrl_w: &mut V,
+    signal: &macs_peaks::callpeak::ChromSignals,
+    coord_shift: i64,
+    denominator: f64,
+) -> std::io::Result<()> {
+    let Some(ctrl) = &signal.ctrl else {
+        return Ok(());
+    };
+    let (raw_pos, treat, control) = macs_peaks::callpeak::paired_union(&signal.treat, ctrl);
+    if raw_pos.is_empty() {
+        return Ok(());
+    }
+    write_coalesced(
+        treat_w,
+        &signal.name,
+        &raw_pos,
+        &treat,
+        denominator,
+        coord_shift,
+    )?;
+    write_coalesced(
+        ctrl_w,
+        &signal.name,
+        &raw_pos,
+        &control,
+        denominator,
+        coord_shift,
+    )?;
+    Ok(())
+}
+
+/// [`coalesce_into`] against a writer, shifting positions lazily.
+///
+/// The shift is applied per emitted row rather than materialising `pos: Vec<i64>`
+/// up front, which only the string version needed because it indexed twice.
+/// Same values, same order, same `%.5f` formatting.
+fn write_coalesced<W: std::io::Write>(
+    out: &mut W,
+    chrom: &str,
+    raw_pos: &[macs_core::Coord],
+    vals: &[f32],
+    denom: f64,
+    coord_shift: i64,
+) -> std::io::Result<()> {
+    let shift = |p: macs_core::Coord| p as i64 - coord_shift;
+    let last = raw_pos.len() - 1;
+    let mut pre_p: i64 = 0;
+    let mut pre_v = (f64::from(vals[0]) / denom) as f32;
+    for (i, v) in vals.iter().enumerate().take(last + 1).skip(1) {
+        let v = (f64::from(*v) / denom) as f32;
+        if (pre_v - v).abs() > 1e-5 {
+            writeln!(
+                out,
+                "{chrom}\t{pre_p}\t{}\t{pre_v:.5}",
+                shift(raw_pos[i - 1])
+            )?;
+            pre_v = v;
+            pre_p = shift(raw_pos[i - 1]);
+        }
+    }
+    writeln!(
+        out,
+        "{chrom}\t{pre_p}\t{}\t{pre_v:.5}",
+        shift(raw_pos[last])
+    )?;
+    Ok(())
 }
 
 fn coalesce_into(out: &mut String, chrom: &str, pos: &[i64], vals: &[f32], denom: f64) {

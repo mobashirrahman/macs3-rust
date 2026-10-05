@@ -2,7 +2,7 @@ use macs_core::ChromId;
 use macs_peaks::callpeak::{build_qtable_from_with_hist, ChromSignals, CutoffParams};
 use macs_rle::{Run, SignalTrack};
 
-fn track(chrom: ChromId, runs: &[(u64, f32)]) -> SignalTrack<f32> {
+fn track(chrom: ChromId, runs: &[(u32, f32)]) -> SignalTrack<f32> {
     SignalTrack::from_runs_exact(
         chrom,
         0,

@@ -187,10 +187,10 @@ fn endpoints_from_positions(
     let clamp = |v: i64| -> Coord {
         if v < 0 {
             0
-        } else if v as u64 > rlength {
+        } else if v as u64 > u64::from(rlength) {
             rlength
         } else {
-            v as u64
+            v as u32
         }
     };
 
@@ -358,10 +358,10 @@ pub fn pileup_from_weighted_positions(
     let clamp = |v: i64| -> Coord {
         if v < 0 {
             0
-        } else if v as u64 > rlength {
+        } else if v as u64 > u64::from(rlength) {
             rlength
         } else {
-            v as u64
+            v as u32
         }
     };
     // F167: build `(position, weight)` **pairs** and sort those, rather than
@@ -502,7 +502,7 @@ fn sweep_weighted_to_track(
         }
     };
     let mut depth = 0.0f32;
-    let mut at = 0u64;
+    let mut at = 0u32;
     let (mut i_s, mut i_e) = (0usize, 0usize);
     while i_s < start_pairs.len() || i_e < end_pairs.len() {
         // upstream picks the smaller of the two heads, preferring starts on a tie
@@ -706,7 +706,7 @@ mod tests {
     const C: ChromId = ChromId(0);
 
     /// `(start, value)` of every run — the compact canonical view.
-    fn spans(t: &SignalTrack<f32>) -> Vec<(u64, f32)> {
+    fn spans(t: &SignalTrack<f32>) -> Vec<(u32, f32)> {
         t.spans().collect()
     }
 
@@ -716,11 +716,11 @@ mod tests {
     /// *before* the first event, so a track produced by this module is total over
     /// `[0, cursor)` and the uncovered head is represented explicitly. Reading it
     /// as zero is what every MACS consumer does.
-    fn cov(t: &SignalTrack<f32>, pos: u64) -> f32 {
+    fn cov(t: &SignalTrack<f32>, pos: u32) -> f32 {
         t.value_at_or(pos, 0.0)
     }
 
-    fn params(d: i64, rlength: u64) -> SingleEndParams {
+    fn params(d: i64, rlength: u32) -> SingleEndParams {
         SingleEndParams::directional(d, 0, rlength, 1.0)
     }
 
@@ -964,7 +964,7 @@ mod tests {
 
     #[test]
     fn fragment_pileup_uses_real_intervals() {
-        let frags = [(100u64, 200u64), (150, 250)];
+        let frags = [(100u32, 200u32), (150, 250)];
         let t = pileup_from_fragments(C, &frags, 1000, 1.0, 0.0);
         // [0,100)=0, [100,150)=1, [150,200)=2, [200,250)=1
         assert_eq!(
@@ -978,7 +978,7 @@ mod tests {
     #[test]
     fn fragment_pileup_ignores_the_estimated_d() {
         // a 2 bp fragment and a 400 bp fragment, side by side
-        let frags = [(100u64, 102u64), (200, 600)];
+        let frags = [(100u32, 102u32), (200, 600)];
         let t = pileup_from_fragments(C, &frags, 1000, 1.0, 0.0);
         assert_eq!(cov(&t, 101), 1.0);
         assert_eq!(cov(&t, 102), 0.0);
@@ -988,7 +988,7 @@ mod tests {
 
     #[test]
     fn fragment_pileup_clips_to_the_contig() {
-        let frags = [(0u64, 10u64), (995, 5000)];
+        let frags = [(0u32, 10u32), (995, 5000)];
         let t = pileup_from_fragments(C, &frags, 1000, 1.0, 0.0);
         assert_eq!(t.cursor(), 1000);
         assert_eq!(t.integral(), 15.0);
@@ -996,7 +996,7 @@ mod tests {
 
     #[test]
     fn weighted_fragments_accumulate_multiplicity() {
-        let frags = [(100u64, 200u64, 3.0f32), (150, 250, 1.0)];
+        let frags = [(100u32, 200u32, 3.0f32), (150, 250, 1.0)];
         let t = pileup_from_weighted_fragments(C, &frags, 1000, 1.0, 0.0);
         // [0,100)=0, [100,150)=3, [150,200)=4, [200,250)=1
         assert_eq!(
@@ -1008,7 +1008,7 @@ mod tests {
 
     #[test]
     fn zero_weight_fragments_are_dropped() {
-        let frags = [(100u64, 200u64, 0.0f32), (300, 400, 2.0)];
+        let frags = [(100u32, 200u32, 0.0f32), (300, 400, 2.0)];
         let t = pileup_from_weighted_fragments(C, &frags, 1000, 1.0, 0.0);
         // the head up to 300 is an explicit zero run
         assert_eq!(spans(&t), vec![(0, 0.0), (300, 2.0)]);
@@ -1016,8 +1016,8 @@ mod tests {
 
     #[test]
     fn weighted_and_unweighted_agree_for_unit_weights() {
-        let frags = [(100u64, 200u64), (150, 250), (400, 500)];
-        let w: Vec<(u64, u64, f32)> = frags.iter().map(|&(l, r)| (l, r, 1.0)).collect();
+        let frags = [(100u32, 200u32), (150, 250), (400, 500)];
+        let w: Vec<(u32, u32, f32)> = frags.iter().map(|&(l, r)| (l, r, 1.0)).collect();
         let a = pileup_from_fragments(C, &frags, 1000, 1.0, 0.0);
         let b = pileup_from_weighted_fragments(C, &w, 1000, 1.0, 0.0);
         assert_eq!(spans(&a), spans(&b));
@@ -1043,23 +1043,23 @@ mod tests {
 
     #[test]
     fn integrated_depth_equals_the_sum_of_fragment_lengths() {
-        let plus = [10u64, 40, 90, 140, 190, 240];
-        let minus = [15u64, 45, 95, 145, 195, 245];
+        let plus = [10u32, 40, 90, 140, 190, 240];
+        let minus = [15u32, 45, 95, 145, 195, 245];
         let d = 200i64;
         let t = pileup_from_positions(C, &plus, &minus, &params(d, 1000));
         let want: f64 = plus
             .iter()
             .map(|&x| {
                 let s = x;
-                let e = ((x as i64) + d).min(1000) as u64;
+                let e = ((x as i64) + d).min(1000) as u32;
                 e.saturating_sub(s) as f64
             })
             .sum::<f64>()
             + minus
                 .iter()
                 .map(|&x| {
-                    let s = ((x as i64) - d).max(0) as u64;
-                    let e = (x as i64).min(1000) as u64;
+                    let s = ((x as i64) - d).max(0) as u32;
+                    let e = (x as i64).min(1000) as u32;
                     e.saturating_sub(s) as f64
                 })
                 .sum::<f64>();
@@ -1073,8 +1073,8 @@ mod tests {
 
     #[test]
     fn canonical_form_holds_for_random_input() {
-        let plus: Vec<u64> = (0..200).map(|i| (i * 37) % 900).collect();
-        let minus: Vec<u64> = (0..200).map(|i| (i * 53) % 900).collect();
+        let plus: Vec<u32> = (0..200).map(|i| (i * 37) % 900).collect();
+        let minus: Vec<u32> = (0..200).map(|i| (i * 53) % 900).collect();
         let t = pileup_from_positions(C, &plus, &minus, &params(200, 1000));
         let mut prev_end = t.start();
         for (i, s) in t.iter().enumerate() {
@@ -1092,8 +1092,8 @@ mod tests {
 
     #[test]
     fn unsorted_input_gives_the_same_track_as_sorted() {
-        let a = [500u64, 10, 300, 42, 700];
-        let b = [100u64, 600, 250];
+        let a = [500u32, 10, 300, 42, 700];
+        let b = [100u32, 600, 250];
         let t1 = pileup_from_positions(C, &a, &b, &params(200, 1000));
         let mut a = a;
         let mut b = b;
@@ -1105,8 +1105,8 @@ mod tests {
 
     #[test]
     fn every_run_end_is_within_the_contig() {
-        for rlength in [1u64, 2, 10, 1000, 100_000] {
-            let plus: Vec<u64> = (0..50).map(|i| i * 7 % rlength.max(1)).collect();
+        for rlength in [1u32, 2, 10, 1000, 100_000] {
+            let plus: Vec<u32> = (0..50).map(|i| i * 7 % rlength.max(1)).collect();
             let t = pileup_from_positions(C, &plus, &[], &params(200, rlength));
             assert!(
                 t.cursor() <= rlength,

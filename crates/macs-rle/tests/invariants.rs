@@ -13,7 +13,7 @@ use proptest::prelude::*;
 fn dense(t: &SignalTrack<f32>) -> Vec<f32> {
     let mut v: Vec<f32> = Vec::new();
     for r in t.runs() {
-        let at = v.len() as u64;
+        let at = v.len() as u32;
         v.extend(std::iter::repeat_n(r.value, (r.end - at) as usize));
     }
     v
@@ -29,7 +29,7 @@ proptest! {
     ) {
         let mut t = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
         for (i, v) in vals.iter().enumerate() {
-            t.push_exact((i as u64 + 1) * 7, *v);
+            t.push_exact((i as u32 + 1) * 7, *v);
         }
         let naive: f64 = vals.iter().map(|v| *v as f64 * 7.0).sum();
         prop_assert!((t.integral() - naive).abs() < 1e-3,
@@ -43,7 +43,7 @@ proptest! {
     ) {
         let mut t = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
         for (i, v) in vals.iter().enumerate() {
-            t.push((i as u64 + 1) * 3, *v);
+            t.push((i as u32 + 1) * 3, *v);
         }
         for w in t.runs().windows(2) {
             prop_assert!(w[0].end < w[1].end, "ends not increasing");
@@ -54,11 +54,11 @@ proptest! {
     /// panicking; the cursor never moves backwards.
     #[test]
     fn push_never_moves_the_cursor_backwards(
-        ends in prop::collection::vec(0u64..500, 1..50),
+        ends in prop::collection::vec(0u32..500, 1..50),
         v in 0.0f32..10.0,
     ) {
         let mut t = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
-        let mut last = 0u64;
+        let mut last = 0u32;
         for e in ends {
             t.push(e, v);
             prop_assert!(t.cursor() >= last, "cursor went backwards");
@@ -75,8 +75,8 @@ proptest! {
         let mut merged = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
         let mut split = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
         for i in 0..n {
-            merged.push((i as u64 + 1) * 4, v);
-            split.push_exact((i as u64 + 1) * 4, v);
+            merged.push((i as u32 + 1) * 4, v);
+            split.push_exact((i as u32 + 1) * 4, v);
         }
         prop_assert!((merged.integral() - split.integral()).abs() < 1e-6);
     }
@@ -93,8 +93,8 @@ proptest! {
         let mut ta = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
         let mut tb = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
         let (mut ea, mut eb): (Vec<_>, Vec<_>) = (
-            a.iter().enumerate().map(|(i, v)| ((i as u64 + 1) * 5, *v)).collect(),
-            b.iter().enumerate().map(|(i, v)| ((i as u64 + 1) * 11, *v)).collect(),
+            a.iter().enumerate().map(|(i, v)| ((i as u32 + 1) * 5, *v)).collect(),
+            b.iter().enumerate().map(|(i, v)| ((i as u32 + 1) * 11, *v)).collect(),
         );
         ea.sort_by_key(|(e, _)| *e);
         eb.sort_by_key(|(e, _)| *e);
@@ -107,7 +107,7 @@ proptest! {
         // inputs share one domain there -- so the truncation is pinned, not wished
         // away.
         let overlap = ta.cursor().min(tb.cursor());
-        for x in 0..400u64 {
+        for x in 0..400u32 {
             let have = m.value_at_or(x, 0.0);
             if x < overlap {
                 let want = ta.value_at_or(x, 0.0).max(tb.value_at_or(x, 0.0));
@@ -126,15 +126,15 @@ proptest! {
         a in prop::collection::vec(0.0f32..20.0, 1..25),
         b in prop::collection::vec(0.0f32..20.0, 1..25),
     ) {
-        let build = |xs: &Vec<f32>, step: u64| {
+        let build = |xs: &Vec<f32>, step: u32| {
             let mut t = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
-            for (i, v) in xs.iter().enumerate() { t.push_exact((i as u64 + 1) * step, *v); }
+            for (i, v) in xs.iter().enumerate() { t.push_exact((i as u32 + 1) * step, *v); }
             t
         };
         let (ta, tb) = (build(&a, 5), build(&b, 7));
         let (ab, ba) = (ta.max_with(&tb), tb.max_with(&ta));
         prop_assert_eq!(ab.integral(), ba.integral());
-        for x in 0..300u64 {
+        for x in 0..300u32 {
             prop_assert_eq!(ab.value_at_or(x, 0.0), ba.value_at_or(x, 0.0));
         }
     }
@@ -144,15 +144,15 @@ proptest! {
     #[test]
     fn slice_conserves_the_covered_integral(
         vals in prop::collection::vec(0.0f32..20.0, 1..30),
-        lo in 0u64..300,
-        hi in 0u64..300,
+        lo in 0u32..300,
+        hi in 0u32..300,
     ) {
         let mut t = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
-        for (i, v) in vals.iter().enumerate() { t.push_exact((i as u64 + 1) * 13, *v); }
+        for (i, v) in vals.iter().enumerate() { t.push_exact((i as u32 + 1) * 13, *v); }
         let (lo, hi) = (lo.min(hi), lo.max(hi));
         let s = t.slice(Interval::new(lo, hi));
         let expect: f64 = dense(&t).iter().enumerate()
-            .filter(|(x, _)| (*x as u64) >= lo && (*x as u64) < hi)
+            .filter(|(x, _)| *x as u32 >= lo && (*x as u32) < hi)
             .map(|(_, v)| *v as f64).sum();
         prop_assert!((s.integral() - expect).abs() < 1e-3,
             "slice integral {} != {}", s.integral(), expect);
@@ -166,7 +166,7 @@ proptest! {
     /// order the partitions arrive in.
     #[test]
     fn construction_is_order_independent(
-        vals in prop::collection::vec((0u64..400, 0.0f32..10.0), 1..60),
+        vals in prop::collection::vec((0u32..400, 0.0f32..10.0), 1..60),
     ) {
         let mut shuffled = vals.clone();
         for i in (1..shuffled.len()).rev() {
@@ -183,8 +183,8 @@ proptest! {
         // wins*; a stable sort by end alone would therefore make the track depend on
         // input order. Sorting by `(end, value)` makes the tie-break total, which is
         // what any parallel producer has to do.
-        let build = |xs: &[(u64, f32)]| {
-            let mut sorted: Vec<(u64, f32)> =
+        let build = |xs: &[(u32, f32)]| {
+            let mut sorted: Vec<(u32, f32)> =
                 xs.iter().copied().map(|(e, v)| (e.max(1), v)).collect();
             sorted.sort_by(|l, r| l.0.cmp(&r.0).then(l.1.total_cmp(&r.1)));
             let mut t = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
@@ -193,7 +193,7 @@ proptest! {
         };
         let (a, b) = (build(&vals), build(&shuffled));
         prop_assert_eq!(a.integral(), b.integral());
-        for x in 0..600u64 {
+        for x in 0..600u32 {
             prop_assert_eq!(a.value_at_or(x, 0.0), b.value_at_or(x, 0.0),
                 "value at {} depends on push order", x);
         }

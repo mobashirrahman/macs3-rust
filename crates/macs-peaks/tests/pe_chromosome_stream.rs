@@ -4,8 +4,8 @@ use macs_track::FragTrackBuilder;
 fn tracks() -> (macs_track::FragmentTrack, macs_track::FragmentTrack) {
     let mut treat = FragTrackBuilder::new();
     let mut ctrl = FragTrackBuilder::new();
-    for (chrom, offset) in [(b"chr1".as_slice(), 0u64), (b"chr2".as_slice(), 10_000)] {
-        for i in 0..80u64 {
+    for (chrom, offset) in [(b"chr1".as_slice(), 0u32), (b"chr2".as_slice(), 10_000)] {
+        for i in 0..80u32 {
             let start = offset + 100 + i * 11;
             treat.push(chrom, start, start + 140 + i % 7);
             let cstart = offset + 90 + i * 13;
@@ -20,12 +20,12 @@ fn tracks() -> (macs_track::FragmentTrack, macs_track::FragmentTrack) {
 fn counted_tracks() -> (macs_track::FragmentTrack, macs_track::FragmentTrack) {
     let mut treat = FragTrackBuilder::with_barcodes();
     let mut ctrl = FragTrackBuilder::with_barcodes();
-    for (chrom, offset) in [(b"chr1".as_slice(), 0u64), (b"chr2".as_slice(), 10_000)] {
-        for i in 0..80u64 {
+    for (chrom, offset) in [(b"chr1".as_slice(), 0u32), (b"chr2".as_slice(), 10_000)] {
+        for i in 0..80u32 {
             let start = offset + 100 + i * 11;
-            treat.push_with_count(chrom, start, start + 140 + i % 7, 1 + (i % 4) as u32);
+            treat.push_with_count(chrom, start, start + 140 + i % 7, 1 + (i % 4));
             let cstart = offset + 90 + i * 13;
-            ctrl.push_with_count(chrom, cstart, cstart + 135 + i % 9, 1 + (i % 3) as u32);
+            ctrl.push_with_count(chrom, cstart, cstart + 135 + i % 9, 1 + (i % 3));
         }
     }
     treat.finalize();

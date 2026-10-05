@@ -134,6 +134,71 @@ pub fn over_two_pv_array(
     (pos, val)
 }
 
+/// Pointwise max-fold of 2..=3 tracks in a **single pass**.
+///
+/// `over_two_pv_array_track` folds pairwise, which materialises every intermediate:
+/// for three control scales it holds `combined`, the next scale's track and the
+/// merge result simultaneously. That transient is what sets the single-end peak RSS
+/// (~114 MB for chr1 of the 5 M-read fixture, against a final control track of
+/// 2.5 M runs = 20 MB).
+///
+/// The fold is equivalent to `((a max b) max c)`, which is what upstream's loop
+/// computes:
+///
+/// * the emitted position is `min` of the live cursors, and the emitted value is
+///   `max` of the live values -- and `max(max(va,vb),vc) == max(va,vb,vc)`;
+/// * `over_two_pv_array` stops as soon as either cursor is exhausted (F168), so
+///   `(a max b)` covers `min(extent_a, extent_b)` and the next fold covers
+///   `min(that, extent_c)` == `min` of all three. Stopping when *any* of the three
+///   exhausts gives the same row count;
+/// * the equal-end case advances **both** cursors in the pairwise form and every
+///   cursor tied at the minimum in this one, which is the same rule.
+///
+/// Verified against the pairwise fold by the golden gate (byte identity over 7204
+/// recorded invocations), which is what makes the equivalence a fact rather than an
+/// argument.
+pub fn over_max_tracks(tracks: &[&SignalTrack<f32>]) -> Option<SignalTrack<f32>> {
+    match tracks {
+        [] => return None,
+        [only] => return Some((*only).clone()),
+        _ => {}
+    }
+    let runs: Vec<&[Run<f32>]> = tracks.iter().map(|t| t.runs()).collect();
+    let mut idx = vec![0usize; runs.len()];
+    let mut out: Vec<Run<f32>> =
+        Vec::with_capacity(runs.iter().map(|r| r.len()).min().unwrap_or(0));
+    let chrom = tracks[0].chrom();
+    let start = tracks.iter().map(|t| t.start()).min().unwrap_or(0);
+    loop {
+        // Stop when any cursor is exhausted, matching `over_two_pv_array`'s
+        // "stop when either runs out" applied through the fold.
+        if idx.iter().zip(&runs).any(|(i, r)| *i >= r.len()) {
+            break;
+        }
+        let lowest = idx
+            .iter()
+            .zip(&runs)
+            .map(|(i, r)| r[*i].end)
+            .min()
+            .expect("non-empty");
+        let mut v = f32::MIN;
+        for (i, r) in idx.iter().zip(&runs) {
+            let cand = r[*i].value;
+            // `a if a > b else b`: a tie takes the later array's value, which for
+            // equal floats is unobservable but keeps the fold order explicit.
+            v = if v > cand { v } else { cand };
+        }
+        out.push(Run::new(lowest, v));
+        for (i, r) in idx.iter_mut().zip(&runs) {
+            if r[*i].end == lowest {
+                *i += 1;
+            }
+        }
+    }
+    let end = out.last().map_or(start, |r| r.end).max(start);
+    Some(SignalTrack::from_runs_exact(chrom, start, end, out))
+}
+
 /// Rebuild a [`SignalTrack`] from a merged `[p, v]` pair.
 ///
 /// The merged positions are run ends, so the run for entry `i` spans

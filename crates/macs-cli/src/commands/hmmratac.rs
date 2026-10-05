@@ -144,7 +144,7 @@ fn load_fragments(
         for path in inputs {
             let (frags, _) = macs_io::bam::bampe_fragments(Path::new(path))?;
             for fr in &frags {
-                b.push(&fr.chrom, u64::from(fr.start), u64::from(fr.start + fr.len));
+                b.push(&fr.chrom, fr.start, fr.start + fr.len);
             }
         }
         b.finalize();
@@ -1338,7 +1338,7 @@ fn states_bed_text(path: &[macs_hmmratac::StateRun], genome: &Genome) -> String 
 /// `MACS_peak_<n>` regardless of `--name`. The parameter is kept so the call site reads
 /// the way the signature does.
 fn narrowpeak_text(peaks: &[(ChromId, peakcall::BdgPeak)], genome: &Genome, _name: &str) -> String {
-    let mut by_chrom: BTreeMap<Vec<u8>, Vec<(u64, usize, &peakcall::BdgPeak)>> = BTreeMap::new();
+    let mut by_chrom: BTreeMap<Vec<u8>, Vec<(u32, usize, &peakcall::BdgPeak)>> = BTreeMap::new();
     for (i, (c, pk)) in peaks.iter().enumerate() {
         by_chrom
             .entry(genome.name(*c).to_vec())

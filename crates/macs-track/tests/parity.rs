@@ -128,7 +128,7 @@ fn filter_dup_matches_upstream_on_every_vector() {
 
             let mut b = SingleEndTrackBuilder::new();
             for (c, pos, st) in &orig {
-                b.push(c.as_bytes(), *pos, *st);
+                b.push(c.as_bytes(), *pos as u32, *st);
             }
             b.finalize();
             let mut t = b.build();
@@ -209,7 +209,7 @@ fn filter_dup_matches_upstream_on_every_vector() {
             let orig = parse_se_kept(orig_s);
             let mut b = SingleEndTrackBuilder::new();
             for (c, pos, st) in &orig {
-                b.push(c.as_bytes(), *pos, *st);
+                b.push(c.as_bytes(), *pos as u32, *st);
             }
             b.finalize();
             let mut t = b.build();

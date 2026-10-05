@@ -129,35 +129,31 @@ human `hs` genome size), median of 3, release build:
 
 | workload | macs3 3.0.5 | macs3-rs | speedup | peak RSS |
 |---|---|---|---|---|
-| SE `--nomodel --extsize 200 -B` | 41.8 s / 296 MB | 12.4 s / 929 MB | **3.4x** | 3.1x |
-| SE `--nomodel --SPMR` | 31.9 s / 302 MB | 7.7 s / 520 MB | **4.2x** | 1.7x |
-| SE model mode (default) | 44.0 s / 300 MB | 12.8 s / 958 MB | **3.4x** | 3.2x |
-| SE `--nomodel`, no control | 21.9 s / 172 MB | 6.8 s / 392 MB | **3.2x** | 2.3x |
-| BAMPE narrow | 1.36 s / 80 MB | 0.42 s / 50 MB | **3.2x** | **0.6x** |
+| SE `--nomodel --extsize 200 -B` | 42.7 s / 304 MB | 11.9 s / 186 MB | **3.6x** | **0.61x** |
+| SE `--nomodel --SPMR` | 32.3 s / 299 MB | 8.1 s / 173 MB | **4.0x** | **0.58x** |
+| SE model mode (default) | 44.4 s / 296 MB | 11.9 s / 183 MB | **3.7x** | **0.62x** |
+| SE `--nomodel`, no control | 22.9 s / 169 MB | 6.7 s / 88 MB | **3.4x** | **0.52x** |
+| BAMPE narrow | 1.41 s / 80 MB | 0.41 s / 31 MB | **3.4x** | **0.39x** |
 
-Wall clock clears the >=3x target on every workload. Peak memory is the one
-metric still short of its target (<=0.5x): BAMPE meets it, single-end does not.
+Wall clock clears the >=3x target on every workload, and peak memory is now
+0.39-0.62x of upstream against a <=0.5x target — BAMPE meets it, the single-end
+paths sit within 4-24% of it, and both are down from **~10x** before this work.
 
-The single-end floor is structural, not tuning. Measured on this fixture, a
-fully serial run with no bedGraph output still peaks at **266 MB against
-upstream's ~300 MB**, so ~1.8x upstream is reachable today and 0.5x is not. Of
-that floor, ~80 MB is the resident reads alone: single-end positions are stored
-as `u64` (10 M positions x 8 B) where upstream uses `i32`. The rest is the
-per-chromosome signal tracks, which the pipeline materialises for the q-table
-pass and then spools for the peak pass.
+Where the single-end memory goes, measured on the 5 M-read fixture:
 
-Reaching 0.5x needs the two things `docs/status.md` already identifies, as a
-storage refactor rather than more streaming:
-
-1. narrower positions (`u32`, matching upstream's `cython.int`) and a compact run
-   type, halving the read and signal footprint;
-2. scoring the union walk directly from the resident sorted positions, so pass 1
-   never materialises a genome-wide `SignalTrack`.
-
-The chromosome window (`CHUNK` in `callpeak.rs`) is the memory/speed dial in the
-meantime: 3 is the smallest setting that holds >=3x; 1 gives 327 MB at 2.1x.
+* ~43 MB is the two resident u32 position arrays (10 M reads);
+* ~86 MB is one chromosome's signal build plus the q-table histogram, which is
+  the parallel window's working set: `CHUNK` chromosomes are built at once and the
+  window is the memory/speed dial. `CHUNK = 2` is the shipping setting; `CHUNK = 1`
+  reaches 0.54x at the cost of the `-B` workload's speed (2.8x);
+* the bedGraph and spool bodies are **streamed to per-chromosome temp files** and
+  concatenated at the end, so `-B` no longer buffers a chromosome's ~38 MB of text;
+* `MALLOC_ARENA_MAX` is capped to 1 by re-exec, because glibc's per-thread arenas
+  retain freed blocks (237 MB against 177 MB at the same wall clock).
 
 ## Testing
+
+
 
 
 

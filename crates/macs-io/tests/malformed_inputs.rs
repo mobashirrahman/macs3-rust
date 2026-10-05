@@ -29,12 +29,12 @@ impl Rng {
         x.wrapping_mul(0x2545_f491_4f6c_dd1d)
     }
 
-    fn below(&mut self, n: u64) -> u64 {
-        self.next() % n
+    fn below(&mut self, n: u32) -> u32 {
+        (self.next() % u64::from(n)) as u32
     }
 
     fn pick<'a, T>(&mut self, xs: &'a [T]) -> &'a T {
-        &xs[self.below(xs.len() as u64) as usize]
+        &xs[self.below(xs.len() as u32) as usize]
     }
 }
 
@@ -137,7 +137,7 @@ fn parsers_never_panic_on_random_lines() {
 
         for rec in [parse_bedpe_line(bytes), parse_frag_line(bytes)] {
             if let Ok(Some(f)) = rec {
-                let iv = Interval::new(f.left.max(0) as u64, f.right.max(0) as u64);
+                let iv = Interval::new(f.left.max(0) as u32, f.right.max(0) as u32);
                 assert!(
                     iv.end() >= iv.start(),
                     "case {}: inverted fragment interval",

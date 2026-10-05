@@ -120,18 +120,18 @@ proptest! {
     #[test]
     fn add_track_from_matches_manual_counts(
         vals in prop::collection::vec(0.0f32..100.0, 1..25),
-        step in 1u64..17,
+        step in 1u32..17,
     ) {
         let mut t = SignalTrack::<f32>::empty(ChromId(0), 0, 1_000_000);
         for (i, v) in vals.iter().enumerate() {
-            t.push_exact((i as u64 + 1) * step, *v);
+            t.push_exact((i as u32 + 1) * step, *v);
         }
         let mut from_track = PScoreHistogram::new();
         from_track.add_track(&t);
         let mut manual = PScoreHistogram::new();
         let mut prev = 0i64;
         for (i, v) in vals.iter().enumerate() {
-            let end = ((i as u64 + 1) * step) as i64;
+            let end = ((i as u32 + 1) * step) as i64;
             manual.add(*v, end - prev);
             prev = end;
         }
