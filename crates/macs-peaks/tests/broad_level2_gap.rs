@@ -46,7 +46,7 @@ fn control() -> SignalTrack<f32> {
 }
 
 /// `int(tsize) = 253` and `int(tsize * 4) = 1014` for the mean fragment length 253.5.
-fn call(broad_max_gap: macs_core::Coord) -> Vec<macs_peaks::callpeak::Called> {
+fn call(broad_max_gap: i64) -> Vec<macs_peaks::callpeak::Called> {
     let treat = treatment();
     let ctrl = control();
     let empty = SignalTrack::empty(C, 0, 5000);
@@ -61,6 +61,7 @@ fn call(broad_max_gap: macs_core::Coord) -> Vec<macs_peaks::callpeak::Called> {
         qtrack: &empty,
         table: &table,
         d: 500,
+        min_length: 500,
         max_gap: 253,
         broad_max_gap,
         p_cutoff: Some(1.0),

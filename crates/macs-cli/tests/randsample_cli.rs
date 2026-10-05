@@ -154,8 +154,15 @@ fn percentage_and_number_are_mutually_exclusive() {
     let _ = std::fs::remove_dir_all(&dir);
 }
 
+/// `-n` above the tag count is refused by `randsample_cmd.py:62-64`, which runs
+/// *after* the output file is opened at step 0 (`:41-44`). The reference therefore
+/// exits 1 and leaves an **empty** output file behind; an earlier port refused
+/// before creating anything, which is the same exit status but a different set of
+/// files on disk. Measured:
+/// `macs3 randsample -i in.bed -f BED -n 999999 --tsize 10 -o o.bed --outdir d`
+/// exits 1 with `d/o.bed` present and zero bytes.
 #[test]
-fn requesting_more_than_the_total_is_rejected_before_writing() {
+fn requesting_more_than_the_total_is_rejected_with_an_empty_output_file() {
     let dir = tmpdir("over");
     let input = bed(&dir);
     let args = vec![
@@ -177,9 +184,8 @@ fn requesting_more_than_the_total_is_rejected_before_writing() {
     let o = parse_flags("randsample", &args).expect("parse");
     let e = macs_cli::commands::randsample::randsample(&o).expect_err("over-count rejected");
     assert!(format!("{e}").contains("bigger than total"), "got {e}");
-    assert!(
-        !dir.join("o.bed").exists(),
-        "no output written on rejection"
-    );
+    let out = dir.join("o.bed");
+    assert!(out.exists(), "upstream opens the writer before this check");
+    assert_eq!(std::fs::metadata(&out).unwrap().len(), 0);
     let _ = std::fs::remove_dir_all(&dir);
 }

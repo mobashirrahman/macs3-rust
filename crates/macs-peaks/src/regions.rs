@@ -111,7 +111,12 @@ pub struct CallParams {
     /// peak of exactly this length is kept.
     pub min_length: Coord,
     /// Merge chunks separated by a gap of at most this many bases.
-    pub max_gap: Coord,
+    ///
+    /// Signed, because upstream's is `max_gap: cython.int` (`CallPeakUnit.py:1037`)
+    /// and the merge test is `tl <= max_gap` with `tl` a signed `long`. A negative
+    /// `--max-gap` is therefore accepted and makes every comparison false, so no
+    /// two chunks ever merge. `Coord` is `u32` and could not express that.
+    pub max_gap: i64,
     /// Emit sub-peak summits (`--call-summits`).
     pub call_summits: bool,
     /// Added to both numerator and denominator of the fold change.
@@ -213,7 +218,7 @@ impl ScoreKind {
 /// Mirrors the loop in `__chrom_call_peak_using_certain_criteria`: a chunk joins
 /// the open region when `start - last_end <= max_gap`, and `<=` is inclusive, so
 /// a gap of exactly `max_gap` is merged.
-pub fn segment_regions(chunks: &[Chunk], max_gap: Coord) -> Vec<Vec<Chunk>> {
+pub fn segment_regions(chunks: &[Chunk], max_gap: i64) -> Vec<Vec<Chunk>> {
     segment_region_ranges(chunks, max_gap)
         .into_iter()
         .map(|range| chunks[range].to_vec())
@@ -225,10 +230,7 @@ pub fn segment_regions(chunks: &[Chunk], max_gap: Coord) -> Vec<Vec<Chunk>> {
 /// Peak calling may have millions of above-cutoff chunks. Keeping the original
 /// vector and a second `Vec<Vec<Chunk>>` nearly doubles that part of the working
 /// set, so the shipping caller iterates these ranges instead.
-pub(crate) fn segment_region_ranges(
-    chunks: &[Chunk],
-    max_gap: Coord,
-) -> Vec<std::ops::Range<usize>> {
+pub(crate) fn segment_region_ranges(chunks: &[Chunk], max_gap: i64) -> Vec<std::ops::Range<usize>> {
     if chunks.is_empty() {
         return Vec::new();
     }
@@ -236,7 +238,8 @@ pub(crate) fn segment_region_ranges(
     let mut start = 0usize;
     let mut last_end = chunks[0].end;
     for (i, c) in chunks.iter().enumerate().skip(1) {
-        if c.start - last_end > max_gap {
+        // `tl <= max_gap` with both sides signed, as upstream's `long` comparison
+        if (c.start as i64 - last_end as i64) > max_gap {
             regions.push(start..i);
             start = i;
         }

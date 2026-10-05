@@ -782,7 +782,7 @@ fn finish(
     // were being dropped that upstream keeps.
     let params = CallParams {
         min_length: d,
-        max_gap: d,
+        max_gap: d.into(),
         call_summits: a.call_summits,
         ..Default::default()
     };
@@ -860,10 +860,11 @@ fn finish(
                 qtrack: q,
                 table: &table,
                 d,
+                min_length: d,
                 // F188: `maxgap = opt.maxgap or opt.tsize`; the harness has no
                 // separate tag size, so `d` is the closest stand-in.
-                max_gap: d,
-                broad_max_gap: d.saturating_mul(4),
+                max_gap: d.into(),
+                broad_max_gap: i64::from(d).saturating_mul(4),
                 p_cutoff: None,
                 qvalue: a.qvalue,
                 broad: a.broad,

@@ -31,32 +31,82 @@ pub fn randsample(o: &Options) -> Result<()> {
         ));
     }
     let infer_tsize = matches!(o.int("tsize"), None | Some(0));
+    // `opt_validate_randsample` (`OptValidator.py:375-383`): `-p` and `-n` are
+    // mutually exclusive and neither has a default, so the checks are two
+    // independent truthiness tests -- `-p 1000` is refused, `-n 0` is *not*
+    // (`elif options.number:` is false) and fails later with a `TypeError`
+    // formatting the unset percentage, and a negative `-n` is refused.
+    let percentage = o.float("percentage");
+    let number = o.float("number");
+    if let Some(p) = percentage.filter(|p| *p != 0.0) {
+        if p > 100.0 {
+            return Err(MacsError::InvalidParameter(
+                "Percentage can't be bigger than 100.0. Please check your options and retry!"
+                    .into(),
+            ));
+        }
+    } else if let Some(n) = number.filter(|n| *n != 0.0) {
+        if n <= 0.0 {
+            return Err(MacsError::InvalidParameter(
+                "Number of tags can't be smaller than or equal to 0. Please check your options and retry!"
+                    .into(),
+            ));
+        }
+    }
+    // Upstream opens the writer as step 0 (`randsample_cmd.py:41-44`), before it
+    // reads a tag, so every failure below it -- the `OverflowError` from
+    // `treat.fw = options.tsize` (`:55`), the `-n > total` refusal (`:62-64`),
+    // `sample_percent`'s negative dimension (`FixWidthTrack.py:449`) and
+    // `print_to_bed`'s `assert self.fw > 0` (`:509`) -- leaves an empty file.
+    let ofile = o.get("outputfile").unwrap_or("stdout");
+    let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
+    let to_file = ofile != "stdout";
+    if to_file {
+        std::fs::create_dir_all(&outdir)?;
+        std::fs::write(outdir.join(ofile), b"")?;
+    }
+    super::input::check_tsize_fits_c_int(o.int("tsize").unwrap_or(0))?;
+    if number == Some(0.0) {
+        // `-n 0` slips past both `OptValidator` checks and leaves
+        // `options.percentage` as `None`, which `randsample_cmd.py:67` then
+        // formats: a `TypeError`, exit 1. `-p 0` does not: the percentage is set,
+        // so `%.2f` formats it as `0.00` and the run succeeds keeping no tags.
+        return Err(MacsError::InvalidParameter(
+            "TypeError: must be real number, not NoneType".into(),
+        ));
+    }
     let (mut track, inferred_size) = super::input::load_tag_files(&ifiles, &format, infer_tsize)?;
     let t0 = track.total();
 
     // percentage (default upstream) and optional -n override
-    let mut percent = o.float("percentage").unwrap_or(100.0);
-    if let Some(num) = o.int("number") {
-        if num < 0 {
-            return Err(MacsError::InvalidParameter("-n must be >= 0".into()));
-        }
+    let mut percent = percentage.unwrap_or(100.0);
+    if let Some(num) = number {
         if num as u64 > t0 {
             return Err(MacsError::InvalidParameter(format!(
-                "number requested ({num}) is bigger than total tags ({t0})"
+                "Number you want is bigger than total number of tags in alignment file! \
+                 Please specify a smaller number and try again!\n {num:.2e} > {t0:.2e}"
             )));
         }
-        percent = (num as f64) / (t0 as f64) * 100.0;
+        percent = num / t0 as f64 * 100.0;
+    }
+    if percent < 0.0 {
+        // `treat.sample_percent` allocates `int(total * percentage)`, which is a
+        // negative dimension (`FixWidthTrack.py:449`).
+        return Err(MacsError::InvalidParameter(
+            "ValueError: negative dimensions not allowed".into(),
+        ));
     }
     // F199: `-s/--tsize` is optional. `randsample_cmd.py:87-89` falls back to the
     // parser's own estimate whenever the user omitted it, and that is the normal path
     // -- rejecting the invocation instead made every `randsample` without an explicit
     // `-s` a hard error where upstream succeeds.
     let fw = match o.int("tsize") {
-        Some(v) if v > 0 => v as i32,
+        Some(v) if super::input::tag_size_is_storable(v) => v as i32,
         Some(v) => {
+            // `print_to_bed` asserts `self.fw > 0` (`FixWidthTrack.py:509`).
             return Err(MacsError::InvalidParameter(format!(
-                "--tsize must be > 0 (got {v})"
-            )))
+                "AssertionError: FWTrack object .fw should be set larger than 0! (got {v})"
+            )));
         }
         None if inferred_size > 0.0 => inferred_size.trunc() as i32,
         None => {
@@ -72,7 +122,6 @@ pub fn randsample(o: &Options) -> Result<()> {
     eprintln!("randsample: {t0} tags, {kept} kept ({percent:.2}%)");
 
     // print_to_bed
-    let ofile = o.get("outputfile").unwrap_or("stdout");
     let mut out = String::new();
     let pos = track.positions();
     for chrom in pos.chroms_sorted() {
@@ -88,12 +137,10 @@ pub fn randsample(o: &Options) -> Result<()> {
             out.push_str(&format!("{name}\t{lo}\t{p}\t.\t.\t-\n"));
         }
     }
-    if ofile == "stdout" {
-        print!("{out}");
-    } else {
-        let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
-        std::fs::create_dir_all(&outdir)?;
+    if to_file {
         std::fs::write(outdir.join(ofile), out)?;
+    } else {
+        print!("{out}");
     }
     Ok(())
 }

@@ -796,6 +796,16 @@ pub fn hmmratac(o: &Options) -> Result<()> {
             .map(|l| l.trim_end().as_bytes().to_vec())
             .collect()
     });
+    // `hmmratac` has no `opt_validate` check for `--max-count` (unlike `callpeak` and
+    // `pileup`, which refuse a negative one outright). Instead the cap reaches
+    // `FragParser.pe_parse_line`, whose `count` is declared `cython.ushort`
+    // (`Parser.py:1416`), so `count = min(count, max_count)` with a negative
+    // `max_count` makes Cython raise `OverflowError` on the first fragment line.
+    if o.int("maxcount").is_some_and(|m| m < 0) {
+        return Err(MacsError::InvalidParameter(
+            "OverflowError: can't convert negative value to unsigned short".into(),
+        ));
+    }
     let mut petrack = load_fragments(
         &inputs,
         &format,

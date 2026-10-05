@@ -184,6 +184,41 @@ pub fn load_tag_files(
     Ok(result)
 }
 
+/// Reject a `-s/--tsize` that upstream could not store.
+///
+/// `filterdup` and `randsample` both assign the flag straight onto the Cython
+/// track (`filterdup_cmd.py:58`, `randsample_cmd.py:55`):
+///
+/// ```python
+/// inputtrack.fw = options.tsize
+/// ```
+///
+/// and `FWTrack.fw` is `cython.declare(cython.int)`, so Cython raises
+/// `OverflowError: value too large to convert to int` above `2**31 - 1`. Both
+/// commands have already opened the output file by that point
+/// (`filterdup_cmd.py:40-43`, `randsample_cmd.py:41-44`), so the file is left
+/// behind empty -- which is why this is checked before the writer rather than
+/// next to the other `fw` diagnostics.
+///
+/// A non-positive value is a different failure: it is a legal C `int`, and
+/// `print_to_bed` only rejects it at `FixWidthTrack.py:509`, after the tags have
+/// been sampled and filtered. [`tag_size_is_storable`] reports that case so the
+/// caller can open the output file first, as upstream does.
+pub fn check_tsize_fits_c_int(tsize: i64) -> Result<()> {
+    if tsize > i32::MAX as i64 {
+        return Err(MacsError::InvalidParameter(
+            "OverflowError: value too large to convert to int".into(),
+        ));
+    }
+    Ok(())
+}
+
+/// Whether `--tsize` survives Cython's `assert self.fw > 0`
+/// (`FixWidthTrack.py:509`) and so can actually be written out.
+pub fn tag_size_is_storable(tsize: i64) -> bool {
+    tsize > 0
+}
+
 pub(super) fn validate_bowtie_tsize(path: &Path) -> Result<()> {
     use std::io::BufRead;
     let mut reader = macs_io::open_maybe_gzip(path)?;

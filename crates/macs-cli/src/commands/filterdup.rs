@@ -49,6 +49,33 @@ pub fn filterdup(o: &Options) -> Result<()> {
     // (`filterdup` rejects BAMPE/BEDPE/FRAG above; BAM here is single-end.)
     // The BAM mean query length is captured for `--tsize` inference below.
     let infer_tsize = matches!(o.int("tsize"), None | Some(0));
+    // `opt_validate_filterdup` (`OptValidator.py:259-325`) runs at
+    // `filterdup_cmd.py:33`, ahead of the writer, and rejects an unparsable `-g`
+    // and a `--keep-dup` that is neither `auto`/`all` nor a run of digits
+    // (`str.isdigit`, `:317-320`). Both must therefore fail before anything is
+    // created on disk.
+    let gsize_spec = o.get("gsize").unwrap_or("hs").to_string();
+    let gsize =
+        macs_core::genomesize::resolve_gsize(&gsize_spec).map_err(MacsError::InvalidParameter)?;
+    let keep_raw = o.get("keepduplicates").unwrap_or("auto");
+    if keep_raw != "auto" && keep_raw != "all" && !keep_raw.bytes().all(|b| b.is_ascii_digit()) {
+        return Err(MacsError::InvalidParameter(
+            "--keep-dup should be 'auto', 'all' or an integer!".into(),
+        ));
+    }
+    // Upstream opens the writer as step 0 (`filterdup_cmd.py:40-43`), before it reads
+    // a tag, so every later failure -- the `OverflowError` from
+    // `inputtrack.fw = options.tsize` (`:58`) and the `assert self.fw > 0` in
+    // `print_to_bed` (`FixWidthTrack.py:509`) -- and even `--dry-run` leave an empty
+    // file behind. Creating it here reproduces that.
+    let ofile = o.get("outputfile").unwrap_or("stdout");
+    let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
+    let mut file: Option<std::fs::File> = None;
+    if ofile != "stdout" {
+        std::fs::create_dir_all(&outdir)?;
+        file = Some(std::fs::File::create(outdir.join(ofile))?);
+    }
+    super::input::check_tsize_fits_c_int(o.int("tsize").unwrap_or(0))?;
     let (mut track, inferred_size) = super::input::load_tag_files(&ifiles, &format, infer_tsize)?;
     let t0 = track.total();
 
@@ -71,7 +98,11 @@ pub fn filterdup(o: &Options) -> Result<()> {
         }
     };
     if fw <= 0 {
-        return Err(MacsError::InvalidParameter("--tsize must be > 0".into()));
+        // `print_to_bed` asserts `self.fw > 0` (`FixWidthTrack.py:509`), and the
+        // output file was opened before the tags were read.
+        return Err(MacsError::InvalidParameter(
+            "AssertionError: FWTrack object .fw should be set larger than 0!".into(),
+        ));
     }
 
     // F275: upstream's `--keep-dup` defaults to **`auto`**, not `1`, and `-g/--gsize`
@@ -87,12 +118,9 @@ pub fn filterdup(o: &Options) -> Result<()> {
     // accept/reject outcome. Verified against upstream: with no `-g` it reports
     // `max_dup_tags based on binomal = 1`, with `-g 24000000` it reports `2`, so the
     // shortcut genuinely participates in the computation.
-    let keep = o.get("keepduplicates").unwrap_or("auto").to_lowercase();
+    let keep = keep_raw.to_lowercase();
     if keep != "all" {
         let max_dup: i64 = if keep == "auto" {
-            let spec = o.get("gsize").unwrap_or("hs");
-            let gsize =
-                macs_core::genomesize::resolve_gsize(spec).map_err(MacsError::InvalidParameter)?;
             let pval = o.float("pvalue").unwrap_or(1e-5);
             cal_max_dup_tags(gsize, t0, pval)
         } else {
@@ -111,13 +139,6 @@ pub fn filterdup(o: &Options) -> Result<()> {
     // Stream to a buffered writer; the whole-file `String` is hundreds of MB on a
     // real run and made `filterdup` exceed upstream's peak RSS. Bytes unchanged.
     use std::io::Write as _;
-    let ofile = o.get("outputfile").unwrap_or("stdout");
-    let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
-    let mut file: Option<std::fs::File> = None;
-    if ofile != "stdout" {
-        std::fs::create_dir_all(&outdir)?;
-        file = Some(std::fs::File::create(outdir.join(ofile))?);
-    }
     let mut out = std::io::BufWriter::new(match file {
         Some(f) => Box::new(f) as Box<dyn std::io::Write>,
         None => Box::new(std::io::stdout()) as Box<dyn std::io::Write>,

@@ -148,7 +148,7 @@ fn upsert(v: &mut Vec<(f64, u64)>, cutoff: f64, delta: u64) {
 pub fn chromosome_cutoff_stats(
     pos: &[Coord],
     score: &[f32],
-    max_gap: Coord,
+    max_gap: i64,
     min_length: Coord,
 ) -> CutoffStats {
     let mut stats = CutoffStats::default();
@@ -186,7 +186,7 @@ pub fn chromosome_cutoff_stats(
         let mut lastp = ends[0];
         for i in 1..starts.len() {
             let tl = starts[i] - lastp;
-            if tl <= max_gap {
+            if tl as i64 <= max_gap {
                 region.push((starts[i], ends[i]));
             } else {
                 let len = region[region.len() - 1].1 - region[0].0;
@@ -233,7 +233,7 @@ pub fn accumulate_histogram(hist: &mut PScoreHistogram, pos: &[Coord], score: &[
 /// same AFDR walk.
 pub fn pre_computes(
     chromosomes: &[(&[Coord], &[f32])],
-    max_gap: Coord,
+    max_gap: i64,
     min_length: Coord,
 ) -> (PScoreHistogram, CutoffStats) {
     let mut hist = PScoreHistogram::new();
@@ -248,7 +248,7 @@ pub fn pre_computes(
 /// A convenience wrapper for callers holding run-length tracks.
 pub fn pre_computes_tracks(
     tracks: &[(&SignalTrack<f32>, &SignalTrack<f32>)],
-    max_gap: Coord,
+    max_gap: i64,
     min_length: Coord,
 ) -> (PScoreHistogram, CutoffStats) {
     // `SignalTrack` exposes run ends and values; there is no `values()` accessor

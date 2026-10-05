@@ -30,6 +30,22 @@ use crate::Options;
 pub fn pileup(o: &Options) -> Result<()> {
     let ifiles = super::input::input_files(o)?;
     let format = o.get("format").unwrap_or("BED").to_uppercase();
+    // `opt_validate_pileup` (`OptValidator.py:560-563`) is format-independent:
+    //
+    // ```python
+    // if options.extsize <= 0:
+    //     logger.error("--extsize must > 0!")
+    //     sys.exit(1)
+    // ```
+    //
+    // It sits at the end of the validator, after the format dispatch, so it runs
+    // for BEDPE/BAMPE and FRAG too. The single-end branch below re-checks it (it
+    // computes `d` from it); this one is the shared gate, and it is what makes
+    // `pileup -f FRAG --extsize 0` an exit 1 with no bedGraph rather than a
+    // successful run over a zero-width extension.
+    if o.int("extsize").unwrap_or(0) <= 0 {
+        return Err(MacsError::InvalidParameter("--extsize must be > 0".into()));
+    }
     // Paired-end modes pile up fragments, not 5' ends (`pileup_cmd.py:50-68`,
     // `PileupV2.pileup_and_write_pe`). FRAG is still rejected: it needs the barcode
     // subset and count weighting, which live in the callpeak/hmmratac FRAG paths.
@@ -180,6 +196,13 @@ fn pileup_frag(o: &Options, paths: &[String]) -> Result<()> {
         }
         _ => None,
     };
+    // `opt_validate_pileup` (`OptValidator.py:547-552`) checks `--max-count` for the
+    // FRAG format only, and only a negative one: exit 1 before the writer opens.
+    if o.int("maxcount").is_some_and(|m| m < 0) {
+        return Err(MacsError::InvalidParameter(
+            "--max-count can't be a negative value".into(),
+        ));
+    }
     let max_count = o.int("maxcount").unwrap_or(0).max(0) as u32;
 
     let mut frags: BTreeMap<Vec<u8>, Vec<(u32, u32, u32)>> = BTreeMap::new();

@@ -293,9 +293,14 @@ fn bdgdiff_requires_an_output_specification() {
     let _ = std::fs::remove_dir_all(&d);
 }
 
-/// `--max-gap >= --min-len` is rejected before any output is written.
+/// `--max-gap >= --min-len` is *reported and then ignored*.
+///
+/// `bdgdiff_cmd.py:43` calls `error("MAXGAP should be smaller than MINLEN! ...")`
+/// and falls through -- there is no `sys.exit()` -- so the reference prints the
+/// complaint and runs anyway, exiting 0 with all three BED files written and
+/// byte-identical to a legal run. An earlier port treated it as a hard error.
 #[test]
-fn bdgdiff_rejects_maxgap_ge_minlen() {
+fn bdgdiff_reports_maxgap_ge_minlen_but_still_runs() {
     let d = tmpdir("gap", 1);
     for n in ["t1", "c1", "t2", "c2"] {
         write_bedgraph(&d.join(format!("{n}.bdg")), 1, 1, 4, 10.0, 0.0);
@@ -317,15 +322,16 @@ fn bdgdiff_rejects_maxgap_ge_minlen() {
             "200",
             "--o-prefix",
             "x",
+            "--outdir",
+            d.to_str().unwrap(),
         ])
         .output()
         .expect("run");
-    assert_eq!(out.status.code(), Some(1));
+    assert_eq!(out.status.code(), Some(0));
     let err = String::from_utf8_lossy(&out.stderr);
     assert!(err.contains("MAXGAP"), "stderr was: {err}");
-    assert!(
-        !d.join("x_c3.0_cond1.bed").exists(),
-        "no output file may be created on a validation error"
-    );
+    for f in ["x_c3.0_cond1.bed", "x_c3.0_cond2.bed", "x_c3.0_common.bed"] {
+        assert!(d.join(f).exists(), "{f} is written despite the complaint");
+    }
     let _ = std::fs::remove_dir_all(&d);
 }

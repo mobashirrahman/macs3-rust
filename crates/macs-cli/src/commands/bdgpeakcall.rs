@@ -181,7 +181,12 @@ pub fn bdgpeakcall(o: &Options) -> Result<()> {
         let tracks: Vec<(macs_rle::SignalTrack<f32>, macs_core::Coord)> =
             bg.iter_sorted().map(|(_, t)| (t.clone(), 0u32)).collect();
         let report = macs_peaks::callpeak::bedgraph_cutoff_analysis(
-            &tracks, maxgap, minlen, steps, min_value, max_score,
+            &tracks,
+            maxgap.into(),
+            minlen,
+            steps,
+            min_value,
+            max_score,
         );
         let path = ofile
             .clone()

@@ -123,9 +123,19 @@ fn argtxt(o: &Options, name: &str, gsize: f64, pe: bool) -> String {
         )
     };
     a.push_str(&format!("# model fold = {mfold}\n"));
+    // `OptValidator.py:189-190`: the FRAG-only `--max-count` line sits between the
+    // model-fold line and the cutoff line, and `if options.maxcount:` is a
+    // truthiness test, so `--max-count 0` -- "keep all counts" -- omits it.
+    if o.get("format").unwrap_or("AUTO").to_uppercase() == "FRAG" {
+        if let Some(m) = o.int("maxcount").filter(|m| *m != 0) {
+            a.push_str(&format!("# Maximum count in fragment file is set as {m}\n"));
+        }
+    }
     // the trailing newline of the model-fold line is the "\n" in its own
     // format string, which is why the block already ends in a blank line
-    let pvalue = o.float("pvalue");
+    // `OptValidator.py:127` and `:191` both test `options.pvalue` for truthiness,
+    // so `-p 0` is reported as a q-value run.
+    let pvalue = o.float("pvalue").filter(|p| *p != 0.0);
     let broad = o.flag("broad");
     match pvalue {
         Some(p) if broad => {
@@ -160,14 +170,16 @@ fn argtxt(o: &Options, name: &str, gsize: f64, pe: bool) -> String {
             ));
         }
     }
+    // `OptValidator.py:206-213`: `if options.maxgap:` / `if options.minlen:` are
+    // truthiness tests too, so a negative value is reported rather than ignored.
     match o.int("maxgap") {
-        Some(g) if g > 0 => a.push_str(&format!("# The maximum gap between significant sites = {g}\n")),
+        Some(g) if g != 0 => a.push_str(&format!("# The maximum gap between significant sites = {g}\n")),
         _ => a.push_str(
             "# The maximum gap between significant sites is assigned as the read length/tag size.\n",
         ),
     }
     match o.int("minlen") {
-        Some(l) if l > 0 => a.push_str(&format!("# The minimum length of peaks = {l}\n")),
+        Some(l) if l != 0 => a.push_str(&format!("# The minimum length of peaks = {l}\n")),
         _ => a.push_str(
             "# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n",
         ),
@@ -685,6 +697,136 @@ fn keep_dup(o: &Options) -> Result<i64> {
     }
 }
 
+/// `opt_validate_callpeak` (`MACS3/Utilities/OptValidator.py:40-256`): the
+/// rejections upstream performs before it reads a single alignment, plus the two
+/// `cython.int` conversions that happen at the first peak-calling call.
+///
+/// Every branch here exits 1 and leaves no output file, which is what the
+/// reference does: `OptValidator` runs at `callpeak_cmd.py:51`, long before the
+/// `*_peaks.xls` writer is opened.
+///
+/// * `--broad` with `--call-summits` (`:123-125`) is refused outright.
+/// * `-p`/`-q`/`--broad-cutoff` reach `math.log` (`:130`, `:132`, `:135`) and a
+///   non-positive value is a `ValueError: math domain error`. `-p` is tested for
+///   *truthiness*, so `-p 0` falls through to the q-value branch and `-p 0` is a
+///   valid run that reports a q-value cutoff.
+/// * `--d-min` (`:141-143`) and an inverted `--mfold` (`:146-150`) are refused.
+/// * `--max-count` is only looked at for `-f FRAG` (`:93-96`), and a negative one
+///   is refused; for every other format the option is ignored entirely.
+/// * `--keep-dup` must be `auto`, `all` or a run of ASCII digits
+///   (`str.isdigit`, `:104-107`), so `-1` is refused even though it parses as an
+///   integer.
+/// * The remaining three are `cython.int` conversions, not range checks: Cython
+///   narrows a Python int to a C `int` at the call boundary and raises
+///   `OverflowError: value too large to convert to int` above `2**31 - 1`. The
+///   measured tag size reaches `call_peaks`'s `max_gap` (`CallPeakUnit.py:1037`,
+///   `PeakDetect.py:76-78`), `--max-gap` and `--min-length` reach the same two
+///   `cython.int` parameters, and `--shift` reaches `CallerFromAlignments`'s
+///   `end_shift` (`PeakDetect.py:234`, `CallPeakUnit.py:440`).
+/// * `PeakDetect.py:187-190` asserts `d <= slocal <= llocal`, but only on the
+///   **with-control** branch: without `-c` those windows are never consulted and
+///   `--slocal 20000 --llocal 10000` runs. The reference's no-control branch raises
+///   the same `OverflowError` from `CallerFromAlignments`'s `d` instead
+///   (`PeakDetect.py:349`).
+///
+/// A value of exactly `2**31 - 1` still fits, and negative values do not overflow
+/// (they only trip the `assert self.fw > 0` inside `print_to_bed`).
+fn opt_validate_callpeak(o: &Options, format: &str, extsize: i64, pe_mode: bool) -> Result<()> {
+    // OptValidator.py:123-125
+    if o.flag("broad") && o.flag("call_summits") {
+        return Err(MacsError::InvalidParameter(
+            "--broad can't be combined with --call-summits!".into(),
+        ));
+    }
+    // OptValidator.py:127-133: `if options.pvalue:` is a truthiness test, so 0.0
+    // takes the q-value branch and `-q 0` is then `math.log(0)`.
+    let pvalue = o.float("pvalue").filter(|p| *p != 0.0);
+    if pvalue.is_some_and(|p| p < 0.0)
+        || (pvalue.is_none() && o.float("qvalue").unwrap_or(0.05) <= 0.0)
+    {
+        return Err(MacsError::InvalidParameter(
+            "ValueError: math domain error".into(),
+        ));
+    }
+    // OptValidator.py:134-135, only reached with `--broad`
+    if o.flag("broad") && o.float("broadcutoff").unwrap_or(0.1) <= 0.0 {
+        return Err(MacsError::InvalidParameter(
+            "ValueError: math domain error".into(),
+        ));
+    }
+    // OptValidator.py:141-143
+    if o.int("d_min").unwrap_or(20) < 0 {
+        return Err(MacsError::InvalidParameter(
+            "Minimum fragment size shouldn't be negative!".into(),
+        ));
+    }
+    // OptValidator.py:146-150
+    let mf = o.get_all("mfold");
+    let lmfold = mf.first().and_then(|v| v.parse::<i64>().ok()).unwrap_or(5);
+    let umfold = mf.get(1).and_then(|v| v.parse::<i64>().ok()).unwrap_or(50);
+    if lmfold > umfold {
+        return Err(MacsError::InvalidParameter(
+            "Upper limit of mfold should be greater than lower limit!".into(),
+        ));
+    }
+    // OptValidator.py:93-96, FRAG only
+    if format == "FRAG" && o.int("maxcount").is_some_and(|m| m < 0) {
+        return Err(MacsError::InvalidParameter(
+            "--max-count can't be a negative value".into(),
+        ));
+    }
+    // OptValidator.py:104-107: `str.isdigit()`, so a sign or a point is a rejection
+    // rather than a parse.
+    if let Some(k) = o.get("keepduplicates") {
+        if k != "auto" && k != "all" && !k.bytes().all(|b| b.is_ascii_digit()) {
+            return Err(MacsError::InvalidParameter(
+                "--keep-dup should be 'auto', 'all' or an integer!".into(),
+            ));
+        }
+    }
+    // The `cython.int` narrows listed above. `extsize` is the no-control branch's
+    // `d`, so it is checked on that branch only.
+    const C_INT_MAX: i64 = i32::MAX as i64;
+    let tsize = o.int("tsize").unwrap_or(0);
+    let maxgap = o.int("maxgap").unwrap_or(0);
+    if maxgap > C_INT_MAX || o.int("minlen").is_some_and(|m| m > C_INT_MAX) {
+        return Err(MacsError::InvalidParameter(
+            "OverflowError: value too large to convert to int".into(),
+        ));
+    }
+    if maxgap == 0 && tsize > C_INT_MAX {
+        return Err(MacsError::InvalidParameter(
+            "OverflowError: value too large to convert to int".into(),
+        ));
+    }
+    if o.int("shift").unwrap_or(0) > C_INT_MAX {
+        return Err(MacsError::InvalidParameter(
+            "OverflowError: value too large to convert to int".into(),
+        ));
+    }
+    if !pe_mode {
+        if o.get_all("cfile").is_empty() {
+            if extsize > C_INT_MAX {
+                return Err(MacsError::InvalidParameter(
+                    "OverflowError: value too large to convert to int".into(),
+                ));
+            }
+        } else {
+            let slocal = o.int("smalllocal").unwrap_or(1000);
+            let llocal = o.int("largelocal").unwrap_or(10000);
+            let d = extsize;
+            // `if self.sregion:` / `if self.lregion:` are truthiness tests, so a window
+            // set to 0 is skipped rather than asserted against.
+            if (slocal != 0 && d > slocal) || (llocal != 0 && (d > llocal || slocal > llocal)) {
+                return Err(MacsError::InvalidParameter(format!(
+                    "AssertionError: can't be smaller than {d}!"
+                )));
+            }
+        }
+    }
+    Ok(())
+}
+
 /// Pool several input files into one track, as `-t A B C` and `-c A B` do.
 ///
 /// Duplicate filtering is applied by the caller on the pooled track, not per
@@ -798,10 +940,31 @@ fn callpeak_tempdir(o: &Options) -> PathBuf {
     }
 }
 
+/// `--max-count`, the cap upstream applies to a FRAG row's fifth column.
+///
+/// `callpeak_cmd.py:356-357` and `:370-372` pass `max_count=options.maxcount` to
+/// `append_petrack`/`build_petrack`, and `FragParser` does
+/// `if max_count: count = min(count, max_count)` on every parsed row
+/// (`Parser.py:1482-1483`, `:1550-1551`). Zero means "keep every count", so it is
+/// the same as not passing the option at all. Ignored for a non-FRAG format:
+/// `OptValidator.py:93-96` only looks at `maxcount` inside the FRAG branch, and
+/// the `--max-count` help says as much.
+fn frag_max_count(o: &Options) -> u32 {
+    if o.get("format")
+        .unwrap_or("AUTO")
+        .eq_ignore_ascii_case("FRAG")
+    {
+        o.int("maxcount").unwrap_or(0).max(0) as u32
+    } else {
+        0
+    }
+}
+
 fn pool_pe(
     paths: &[String],
     frag: bool,
     barcodes: Option<&std::collections::HashSet<Vec<u8>>>,
+    max_count: u32,
 ) -> Result<(FragmentTrack, f64, f64, u64)> {
     let mut b = if frag {
         FragTrackBuilder::with_barcodes()
@@ -842,7 +1005,12 @@ fn pool_pe(
                 // came out 947 where upstream reports 3783, i.e. divided by the
                 // mean count.
                 for (f, &w) in t.frags(c).iter().zip(t.counts(c).iter()) {
-                    b.push_with_count(&name, f.start, f.end, u32::from(w));
+                    let w = if max_count > 0 {
+                        u32::from(w).min(max_count)
+                    } else {
+                        u32::from(w)
+                    };
+                    b.push_with_count(&name, f.start, f.end, w);
                 }
             } else {
                 for f in t.frags(c) {
@@ -900,13 +1068,16 @@ pub fn run(o: &Options) -> Result<()> {
         broad_cutoff: o.float("broadcutoff").unwrap_or(0.1),
         nolambda: o.flag("nolambda"),
         // F189: `log_pvalue = -log10(pvalue)`; `call_peaks` dispatches on it
-        // being set, and `-p` takes precedence over `-q`.
+        // being set, and `-p` takes precedence over `-q`. `OptValidator.py:127`
+        // tests `options.pvalue` for truthiness, so `-p 0` is the same as not
+        // setting it at all.
         p_cutoff: o
             .float("pvalue")
-            .filter(|v| *v > 0.0)
+            .filter(|v| *v != 0.0)
             .map(|v| -(v as f32).log10()),
     };
     let extsize = o.int("extsize").unwrap_or(0);
+    opt_validate_callpeak(o, &format, extsize, is_pe)?;
     if ctrl_paths.is_empty() && !cfg_common.nolambda && cfg_common.llocal == 0 {
         // PeakDetect's no-control branch divides d by lregion (or the
         // treatment length by lregion in paired-end mode).
@@ -1150,6 +1321,7 @@ pub fn run(o: &Options) -> Result<()> {
             }
         } else {
             let frag = format == "FRAG";
+            let max_count = frag_max_count(o);
             // `--barcodes` subsets `-f FRAG` fragments to an allow-list
             // (`callpeak_cmd.py:86-92`). It is read once here and shared by the
             // treatment and control pools; it has no effect for other formats.
@@ -1164,7 +1336,7 @@ pub fn run(o: &Options) -> Result<()> {
             // F258: the count-weighted mean is no longer read here; upstream's
             // `self.d` is the unweighted row mean (`mean_row`).
             let (mut treat, _count_weighted_mean, mean_row, pre_subset) =
-                pool_pe(&treat_paths, frag, barcode_set.as_ref())?;
+                pool_pe(&treat_paths, frag, barcode_set.as_ref(), max_count)?;
             let pre_treatment = sdump_on.then(|| stagedump::pre_json_frag(&treat, "treatment"));
             // With `--barcodes`, `t0` is the pooled total *before* subsetting
             // (`callpeak_cmd.py:80`), not the filtered track's total. Without a
@@ -1192,7 +1364,7 @@ pub fn run(o: &Options) -> Result<()> {
             let ctrl = if ctrl_paths.is_empty() {
                 None
             } else {
-                let (mut c, _, _, _) = pool_pe(&ctrl_paths, frag, barcode_set.as_ref())?;
+                let (mut c, _, _, _) = pool_pe(&ctrl_paths, frag, barcode_set.as_ref(), max_count)?;
                 ensure_shared_chroms(
                     treat.chroms().iter().map(|&cid| treat.genome().name(cid)),
                     c.chroms().iter().map(|&cid| c.genome().name(cid)),
@@ -1503,7 +1675,7 @@ pub fn run(o: &Options) -> Result<()> {
             nolambda: cfg_common.nolambda,
             // F188: `maxgap = opt.maxgap or opt.tsize`; callpeak has no
             // `--max-gap`, so it is the measured tag size.
-            max_gap: tsize.max(1) as macs_core::Coord,
+            max_gap: tsize.max(1),
             // F189: see `ChromCall::p_cutoff`.
             p_cutoff: cfg_common.p_cutoff,
             // F160: `--shift` moves every 5' end before the single-end extension.
@@ -1594,6 +1766,27 @@ pub fn run(o: &Options) -> Result<()> {
     // without the flag. That is why the flag is threaded into the table pass rather than
     // being a post-hoc dump.
     let cut_analysis = o.flag("cutoff_analysis");
+    // `PeakDetect.__init__` (`PeakDetect.py:76-83`): both are **truthiness** tests --
+    //
+    // ```python
+    // if opt.maxgap: self.maxgap = opt.maxgap
+    // else:          self.maxgap = opt.tsize
+    // if opt.minlen: self.minlen = opt.minlen
+    // else:          self.minlen = self.d
+    // ```
+    //
+    // -- so `--max-gap 0` and `--min-length 0` fall back to the tag size and `d`
+    // (which is what the xls header says too, `OptValidator.py:206-213`), while a
+    // *negative* value is used as given. `lvl2_max_gap` is `self.maxgap * 4` on the
+    // **float**, truncated by the `cython.int` parameter at the call, so it comes
+    // from `tsize_exact` when the option is absent (F188).
+    let maxgap_opt = o.int("maxgap").filter(|g| *g != 0);
+    let minlen_opt = o.int("minlen").filter(|l| *l != 0);
+    let max_gap_used = maxgap_opt.unwrap_or(tsize.max(1));
+    // `lvl2_max_gap = self.maxgap * 4` on the float, then Cython narrows it to a
+    // `cython.int` (`CallPeakUnit.py:1793`), so the truncation is toward zero.
+    let broad_max_gap_used = (maxgap_opt.map_or(tsize_exact, |g| g as f64) * 4.0) as i64;
+    let min_length_used = minlen_opt.unwrap_or(i64::from(d)).max(0) as macs_core::Coord;
     let (table, qtracks, cut_stats) = if let Some(source) = &se_source {
         use std::io::{BufWriter, Write as _};
         let mut histogram = macs_score::PScoreHistogram::new();
@@ -1652,7 +1845,7 @@ pub fn run(o: &Options) -> Result<()> {
                                     &mut cut,
                                     &ptrack,
                                     ladder,
-                                    tsize.max(1) as macs_core::Coord,
+                                    tsize.max(1),
                                     d,
                                 );
                                 h
@@ -1801,7 +1994,7 @@ pub fn run(o: &Options) -> Result<()> {
                     &mut cut_stats,
                     &ptrack,
                     ladder,
-                    tsize.max(1) as macs_core::Coord,
+                    tsize.max(1),
                     d,
                 );
             }
@@ -1853,9 +2046,10 @@ pub fn run(o: &Options) -> Result<()> {
                 enabled: cut_analysis,
                 // F188: `maxgap = opt.maxgap or opt.tsize`, and callpeak defines no
                 // `--max-gap`, so the merge gap is the measured tag size -- the same
-                // value the peak caller uses. `min_length` is `opt.d`.
-                max_gap: tsize.max(1) as macs_core::Coord,
-                min_length: d,
+                // value the peak caller uses, unless `--max-gap` overrides it;
+                // `min_length` is `--min-length` or `opt.d` (`PeakDetect.py:80-83`).
+                max_gap: max_gap_used,
+                min_length: min_length_used,
             },
         );
         (qparts.table, qparts.qtracks, qparts.cutoffs)
@@ -1960,8 +2154,9 @@ pub fn run(o: &Options) -> Result<()> {
                 qtrack: &qtrack,
                 table,
                 d,
-                max_gap: tsize.max(1) as macs_core::Coord,
-                broad_max_gap: (tsize_exact * 4.0) as macs_core::Coord,
+                min_length: min_length_used,
+                max_gap: max_gap_used,
+                broad_max_gap: broad_max_gap_used,
                 p_cutoff: cfg_common.p_cutoff,
                 qvalue: cfg_common.qvalue,
                 broad: cfg_common.broad,
@@ -2012,8 +2207,9 @@ pub fn run(o: &Options) -> Result<()> {
                 qtrack: &qtrack,
                 table,
                 d,
-                max_gap: tsize.max(1) as macs_core::Coord,
-                broad_max_gap: (tsize_exact * 4.0) as macs_core::Coord,
+                min_length: min_length_used,
+                max_gap: max_gap_used,
+                broad_max_gap: broad_max_gap_used,
                 p_cutoff: cfg_common.p_cutoff,
                 qvalue: cfg_common.qvalue,
                 broad: cfg_common.broad,
@@ -2054,8 +2250,9 @@ pub fn run(o: &Options) -> Result<()> {
                         qtrack: qtracks.get(k).unwrap_or(&EMPTY_TRACK),
                         table,
                         d,
-                        max_gap: tsize.max(1) as macs_core::Coord,
-                        broad_max_gap: (tsize_exact * 4.0) as macs_core::Coord,
+                        min_length: min_length_used,
+                        max_gap: max_gap_used,
+                        broad_max_gap: broad_max_gap_used,
                         p_cutoff: cfg_common.p_cutoff,
                         qvalue: cfg_common.qvalue,
                         broad: cfg_common.broad,
@@ -2076,6 +2273,20 @@ pub fn run(o: &Options) -> Result<()> {
             hwm_kb(),
             t_start.elapsed().as_secs_f64()
         );
+    }
+    // `--call-summits` smooths each region with a Savitzky-Golay window of
+    // `min_length` bases (`CallPeakUnit.py:1438-1439` ->
+    // `SignalProcessing.savitzky_golay_order2_deriv1`), so a negative
+    // `--min-length` reaches `numpy.linalg.pinv` with a degenerate array and raises
+    // `ValueError: not enough values to unpack` -- exit 1, no output file. It only
+    // happens once a region exists, so a run that calls no peak still succeeds.
+    if cfg_common.call_summits
+        && minlen_opt.is_some_and(|l| l < 0)
+        && per_chrom.iter().any(|(_, called, _)| !called.is_empty())
+    {
+        return Err(MacsError::InvalidParameter(
+            "ValueError: not enough values to unpack (expected 2, got 1)".into(),
+        ));
     }
     for (name, called, bad) in per_chrom {
         // F172: upstream raises `ZeroDivisionError: float division` from

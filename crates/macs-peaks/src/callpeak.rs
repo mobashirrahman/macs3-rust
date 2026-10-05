@@ -29,8 +29,17 @@ pub struct ChromCall<'a> {
     pub qtrack: &'a SignalTrack<f32>,
     /// The shared p->q table.
     pub table: &'a PqTable,
-    /// The fragment length `d`, used for `min_length` and `max_gap`.
+    /// The fragment length `d`.
     pub d: Coord,
+    /// The shortest peak `call_peaks` will report: `opt.minlen or self.d`
+    /// (`PeakDetect.py:80-83`).
+    ///
+    /// `PeakDetect.minlen` is `opt.minlen` when that option is *truthy* and the
+    /// predicted fragment length `d` otherwise, and it is what
+    /// `CallerFromAlignments.call_peaks` receives as its `min_length: cython.int`
+    /// (`CallPeakUnit.py:1036`). A negative `--min-length` is a legal C `int` that
+    /// no region can fail, so it is folded to `0` here.
+    pub min_length: Coord,
     /// F260: the coordinate upstream's sub-peak padding clamps at -- our stand-in
     /// for its signed `0`. See [`crate::regions::CallParams::clamp_floor`].
     pub clamp_floor: Coord,
@@ -59,7 +68,7 @@ pub struct ChromCall<'a> {
     /// invisible until single-end fixtures with a read length far from
     /// `--extsize` were added: there `max_gap` is the read length and a peak whose
     /// gap exceeds it is split even though the gap is under `d`.
-    pub max_gap: Coord,
+    pub max_gap: i64,
     /// `lvl2_max_gap` for `--broad`: `int(self.maxgap * 4)`.
     ///
     /// Not `max_gap * 4`. `PeakDetect.maxgap` is `opt.tsize`, which is a Python
@@ -70,7 +79,7 @@ pub struct ChromCall<'a> {
     /// Two bases of difference is one merged-versus-split broad region on
     /// `pe_broad/ctcf_pe_chr22_50k` at `chr22:18187588-18189977`, whose
     /// `1013`-base internal gap sits between the two.
-    pub broad_max_gap: Coord,
+    pub broad_max_gap: i64,
     pub broad: bool,
     pub broad_cutoff: f64,
     pub call_summits: bool,
@@ -115,7 +124,7 @@ pub fn to_control(scaleto_large: bool, t1: u64, c1: u64, pe_mode: bool) -> bool 
 fn broad_level(
     chunks: &[Chunk],
     params: &CallParams,
-    lvl2_max_gap: Coord,
+    lvl2_max_gap: i64,
     scores: &[(&[f32], f32)],
     table: &PqTable,
     cache: &mut PScoreCache,
@@ -204,7 +213,7 @@ fn combine_broad(lvl2: &[Peak], lvl1: &[Peak]) -> Vec<Called> {
 /// closer -- narrow, or the two-level broad call when `broad` is set.
 pub fn call_chromosome(cc: &ChromCall<'_>, cache: &mut PScoreCache) -> Vec<Called> {
     let params = CallParams {
-        min_length: cc.d,
+        min_length: cc.min_length,
         max_gap: cc.max_gap,
         call_summits: cc.call_summits,
         clamp_floor: cc.clamp_floor,
@@ -303,10 +312,23 @@ pub fn call_chromosome(cc: &ChromCall<'_>, cache: &mut PScoreCache) -> Vec<Calle
     // against the p-value cutoff instead made every `-p` run threshold on q at a
     // p-value's level: `-p 0.01` on the 5 M fixture called 35,683 peaks, exactly
     // the `-q 0.01` answer, where upstream calls 69,159.
+    //
+    // The above-cutoff test is the **score alone**. Upstream's is
+    // `np.nonzero(apply_multiple_cutoffs(score_array_s, score_cutoff_s))[0]`
+    // (`CallPeakUnit.py:1202`), which never looks at the treatment pileup, and the
+    // cutoff itself can be negative: `OptValidator.py:132` computes
+    // `log_qvalue = log(qvalue, 10) * -1`, so `-q 2.0` asks for `> -0.301`, which
+    // every position clears -- `__cal_pvalue_qvalue_table` floors the q-value at 0
+    // (`CallPeakUnit.py:990-993`), never below. Adding `tpos[i] > 0.0` here dropped
+    // the zero-depth positions that open such a run, so the first chunk started at
+    // `pos[i-1]` instead of at the literal `0` that `above_cutoff[0] == 0` forces
+    // (`CallPeakUnit.py:1216-1220`). Measured on `sweep/gtiny_mse_d400_w60_ctrl_001`
+    // with `-q 2.0`: `chrB 0 1293` upstream against `chrB 1001 1293` here, with the
+    // summit offset column 1147 against 146 for the same absolute summit.
     let chunks_at = |track: &[f32], cut: f32| -> Vec<Chunk> {
         let mut v: Vec<Chunk> = Vec::new();
         for i in 0..n {
-            if track[i] > cut && tpos[i] > 0.0 {
+            if track[i] > cut {
                 v.push(Chunk {
                     // F271: upstream's `if above_cutoff[0] == 0:
                     // above_cutoff_startpos[0] = 0` assigns a *literal* zero, whose
@@ -466,7 +488,7 @@ pub struct SeConfig {
     /// `--nolambda`: disable the dynamic local lambda entirely.
     pub nolambda: bool,
     /// `maxgap`, i.e. `opt.tsize` -- see [`ChromCall::max_gap`] (F188).
-    pub max_gap: Coord,
+    pub max_gap: i64,
     /// `-log10(--pvalue)`, when given (F189).
     pub p_cutoff: Option<f32>,
     /// `--scaleto large` (the default) rather than `small`; see [`to_control`].
@@ -624,7 +646,7 @@ pub struct CutoffParams {
     /// Run the analysis at all.
     pub enabled: bool,
     /// Merge gap: `opt.maxgap or opt.tsize` (F188).
-    pub max_gap: Coord,
+    pub max_gap: i64,
     /// Minimum peak length: `opt.d`.
     pub min_length: Coord,
 }
@@ -1159,7 +1181,11 @@ pub fn run_callpeak_se(
     let (signals, lambda_bg) = build_signals_se(treat, ctrl, cfg);
     let (table, qtracks) = build_qtable(&signals, false);
     let d = cfg.extsize.max(1) as Coord;
-    let max_gap = if cfg.max_gap == 0 { d } else { cfg.max_gap };
+    let max_gap = if cfg.max_gap == 0 {
+        i64::from(d)
+    } else {
+        cfg.max_gap
+    };
     let mut cache = PScoreCache::new();
     let mut peaks: Vec<(String, Peak)> = Vec::new();
     for (k, s) in signals.iter().enumerate() {
@@ -1176,6 +1202,7 @@ pub fn run_callpeak_se(
             qtrack: &qtracks[k],
             table: &table,
             d,
+            min_length: d,
             max_gap,
             broad_max_gap: max_gap.saturating_mul(4),
             p_cutoff: cfg.p_cutoff,
@@ -1985,7 +2012,7 @@ pub fn accumulate_cutoffs(
     stats: &mut CutoffStats,
     track: &macs_rle::SignalTrack<f32>,
     ladder: &[f32],
-    max_gap: Coord,
+    max_gap: i64,
     min_length: Coord,
 ) {
     let runs = track.runs();
@@ -2029,7 +2056,7 @@ pub fn accumulate_cutoffs(
             // the two agree here; the explicit form is kept because it is the rule, not
             // the coincidence.
             let tl = s as i64 - last_end as i64;
-            if tl <= max_gap as i64 {
+            if tl <= max_gap {
                 chunk_end = e;
             } else {
                 let len = chunk_end.saturating_sub(chunk_start);
@@ -2103,7 +2130,7 @@ pub fn render_cutoff_analysis(
 /// q-value for a bedGraph). The output is descending by cutoff.
 pub fn bedgraph_cutoff_analysis(
     tracks: &[(macs_rle::SignalTrack<f32>, Coord)],
-    max_gap: Coord,
+    max_gap: i64,
     min_length: Coord,
     steps: usize,
     min_score: f32,
@@ -2171,7 +2198,7 @@ pub fn bedgraph_cutoff_analysis(
             let mut last_end = ce;
             for k in 1..above.len() {
                 let (s, e) = (start_at(k), ends[above[k]]);
-                if (s as i64 - last_end as i64) <= max_gap as i64 {
+                if (s as i64 - last_end as i64) <= max_gap {
                     ce = e;
                 } else {
                     let len = ce.saturating_sub(cs);

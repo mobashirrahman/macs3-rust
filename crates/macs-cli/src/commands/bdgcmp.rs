@@ -67,9 +67,23 @@ pub fn bdgcmp(o: &Options) -> Result<()> {
     // upstream: `pseudo_depth = 1.0/scaling_factor`, "a trick to override SPMR"
     let pseudo_depth = (1.0 / sfactor) as f32;
 
+    // `-m` is `nargs="+"` with `default="ppois"` (`bin/macs3:894-895`), so when the
+    // flag is absent argparse leaves the **string** `"ppois"` in `options.method` --
+    // not a one-element list. `opt_validate_bdgcmp` then runs
+    // `for method in set(options.method)` (`OptValidator.py:583`), which iterates
+    // the set's five characters, and the first one it reaches is not a valid method:
+    //
+    //     $ macs3 bdgcmp -t t.bdg -c c.bdg -o out.bdg
+    //     ERROR ... Invalid method: p
+    //
+    // and it exits 1. The character is `set`-iteration order, i.e. hash-randomized,
+    // so only the exit status is reproducible; `p` is what it reports most often.
+    // This port therefore treats a missing `-m` as the string default and reports
+    // its first character, rather than running the default method -- which is a
+    // different result, not just a different message.
     let methods: Vec<String> = o.get_all("method").to_vec();
     let methods = if methods.is_empty() {
-        vec!["ppois".to_string()]
+        vec!["ppois".chars().next().unwrap_or('p').to_string()]
     } else {
         methods
     };
@@ -186,9 +200,13 @@ pub fn bdgdiff(o: &Options) -> Result<()> {
     let minlen = o.int("minlen").unwrap_or(200).max(0) as u32;
     let maxgap = o.int("maxgap").unwrap_or(100).max(0) as u32;
     if maxgap >= minlen {
-        return Err(MacsError::InvalidParameter(format!(
+        // `bdgdiff_cmd.py:43` calls `error(...)` and then *falls through* -- there is
+        // no `sys.exit()` -- so the reference prints the complaint and runs anyway,
+        // exiting 0 with all three BED files written. Refusing the run here made
+        // `-l 100 -g 200` a hard error where upstream succeeds.
+        eprintln!(
             "MAXGAP should be smaller than MINLEN! Your input is MAXGAP = {maxgap} and MINLEN = {minlen}"
-        )));
+        );
     }
     let depth1 = o.float("depth1").unwrap_or(1.0);
     let depth2 = o.float("depth2").unwrap_or(1.0);
