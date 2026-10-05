@@ -928,6 +928,13 @@ pub fn run(o: &Options) -> Result<()> {
     // count block; each load branch fills them.
     #[allow(unused_assignments)]
     let mut tsize: i64 = 0;
+    // `options.tsize` *untruncated*, which `tsize` above cannot carry: the narrow
+    // and broad-level-1 merge gaps are `int(opt.tsize)`, but `--broad`'s level-2 gap
+    // is `int(opt.tsize * 4)` (`PeakDetect.py:264`), and the two differ whenever the
+    // measured mean fragment length is not an integer. See
+    // [`macs_peaks::callpeak::ChromCall::broad_max_gap`].
+    #[allow(unused_assignments)]
+    let mut tsize_exact = 0.0f64;
     #[allow(unused_assignments)]
     let mut t0 = 0u64;
     // The per-chromosome read counts **before** duplicate filtering, for
@@ -1092,6 +1099,7 @@ pub fn run(o: &Options) -> Result<()> {
             } else {
                 cfg.tsize as f32 as f64
             };
+            tsize_exact = cfg.tsize_exact;
             if sdump_on {
                 let r = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
                 record_pe_scaling_stage(&mut sdump, &treat, ctrl.as_ref(), &cfg);
@@ -1252,6 +1260,7 @@ pub fn run(o: &Options) -> Result<()> {
             } else {
                 cfg.tsize as f32 as f64
             };
+            tsize_exact = cfg.tsize_exact;
             if sdump_on {
                 let r = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
                 record_pe_scaling_stage(&mut sdump, &treat, ctrl.as_ref(), &cfg);
@@ -1330,6 +1339,9 @@ pub fn run(o: &Options) -> Result<()> {
             .int("tsize")
             .filter(|v| *v != 0)
             .unwrap_or(mean_treat as i64);
+        // single-end `opt.tsize` is a read length, hence an integer: the level-2 gap
+        // `int(opt.tsize * 4)` and `int(opt.tsize) * 4` coincide
+        tsize_exact = tsize as f64;
         let ctrl = if ctrl_paths.is_empty() {
             None
         } else {
@@ -1944,6 +1956,7 @@ pub fn run(o: &Options) -> Result<()> {
                 table,
                 d,
                 max_gap: tsize.max(1) as macs_core::Coord,
+                broad_max_gap: (tsize_exact * 4.0) as macs_core::Coord,
                 p_cutoff: cfg_common.p_cutoff,
                 qvalue: cfg_common.qvalue,
                 broad: cfg_common.broad,
@@ -1995,6 +2008,7 @@ pub fn run(o: &Options) -> Result<()> {
                 table,
                 d,
                 max_gap: tsize.max(1) as macs_core::Coord,
+                broad_max_gap: (tsize_exact * 4.0) as macs_core::Coord,
                 p_cutoff: cfg_common.p_cutoff,
                 qvalue: cfg_common.qvalue,
                 broad: cfg_common.broad,
@@ -2036,6 +2050,7 @@ pub fn run(o: &Options) -> Result<()> {
                         table,
                         d,
                         max_gap: tsize.max(1) as macs_core::Coord,
+                        broad_max_gap: (tsize_exact * 4.0) as macs_core::Coord,
                         p_cutoff: cfg_common.p_cutoff,
                         qvalue: cfg_common.qvalue,
                         broad: cfg_common.broad,

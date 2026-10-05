@@ -1,7 +1,9 @@
 //! The AFDR p-to-q table.
 //!
-//! Port of `MACS3/Signal/ScoreTrack.py:490-544` (`make_pq_table`) and the
-//! p-to-q conversion at `:465-487` (`compute_qvalue`).
+//! Port of `MACS3/Signal/CallPeakUnit.py:752-835` (`__cal_pvalue_qvalue_table`) --
+//! the table `callpeak` builds, since this is the only caller of it. The
+//! near-identical `ScoreTrack.make_pq_table` (`ScoreTrack.py:490-544`) differs in
+//! one declaration, `k`: see the note on `k` below.
 //!
 //! # The algorithm, exactly
 //!
@@ -30,10 +32,16 @@
 //!
 //! Three details decide whether this is bit-compatible:
 //!
-//! * `k` is declared `cython.float`, so the rank accumulates in `f32`. Above
-//!   2^24 the spacing of `f32` exceeds 1, so on a human genome the rank is
-//!   quantised and `log10(k)` inherits it. Reproduced.
-//! * `q` is also `cython.float`, so `v + (log10(k) + f)` is evaluated in `f64`
+//! * `k` is declared `cython.long` here (`CallPeakUnit.py:770`, and likewise in
+//!   `__pre_computes`, `:864`), so the rank accumulates **exactly**; it is *not*
+//!   the `cython.float` of `ScoreTrack.make_pq_table` (`ScoreTrack.py:510`). The
+//!   difference only shows once the rank passes 2^24, which on a human genome it
+//!   does long before the AFDR tail: with `k` in `f32` the spacing above 2^24
+//!   exceeds 1, `log10(k)` inherits the quantisation, and every q-score in the
+//!   tail moves. Measured on the 5 M-read fixture with `callpeak -p 0.01`: 1126 of
+//!   69,159 peaks carried a `-log10(qvalue)` that was wrong in its last few
+//!   digits, e.g. `5.77227e-05` upstream against `5.48469e-05`.
+//! * `q` is `cython.float`, so `v + (log10(k) + f)` is evaluated in `f64`
 //!   (`log10` is a Python function, `v` and `k` are widened) and then
 //!   **truncated** to `f32`. Reproduced.
 //! * The `break` at `q <= 0` leaves the breaking p-score **out** of the table in
@@ -97,6 +105,10 @@ impl PqTable {
 
     /// Build the table from a p-score histogram.
     ///
+    /// The AFDR rank `k` accumulates in `i64`, as `CallPeakUnit.py:770` declares
+    /// it -- see the module doc for why that is not the `f32` of
+    /// `ScoreTrack.make_pq_table`.
+    ///
     /// An empty histogram yields an empty table (upstream would raise a
     /// `NameError` here, because `i` is never bound; we return an empty table
     /// and let the caller decide, which is strictly safer).
@@ -116,8 +128,7 @@ impl PqTable {
         // float32, and that truncation is worth up to a ULP in every q below.
         // Caught by the golden pq tables.
         let f: f32 = (-(n as f64).log10()) as f32;
-        // upstream: k = 1, then k += <base pair count>, all in float32
-        let mut k: f32 = 1.0;
+        let mut k: i64 = 1;
         let mut pre_q: f32 = PRE_Q_INIT;
         let mut cut_at: Option<f32> = None;
         let ordered = h.sorted_descending();
@@ -125,10 +136,11 @@ impl PqTable {
 
         for (i, (v, ln)) in ordered.iter().copied().enumerate() {
             last_index = i;
-            // upstream: q = v + (log10(k) + f); `v`, `k` and `f` are all C floats
-            // widened to f64 for the addition, then the result is truncated to
-            // float32 on assignment to `q: cython.float`
-            let q = (f64::from(v) + (f64::from(k).log10() + f64::from(f))) as f32;
+            // upstream: q = v + (log10(k) + f); `v` and `f` are C floats and `k` a C
+            // long, all widened to f64 for the addition (C promotes, and `log10` is a
+            // Python function), then the result is truncated to float32 on
+            // assignment to `q: cython.float`
+            let q = (f64::from(v) + ((k as f64).log10() + f64::from(f))) as f32;
             let q = if q > pre_q { pre_q } else { q };
             if q <= 0.0 {
                 cut_at = Some(v);
@@ -136,8 +148,7 @@ impl PqTable {
             }
             table.map.insert(canonical_score_key(v), q);
             pre_q = q;
-            // the float32 accumulation is upstream's, not an oversight
-            k += ln as f32;
+            k += ln;
         }
 
         // F18: upstream's second loop runs from the loop variable `i`, which is
@@ -416,32 +427,27 @@ mod tests {
         assert_eq!(t.len(), h.len(), "every bucket is present, the tail as 0");
     }
 
-    /// The AFDR rank `k` is a C `float`, so above 2^24 its spacing exceeds 1 and
-    /// adding a small count to it is a no-op. That is directly observable in the
-    /// *middle* bucket's q, which is the only one that depends on a large `k`.
+    /// The AFDR rank `k` is a C `long` in `__cal_pvalue_qvalue_table`
+    /// (`CallPeakUnit.py:770`), so it accumulates exactly. `f32` is exact below
+    /// 2^24 and decisive above it, so this is only observable on a genome-scale
+    /// histogram: with the rank rounded to `f32` the middle bucket of this one
+    /// would report `0.35982170701026917` rather than the
+    /// `0.35982173681259155` asserted here.
     #[test]
-    fn the_rank_accumulates_in_f32_so_small_counts_do_not_move_it() {
-        // k for the middle bucket is 1 + top_count, and top_count is ~2^25
-        let big = 1u64 << 25;
-        let a = PqTable::from_histogram(&hist(&[(30.0, big), (20.0, 1), (10.0, 1)]));
-        let b = PqTable::from_histogram(&hist(&[(30.0, big), (20.0, 2), (10.0, 1)]));
-        // top_count differing by 1 cannot be represented in f32, so the middle
-        // bucket's q must be bit-identical
-        assert_eq!(
-            a.get(20.0).unwrap().to_bits(),
-            b.get(20.0).unwrap().to_bits(),
-            "an f32 rank must not see a change of 1 above 2^24"
-        );
-
-        // ...while a change large enough to move f32 *does* change the table:
-        // `f = -log10(N)` is an f64 computation, so it is sensitive at any scale
-        let small = PqTable::from_histogram(&hist(&[(30.0, 1 << 20), (20.0, 1), (10.0, 1)]));
-        assert!(
-            small.get(30.0).unwrap() > a.get(30.0).unwrap(),
-            "a smaller N must give a larger q: {} vs {}",
-            small.get(30.0).unwrap(),
-            a.get(30.0).unwrap()
-        );
+    fn the_rank_accumulates_as_a_c_long_not_as_a_float() {
+        // a human genome's worth of base pairs, split so that the middle bucket's
+        // rank is `1 + 21_000_000` -- past 2^24, where f32 spacing is 2
+        let n = 2_900_000_000u64;
+        let h = hist(&[(30.0, 21_000_000), (2.5, n - 21_000_000 - 1), (0.5, 1)]);
+        let t = PqTable::from_histogram(&h);
+        // the top bucket is scored at k = 1, so its q is `v - log10(N)` alone:
+        // 0x41a4_4d02, the f32 nearest 20.537601
+        assert_eq!(t.get(30.0).unwrap().to_bits(), 0x41a4_4d02);
+        // the middle bucket is the only one that depends on a rank above 2^24:
+        // 0x3eb8_3a8e, the f32 nearest 0.35982173681259155
+        assert_eq!(t.get(2.5).unwrap().to_bits(), 0x3eb8_3a8e);
+        // the lowest bucket is forced to 0 by F18
+        assert_eq!(t.get(0.5), Some(0.0));
     }
 
     /// With a single bucket, the walk computes `q = v - log10(N)` and F18 then

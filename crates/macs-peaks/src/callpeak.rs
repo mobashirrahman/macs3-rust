@@ -60,6 +60,17 @@ pub struct ChromCall<'a> {
     /// `--extsize` were added: there `max_gap` is the read length and a peak whose
     /// gap exceeds it is split even though the gap is under `d`.
     pub max_gap: Coord,
+    /// `lvl2_max_gap` for `--broad`: `int(self.maxgap * 4)`.
+    ///
+    /// Not `max_gap * 4`. `PeakDetect.maxgap` is `opt.tsize`, which is a Python
+    /// **float** (`tp.d`, the mean fragment length), and `PeakDetect.py:264` scales
+    /// that before Cython truncates it at the `cython.int` boundary of
+    /// `call_broadpeaks` (`CallPeakUnit.py:1793`) -- so with a mean fragment length
+    /// of `253.5` the level-2 gap is `int(1014.0) = 1014`, not `253 * 4 = 1012`.
+    /// Two bases of difference is one merged-versus-split broad region on
+    /// `pe_broad/ctcf_pe_chr22_50k` at `chr22:18187588-18189977`, whose
+    /// `1013`-base internal gap sits between the two.
+    pub broad_max_gap: Coord,
     pub broad: bool,
     pub broad_cutoff: f64,
     pub call_summits: bool,
@@ -104,13 +115,14 @@ pub fn to_control(scaleto_large: bool, t1: u64, c1: u64, pe_mode: bool) -> bool 
 fn broad_level(
     chunks: &[Chunk],
     params: &CallParams,
+    lvl2_max_gap: Coord,
     scores: &[(&[f32], f32)],
     table: &PqTable,
     cache: &mut PScoreCache,
 ) -> Vec<Peak> {
     use crate::{close_peak_for_broad_region, regions::segment_region_ranges};
     let lvl2_params = CallParams {
-        max_gap: params.max_gap.saturating_mul(4),
+        max_gap: lvl2_max_gap,
         ..params.clone()
     };
     let regions = segment_region_ranges(chunks, lvl2_params.max_gap);
@@ -185,10 +197,11 @@ fn combine_broad(lvl2: &[Peak], lvl1: &[Peak]) -> Vec<Called> {
 /// Call peaks for one chromosome and return them in coordinate order.
 ///
 /// Builds the paired position list (the union of the treatment and control run
-/// ends, or the q-track's ends when there is no control), samples the q-score
-/// at each position, keeps positions above `-log10(qvalue)` with a non-zero
-/// treatment pileup as chunks, then calls the peak closer -- narrow, or the
-/// two-level broad call when `broad` is set.
+/// ends, or the q-track's ends when there is no control), samples the p- and
+/// q-score at each position, keeps the positions whose requested score --
+/// `p_cutoff` when `-p` was given, `-log10(qvalue)` otherwise -- clears the
+/// cutoff with a non-zero treatment pileup as chunks, then calls the peak
+/// closer -- narrow, or the two-level broad call when `broad` is set.
 pub fn call_chromosome(cc: &ChromCall<'_>, cache: &mut PScoreCache) -> Vec<Called> {
     let params = CallParams {
         min_length: cc.d,
@@ -275,10 +288,25 @@ pub fn call_chromosome(cc: &ChromCall<'_>, cache: &mut PScoreCache) -> Vec<Calle
 
     // F114: each cutoff needs its own chunk list -- a lvl2 broad region must be
     // able to extend past the narrow cutoff.
-    let chunks_at = |cut: f32| -> Vec<Chunk> {
+    //
+    // F189: the comparison is against the *requested* score array, not always the
+    // q-score. Upstream builds exactly one `score_array_s` per call from
+    // `scoring_function_symbols` (`__chrom_call_peak_using_certain_criteria`,
+    // `CallPeakUnit.py:1184-1197`, and `__chrom_call_broadpeak_using_certain_criteria`,
+    // `CallPeakUnit.py:1983-1996`) and thresholds it for **both** levels:
+    // `apply_multiple_cutoffs(score_array_s, score_cutoff_s)` (`:1202`) for the
+    // narrow call and `apply_multiple_cutoffs(score_array_s, lvl1_cutoff_s)`
+    // / `apply_multiple_cutoffs(score_array_s, lvl2_cutoff_s)` (`:2002`, `:2082`)
+    // for the broad call. `PeakDetect` picks the symbol from the flag
+    // (`PeakDetect.py:255-289`, `:372-406`), so `-p` means both broad levels and the
+    // narrow call threshold the **p-score** array. Comparing the q-score array
+    // against the p-value cutoff instead made every `-p` run threshold on q at a
+    // p-value's level: `-p 0.01` on the 5 M fixture called 35,683 peaks, exactly
+    // the `-q 0.01` answer, where upstream calls 69,159.
+    let chunks_at = |track: &[f32], cut: f32| -> Vec<Chunk> {
         let mut v: Vec<Chunk> = Vec::new();
         for i in 0..n {
-            if qpos[i] > cut && tpos[i] > 0.0 {
+            if track[i] > cut && tpos[i] > 0.0 {
                 v.push(Chunk {
                     // F271: upstream's `if above_cutoff[0] == 0:
                     // above_cutoff_startpos[0] = 0` assigns a *literal* zero, whose
@@ -306,7 +334,7 @@ pub fn call_chromosome(cc: &ChromCall<'_>, cache: &mut PScoreCache) -> Vec<Calle
     let use_p = cc.p_cutoff.is_some();
     let cut = cc.p_cutoff.unwrap_or(neg_log10_qvalue);
     let score_track: &[f32] = if use_p { &ppos } else { &qpos };
-    let chunks = chunks_at(cut);
+    let chunks = chunks_at(score_track, cut);
     let scores: Vec<(&[f32], f32)> = vec![(score_track, cut)];
     if cc.broad {
         // F111: broad mode calls the region set twice -- once at the q-value
@@ -345,7 +373,7 @@ pub fn call_chromosome(cc: &ChromCall<'_>, cache: &mut PScoreCache) -> Vec<Calle
         } else {
             vec![(qv.as_slice(), lvl2_cut)]
         };
-        let lvl2_chunks = chunks_at(lvl2_cut);
+        let lvl2_chunks = chunks_at(score_track, lvl2_cut);
         // F266: dump the broad-path level sets. This is the intermediate the porting
         // plan lists as "candidate/merged intervals", and it is what
         // `sweep/gmini_mpe_d400_w180_ctrl_192 --broad` turns on: we emit one broad peak
@@ -386,7 +414,14 @@ pub fn call_chromosome(cc: &ChromCall<'_>, cache: &mut PScoreCache) -> Vec<Calle
                 );
             }
         }
-        let l2 = broad_level(&lvl2_chunks, &params, &lvl2_scores, cc.table, cache);
+        let l2 = broad_level(
+            &lvl2_chunks,
+            &params,
+            cc.broad_max_gap,
+            &lvl2_scores,
+            cc.table,
+            cache,
+        );
         return combine_broad(&l2, &l1);
     }
 
@@ -1141,6 +1176,7 @@ pub fn run_callpeak_se(
             table: &table,
             d,
             max_gap,
+            broad_max_gap: max_gap.saturating_mul(4),
             p_cutoff: cfg.p_cutoff,
             qvalue: cfg.qvalue,
             broad: cfg.broad,

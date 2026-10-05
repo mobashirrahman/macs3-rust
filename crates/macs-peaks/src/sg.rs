@@ -125,11 +125,18 @@ pub fn savitzky_golay_order2_deriv1(signal: &[f32], window_size: usize) -> Vec<f
         return signal.iter().map(|v| *v as f64).collect();
     }
 
-    // edge padding by inward reflection of the slope
+    // edge padding by inward reflection of the slope.
+    //
+    // `firstvals`/`lastvals` are float32 arrays upstream -- `signal` is float32, so
+    // `signal[0] - np.abs(signal[1:half+1][::-1] - signal[0])` is evaluated and
+    // rounded in f32 before the concatenation, and only the concatenated array is
+    // widened (`.astype("f8")`). Each pad value therefore carries its own f32
+    // rounding, which the padding-only convolution outputs (indices `< half` and
+    // `>= n - half`) see directly.
     let mut padded: Vec<f64> = Vec::with_capacity(n + 2 * half);
-    let first = signal[0] as f64;
+    let first = signal[0];
     for k in (1..=half).rev() {
-        padded.push(first - (signal[k] as f64 - first).abs());
+        padded.push((first - (signal[k] - first).abs()) as f64);
     }
     padded.extend(signal.iter().map(|v| *v as f64));
     // The right pad is `signal[-1] + abs(signal[-half-1:-1][::-1] - signal[-1])`.
@@ -141,9 +148,9 @@ pub fn savitzky_golay_order2_deriv1(signal: &[f32], window_size: usize) -> Vec<f
     // `signal[n-half-1:n][::-1]`. The two agree only where the tail is flat, so
     // they differ exactly at a contig end carrying a peak, and the wrong
     // derivative there moved the detected maximum.
-    let last = signal[n - 1] as f64;
+    let last = signal[n - 1];
     for k in (n - half - 1..n - 1).rev() {
-        padded.push(last + (signal[k] as f64 - last).abs());
+        padded.push((last + (signal[k] - last).abs()) as f64);
     }
 
     let m = deriv1_coefficients(window_size);
@@ -224,11 +231,15 @@ mod tests {
 
     #[test]
     fn the_coefficient_sum_is_zero_for_a_constant_signal() {
-        // a constant signal must differentiate to exactly zero, so the weights
-        // have to sum to zero
+        // A constant signal must differentiate to (near) zero, so the weights have to
+        // sum to zero. The residual is upstream's own: `np.linalg.pinv` leaves the row
+        // short of an exact zero by whatever its SVD rounds to, and for the oracle's
+        // NumPy the naive sum of window 181's coefficients is -1.03e-18. What matters
+        // is that it stays far below the 1e-16 `maxima` rounds at, which
+        // `a_constant_signal_differentiates_to_zero` checks end to end.
         let m = deriv1_coefficients(180);
         let s: f64 = m.iter().sum();
-        assert!(s.abs() < 1e-18, "coefficients must sum to zero, got {s}");
+        assert!(s.abs() < 1e-17, "coefficients must sum to zero, got {s}");
     }
 
     #[test]

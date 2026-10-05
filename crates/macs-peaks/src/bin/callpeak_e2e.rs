@@ -863,6 +863,7 @@ fn finish(
                 // F188: `maxgap = opt.maxgap or opt.tsize`; the harness has no
                 // separate tag size, so `d` is the closest stand-in.
                 max_gap: d,
+                broad_max_gap: d.saturating_mul(4),
                 p_cutoff: None,
                 qvalue: a.qvalue,
                 broad: a.broad,

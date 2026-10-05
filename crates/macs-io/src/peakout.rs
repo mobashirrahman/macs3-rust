@@ -313,6 +313,14 @@ pub fn format_g(v: f64, sig: usize) -> String {
         let s = format!("{:.*e}", sig.saturating_sub(1), v);
         // Rust writes `1.2345e6`; Python writes `1.2345e+06`
         if let Some((m, e)) = s.split_once('e') {
+            // `%g` drops trailing zeros from the fraction in exponent form too, so
+            // `7.25020e-06` is `7.2502e-06` -- and a mantissa that is nothing but
+            // zeros keeps its leading digit: `1.00000e-06` is `1e-06`.
+            let m = if m.contains('.') {
+                m.trim_end_matches('0').trim_end_matches('.')
+            } else {
+                m
+            };
             let ev: i32 = e.parse().unwrap_or(0);
             return format!("{m}e{}{:02}", if ev < 0 { '-' } else { '+' }, ev.abs());
         }
