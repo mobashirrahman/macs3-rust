@@ -51,7 +51,9 @@ not yet a full all-flags, all-corpus replacement.
   term, the q value before the clamp and the `pre_q` seed are f32 upstream);
   `bdgcmp -m logFE|ppois|qpois` now exits 1 with no output file where upstream
   raises. All five 5M-read `pileup`/`bdg*` outputs are byte-identical; workspace
-  tests are at 767. `filterdup` output still has the same rows in a different
+  tests are at 771. `hmmratac --save-training-data` now prints values as Python's
+  `repr` does (ties-to-even on the last digit), taking upstream's `cmdlinetest`
+  to 154 of 163 files byte-identical. `filterdup` output still has the same rows in a different
   chromosome order.
 - **The C fermi-lite assembler bridge is intentionally retained.** Replacing it with
   a pure-Rust assembler remains post-v1.0 scope; the existing bridge is tested in CI.

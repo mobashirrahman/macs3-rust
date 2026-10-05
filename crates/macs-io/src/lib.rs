@@ -55,7 +55,7 @@ pub use formats::{
     parse_bed_line, parse_bedgraph_line, parse_bedpe_line, parse_frag_line, parse_sam_line,
     split_line, LineSplit, RawSam, RecordKind,
 };
-pub use peakout::{format_g, narrowpeak_row, summit_row, xls_body, xls_row, XlsRow};
+pub use peakout::{format_g, narrowpeak_row, python_repr, summit_row, xls_body, xls_row, XlsRow};
 pub use tsize::{detect_tsize, detect_tsize_bam, detect_tsize_text};
 
 use macs_core::{ChromId, Coord, MacsError, Result, Strand};

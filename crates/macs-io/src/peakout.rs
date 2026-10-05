@@ -332,6 +332,87 @@ pub fn format_g(v: f64, sig: usize) -> String {
     }
 }
 
+/// CPython's `repr(float)` -- what `str()`, `%s` and an f-string's empty `format()`
+/// spec all produce for a Python `float`.
+///
+/// `hmmratac`'s `*_training_data.txt` is written as `f"{p[0]}\t{p[1]}\t{v[0]}..."`
+/// (`hmmratac_cmd.py:350`), and `v[k]` there is `numpy.float32`. A `numpy.float32`
+/// with an empty format spec widens to `double` and defers to `float.__repr__`, so
+/// the column is the shortest round-tripping decimal of the **widened `f64`** --
+/// not numpy's shorter, `float32`-round-tripping `str()` (`8.765152`).
+///
+/// Rust's `Display` is shortest-round-trip too, but not the same digit string: on
+/// an exact halfway value it rounds away from zero where CPython's `_Py_dg_dtoa`
+/// rounds to even, so `f64::from(8.765152f32)` prints `8.765151977539063` here and
+/// `8.765151977539062` there -- 840 of 44757 rows of a real run. Rust's
+/// fixed-precision `{:.n}` *is* correctly rounded with ties to even, so the answer
+/// is the shortest digit count whose correctly rounded rendering parses back.
+///
+/// The layout is `format_float_short` (`Python/pystrtod.c`): exponent form when
+/// the decimal point sits at `-4` or below or above `16`, and `Py_DTSF_ADD_DOT_0`
+/// puts a `.0` on an integral value.
+pub fn python_repr(v: f64) -> String {
+    if v.is_nan() {
+        return "nan".to_string();
+    }
+    if v.is_infinite() {
+        return if v > 0.0 { "inf" } else { "-inf" }.to_string();
+    }
+    // 17 significant digits always round-trip an `f64`, so the loop stops there.
+    let mut sig = 1usize;
+    while sig < 17 && format!("{v:.*e}", sig - 1).parse::<f64>() != Ok(v) {
+        sig += 1;
+    }
+    let sci = format!("{v:.*e}", sig - 1);
+    let (mant, exp) = sci
+        .split_once('e')
+        .expect("LowerExp always writes an exponent");
+    let exp: i32 = exp.parse().expect("LowerExp exponent parses");
+    let (sign, mant) = mant.strip_prefix('-').map_or(("", mant), |m| ("-", m));
+    // `mant` is `d.ddd`; the digits alone are what the point position indexes.
+    let digits = mant.replace('.', "");
+    // The decimal point sits one place past the leading digit.
+    let point = exp + 1;
+    if point <= -4 || point > 16 {
+        let rest = &digits[1..];
+        return if rest.is_empty() {
+            format!(
+                "{sign}{digits}e{}{:02}",
+                if exp < 0 { '-' } else { '+' },
+                exp.abs()
+            )
+        } else {
+            format!(
+                "{sign}{}.{}e{}{:02}",
+                &digits[..1],
+                rest,
+                if exp < 0 { '-' } else { '+' },
+                exp.abs()
+            )
+        };
+    }
+    let mut out = String::from(sign);
+    if point <= 0 {
+        out.push_str("0.");
+        for _ in 0..-point {
+            out.push('0');
+        }
+        out.push_str(&digits);
+    } else if (point as usize) >= sig {
+        out.push_str(&digits);
+        for _ in 0..(point as usize - sig) {
+            out.push('0');
+        }
+        out.push_str(".0");
+    } else {
+        let point = point as usize;
+        out.push_str(&digits[..point]);
+        out.push('.');
+        out.push_str(&digits[point..]);
+    }
+    out
+}
+
 /// The XLS column header, in upstream's order.
 pub const XLS_HEADER: &str =
     "chr\tstart\tend\tlength\tabs_summit\tpileup\t-log10(pvalue)\tfold_enrichment\t-log10(qvalue)\tname";
@@ -596,5 +677,74 @@ mod tests {
         assert_eq!(format_g(7.20635, 5), "7.2063");
         assert_eq!(format_g(0.0000123456, 5), "1.2346e-05");
         assert_eq!(format_g(123456.0, 5), "1.2346e+05");
+    }
+
+    /// Every cell here is a `numpy.float32` from `hmmratac`'s `*_training_data.txt`
+    /// that the pinned reference wrote, and each one is a value where Rust's own
+    /// `Display` rounds the final digit the other way.
+    #[test]
+    fn python_repr_rounds_an_exact_halfway_value_to_even() {
+        // 8.765151977539062 is `hmmratac_yeast500k_training_data.txt` line 88
+        // (yeast_500k_SRR1822137.bam); the rest are the tie cells of
+        // `gmini_mfrag_d400_w180_ctrl_033/treat.frag`.
+        let cases: [(f32, &str); 4] = [
+            (8.765152, "8.765151977539062"),
+            (136.04337, "136.04336547851562"),
+            (89.1022, "89.10220336914062"),
+            (895.99835, "895.9983520507812"),
+        ];
+        for (f32_value, want) in cases {
+            let v = f64::from(f32_value);
+            assert_eq!(python_repr(v), want, "for {f32_value}f32");
+            // The bug this reproduces: `Display` is shortest-round-trip too, but
+            // rounds an exact halfway digit away from zero instead of to even.
+            assert_ne!(
+                format!("{v}"),
+                want,
+                "Display should differ for {f32_value}f32"
+            );
+        }
+        // A cell that is not halfway still has to come out unchanged.
+        assert_eq!(python_repr(f64::from(0.92852986f32)), "0.9285298585891724");
+    }
+
+    /// A cell that *is* integral still needs `.0` (`Py_DTSF_ADD_DOT_0`), and the
+    /// exponent window of `format_float_short` is `[-4, 16)` on the position of
+    /// the decimal point.
+    #[test]
+    fn python_repr_layout_matches_cpython() {
+        assert_eq!(python_repr(0.0), "0.0");
+        assert_eq!(python_repr(-0.0), "-0.0");
+        assert_eq!(python_repr(3.0), "3.0");
+        assert_eq!(python_repr(-2.5), "-2.5");
+        assert_eq!(python_repr(0.0001), "0.0001");
+        assert_eq!(python_repr(1e-5), "1e-05");
+        assert_eq!(python_repr(1.5e-5), "1.5e-05");
+        assert_eq!(python_repr(1e15), "1000000000000000.0");
+        assert_eq!(python_repr(1e16), "1e+16");
+        assert_eq!(
+            python_repr(1.7976931348623157e308),
+            "1.7976931348623157e+308"
+        );
+        assert_eq!(python_repr(5e-324), "5e-324");
+        assert_eq!(python_repr(f64::NAN), "nan");
+        assert_eq!(python_repr(f64::INFINITY), "inf");
+        assert_eq!(python_repr(f64::NEG_INFINITY), "-inf");
+    }
+
+    /// Whatever the digit string, the result must parse back to the input.
+    #[test]
+    fn python_repr_always_round_trips() {
+        let mut state = 0x2545_F491_4F6C_DD1Du64;
+        for _ in 0..20_000 {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            let v = f64::from_bits(state);
+            if !v.is_finite() {
+                continue;
+            }
+            assert_eq!(python_repr(v).parse::<f64>(), Ok(v), "for {v:?}");
+        }
     }
 }

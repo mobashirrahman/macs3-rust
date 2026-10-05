@@ -25,15 +25,14 @@ fourth decimal is a different answer.
 | Invalid invocations, 481 cases | **0 exit-status mismatches** |
 | `callpeak` on 5 M + 5 M real CTCF reads, five modes | 17 / 17 files byte-identical |
 | `pileup`, `bdgcmp`, `cmbreps`, `bdgopt`, `bdgpeakcall` on the same data | 5 / 5 files byte-identical |
-| MACS3's own `cmdlinetest` suite, 14 subcommands | passes; 153 / 163 output files byte-identical |
+| MACS3's own `cmdlinetest` suite, 14 subcommands | passes; 154 / 163 output files byte-identical |
 | `hmmratac` on yeast ATAC-seq | 1,605 / 1,605 accessible regions identical |
 | `callvar`, assembly off / auto / on | 22 / 22, 16 / 16, 15 / 15 VCF records identical |
 | 1 thread vs 32 threads, all 7,685 recorded runs | byte-identical output |
 
-The 10 `cmdlinetest` files that differ: seven `hmmratac` model files agree to
-2 × 10⁻¹⁰ but not to the byte, one training-data dump is numerically equal, and
-two outputs on a 50,000-contig input depend on MACS3's unordered chromosome
-iteration.
+The 9 `cmdlinetest` files that differ: seven `hmmratac` model files agree to
+2 × 10⁻¹⁰ but not to the byte, and two outputs on a 50,000-contig input depend
+on MACS3's unordered chromosome iteration.
 
 Getting there meant reproducing upstream's arithmetic exactly: float32 widths,
 NumPy's summation order, its Mersenne Twister stream, and a number of upstream
@@ -110,7 +109,7 @@ Details: [compatibility by command](docs/compatibility.md) ·
 vendored, so the reference cannot be edited to make a test pass.
 
 ```sh
-cargo test --workspace     # 767 tests
+cargo test --workspace     # 771 tests
 oracle/run_golden.sh       # replay every recorded run and compare bytes
 ```
 

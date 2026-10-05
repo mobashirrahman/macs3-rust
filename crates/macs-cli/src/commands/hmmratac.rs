@@ -517,6 +517,31 @@ fn extract_one_chrom(
     }
 }
 
+/// One `*_training_data.txt` value cell.
+///
+/// `hmmratac_cmd.py:350` interpolates the extracted row with `f"{v[k]}"`, and the
+/// type of `v[k]` is what decides the text:
+///
+/// * Gaussian: `max(0.0001, extracted_data[k][i])` (`HMMR_Signal_Processing.py:197`),
+///   which is a `numpy.float32` unless the `0.0001` floor won. A `numpy.float32`
+///   with an empty format spec widens to `double` and defers to `float.__repr__`,
+///   so the cell is Python's shortest round-tripping decimal of the widened value
+///   -- `8.765151977539062`, not numpy's own `str()` (`8.765152`) and not Rust's
+///   `Display` (`8.765151977539063`).
+/// * Poisson: `int(max(...))`, a Python `int`, so the cell is a bare integer.
+///
+/// Rust's `Display` for `f64` is also shortest-round-trip, but on an exact halfway
+/// value it rounds away from zero where CPython rounds to even; 840 of the 44757
+/// rows of a real run landed on one. [`macs_io::python_repr`] is the same digit
+/// string CPython prints.
+fn training_cell(v: f64, poisson: bool) -> String {
+    if poisson {
+        format!("{}", v as i64)
+    } else {
+        macs_io::python_repr(v)
+    }
+}
+
 /// Decode every region's bin sequence and return `(chrom, bin_end, posteriors)`
 /// in upstream's emission order.
 fn decode(
@@ -994,10 +1019,10 @@ pub fn hmmratac(o: &Options) -> Result<()> {
                         "b'{}'\t{}\t{}\t{}\t{}\t{}\n",
                         String::from_utf8_lossy(genome.name(c)),
                         bin.pos,
-                        values[0],
-                        values[1],
-                        values[2],
-                        values[3]
+                        training_cell(values[0], poisson),
+                        training_cell(values[1], poisson),
+                        training_cell(values[2], poisson),
+                        training_cell(values[3], poisson)
                     ));
                 }
             }
