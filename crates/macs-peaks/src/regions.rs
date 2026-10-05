@@ -214,28 +214,35 @@ impl ScoreKind {
 /// the open region when `start - last_end <= max_gap`, and `<=` is inclusive, so
 /// a gap of exactly `max_gap` is merged.
 pub fn segment_regions(chunks: &[Chunk], max_gap: Coord) -> Vec<Vec<Chunk>> {
-    let mut regions: Vec<Vec<Chunk>> = Vec::new();
-    let mut open: Vec<Chunk> = Vec::new();
-    let mut last_end: Coord = 0;
+    segment_region_ranges(chunks, max_gap)
+        .into_iter()
+        .map(|range| chunks[range].to_vec())
+        .collect()
+}
 
-    for c in chunks {
-        if open.is_empty() {
-            open.push(*c);
-            last_end = c.end;
-            continue;
-        }
-        if c.start - last_end <= max_gap {
-            open.push(*c);
-            last_end = c.end;
-        } else {
-            regions.push(std::mem::take(&mut open));
-            open.push(*c);
-            last_end = c.end;
-        }
+/// Return bounds into a sorted chunk slice without copying the chunks.
+///
+/// Peak calling may have millions of above-cutoff chunks. Keeping the original
+/// vector and a second `Vec<Vec<Chunk>>` nearly doubles that part of the working
+/// set, so the shipping caller iterates these ranges instead.
+pub(crate) fn segment_region_ranges(
+    chunks: &[Chunk],
+    max_gap: Coord,
+) -> Vec<std::ops::Range<usize>> {
+    if chunks.is_empty() {
+        return Vec::new();
     }
-    if !open.is_empty() {
-        regions.push(open);
+    let mut regions = Vec::new();
+    let mut start = 0usize;
+    let mut last_end = chunks[0].end;
+    for (i, c) in chunks.iter().enumerate().skip(1) {
+        if c.start - last_end > max_gap {
+            regions.push(start..i);
+            start = i;
+        }
+        last_end = c.end;
     }
+    regions.push(start..chunks.len());
     regions
 }
 
@@ -407,19 +414,6 @@ pub fn close_peak_wo_subpeaks_with_p(
     let midindex = (summits.len() + 1) / 2 - 1;
     let (summit_pos, summit_index) = summits[midindex];
     let sc = &region[summit_index];
-    if std::env::var("CALLPEAK_SUMMIT").is_ok() {
-        eprintln!(
-            "SUMMIT region {} chunks, chose index {summit_index} pos {summit_pos}",
-            region.len()
-        );
-        for (i, c) in region.iter().enumerate() {
-            eprintln!(
-                "  CHUNK {i} [{}, {}) treat {} ctrl {} ti {}",
-                c.start, c.end, c.treat, c.ctrl, c.score_index
-            );
-        }
-    }
-
     // Re-check the cutoff at the summit. This is a *double check* upstream calls
     // out in a comment: a chunk's score array entry must still clear it.
     for (array, cutoff) in scores {
@@ -573,7 +567,6 @@ pub fn close_peak_with_subpeaks(
 
     // smoothlen is min_length, i.e. the fragment size d
     let mut summit_offsets = sg::maxima(&peakdata, params.min_length as usize);
-
     // drop maxima that landed in the padding
     if !summit_offsets.is_empty() {
         let upper = start_boundary + peak_length as i64;
@@ -585,25 +578,12 @@ pub fn close_peak_with_subpeaks(
         return close_peak_wo_subpeaks(region, params, scores, pq, cache).map(|p| vec![p]);
     }
 
-    // Upstream removes maxima that fall inside a below-cutoff gap before the
-    // peakyness test: `summit_indices = peakindices[summit_offsets]` and
-    // `mapped_summits = summit_indices >= 0` (`CallPeakUnit.py:1470-1472`).
-    // `peakindices` is -1 in the gaps, so this drops any smoothed maximum whose
-    // position belongs to no above-cutoff chunk.
-    //
-    // This matters: a smoothed maximum inside a gap is not a real summit, and
-    // keeping it changed both the peakyness verdict and the reported summit.
-    summit_offsets = summit_offsets
-        .iter()
-        .copied()
-        .filter(|o| peakindices.get(*o).copied().unwrap_or(-1) >= 0)
-        .collect();
-    if summit_offsets.is_empty() {
-        // failsafe: smoothed maxima can sit entirely in below-cutoff gaps
-        return close_peak_wo_subpeaks_with_p(region, params, scores, pq, None, cache)
-            .map(|p| vec![p]);
-    }
-
+    // Upstream runs peakyness on all maxima in the peak body, including those
+    // that fall in below-cutoff gaps. Only afterward does it map maxima to their
+    // source chunks and discard unmapped offsets (CallPeakUnit.py:1458-1472).
+    // The order matters: a gap maximum can define the valley used to reject an
+    // otherwise surviving subpeak, sending the whole region through the ordinary
+    // summit fallback.
     summit_offsets = crate::peakyness::enforce_peakyness(&peakdata, &summit_offsets);
     if summit_offsets.is_empty() {
         return close_peak_wo_subpeaks(region, params, scores, pq, cache).map(|p| vec![p]);
@@ -693,10 +673,11 @@ pub fn call_peaks_chromosome_with_p(
     pscore_track: Option<&[f32]>,
     cache: &mut macs_score::PScoreCache,
 ) -> (Vec<Peak>, usize) {
-    let regions = segment_regions(chunks, params.max_gap);
+    let regions = segment_region_ranges(chunks, params.max_gap);
     let mut peaks = Vec::new();
     let mut rejected = 0usize;
-    for region in &regions {
+    for range in &regions {
+        let region = &chunks[range.clone()];
         let r = if params.call_summits {
             close_peak_with_subpeaks(region, params, scores, pq, Some(cache)).map(|v| (v, true))
         } else {
@@ -823,6 +804,31 @@ mod tests {
         let mut cache = macs_score::PScoreCache::new();
         let p = close_peak_wo_subpeaks(&region, &params, &[], &pq, Some(&mut cache)).unwrap();
         assert_eq!(p.summit, 201, "F62: (100+300+1).div_ceil(2)");
+    }
+
+    #[test]
+    fn gap_maxima_participate_in_peakyness_before_chunk_mapping() {
+        // Reproduces the reported CTCF single-end peak. The smoothing maxima
+        // include a one-base gap maximum. Upstream tests peakyness before mapping
+        // maxima back to chunks; this rejects all subpeaks and uses the ordinary
+        // parent-peak fallback, whose tied lower-median summit is 30642880.
+        let region = vec![
+            c(30_642_747, 30_642_844, 3.0),
+            c(30_642_879, 30_642_880, 3.0),
+            c(30_642_880, 30_642_975, 3.0),
+            c(30_643_035, 30_643_073, 3.0),
+        ];
+        let params = CallParams {
+            min_length: 228,
+            call_summits: true,
+            ..Default::default()
+        };
+        let pq = PqTable::empty();
+        let mut cache = macs_score::PScoreCache::new();
+        let peaks = close_peak_with_subpeaks(&region, &params, &[], &pq, Some(&mut cache))
+            .expect("the parent peak should survive the ordinary fallback");
+        assert_eq!(peaks.len(), 1);
+        assert_eq!(peaks[0].summit, 30_642_880);
     }
 
     #[test]

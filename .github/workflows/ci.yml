@@ -20,7 +20,7 @@ name: ci
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
   workflow_dispatch:
   schedule:
@@ -35,6 +35,7 @@ env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-D warnings"
   MACS3_RS_ORACLE_COMMIT: c5443190e3edfeb301cc94acf450e2b2c026a223
+  OPENBLAS_CORETYPE: Haswell
 
 jobs:
   # ---------------------------------------------------------------- L1: unit
@@ -57,7 +58,7 @@ jobs:
                       callvar hmmratac; do
             ./target/release/macs3-rs "$cmd" --help >/dev/null 2>&1 \
               && echo "ok: $cmd" \
-              || echo "FAIL: $cmd is missing or rejects --help"
+              || { echo "FAIL: $cmd is missing or rejects --help"; exit 1; }
           done
 
   # ------------------------------------------------------- L2: proptest invariants
@@ -125,23 +126,10 @@ jobs:
           cargo test --release --test malformed_inputs
           # callvar: the VCF header must stay byte-identical to the pinned oracle
           cargo test --release -p macs-callvar --test header_parity
-      - name: every F-finding has a named regression test
-        # guards against a finding being documented but never pinned in code
-        run: |
-          python3 - <<'PY'
-          import re, pathlib, sys
-          doc = pathlib.Path("docs/upstream-findings.md").read_text()
-          findings = set(re.findall(r"^## (F\\d+)", doc, re.M))
-          src = "\n".join(
-              p.read_text(errors="replace")
-              for p in pathlib.Path("crates").rglob("*.rs")
-          )
-          missing = sorted(f for f in findings if f not in src)
-          print(f"{len(findings)} findings, {len(missing)} without a code reference")
-          if missing:
-              print("unreferenced:", ", ".join(missing))
-          sys.exit(1 if missing else 0)
-          PY
+      - name: findings have code references or reviewed historical debt
+        # Older findings predate the F-number reference convention. Keep that
+        # explicitly listed debt visible, and fail on newly unreferenced findings.
+        run: python3 oracle/check_finding_refs.py
 
   # ------------------------------------------ L4: golden byte-compare (the oracle)
   golden:
@@ -153,7 +141,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
       - name: provision the pinned oracle
         run: bash oracle/provision_oracle.sh
       - run: cargo build --release --workspace
@@ -184,7 +172,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
       - name: provision the pinned oracle
         run: bash oracle/provision_oracle.sh
       - run: cargo build --release --workspace
@@ -201,16 +189,21 @@ jobs:
             python3 "oracle/$c.py"
             echo "::endgroup::"
           done
-      - name: replay the recorded fixtures through macs3-rs and diff the stages
+      - name: fresh SE, BEDPE, and BAMPE summit outputs match the pinned oracle
+        run: >-
+          python3 oracle/check_real_summit_bytes.py
+          --source "$MACS3_SRC"
+          --oracle "$MACS3_VENV/bin/macs3"
+      - name: recorded intermediate stages match the pinned oracle
         # The real stage-by-stage differential: our own `stages.json` against upstream's
         # recorded one. `MACS3_RS_DUMP_STAGES` is an env override precisely so the CLI's
         # accept/reject surface stays byte-identical to upstream's -- a `--dump-stages`
-        # flag would itself be a divergence.
+        # flag would itself be a divergence. Constructor arguments are captured
+        # positionally as well as by keyword so the lambda ladder is observed.
         run: |
           cargo build --release
           bash oracle/run_our_stages.sh /tmp/our_stages
-          ./target/release/macs-compare --stages tests/stages --ours-stages /tmp/our_stages \
-            || echo "::warning::stage differential reported gaps (see the table above)"
+          ./target/release/macs-compare --stages tests/stages --ours-stages /tmp/our_stages
       - name: --cutoff-analysis against the recorded upstream files
         # Not just a report: the ladder's cutoffs are seeded into the AFDR histogram
         # before the q-table is built, so a wrong ladder changes every q-score too.
@@ -240,12 +233,10 @@ jobs:
         # *_model.r byte comparison lives here too.
         run: bash oracle/check_predictd_randsample.sh
       - name: callvar matches the oracle's variant records
-        # PosReadsInfo/PeakVariants/RACollection are cython.cclass, so they cannot be
-        # unit-tested against Python; the only differential is a whole `callvar` run.
-        # `--fermi off` is byte-identical on upstream's own fixtures. The script also
-        # asserts that `--fermi auto` is refused *and* leaves no output file, since it
-        # needs the fermi-lite assembler.
-        run: bash oracle/check_callvar.sh
+        run: |
+          bash oracle/check_callvar.sh
+          bash oracle/check_callvar.sh --fermi
+          bash oracle/check_callvar.sh --fermi-on
       - name: hmmratac accessible regions against the oracle
         # G13, strict. Was non-strict while it read 0.66 on yeast500k. Two defects
         # closed it (F232 bin lookup off by one run, F233 a states run spanning two
@@ -253,8 +244,9 @@ jobs:
         # digested tracks byte-identical, and both `*_accessible_regions.narrowPeak`
         # and `*_states.bed` byte-identical.
         run: |
-          pip install --quiet hmmlearn
           python3 oracle/check_hmmratac.py
+      - name: Gaussian and Poisson self-training against the pinned oracle
+        run: python3 oracle/check_hmm_training.py
       - name: the recorded intermediate corpus must parse and agree with itself
         # `tests/stages/**/stages.json` is the committed record of upstream's
         # intermediates (reads, d, scaling, p->q table, candidate peaks). If it stops
@@ -297,7 +289,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
       - run: cargo build --release --workspace
       - name: thread determinism is a stated criterion, not a test convenience
         run: cargo test --release --test thread_determinism

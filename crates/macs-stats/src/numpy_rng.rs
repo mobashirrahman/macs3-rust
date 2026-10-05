@@ -24,6 +24,8 @@ pub struct NumpyRng {
     state: [u32; Self::N],
     /// Position within the state array.
     index: usize,
+    /// Spare value from the last polar Box-Muller draw (`rk_gauss`'s cache).
+    gauss_cache: Option<f64>,
 }
 
 impl NumpyRng {
@@ -48,6 +50,7 @@ impl NumpyRng {
         let mut rng = NumpyRng {
             state: [0; Self::N],
             index: Self::N,
+            gauss_cache: None,
         };
         for (pos, word) in rng.state.iter_mut().enumerate() {
             *word = s;
@@ -116,7 +119,11 @@ impl NumpyRng {
             k -= 1;
         }
         state[0] = 0x8000_0000;
-        Self { state, index: N }
+        Self {
+            state,
+            index: N,
+            gauss_cache: None,
+        }
     }
     /// Seed exactly as `np.random.RandomState(np.random.MT19937(np.random.SeedSequence(seed)))`.
     ///
@@ -134,7 +141,11 @@ impl NumpyRng {
         let mut state = [0u32; Self::N];
         state.copy_from_slice(&words);
         state[0] = 0x8000_0000;
-        Self { state, index: 623 }
+        Self {
+            state,
+            index: 623,
+            gauss_cache: None,
+        }
     }
 
     /// NumPy's `mixbits` helper: XOR the two words and fold the low bits upward.
@@ -188,12 +199,107 @@ impl NumpyRng {
         (a as f64 * 67_108_864.0 + b as f64) * (1.0 / 9_007_199_254_740_992.0)
     }
 
-    /// A uniform integer in `[low, high)`, as NumPy's `randint`.
+    /// Legacy `rk_standard_exponential`: `-log(1 - U)`.
     ///
-    /// NumPy uses masked rejection sampling: mask off the low bits, and redraw
-    /// while the value is out of range. That redraw loop consumes a variable
-    /// number of words, so a naive modulo would desynchronise the stream and
-    /// diverge on every subsequent draw.
+    /// Not the ziggurat the modern `Generator` uses; `RandomState` draws the legacy
+    /// path, and the two consume different words.
+    pub fn standard_exponential(&mut self) -> f64 {
+        -(1.0 - self.random_sample()).ln()
+    }
+
+    /// Legacy `rk_gauss`: Box-Muller in polar form, with one cached value.
+    ///
+    /// `RandomState` uses this, not the ziggurat. The cache means a gaussian draw
+    /// sometimes consumes **zero** words, so the stream position depends on whether
+    /// the previous draw left a spare -- skipping the cache desynchronises every
+    /// later draw and is a classic source of "matches for one call, diverges on the
+    /// next" bugs.
+    pub fn standard_normal(&mut self) -> f64 {
+        if let Some(g) = self.gauss_cache {
+            self.gauss_cache = None;
+            return g;
+        }
+        loop {
+            let x1 = 2.0 * self.random_sample() - 1.0;
+            let x2 = 2.0 * self.random_sample() - 1.0;
+            let r2 = x1 * x1 + x2 * x2;
+            if r2 >= 1.0 || r2 == 0.0 {
+                continue;
+            }
+            let f = (-2.0 * r2.ln() / r2).sqrt();
+            self.gauss_cache = Some(f * x1);
+            return f * x2;
+        }
+    }
+
+    /// Legacy `rk_standard_gamma`.
+    ///
+    /// Three branches, all taken verbatim from `distributions.c`:
+    ///
+    /// * `shape == 1` is an exponential;
+    /// * `shape < 1` is a rejection scheme with a power transform;
+    /// * `shape >= 1` is Marsaglia-Tsang's squeeze, which draws a gaussian and a
+    ///   uniform per trial.
+    ///
+    /// The `shape < 1` branch is the one `dirichlet(1/3)` hits.
+    pub fn standard_gamma(&mut self, shape: f64) -> f64 {
+        if shape == 1.0 {
+            return self.standard_exponential();
+        }
+        if shape == 0.0 {
+            return 0.0;
+        }
+        if shape < 1.0 {
+            loop {
+                let u = self.random_sample();
+                let v = self.standard_exponential();
+                if u <= 1.0 - shape {
+                    let x = u.powf(1.0 / shape);
+                    if x <= v {
+                        return x;
+                    }
+                } else {
+                    let y = -((1.0 - u) / shape).ln();
+                    let x = (1.0 - shape + shape * y).powf(1.0 / shape);
+                    if x <= v + y {
+                        return x;
+                    }
+                }
+            }
+        }
+        let b = shape - 1.0 / 3.0;
+        let c = 1.0 / (9.0 * b).sqrt();
+        loop {
+            let (x, mut v) = loop {
+                let x = self.standard_normal();
+                let v = 1.0 + c * x;
+                if v > 0.0 {
+                    break (x, v);
+                }
+            };
+            v = v * v * v;
+            let u = self.random_sample();
+            let x2 = x * x;
+            if u < 1.0 - 0.0331 * x2 * x2 {
+                return b * v;
+            }
+            if u.ln() < 0.5 * x2 + b * (1.0 - v + v.ln()) {
+                return b * v;
+            }
+        }
+    }
+
+    /// `RandomState.dirichlet(alpha)`: normalised standard-gamma draws.
+    pub fn dirichlet(&mut self, alpha: &[f64]) -> Vec<f64> {
+        let mut out: Vec<f64> = alpha.iter().map(|&a| self.standard_gamma(a)).collect();
+        let s: f64 = out.iter().sum();
+        for v in out.iter_mut() {
+            *v /= s;
+        }
+        out
+    }
+
+    /// A uniform integer in `[low, high)`, as NumPy's `randint`.
     pub fn randint(&mut self, low: i64, high: i64) -> i64 {
         let rng = high - low - 1;
         if rng <= 0 {

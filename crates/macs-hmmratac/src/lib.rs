@@ -26,9 +26,11 @@
 
 #![forbid(unsafe_code)]
 
+pub mod baum_welch;
 pub mod em;
 pub(crate) mod json;
 pub mod json_read;
+pub mod kmeans;
 
 use std::collections::BTreeMap;
 
@@ -278,7 +280,13 @@ pub struct TrainingData {
     /// Bin start position per row.
     pub bins: Vec<Coord>,
     /// `[short, mono, di, tri]` per row, floored at `0.0001`.
-    pub rows: Vec<[f32; N_SIGNALS]>,
+    ///
+    /// f64, not f32: upstream is `max(0.0001, extracted_data[k][i])`
+    /// (`HMMR_Signal_Processing.py:197-200`) with a Python float literal `0.0001`,
+    /// so the comparison happens in f64 and the floored entries come out as exactly
+    /// `0.0001`, not `f32(0.0001) = 0.00009999999747378752`. Storing f32 made every
+    /// floored cell print one ulp low in `*_training_data.txt` (54174 lines here).
+    pub rows: Vec<[f64; N_SIGNALS]>,
     /// Length of each region's run of consecutive bins.
     pub lengths: Vec<usize>,
 }
@@ -398,8 +406,8 @@ pub fn extract_value_hmmr(
 }
 
 /// Floor applied to extracted signal values, as upstream does before feeding
-/// the HMM.
-const MIN_VALUE: f32 = 0.0001;
+/// the HMM. f64 because upstream's literal is a Python float.
+const MIN_VALUE: f64 = 0.0001;
 
 /// Turn extracted bins into HMM training rows.
 ///
@@ -411,9 +419,9 @@ pub fn extract_signals_from_regions(bins: &[ExtractedBin], poisson: bool) -> Tra
     let mut prev_c = 0i32;
     for b in bins {
         td.bins.push(b.pos);
-        let v = std::array::from_fn(|i| b.values[i].max(MIN_VALUE));
+        let v = std::array::from_fn(|i| f64::from(b.values[i]).max(MIN_VALUE));
         td.rows.push(if poisson {
-            v.map(|x| x as i64 as f32)
+            v.map(|x| x as i64 as f64)
         } else {
             v
         });

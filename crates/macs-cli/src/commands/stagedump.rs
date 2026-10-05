@@ -128,17 +128,28 @@ pub fn num_map_json(pairs: &[(&str, f64)]) -> String {
     s
 }
 
-/// A JSON array of `[score, length]` pairs -- the p->q histogram.
-pub fn pairs_json(pairs: &[(f32, i64)]) -> String {
-    let mut s = String::from("[");
-    for (i, (v, n)) in pairs.iter().enumerate() {
-        if i > 0 {
-            s.push(',');
-        }
-        let _ = write!(s, "[{},{}]", num(f64::from(*v)), n);
-    }
-    s.push(']');
-    s
+/// JSON for the control scale parameters actually passed to the peak score engine.
+pub fn lambda_ladder_json(
+    ctrl_d_s: &[i64],
+    ctrl_scaling_factor_s: &[f64],
+    lambda_bg: f64,
+    treat_scale: f64,
+) -> String {
+    let d_s = ctrl_d_s
+        .iter()
+        .map(ToString::to_string)
+        .collect::<Vec<_>>()
+        .join(", ");
+    let factors = ctrl_scaling_factor_s
+        .iter()
+        .map(|&v| num(v))
+        .collect::<Vec<_>>()
+        .join(", ");
+    format!(
+        "{{\"ctrl_d_s\": [{d_s}], \"ctrl_scaling_factor_s\": [{factors}], \"lambda_bg\": {}, \"treat_scale\": {}}}",
+        num(lambda_bg),
+        num(treat_scale)
+    )
 }
 
 /// `dump_stages.py` records lengths as plain integers, and `qvalue_table` carries the
@@ -241,6 +252,187 @@ pub fn record_reads(
 pub fn pre_json_se(treat: &macs_track::SingleEndTrack) -> String {
     let tm = per_chrom_se(treat);
     format!("{{\"treatment\": {}}}", counts_json(treat.total(), &tm))
+}
+
+/// Append the control snapshot captured before its duplicate filter to an earlier
+/// treatment snapshot. `callpeak` filters treatment before it loads control, so the
+/// two pre-filter snapshots necessarily arrive at separate points in the pipeline.
+pub fn add_pre_control_se(
+    pre_treatment: &str,
+    control: Option<&macs_track::SingleEndTrack>,
+) -> String {
+    let treatment = pre_treatment
+        .strip_prefix("{\"treatment\": ")
+        .and_then(|v| v.strip_suffix('}'))
+        .expect("pre_json_se has a stable treatment wrapper");
+    let control = control.map_or_else(
+        || "null".to_string(),
+        |track| counts_json(track.total(), &per_chrom_se(track)),
+    );
+    format!("{{\"treatment\": {treatment}, \"control\": {control}}}")
+}
+
+/// `reads_pre_filter` payload for paired fragments, as read by the oracle wrapper.
+pub fn pre_json_frag(track: &macs_track::FragmentTrack, role: &str) -> String {
+    let mut chroms = BTreeMap::new();
+    for chrom in track.chroms() {
+        let name = String::from_utf8_lossy(track.genome().name(chrom)).into_owned();
+        let fields = if track.has_counts() {
+            "[\"l\",\"r\",\"c\"]"
+        } else {
+            "[\"l\",\"r\"]"
+        };
+        chroms.insert(
+            name,
+            format!(
+                "{{\"fragments\": {}, \"fields\": {fields}}}",
+                track.frags(chrom).len()
+            ),
+        );
+    }
+    let mut body = String::from("{");
+    for (i, (name, details)) in chroms.iter().enumerate() {
+        if i > 0 {
+            body.push(',');
+        }
+        let _ = write!(body, "\"{}\": {details}", esc(name));
+    }
+    body.push('}');
+    format!(
+        "{{\"{role}\": {{\"total\": {}, \"chroms\": {body}}}}}",
+        track.total()
+    )
+}
+
+/// Add the second paired-end input's pre-filter snapshot to the first.
+pub fn add_pre_control_frag(
+    pre_treatment: &str,
+    control: Option<&macs_track::FragmentTrack>,
+) -> String {
+    let treatment = pre_treatment
+        .strip_prefix("{\"treatment\": ")
+        .and_then(|v| v.strip_suffix('}'))
+        .expect("pre_json_frag has a stable treatment wrapper");
+    let control = control.map_or_else(
+        || "null".to_string(),
+        |track| {
+            let wrapped = pre_json_frag(track, "control");
+            wrapped
+                .strip_prefix("{\"control\": ")
+                .and_then(|v| v.strip_suffix('}'))
+                .expect("pre_json_frag has a stable control wrapper")
+                .to_string()
+        },
+    );
+    format!("{{\"treatment\": {treatment}, \"control\": {control}}}")
+}
+
+/// Duplicate counts/rates reconstructed from the actual input and filtered totals.
+/// FRAG tracks carry counts and upstream skips duplicate filtering, so their capture
+/// intentionally contains totals only.
+pub fn record_duplicates(
+    sd: &mut StageDump,
+    treat_total: u64,
+    treat_after: u64,
+    ctrl_total: u64,
+    ctrl_after: u64,
+    ctrl_present: bool,
+    counted_fragments: bool,
+) {
+    if !sd.enabled() {
+        return;
+    }
+    let mut fields = vec![("treat_total", treat_total as f64)];
+    if counted_fragments {
+        if ctrl_present {
+            fields.push(("ctrl_total", ctrl_total as f64));
+        }
+    } else {
+        fields.push(("treat_after_filter", treat_after as f64));
+        fields.push((
+            "treat_redundant_rate",
+            redundant_rate(treat_total, treat_after),
+        ));
+        if ctrl_present {
+            fields.push(("ctrl_total", ctrl_total as f64));
+            fields.push(("ctrl_after_filter", ctrl_after as f64));
+            fields.push((
+                "ctrl_redundant_rate",
+                redundant_rate(ctrl_total, ctrl_after),
+            ));
+        }
+    }
+    sd.put("duplicates", &num_map_json(&fields));
+}
+
+fn redundant_rate(total: u64, kept: u64) -> f64 {
+    if total == 0 {
+        0.0
+    } else {
+        ((total.saturating_sub(kept) as f64 / total as f64) * 100.0).round() / 100.0
+    }
+}
+
+/// The cutoff-analysis report is the upstream stage named `qvalue_table`; it has
+/// five fields per emitted cutoff. Parse the same text that the output writer uses so
+/// rounding matches the user's report exactly.
+pub fn cutoff_table_json(body: &str) -> String {
+    let mut out = String::from("[");
+    let mut first = true;
+    for line in body.lines().skip(1) {
+        let fields: Vec<&str> = line.split('\t').collect();
+        if fields.len() < 5 {
+            continue;
+        }
+        let (Ok(p), Ok(q), Ok(np), Ok(lp), Ok(avg)) = (
+            fields[0].parse::<f64>(),
+            fields[1].parse::<f64>(),
+            fields[2].parse::<u64>(),
+            fields[3].parse::<u64>(),
+            fields[4].parse::<f64>(),
+        ) else {
+            continue;
+        };
+        if !first {
+            out.push(',');
+        }
+        first = false;
+        let _ = write!(out, "[{}, {}, {np}, {lp}, {}]", num(p), num(q), num(avg));
+    }
+    out.push(']');
+    out
+}
+
+/// Parse `-B`'s actual control-lambda body into the same interval schema used by the
+/// oracle's bedGraph reader.
+pub fn bedgraph_body_json(body: &str) -> String {
+    let mut chroms: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for line in body.lines() {
+        let fields: Vec<&str> = line.split('\t').collect();
+        if fields.len() != 4 {
+            continue;
+        }
+        let (Ok(start), Ok(end), Ok(value)) = (
+            fields[1].parse::<i64>(),
+            fields[2].parse::<i64>(),
+            fields[3].parse::<f64>(),
+        ) else {
+            continue;
+        };
+        chroms
+            .entry(fields[0].to_string())
+            .or_default()
+            .push(format!("[{start},{end},{}]", num(value)));
+    }
+    let mut out = String::from("{");
+    for (i, (chrom, rows)) in chroms.iter().enumerate() {
+        if i > 0 {
+            out.push(',');
+        }
+        let _ = write!(out, "\"{}\": [{}]", esc(chrom), rows.join(","));
+    }
+    out.push('}');
+    out
 }
 
 /// Per-chromosome plus/minus read counts, read back through the track API rather than

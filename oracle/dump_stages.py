@@ -38,12 +38,11 @@ for it -- so for `-f FRAG` only the totals appear, and their absence is correct 
 than a gap.
 
 The control scale ladder (`ctrl_d_s`, `ctrl_scaling_factor_s`, `lambda_bg`) is a **C
-attribute** of `CallerFromAlignments` and also not an argument to `call_peaks`, which
-`callpeak_cmd.run` invokes as `peakdetect.call_peaks()` with none. A delegating proxy
-(F240) confirms this: it observes the call and finds nothing. The stage is recorded as
-an empty ladder precisely so that the negative result is visible instead of
-undocumented -- and the ladder is separately diffable through the `lambda_merged`
-bedGraph, which is written from it.
+attribute** of `CallerFromAlignments`, so it cannot be read from the live object. It is
+passed into the constructor, however, and the Python module global can be wrapped to
+observe the actual constructor arguments before the Cython object is created. The
+constructor's first two arguments are positional (`treat`, `ctrl`); the ladder values
+are supplied by keyword in this upstream call.
 
 The per-*scale* local lambda arrays (slocal and llocal separately) are locals
 inside `ScoreTrack.call_peaks` and are likewise not reachable; `xls_header`
@@ -165,20 +164,37 @@ class Capture:
 
     # -- stage: the score engine's lambda parameters and p->q table -------
     def wrap_caller_factory(self, pd_mod):
-        """Keep the `CallerFromAlignments` instance.
+        """Observe the actual arguments used to construct the lambda calculator.
 
         `PeakDetect` resolves `CallerFromAlignments` from its module globals at
-        call time, so rebinding the name here intercepts the real construction
-        without patching any Cython type. The instance is where upstream keeps
-        the per-scale local-lambda parameters and the p->q table -- the
-        `ScoreTrack` class is vestigial in this path and is never constructed.
+        call time, so rebinding the name here observes arguments without patching
+        any Cython type. Cython attributes remain inaccessible; the constructor
+        inputs are captured exactly as passed.
         """
         original = pd_mod.CallerFromAlignments
 
         def factory(*a, **kw):
-            obj = original(*a, **kw)
-            self.caller = obj
-            return obj
+            # Match CallerFromAlignments.__init__ in the pinned upstream source.
+            # This call path currently passes treat and ctrl positionally and
+            # the ladder values by keyword. Mapping the remaining parameters too
+            # keeps the observation correct if that call site changes.
+            names = (
+                "treat", "ctrl", "d", "ctrl_d_s", "treat_scaling_factor",
+                "ctrl_scaling_factor_s", "stderr_on", "pseudocount",
+                "end_shift", "lambda_bg", "save_bedGraph",
+                "bedGraph_filename_prefix", "bedGraph_treat_filename",
+                "bedGraph_control_filename", "cutoff_analysis_filename",
+                "save_SPMR",
+            )
+            values = dict(zip(names, a))
+            values.update(kw)
+            self.ladder = (
+                list(values.get("ctrl_d_s", ())),
+                list(values.get("ctrl_scaling_factor_s", ())),
+                values.get("lambda_bg", 0.0),
+                values.get("treat_scaling_factor", 1.0),
+            )
+            return original(*a, **kw)
 
         pd_mod.CallerFromAlignments = factory
         return original
@@ -195,7 +211,7 @@ class Capture:
             self.post_filter["treatment"] = int(getattr(obj.treat, "total", 0))
             self.post_filter["control"] = (
                 int(getattr(obj.control, "total", 0)) if obj.control is not None else None)
-            return self.wrap_call_peaks(obj)
+            return obj
 
         cmd_mod.PeakDetect = factory
         return original
@@ -482,7 +498,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--log", default="",
                     help="oracle log to parse duplicate counts and rates from")
-    ap.add_argument("--macs3-src", default="/scratch/mdra00001/tmp/opencode/macs3-src")
+    ap.add_argument("--macs3-src", default=os.environ.get("MACS3_SRC", "/scratch/mdra00001/tmp/opencode/macs3-src"))
     args, extra = ap.parse_known_args()
     # Anything not claimed above is passed through to MACS3 verbatim. A bare `--`
     # separator is dropped if the caller used one.
@@ -512,6 +528,7 @@ def main():
     cap = Capture()
     se_loader = cap.wrap_loader(callpeak_cmd, "load_tag_files_options")
     frag_loader = cap.wrap_loader(callpeak_cmd, "load_frag_files_options")
+    real_caller = cap.wrap_caller_factory(pd_mod)
     real_pd = cap.wrap_peakdetect_factory(callpeak_cmd)
 
     stages = {"_argv": argv_text}
@@ -523,6 +540,7 @@ def main():
     finally:
         callpeak_cmd.load_tag_files_options = se_loader
         callpeak_cmd.load_frag_files_options = frag_loader
+        pd_mod.CallerFromAlignments = real_caller
         callpeak_cmd.PeakDetect = real_pd
         if log_handler is not None:
             logging.getLogger().removeHandler(log_handler)

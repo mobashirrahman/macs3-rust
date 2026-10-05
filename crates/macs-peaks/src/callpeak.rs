@@ -108,14 +108,15 @@ fn broad_level(
     table: &PqTable,
     cache: &mut PScoreCache,
 ) -> Vec<Peak> {
-    use crate::{close_peak_for_broad_region, segment_regions};
+    use crate::{close_peak_for_broad_region, regions::segment_region_ranges};
     let lvl2_params = CallParams {
         max_gap: params.max_gap.saturating_mul(4),
         ..params.clone()
     };
-    let regions = segment_regions(chunks, lvl2_params.max_gap);
+    let regions = segment_region_ranges(chunks, lvl2_params.max_gap);
     let mut out = Vec::new();
-    for r in &regions {
+    for range in &regions {
+        let r = &chunks[range.clone()];
         // F159: the real p->q table and the p-score cache must be threaded
         // through. `close_peak_for_broad_region` derives the peak's q-score with
         // `__cal_qscore(tarray_pileup, tarray_control)`, which is a per-position
@@ -478,29 +479,24 @@ fn retadd_pscore(
     ctrl: &SignalTrack<f32>,
     cache: &mut PScoreCache,
 ) -> SignalTrack<f32> {
-    let ends = |t: &SignalTrack<f32>| -> Vec<Coord> { t.runs().iter().map(|r| r.end).collect() };
-    let vals = |t: &SignalTrack<f32>| -> Vec<f32> { t.runs().iter().map(|r| r.value).collect() };
-    let (p1s, v1s) = (ends(treat), vals(treat));
-    let (p2s, v2s) = (ends(ctrl), vals(ctrl));
+    let (p1s, p2s) = (treat.runs(), ctrl.runs());
     let lo = treat.start().max(ctrl.start());
     let hi_lo = treat.end().min(ctrl.end());
-    let cap = p1s.len() + p2s.len();
     let mut out = SignalTrack::empty(treat.chrom(), lo, hi_lo);
     let (mut i1, mut i2) = (0usize, 0usize);
     let mut last: Option<Coord> = None;
-    while i1 < p1s.len() && i2 < p2s.len() && out.runs().len() < cap {
-        let (p1, p2) = (p1s[i1], p2s[i2]);
-        let (v1, v2) = (v1s[i1], v2s[i2]);
-        let pos = p1.min(p2);
+    while i1 < p1s.len() && i2 < p2s.len() {
+        let (r1, r2) = (&p1s[i1], &p2s[i2]);
+        let pos = r1.end.min(r2.end);
         if last != Some(pos) {
-            let obs = (v1 as i64).clamp(0, u32::MAX as i64) as u32;
-            out.push(pos, cache.get(obs, v2));
+            let obs = (r1.value as i64).clamp(0, u32::MAX as i64) as u32;
+            out.push(pos, cache.get(obs, r2.value));
             last = Some(pos);
         }
-        if p1 <= p2 {
+        if r1.end <= r2.end {
             i1 += 1;
         }
-        if p2 <= p1 {
+        if r2.end <= r1.end {
             i2 += 1;
         }
     }
@@ -624,12 +620,18 @@ pub fn build_qtable_from_with_hist(
     //   integer addition is exact and order-independent -- but keeping it
     //   sequential makes that argument unnecessary.
     use rayon::prelude::*;
-    let tracks: Vec<SignalTrack<f32>> = signals
-        .par_iter()
-        .map_init(
-            PScoreCache::new,
-            |cache: &mut PScoreCache, s: &ChromSignals| {
-                match &s.ctrl {
+    let mut sink = macs_score::QScoreSink::new();
+    // The cutoff ladder is accumulated in the same pass, while each chromosome's
+    // p-score track is in hand -- the analysis needs exactly this track, and computing
+    // it twice would double the most expensive stage for no gain.
+    let mut cut_stats: Option<(CutoffStats, Vec<f32>)> =
+        cut.enabled.then(|| (CutoffStats::new(), cutoff_ladder()));
+    if keep_qtracks {
+        let tracks: Vec<SignalTrack<f32>> = signals
+            .par_iter()
+            .map_init(
+                PScoreCache::new,
+                |cache: &mut PScoreCache, s: &ChromSignals| match &s.ctrl {
                     // F59: in PE mode the chunk boundaries are the **coincident**
                     // ones -- `pos_array[above_cutoff]` over paired arrays. Using the
                     // single-end `retadd` walk instead inserts boundaries wherever only
@@ -638,21 +640,58 @@ pub fn build_qtable_from_with_hist(
                     Some(l) if paired => paired_pscore(&s.treat, l, Some(cache)),
                     Some(l) => retadd_pscore(&s.treat, l, cache),
                     None => crate::over_two_pv_array_track(&s.treat, &s.treat),
-                }
-            },
-        )
-        .collect();
-    let mut sink = macs_score::QScoreSink::new();
-    // The cutoff ladder is accumulated in the same pass, while each chromosome's
-    // p-score track is in hand -- the analysis needs exactly this track, and computing
-    // it twice would double the most expensive stage for no gain.
-    let mut cut_stats: Option<(CutoffStats, Vec<f32>)> =
-        cut.enabled.then(|| (CutoffStats::new(), cutoff_ladder()));
-    for p in tracks {
-        if let Some((stats, ladder)) = cut_stats.as_mut() {
-            accumulate_cutoffs(stats, &p, ladder, cut.max_gap, cut.min_length);
+                },
+            )
+            .collect();
+        for p in tracks {
+            if let Some((stats, ladder)) = cut_stats.as_mut() {
+                accumulate_cutoffs(stats, &p, ladder, cut.max_gap, cut.min_length);
+            }
+            sink.push_from(p, origin);
         }
-        sink.push_from(p, origin);
+    } else {
+        // Narrow-mode peak calling reads no q-score tracks. Reduce each
+        // chromosome's p-score track into a histogram and discard the dense
+        // track immediately instead of retaining all of them until the table
+        // is built. Keep the normal chromosome-level parallelism when cutoff
+        // analysis is off; that mode needs the temporary p-track to collect its
+        // region counts, so process it one chromosome at a time.
+        if cut_stats.is_none() {
+            let histograms: Vec<macs_score::PScoreHistogram> = signals
+                .par_iter()
+                .map_init(
+                    PScoreCache::new,
+                    |cache: &mut PScoreCache, s: &ChromSignals| {
+                        cache.clear();
+                        let p = match &s.ctrl {
+                            Some(l) if paired => paired_pscore(&s.treat, l, Some(cache)),
+                            Some(l) => retadd_pscore(&s.treat, l, cache),
+                            None => crate::over_two_pv_array_track(&s.treat, &s.treat),
+                        };
+                        let mut histogram = macs_score::PScoreHistogram::new();
+                        histogram.add_track_from(&p, origin);
+                        histogram
+                    },
+                )
+                .collect();
+            for histogram in histograms {
+                sink.histogram_mut().merge_owned(histogram);
+            }
+        } else {
+            let mut cache = PScoreCache::new();
+            for s in signals {
+                cache.clear();
+                let p = match &s.ctrl {
+                    Some(l) if paired => paired_pscore(&s.treat, l, Some(&mut cache)),
+                    Some(l) => retadd_pscore(&s.treat, l, &mut cache),
+                    None => crate::over_two_pv_array_track(&s.treat, &s.treat),
+                };
+                if let Some((stats, ladder)) = cut_stats.as_mut() {
+                    accumulate_cutoffs(stats, &p, ladder, cut.max_gap, cut.min_length);
+                }
+                sink.histogram_mut().add_track_from(&p, origin);
+            }
+        }
     }
     if let Some((_, ladder)) = cut_stats.as_ref() {
         seed_cutoffs(sink.histogram_mut(), ladder);
@@ -699,16 +738,25 @@ pub fn paired_pscore(
     ctrl: &SignalTrack<f32>,
     mut cache: Option<&mut PScoreCache>,
 ) -> SignalTrack<f32> {
-    let (pos, tv, cv) = paired_union(treat, ctrl);
     let mut out = SignalTrack::empty(treat.chrom(), 0, 0);
-    for i in 0..pos.len() {
-        let obs = (tv[i] as i64).clamp(0, u32::MAX as i64) as u32;
+    let (tr, cr) = (treat.runs(), ctrl.runs());
+    let (mut i, mut j) = (0usize, 0usize);
+    while i < tr.len() && j < cr.len() {
+        let (t, c) = (&tr[i], &cr[j]);
+        let pos = t.end.min(c.end);
+        let obs = (t.value as i64).clamp(0, u32::MAX as i64) as u32;
         let sc = match cache.as_deref_mut() {
-            Some(c) => c.get(obs, cv[i]),
-            None => macs_score::pscore(None, obs, cv[i]),
+            Some(cache) => cache.get(obs, c.value),
+            None => macs_score::pscore(None, obs, c.value),
         };
-        if pos[i] > out.end() {
-            out.push(pos[i], sc);
+        if pos > out.end() {
+            out.push(pos, sc);
+        }
+        if t.end <= c.end {
+            i += 1;
+        }
+        if c.end <= t.end {
+            j += 1;
         }
     }
     out
@@ -1343,6 +1391,26 @@ pub fn run_callpeak_pe(
     ctrl: Option<&macs_track::FragmentTrack>,
     cfg: &PeConfig,
 ) -> PeResult {
+    run_callpeak_pe_selected(treat, ctrl, cfg, None)
+}
+
+/// Run the paired-end setup and prepare only the named chromosome. The returned
+/// `PeResult` carries the same global metadata as [`run_callpeak_pe`].
+pub fn run_callpeak_pe_chromosome(
+    treat: &macs_track::FragmentTrack,
+    ctrl: Option<&macs_track::FragmentTrack>,
+    cfg: &PeConfig,
+    name: &[u8],
+) -> PeResult {
+    run_callpeak_pe_selected(treat, ctrl, cfg, Some(name))
+}
+
+fn run_callpeak_pe_selected(
+    treat: &macs_track::FragmentTrack,
+    ctrl: Option<&macs_track::FragmentTrack>,
+    cfg: &PeConfig,
+    selected: Option<&[u8]>,
+) -> PeResult {
     let avg_tl = treat.average_template_length();
     // F92: `d` is the as-read mean **truncated**, not rounded.
     let d = (cfg.tsize as u64).max(1);
@@ -1523,6 +1591,9 @@ pub fn run_callpeak_pe(
 
     let mut signals: Vec<ChromSignals> = Vec::new();
     for name in &names {
+        if selected.is_some_and(|selected| selected != name.as_slice()) {
+            continue;
+        }
         let Some(chrom) = treat.genome().get(name) else {
             continue;
         };

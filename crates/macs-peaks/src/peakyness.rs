@@ -54,7 +54,7 @@ pub fn is_valid_peak(signal: &[f32], maximum: usize) -> bool {
 /// The lowest signal value in each interval between consecutive maxima.
 ///
 /// For `maxima = [m0, m1, ..., mk]` this returns `k` values: the position of the
-/// minimum of `signal[m_i ..= m_{i+1}]`, offset by `m_i`.
+/// minimum of `signal[m_i .. m_{i+1}]`, offset by `m_i`.
 pub fn internal_minima(signal: &[f32], maxima: &[usize]) -> Vec<usize> {
     let n = maxima.len();
     if n <= 1 {
@@ -68,7 +68,15 @@ pub fn internal_minima(signal: &[f32], maxima: &[usize]) -> Vec<usize> {
             out.push(pos1);
             continue;
         }
-        let window = &signal[pos1..=pos2];
+        // Python uses `signal[pos1:pos2]`, excluding the right-hand maximum.
+        let Some(window) = signal.get(pos1..pos2) else {
+            out.push(pos1.min(signal.len().saturating_sub(1)));
+            continue;
+        };
+        if window.is_empty() {
+            out.push(pos1.min(signal.len().saturating_sub(1)));
+            continue;
+        }
         // np.argmin returns the FIRST minimum on ties
         let mut best = 0usize;
         for (j, v) in window.iter().enumerate() {
@@ -193,6 +201,15 @@ mod tests {
         // np.argmin returns the first minimum
         let s = vec![10.0f32, 1.0, 1.0, 5.0, 10.0];
         let m = internal_minima(&s, &[0, 4]);
+        assert_eq!(m, vec![1]);
+    }
+
+    #[test]
+    fn internal_minima_excludes_the_right_maximum_like_python_slice() {
+        // The right endpoint is lower than every interior point, but Python's
+        // `signal[pos1:pos2]` does not include it when finding the valley.
+        let s = vec![5.0f32, 2.0, 1.0];
+        let m = internal_minima(&s, &[0, 2]);
         assert_eq!(m, vec![1]);
     }
 

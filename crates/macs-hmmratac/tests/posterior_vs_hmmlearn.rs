@@ -5,8 +5,9 @@
 //! matters: each length is an independent sequence, and `posterior` is called per
 //! group exactly as `hmmratac.rs` does it per region mark.
 //!
-//! Needs a capture from the pinned oracle (`oracle/grab_hmm_probs.py`), so it is
-//! ignored by default:
+//! The committed capture contains non-symmetric transitions and full correlated
+//! covariances generated with the pinned hmmlearn public API. Environment
+//! overrides allow checking a separate capture:
 //!
 //! ```text
 //! MACS_HMM_CAP=/tmp/hmmcap MACS_HMM_MODEL=/tmp/atr/a_model.json \
@@ -19,24 +20,47 @@ fn rows(path: &std::path::Path, want: usize) -> Vec<Vec<f64>> {
     let text =
         std::fs::read_to_string(path).unwrap_or_else(|e| panic!("read {}: {e}", path.display()));
     text.lines()
-        .filter(|l| !l.trim().is_empty())
+        .filter(|l| !l.trim().is_empty() && !l.starts_with('#'))
         .map(|l| {
             let v: Vec<f64> = l.split_whitespace().map(|t| t.parse().unwrap()).collect();
             assert_eq!(v.len(), want, "bad width in {}", path.display());
+            assert!(
+                v.iter().all(|x| x.is_finite()),
+                "non-finite value in {}",
+                path.display()
+            );
             v
         })
         .collect()
 }
 
 #[test]
-#[ignore = "needs a capture from the pinned oracle"]
 fn posterior_matches_hmmlearn() {
-    let cap = std::env::var("MACS_HMM_CAP").expect("MACS_HMM_CAP");
-    let cap = std::path::PathBuf::from(cap);
-    let model_path = std::env::var("MACS_HMM_MODEL").expect("MACS_HMM_MODEL");
+    let default_cap =
+        std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/data/hmmlearn_correlated");
+    let cap = std::env::var("MACS_HMM_CAP")
+        .map(std::path::PathBuf::from)
+        .unwrap_or(default_cap);
+    let model_path = std::env::var("MACS_HMM_MODEL")
+        .map(std::path::PathBuf::from)
+        .unwrap_or_else(|_| cap.join("model.json"));
 
-    let model = ModelFile::load(std::path::Path::new(&model_path)).expect("model");
+    let model = ModelFile::load(&model_path).expect("model");
     let hmm = model.gaussian();
+    assert_eq!(
+        hmm.covariance_type, "full",
+        "fixture exercises full covariance"
+    );
+    assert_ne!(
+        hmm.transmat[0][1], hmm.transmat[1][0],
+        "fixture transitions are non-symmetric"
+    );
+    match &hmm.covars {
+        macs_hmmratac::Covars::Full(covars) => {
+            assert_ne!(covars[2][0][1], 0.0, "fixture includes correlated features");
+        }
+        macs_hmmratac::Covars::Diag(_) => panic!("fixture must have full covariance"),
+    }
 
     let obs = rows(&cap.join("obs.txt"), 4);
     let want = rows(&cap.join("probs.txt"), 3);
@@ -47,6 +71,18 @@ fn posterior_matches_hmmlearn() {
         .map(|l| l.trim().parse().unwrap())
         .collect();
 
+    assert!(!obs.is_empty(), "posterior observation capture is empty");
+    assert!(!want.is_empty(), "hmmlearn posterior capture is empty");
+    assert!(!lens.is_empty(), "sequence lengths capture is empty");
+    assert_eq!(
+        obs.len(),
+        want.len(),
+        "one expected posterior per observation"
+    );
+    assert!(
+        lens.iter().all(|&n| n > 0),
+        "sequence lengths must be positive"
+    );
     assert_eq!(
         lens.iter().sum::<usize>(),
         obs.len(),
@@ -80,27 +116,11 @@ fn posterior_matches_hmmlearn() {
             argmax_disagree += 1;
         }
     }
-    let mut dest = String::new();
-    for (i, row) in ours.iter().enumerate() {
-        if i > 0 {
-            dest.push('\n');
-        }
-        for (j, v) in row.iter().enumerate() {
-            if j > 0 {
-                dest.push('\t');
-            }
-            dest.push_str(&format!("{v:.17e}"));
-        }
-    }
-    let out = cap.join("ours_posteriors.tsv");
-    std::fs::write(&out, dest).expect("write");
-
     eprintln!(
         "rows={} max|ours-hmmlearn|={worst:.3e} at flat index {worst_at}",
         ours.len()
     );
     eprintln!("argmax disagreements: {argmax_disagree}/{}", want.len());
-    eprintln!("wrote {}", out.display());
     assert!(
         worst <= 1e-9,
         "posterior max abs error {worst:.3e} exceeds 1e-9"

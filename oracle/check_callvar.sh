@@ -10,7 +10,7 @@
 # Inputs are upstream's own test data (`test/CTCF_PE_ChIP_chr22_50k.bam` etc.) read
 # straight out of the pinned oracle tree, so the fixture never has to be committed.
 #
-#   bash oracle/check_callvar.sh [--keep] [--regen]
+#   bash oracle/check_callvar.sh [--keep] [--regen] [--fermi | --fermi-on]
 #
 #     --keep   leave the work directory in place and print its path
 #     --regen  overwrite crates/macs-callvar/tests/data/callvar_variants.golden
@@ -23,27 +23,27 @@ set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOCK="$ROOT/oracle/ENV.lock"
+[ ! -f "$ROOT/oracle/ENV.provisioned" ] || LOCK="$ROOT/oracle/ENV.provisioned"
 GOLDEN="$ROOT/crates/macs-callvar/tests/data/callvar_variants.golden"
 GOLDEN_NOFERMI="$ROOT/crates/macs-callvar/tests/data/callvar_variants_nofermi.golden"
 BIN="$ROOT/target/release/macs3-rs"
 
 KEEP=0
 REGEN=0
-# `--fermi auto` (upstream's default) sends peaks that carry an indel or a
-# reference-biased het through fermi-lite assembly, which needs an assembler this
-# port does not have yet -- so `auto` is refused on purpose. `--fermi off` is the
-# path that is implemented, and exact, so it is the default target here.
+# Default to no assembly; the two switches also check automatic and forced
+# assembly against fresh upstream records through the bundled fermi-lite bridge.
 FERMI_MODE=off
 for a in "$@"; do
     case "$a" in
         --keep) KEEP=1 ;;
         --regen) REGEN=1 ;;
         --fermi) FERMI_MODE=auto ;;
-        *) echo "usage: $0 [--keep] [--regen]" >&2; exit 2 ;;
+        --fermi-on) FERMI_MODE=on ;;
+        *) echo "usage: $0 [--keep] [--regen] [--fermi | --fermi-on]" >&2; exit 2 ;;
     esac
 done
 
-MACS3_INIT="$(awk -F= '/^MACS3_PATH=/{print $2}' "$LOCK")"
+MACS3_INIT="${MACS3_PATH:-$(awk -F= '/^MACS3_PATH=/{print $2}' "$LOCK")}"
 if [ -z "$MACS3_INIT" ]; then
     echo "no MACS3_PATH in $LOCK" >&2
     exit 1
@@ -84,8 +84,13 @@ grep -v '^#' "$WORK/oracle.vcf" > "$WORK/oracle.body"
 [ -f "$WORK/ours.vcf" ] && grep -v '^#' "$WORK/ours.vcf" > "$WORK/ours.body" || : > "$WORK/ours.body"
 
 if [ "$REGEN" -eq 1 ]; then
-    cp "$WORK/oracle.body" "$GOLDEN"
-    echo "regenerated $GOLDEN ($(wc -l < "$GOLDEN") records)"
+    case "$FERMI_MODE" in
+        off) REGEN_GOLDEN="$GOLDEN_NOFERMI" ;;
+        auto) REGEN_GOLDEN="$GOLDEN" ;;
+        on) echo "no recorded golden target for forced assembly" >&2; exit 2 ;;
+    esac
+    cp "$WORK/oracle.body" "$REGEN_GOLDEN"
+    echo "regenerated $REGEN_GOLDEN ($(wc -l < "$REGEN_GOLDEN") records)"
     exit 0
 fi
 

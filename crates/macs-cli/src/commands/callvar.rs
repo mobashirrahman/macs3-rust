@@ -16,9 +16,7 @@
 //!   `##Program_Args` is a *reconstruction* (the parsed options appended to what the
 //!   user typed), not an echo of `argv`. See [`macs_callvar::program_args`].
 //!
-//! The variant-calling kernel is not implemented yet; see `macs_callvar`'s module
-//! docs. It refuses **before** creating the VCF, which keeps "errors are raised
-//! before any output file is created" true rather than violated by a header-only file.
+//! The driver delegates variant scoring and local assembly to `macs_callvar`.
 
 use std::path::PathBuf;
 

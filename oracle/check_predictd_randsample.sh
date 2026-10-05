@@ -16,6 +16,7 @@
 # Each case is a *pair* of runs; a divergence in exit status counts as a failure just
 # as a byte difference does.
 set -uo pipefail
+export OPENBLAS_CORETYPE="${OPENBLAS_CORETYPE:-Haswell}"
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 OURS="$ROOT/target/release/macs3-rs"
@@ -97,7 +98,9 @@ run_case() {
 
 # The pinned oracle root, derived from ENV.lock's MACS3_PATH so the checker follows
 # the lockfile rather than a path baked into the script.
-ORACLE_SRC="$(dirname "$(dirname "$(grep '^MACS3_PATH=' "$ROOT/oracle/ENV.lock" | cut -d= -f2-)")")"
+LOCK="$ROOT/oracle/ENV.lock"
+[ ! -f "$ROOT/oracle/ENV.provisioned" ] || LOCK="$ROOT/oracle/ENV.provisioned"
+ORACLE_SRC="${MACS3_SRC:-$(dirname "$(dirname "$(grep '^MACS3_PATH=' "$LOCK" | cut -d= -f2-)")")}"
 
 echo "predictd / randsample oracle comparison"
 

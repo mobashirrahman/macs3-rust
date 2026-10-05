@@ -636,16 +636,49 @@ fn correlate(a: &[f64], b: &[f64]) -> Vec<f64> {
     let mut out = vec![0.0f64; n];
     for (k, slot) in out.iter_mut().enumerate() {
         let lag = k as i64 - (lb - 1);
-        let mut acc = 0.0;
-        for (j, &bv) in b.iter().enumerate() {
-            let i = j as i64 + lag;
-            if i >= 0 && (i as usize) < a.len() {
-                acc += a[i as usize] * bv;
-            }
-        }
-        *slot = acc;
+        let a_start = lag.max(0) as usize;
+        let b_start = (-lag).max(0) as usize;
+        let overlap = a
+            .len()
+            .saturating_sub(a_start)
+            .min(b.len().saturating_sub(b_start));
+        *slot = openblas_ddot_unit_stride(
+            &a[a_start..a_start + overlap],
+            &b[b_start..b_start + overlap],
+        );
     }
     out
+}
+
+/// Reproduce the Haswell `ddot` reduction used by the pinned NumPy CBLAS.
+///
+/// NumPy's `correlate` calls its dtype dot function for each overlap. The
+/// oracle wheels dispatch that function to OpenBLAS's AVX2 `ddot_kernel_8`:
+/// sixteen interleaved FMA accumulators, followed by the same horizontal
+/// reduction and a scalar tail. A sequential Rust sum changes the final bits
+/// of `ycorr`, which are written to the public R model file.
+fn openblas_ddot_unit_stride(a: &[f64], b: &[f64]) -> f64 {
+    debug_assert_eq!(a.len(), b.len());
+    let n = a.len();
+    let vector_end = n & !15;
+    let mut lanes = [0.0f64; 16];
+    for base in (0..vector_end).step_by(16) {
+        for lane in 0..16 {
+            lanes[lane] = a[base + lane].mul_add(b[base + lane], lanes[lane]);
+        }
+    }
+
+    // OpenBLAS first adds the two halves of each YMM accumulator, then sums
+    // the four vector accumulators in pairs, and finally horizontally adds.
+    let u0 = (lanes[0] + lanes[2]) + (lanes[4] + lanes[6]);
+    let u1 = (lanes[1] + lanes[3]) + (lanes[5] + lanes[7]);
+    let v0 = (lanes[8] + lanes[10]) + (lanes[12] + lanes[14]);
+    let v1 = (lanes[9] + lanes[11]) + (lanes[13] + lanes[15]);
+    let mut sum = (u0 + v0) + (u1 + v1);
+    for i in vector_end..n {
+        sum += a[i] * b[i];
+    }
+    sum
 }
 
 /// `model2r_script` (`OutputWriter.py:227-278`): the `*_model.r` acceptance file.
@@ -806,6 +839,31 @@ mod tests {
             correlate(&[1.0, 2.0, 3.0], &[10.0, 20.0]),
             vec![20.0, 50.0, 80.0, 30.0]
         );
+    }
+
+    #[test]
+    fn openblas_ddot_matches_numpy_reduction_order() {
+        // Pinned NumPy 2.5.3's OpenBLAS 0.3.34.106.0 `ddot` results. These
+        // lengths cover no SIMD block, a complete block, and scalar tails.
+        let expected = [
+            (1, 0x4025_b82e_55b8_2e56),
+            (7, 0xc020_6840_de68_40de),
+            (15, 0xc043_1853_6718_5366),
+            (16, 0xc043_1853_6718_5367),
+            (17, 0xc046_9c61_4d9c_614e),
+            (31, 0xc045_bb13_b13b_13b0),
+            (32, 0xc045_bb13_b13b_13b1),
+            (37, 0xc04e_5081_bcd0_81bd),
+            (64, 0xc048_3705_cab7_05cb),
+            (73, 0xc045_6b26_39eb_263a),
+        ];
+        for (n, want) in expected {
+            let a: Vec<f64> = (0..n)
+                .map(|i| ((i * 37) % 101 - 50) as f64 / 13.0)
+                .collect();
+            let b: Vec<f64> = (0..n).map(|i| ((i * 61) % 97 - 48) as f64 / 17.0).collect();
+            assert_eq!(openblas_ddot_unit_stride(&a, &b).to_bits(), want, "n={n}");
+        }
     }
 
     /// F201: `smooth_flat` must scale each window element by `1/n` *before* summing.

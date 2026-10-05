@@ -149,32 +149,11 @@ fn hash_i(hash_const: &mut u32, value: u32) -> u32 {
     v
 }
 
-/// `np.random.RandomState(np.random.MT19937(SeedSequence(seed)))`.
-///
-/// `MT19937(SeedSequence(...))` calls `seed(key)` with the 4-word generated
-/// state, i.e. `init_by_array`.
-///
-/// # KNOWN LIMITATION: the MT19937 half is not yet NumPy-identical
-///
-/// [`SeedSequence::generate_state`] is verified against NumPy, but
-/// `NumpyRng::init_by_array` is not: this returns a stream that diverges from
-/// `np.random.RandomState(np.random.MT19937(np.random.SeedSequence(seed)))` at
-/// the first draw, for every seed tried. NumPy's array seeding is not the
-/// textbook `init_by_array` -- neither the key-expansion loop with
-/// `1812433253`, nor its `zero`-padded variant, nor the two possible lengths of
-/// the second fold, reproduce `np.random.seed([...])` here, so the exact
-/// schedule has not been identified.
-///
-/// Until it is, this must not be used where bit-exactness is required. It is
-/// exposed so the gap is visible rather than silently papered over, and so the
-/// `HMMR_EM` down-sample can name it as the reason its fragment-length means
-/// are only exact with `--no-fragem`. See F144 in
-/// `docs/upstream-findings.md`.
 /// `np.random.RandomState(np.random.MT19937(np.random.SeedSequence(seed)))`.
 ///
 /// Delegates to [`crate::NumpyRng::from_seed_sequence`]: the state is filled
 /// directly from 624 SeedSequence words with `state[0]` forced to `0x80000000`,
-/// not mixed via `init_by_array` (which diverges on the first draw).
+/// rather than mixed via `init_by_array`. Oracle vectors pin the resulting stream.
 pub fn randomstate_from_seed_sequence(seed: u64) -> crate::NumpyRng {
     crate::NumpyRng::from_seed_sequence(seed)
 }

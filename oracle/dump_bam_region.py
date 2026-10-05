@@ -13,9 +13,10 @@ Usage:
 Output: one tab-separated line per read, in the order returned.
 """
 
+import os
 import sys
 
-sys.path.insert(0, "/scratch/mdra00001/tmp/opencode/macs3-src")
+sys.path.insert(0, os.environ.get("MACS3_SRC", "/scratch/mdra00001/tmp/opencode/macs3-src"))
 
 from MACS3.IO.BAM import BAMaccessor  # noqa: E402
 

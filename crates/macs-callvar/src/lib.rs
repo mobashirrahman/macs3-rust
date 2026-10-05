@@ -7,18 +7,9 @@
 //! exact VCF header (including the `Program_Args` reconstruction and the per-contig
 //! lines), the per-peak loop, and the read-extraction/`maxDuplicate` filter.
 //!
-//! The **variant-calling kernel** is not implemented: it is upstream's
-//! `RACollection` + `PosReadsInfo` + `VariantStat` + `PeakVariants` chain
-//! (~3000 lines of Python/Cython), and critically its reference sequence
-//! (`RACollection.__fill_refseq`) is a *consensus built from the reads*, not the
-//! genome -- so it cannot be short-circuited against a reference FASTA.
-//!
-//! Rather than emit plausible-but-wrong VCF records, [`run`] refuses with an
-//! explicit error **before creating any output file**, which keeps the release
-//! criterion "errors are raised before any output file is created" true for this
-//! command instead of quietly violated. [`is_kernel_implemented`] reports the state so
-//! the CLI can distinguish "you passed bad arguments" from "this kernel is not
-//! written yet".
+//! The variant kernel implements read consensus, per-position statistics, and
+//! VCF records. Local assembly uses the bundled fermi-lite C library through
+//! the Rust bridge; both assembly and no-assembly paths have oracle checks.
 //!
 //! # Upstream behaviour this reproduces
 //!
@@ -79,8 +70,7 @@ pub const MACS_VERSION: &str = "3.0.5";
 /// including the three emitted twice because the input contains two byte-identical
 /// peaks. See `oracle/check_callvar.sh`.
 ///
-/// What is *not* implemented is the fermi-lite assembly path, which
-/// [`is_assembly_implemented`] reports separately.
+/// [`is_assembly_implemented`] reports the separately tested fermi-lite bridge.
 pub const fn is_kernel_implemented() -> bool {
     true
 }

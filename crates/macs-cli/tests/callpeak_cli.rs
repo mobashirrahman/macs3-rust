@@ -102,6 +102,74 @@ fn callpeak_writes_all_three_files_through_the_real_parser() {
 }
 
 #[test]
+fn tempdir_is_used_for_spools_and_invalid_tempdir_fails_before_outputs() {
+    let dir = tmpdir("tempdir");
+    let (treat, ctrl) = write_fixture(&dir);
+    let temp = dir.join("custom-temp");
+    std::fs::create_dir_all(&temp).unwrap();
+    let out = dir.join("out");
+    let o = parse(&[
+        "-t",
+        treat.to_str().unwrap(),
+        "-c",
+        ctrl.to_str().unwrap(),
+        "-f",
+        "BED",
+        "-g",
+        "100000",
+        "--nomodel",
+        "--extsize",
+        "200",
+        "-B",
+        "--tempdir",
+        temp.to_str().unwrap(),
+        "--outdir",
+        out.to_str().unwrap(),
+        "-n",
+        "custom_temp",
+    ]);
+    macs_cli::commands::callpeak::run(&o).expect("callpeak honors custom tempdir");
+    assert!(out.join("custom_temp_peaks.xls").is_file());
+    assert_eq!(
+        std::fs::read_dir(&temp).unwrap().count(),
+        0,
+        "signal and bedGraph spool files are cleaned after success"
+    );
+
+    let missing_temp = dir.join("missing-temp");
+    let failed_out = dir.join("failed-out");
+    let bad = parse(&[
+        "-t",
+        treat.to_str().unwrap(),
+        "-c",
+        ctrl.to_str().unwrap(),
+        "-f",
+        "BED",
+        "-g",
+        "100000",
+        "--nomodel",
+        "--extsize",
+        "200",
+        "-B",
+        "--tempdir",
+        missing_temp.to_str().unwrap(),
+        "--outdir",
+        failed_out.to_str().unwrap(),
+        "-n",
+        "bad_temp",
+    ]);
+    assert!(
+        macs_cli::commands::callpeak::run(&bad).is_err(),
+        "a missing explicitly selected tempdir must fail"
+    );
+    assert!(
+        !failed_out.exists() || std::fs::read_dir(&failed_out).unwrap().next().is_none(),
+        "failed temp creation must precede output file creation"
+    );
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+#[test]
 fn a_valid_choice_flag_is_accepted_by_the_derived_parser() {
     // F126: the matrix stores choices comma-separated; the parser must accept a
     // genuine member like `BED` rather than rejecting it.
@@ -362,4 +430,129 @@ fn a_pvalue_cutoff_uses_the_pvalue_track_and_its_own_score_column() {
     };
     assert_eq!(col5(&np_p), (10.0 * xls_pcol(&xls_p)) as i64);
     assert_eq!(col5(&np_q), (10.0 * xls_qcol(&xls_q)) as i64);
+}
+
+#[test]
+fn bam_without_an_index_pools_treatment_and_control_inputs() {
+    let dir = tmpdir("bam-pooling");
+    let bam = dir.join("reads.bam");
+    std::fs::copy(
+        concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../tests/fixtures/bam/reads.bam"
+        ),
+        &bam,
+    )
+    .unwrap();
+    let expected = macs_io::bam::se_bam_tags(&bam).unwrap().0.len() * 2;
+    let out = dir.join("out");
+    let o = parse(&[
+        "-t",
+        bam.to_str().unwrap(),
+        bam.to_str().unwrap(),
+        "-c",
+        bam.to_str().unwrap(),
+        bam.to_str().unwrap(),
+        "-f",
+        "BAM",
+        "-g",
+        "100000",
+        "--nomodel",
+        "--extsize",
+        "200",
+        "--keep-dup",
+        "all",
+        "--outdir",
+        out.to_str().unwrap(),
+        "-n",
+        "pooled",
+    ]);
+    macs_cli::commands::callpeak::run(&o).unwrap();
+    let xls = std::fs::read_to_string(out.join("pooled_peaks.xls")).unwrap();
+    assert!(xls.contains(&format!("# total tags in treatment: {expected}\n")));
+    assert!(xls.contains(&format!("# total tags in control: {expected}\n")));
+    std::fs::remove_dir_all(dir).unwrap();
+}
+
+#[test]
+fn bam_default_model_can_fall_back_without_an_index() {
+    let dir = tmpdir("bam-model");
+    let bam = dir.join("reads.bam");
+    std::fs::copy(
+        concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/../../tests/fixtures/bam/reads.bam"
+        ),
+        &bam,
+    )
+    .unwrap();
+    let out = dir.join("out");
+    let o = parse(&[
+        "-t",
+        bam.to_str().unwrap(),
+        "-f",
+        "BAM",
+        "-g",
+        "100000",
+        "--fix-bimodal",
+        "--extsize",
+        "200",
+        "--outdir",
+        out.to_str().unwrap(),
+        "-n",
+        "modeled",
+    ]);
+    macs_cli::commands::callpeak::run(&o).unwrap();
+    assert!(out.join("modeled_peaks.narrowPeak").exists());
+    std::fs::remove_dir_all(dir).unwrap();
+}
+
+#[test]
+fn auto_format_detects_each_treatment_input_and_pools_mixed_bed_and_sam() {
+    let dir = tmpdir("auto-mixed-inputs");
+    let first = dir.join("first.bed");
+    let later = dir.join("later.sam");
+    // The public AUTO parser is a guess_parser callable: upstream detects each
+    // input independently while retaining the first input's tsize estimate.
+    let bed_rows = (0..40)
+        .map(|i| format!("chr1\t{}\t{}\tb{i}\t0\t+\n", 990 + i, 1030 + i))
+        .collect::<String>();
+    std::fs::write(&first, bed_rows).unwrap();
+    let sam_rows = format!(
+        "@HD\tVN:1.0\tSO:unsorted\n{}",
+        (0..40)
+            .map(|i| format!(
+                "s{i}\t0\tchr1\t{}\t60\t40M\t*\t0\t0\t{}\t{}\n",
+                4991 + i,
+                "A".repeat(40),
+                "I".repeat(40)
+            ))
+            .collect::<String>()
+    );
+    std::fs::write(&later, sam_rows).unwrap();
+    let (_, ctrl_fixture) = write_fixture(&dir);
+    let out = dir.join("out");
+    let o = parse(&[
+        "-t",
+        first.to_str().unwrap(),
+        later.to_str().unwrap(),
+        "-c",
+        ctrl_fixture.to_str().unwrap(),
+        "-f",
+        "AUTO",
+        "-g",
+        "100000",
+        "--nomodel",
+        "--extsize",
+        "200",
+        "--keep-dup",
+        "all",
+        "--outdir",
+        out.to_str().unwrap(),
+    ]);
+
+    macs_cli::commands::callpeak::run(&o)
+        .expect("AUTO independently detects and pools valid BED and SAM inputs");
+    assert!(out.join("NA_peaks.xls").exists());
+    std::fs::remove_dir_all(dir).unwrap();
 }

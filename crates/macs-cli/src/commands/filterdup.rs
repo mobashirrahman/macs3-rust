@@ -16,84 +16,11 @@
 //!   arbitrary; this port writes chromosomes in name order (deterministic, and
 //!   identical for the single-chromosome and small-n cases).
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use macs_core::{MacsError, Result, Strand};
-use macs_track::SingleEndTrack;
 
 use crate::Options;
-
-/// Upstream's inferred tag size when `--tsize` is not given.
-///
-/// `filterdup_cmd.py:103-105`:
-///
-/// ```python
-/// if not options.tsize:           # override tsize if user specified --tsize
-///     ttsize = tp.tsize()
-///     options.tsize = ttsize
-/// ```
-///
-/// and `Parser.tsize()` (`Parser.py:267-292`) is the mean of the **first 10
-/// alignments whose parsed length is positive**, stopping at 10000 trials, cast to
-/// `cython.int` (so truncated). Returns `-1` when no line yields a positive length.
-///
-/// F274: we rejected with `--tsize must be > 0` instead, which is an accept/reject
-/// divergence: `macs3 filterdup -i reads.bed -f BED -o out.txt` runs upstream and
-/// fails here. Found by `oracle/bench_matrix.py`, where this case was the only one
-/// exiting non-zero on our side and not on upstream's.
-///
-/// The sample is taken in **file order** because upstream reads forward from the start
-/// of the stream and then seeks back; a length-averaged sample of the sorted track
-/// would not be the same ten reads.
-fn infer_tsize(path: &Path) -> i64 {
-    use std::io::BufRead;
-    // The sniffing reader, not `File::open`: upstream's `Parser._open` decompresses
-    // gzip itself, and this function is the *first* thing `filterdup` does when
-    // `--tsize` is absent. Reading the raw bytes made it see the gzip header, find
-    // no parsable alignment, and fail with "no valid alignments" on every `.gz`
-    // input -- before the (now gzip-aware) track loader was ever reached.
-    let Ok(mut r) = macs_io::open_maybe_gzip(path) else {
-        return -1;
-    };
-    let mut line = String::new();
-    let (mut sum, mut n, mut trials) = (0i64, 0i64, 0i64);
-    while n < 10 && trials < 10000 {
-        trials += 1;
-        line.clear();
-        if r.read_line(&mut line).unwrap_or(0) == 0 {
-            break;
-        }
-        let t = line.trim();
-        if t.is_empty() || t.starts_with('#') || t.starts_with("track") || t.starts_with("browser")
-        {
-            continue;
-        }
-        // BED / BEDPE / FRAG all carry `chrom start end` as the first three fields;
-        // upstream's `tlen_parse_line` is the per-format wrapper over the same span.
-        let mut it = t.split('\t').flat_map(|f| f.split_whitespace());
-        let (_chrom, start, end) = match (it.next(), it.next(), it.next()) {
-            (Some(c), Some(s), Some(e)) => (c, s, e),
-            _ => continue,
-        };
-        let (Ok(s), Ok(e)) = (start.parse::<i64>(), end.parse::<i64>()) else {
-            continue;
-        };
-        let len = e - s;
-        if len > 0 {
-            sum += len;
-            n += 1;
-        }
-    }
-    if n == 0 {
-        -1
-    } else {
-        sum / n
-    }
-}
-
-fn load_bed(path: &Path) -> Result<SingleEndTrack> {
-    super::input::load_single_end_bed(path)
-}
 
 /// Upstream `cal_max_dup_tags`: `binomial_cdf_inv(1 - p, tags, 1 / gsize)`.
 fn cal_max_dup_tags(gsize: f64, tags: u64, p: f64) -> i64 {
@@ -105,15 +32,13 @@ fn cal_max_dup_tags(gsize: f64, tags: u64, p: f64) -> i64 {
 }
 
 pub fn filterdup(o: &Options) -> Result<()> {
-    let ifile = o
-        .get("ifile")
-        .ok_or_else(|| MacsError::InvalidParameter("-i/--ifile is required".into()))?;
+    let ifiles = super::input::input_files(o)?;
     let format = o.get("format").unwrap_or("BED").to_uppercase();
     // Paired-end modes filter duplicate *fragments* (`filterdup_cmd.py:48-74`).
     // FRAG forces `--keep-dup all` upstream (`OptValidator.py:110-112`), so there is
     // nothing to filter and it is rejected here rather than silently accepted.
     if format == "BAMPE" || format == "BEDPE" {
-        return filterdup_pe(o, Path::new(ifile), &format);
+        return filterdup_pe(o, &ifiles, &format);
     }
     if format == "FRAG" {
         return Err(MacsError::InvalidParameter(
@@ -123,15 +48,8 @@ pub fn filterdup(o: &Options) -> Result<()> {
     // SE BAM streams without an index; SAM/BED/ELAND go through text.
     // (`filterdup` rejects BAMPE/BEDPE/FRAG above; BAM here is single-end.)
     // The BAM mean query length is captured for `--tsize` inference below.
-    let (mut track, bam_qlen) = if format == "BAM" {
-        let (t, q) = super::input::load_single_end_bam(Path::new(ifile))?;
-        (t, Some(q))
-    } else if format == "SAM" {
-        let (t, q) = super::input::load_single_end_sam(Path::new(ifile))?;
-        (t, Some(q))
-    } else {
-        (load_bed(Path::new(ifile))?, None)
-    };
+    let infer_tsize = matches!(o.int("tsize"), None | Some(0));
+    let (mut track, inferred_size) = super::input::load_tag_files(&ifiles, &format, infer_tsize)?;
     let t0 = track.total();
 
     // tag size fw (upstream sets `inputtrack.fw = options.tsize`)
@@ -142,11 +60,8 @@ pub fn filterdup(o: &Options) -> Result<()> {
         Some(v) if v != 0 => v,
         _ => {
             // BAM infers from query lengths (`BAMParser.tsize`); text infers from
-            // BED spans (`infer_tsize`). Both sample the first 10 valid records.
-            let inferred = match bam_qlen {
-                Some(q) if q > 0.0 => q.trunc() as i64,
-                _ => infer_tsize(Path::new(ifile)),
-            };
+            // the selected text parser. Both sample the first 10 valid records.
+            let inferred = inferred_size.trunc() as i64;
             if inferred <= 0 {
                 return Err(MacsError::InvalidParameter(
                     "could not infer --tsize from the input: no valid alignments".into(),
@@ -228,37 +143,18 @@ pub fn filterdup(o: &Options) -> Result<()> {
 /// `finalize()` sorts by position. This port emits chromosomes sorted and positions
 /// in order, which is deterministic and matches upstream on single-chromosome inputs.
 /// Multi-chromosome byte-identity is impossible by upstream's nature (F29).
-fn filterdup_pe(o: &crate::Options, path: &Path, format: &str) -> Result<()> {
+fn filterdup_pe(o: &crate::Options, paths: &[String], format: &str) -> Result<()> {
     use std::collections::BTreeMap;
 
     let mut frags: BTreeMap<Vec<u8>, Vec<(u64, u64)>> = BTreeMap::new();
-    if format == "BAMPE" {
-        let (records, _) = macs_io::bam::bampe_fragments(path)?;
-        for fr in &records {
+    let track = super::input::load_fragment_files(paths, format)?;
+    for chrom in track.chroms() {
+        let name = track.genome().name(chrom).to_vec();
+        for fragment in track.frags(chrom) {
             frags
-                .entry(fr.chrom.clone())
+                .entry(name.clone())
                 .or_default()
-                .push((u64::from(fr.start), u64::from(fr.start + fr.len)));
-        }
-    } else {
-        use std::io::BufRead;
-        let mut r = std::io::BufReader::new(macs_io::open_maybe_gzip(path)?);
-        let mut line = Vec::new();
-        loop {
-            line.clear();
-            if r.read_until(b'\n', &mut line)? == 0 {
-                break;
-            }
-            let Some(rec) = macs_io::parse_bedpe_line(&line)? else {
-                continue;
-            };
-            if rec.chrom.is_empty() || rec.left < 0 || rec.right < rec.left {
-                continue;
-            }
-            frags
-                .entry(rec.chrom.clone())
-                .or_default()
-                .push((rec.left as u64, rec.right as u64));
+                .push((fragment.start, fragment.end));
         }
     }
 

@@ -23,7 +23,7 @@ import json
 import os
 import subprocess
 import sys
-import tempfile
+import run_golden
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BIN = os.environ.get("MACS3_RS", os.path.join(REPO, "target/release/macs3-rs"))
@@ -61,96 +61,20 @@ def recorded():
                 "argv": argv,
                 "golden_dir": dirpath,
                 "returncode": rec.get("returncode"),
+                "fixture_path": group,
+                "recording": rec,
             }
         )
     return out
 
 
 def verify(rec):
-    """Replay one invocation and count byte-identical files.
-
-    The expected bytes are the files sitting next to the recording's `command.json`
-    -- that is the authoritative capture, and it is what `oracle/run_golden.py`
-    compares against. Reading digests out of the JSON instead would be reading a
-    summary of the truth rather than the truth.
-    """
-    argv = list(rec["argv"])
-    argv[0] = BIN
-    golden_dir = rec["golden_dir"]
-    recorded_outdir = _outdir_of(argv)
-    with tempfile.TemporaryDirectory(prefix="compat-") as tmp:
-        for i, a in enumerate(argv):
-            if a == "--outdir" and i + 1 < len(argv):
-                argv[i + 1] = tmp
-            elif a.startswith("--outdir="):
-                argv[i] = "--outdir=" + tmp
-        try:
-            subprocess.run(argv, capture_output=True, text=True, timeout=600)
-        except Exception as exc:  # noqa: BLE001 - reported, not raised
-            return rec, 0, 0, 0, f"error: {exc}"
-
-        # `*.xls` embeds the invocation in a `# Command line:` header, so replaying
-        # into a scratch directory makes every xls differ by one path -- which reads as
-        # a 100% mismatch while meaning nothing. Restore the recorded path in our copy
-        # before comparing. Only that one line is rewritten; the rest of the file is
-        # compared byte for byte.
-        if recorded_outdir:
-            for f in os.listdir(tmp):
-                if f.endswith(".xls"):
-                    _rewrite_outdir(os.path.join(tmp, f), tmp, recorded_outdir)
-
-        expected = [
-            f for f in sorted(os.listdir(golden_dir))
-            if f != "command.json" and not f.startswith(".")
-        ]
-        total = same = missing = 0
-        for want in expected:
-            if not _is_out(want):
-                continue
-            total += 1
-            got = os.path.join(tmp, want)
-            ref = os.path.join(golden_dir, want)
-            if not os.path.exists(got):
-                missing += 1
-            elif _sha(got) == _sha(ref):
-                same += 1
-        # `same`, `missing`, and `same + missing` decide the denominator: a file the
-        # run did not produce is a *coverage* gap, not a byte difference, and conflating
-        # the two understates agreement badly (an invocation that legitimately writes
-        # fewer files would otherwise read as 0%).
-        return rec, same, total - missing, missing, None
-
-
-def _outdir_of(argv):
-    for i, a in enumerate(argv):
-        if a == "--outdir" and i + 1 < len(argv):
-            return argv[i + 1]
-        if a.startswith("--outdir="):
-            return a.split("=", 1)[1]
-    return None
-
-
-def _rewrite_outdir(path, scratch, recorded):
-    """Restore the recorded `--outdir` in the xls `# Command line:` header."""
-    with open(path, "r", encoding="utf-8", errors="surrogateescape") as fh:
-        lines = fh.readlines()
-    changed = False
-    for i, line in enumerate(lines):
-        if line.startswith("# Command line:") and scratch in line:
-            lines[i] = line.replace(scratch, recorded)
-            changed = True
-    if changed:
-        with open(path, "w", encoding="utf-8", errors="surrogateescape") as fh:
-            fh.writelines(lines)
-
-
-def _sha(path):
-    import hashlib
-    h = hashlib.sha256()
-    with open(path, "rb") as fh:
-        for chunk in iter(lambda: fh.read(1 << 16), b""):
-            h.update(chunk)
-    return h.hexdigest()
+    """Use the same complete byte and exit-status comparator as the golden gate."""
+    _, same, total, exit_mismatch, notes = run_golden.run_one(
+        BIN, rec["fixture_path"], rec["variant"], rec["recording"], None, False
+    )
+    missing = sum(note.startswith("missing ") for note in notes)
+    return rec, same, total, missing, exit_mismatch
 
 
 def main():
@@ -171,14 +95,16 @@ def main():
         return 2
 
     cells = {}
+    exit_mismatches = 0
     if args.list_only:
         for r in recs:
             k = (r["subcommand"], r["variant"])
-            cells.setdefault(k, [0, 0, 0])
+            cells.setdefault(k, [0, 0, 0, 0])
             cells[k][0] += 1
     else:
         with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool:
-            for rec, same, compared, missing, err in pool.map(verify, recs):
+            for rec, same, compared, missing, exit_mismatch in pool.map(verify, recs):
+                exit_mismatches += exit_mismatch
                 k = (rec["subcommand"], rec["variant"])
                 cell = cells.setdefault(k, [0, 0, 0, 0])
                 cell[0] += 1
@@ -206,8 +132,6 @@ def main():
                 row.append("-- not covered --")
             elif args.list_only:
                 row.append(f"{c[0]} invocations")
-            elif c[3]:
-                row.append(f"error ({c[3][:40]})")
             else:
                 row.append(f"{c[1]}/{c[2]}")
         lines.append("| " + " | ".join(row) + " |")
@@ -219,8 +143,8 @@ def main():
         totals[2] += c[3]
     lines += ["", f"**Totals: {totals[0]}/{totals[1]} compared output files "
                   f"byte-identical** across {len(cells)} (subcommand, variant) pairs. "
-                  f"{totals[2]} further recorded files were not produced by the replay "
-                  f"and are excluded from the denominator."]
+                  f"{totals[2]} recorded files were not produced by the replay "
+                  f"and remain in the denominator. Exit-status mismatches: {exit_mismatches}."]
     if not args.list_only and totals[1] and totals[0] != totals[1]:
         lines += ["", "> Not all recorded files are byte-identical yet; see "
                       "`docs/upstream-findings.md` for the open findings."]
@@ -231,12 +155,7 @@ def main():
     print(f"wrote {args.out}: {len(subs)} subcommands, {len(variants)} variants, "
           f"{totals[0]}/{totals[1]} files identical "
           f"({totals[2]} not produced by the replay)")
-    return 0
-
-
-def _is_out(name):
-    return name.endswith((".xls", ".narrowPeak", ".bed", ".broadPeak",
-                          ".gappedPeak", ".model.r"))
+    return int(not args.list_only and (totals[0] != totals[1] or exit_mismatches > 0))
 
 
 if __name__ == "__main__":

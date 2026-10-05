@@ -69,6 +69,9 @@ def rewrite_argv(argv: list[str], outdir: str) -> list[str]:
             new[i + 1] = outdir
         elif tok.startswith("--outdir="):
             new[i] = f"--outdir={outdir}"
+        elif "/tests/fixtures/" in tok:
+            # Replay committed inputs at the current checkout prefix.
+            new[i] = os.path.join(ROOT, "tests", "fixtures", tok.split("/tests/fixtures/", 1)[1])
     return new
 
 
@@ -112,10 +115,11 @@ def run_one(
         matched = 0
         total = 0
         for name in sorted(files):
+            total += 1
             want_path = os.path.join(GOLDEN, fixture, variant, name)
             if not os.path.exists(want_path):
+                notes.append(f"missing recorded reference {name}")
                 continue
-            total += 1
             got_path = os.path.join(scratch, name)
             if not os.path.exists(got_path):
                 notes.append(f"missing {name}")

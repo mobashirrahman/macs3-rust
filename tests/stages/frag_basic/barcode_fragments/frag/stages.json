@@ -6,9 +6,17 @@
   "treat_total": 7995.0
  },
  "lambda_ladder": {
-  "ctrl_d_s": [],
-  "ctrl_scaling_factor_s": [],
-  "lambda_bg": 0.0,
+  "ctrl_d_s": [
+   98,
+   1000,
+   10000
+  ],
+  "ctrl_scaling_factor_s": [
+   0.5,
+   0.049153499603271485,
+   0.004915349960327149
+  ],
+  "lambda_bg": 16.32253074645996,
   "treat_scale": 1.0
  },
  "lambda_merged": {

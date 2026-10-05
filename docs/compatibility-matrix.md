@@ -9,8 +9,6 @@ Generated from **7685 recorded invocations** by `oracle/gen_compat_matrix.py`. E
 
 | subcommand | B | broad | bw300 | call_summits | default | gsize_numeric | keepdup1 | keepdup_all | keepdup_auto | mfold_3_20 | mfold_bad_arity | nolambda | nomodel_extsize | nomodel_shift | q001 | q05 | scale_to_large | shift_only | slocal_500_llocal_2000 | spmr |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `callpeak` | 1256/1266 | 1254/1266 | 1256/1266 | 1247/1266 | 1256/1266 | 1256/1266 | 773/777 | 774/780 | 773/777 | 1256/1266 | 0/0 | 769/777 | 1256/1266 | 1252/1266 | 1256/1266 | 1256/1266 | 1250/1266 | 1252/1266 | 767/777 | 1256/1266 |
+| `callpeak` | 2110/2110 | 1266/1266 | 1266/1266 | 1266/1266 | 1266/1266 | 1266/1266 | 777/777 | 780/780 | 777/777 | 1266/1266 | 0/0 | 777/777 | 1266/1266 | 1266/1266 | 1266/1266 | 1266/1266 | 1266/1266 | 1266/1266 | 777/777 | 1266/1266 |
 
-**Totals: 21415/21612 compared output files byte-identical** across 20 (subcommand, variant) pairs. 0 further recorded files were not produced by the replay and are excluded from the denominator.
-
-> Not all recorded files are byte-identical yet; see `docs/upstream-findings.md` for the open findings.
+**Totals: 22456/22456 compared output files byte-identical** across 20 (subcommand, variant) pairs. 0 recorded files were not produced by the replay and remain in the denominator. Exit-status mismatches: 0.

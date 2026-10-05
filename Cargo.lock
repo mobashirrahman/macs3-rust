@@ -209,6 +209,7 @@ dependencies = [
  "macs-stats",
  "macs-track",
  "rayon",
+ "tempfile",
 ]
 
 [[package]]

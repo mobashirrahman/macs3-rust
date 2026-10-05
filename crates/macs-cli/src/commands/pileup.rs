@@ -24,39 +24,26 @@ use std::path::{Path, PathBuf};
 
 use macs_core::{MacsError, Result, Strand};
 use macs_pileup::SingleEndParams;
-use macs_track::SingleEndTrack;
 
 use crate::Options;
 
-fn load_bed(path: &Path) -> Result<SingleEndTrack> {
-    super::input::load_single_end_bed(path)
-}
-
 pub fn pileup(o: &Options) -> Result<()> {
-    let ifile = o
-        .get("ifile")
-        .ok_or_else(|| MacsError::InvalidParameter("-i/--ifile is required".into()))?;
+    let ifiles = super::input::input_files(o)?;
     let format = o.get("format").unwrap_or("BED").to_uppercase();
     // Paired-end modes pile up fragments, not 5' ends (`pileup_cmd.py:50-68`,
     // `PileupV2.pileup_and_write_pe`). FRAG is still rejected: it needs the barcode
     // subset and count weighting, which live in the callpeak/hmmratac FRAG paths.
     if format == "BAMPE" || format == "BEDPE" {
-        return pileup_pe(o, Path::new(ifile), &format);
+        return pileup_pe(o, &ifiles, &format);
     }
     // FRAG piles up count-weighted fragments, optionally subset by `--barcodes`
     // (`pileup_cmd.py:54-68`). Sorted chromosome order, like the other PE path.
     if format == "FRAG" {
-        return pileup_frag(o, Path::new(ifile));
+        return pileup_frag(o, &ifiles);
     }
     // SE BAM streams without an index; everything else text goes through the BED
     // loader (which sniffs gzip). Upstream selects the parser by `-f` directly.
-    let track = if format == "BAM" {
-        super::input::load_single_end_bam(Path::new(ifile))?.0
-    } else if format == "SAM" {
-        super::input::load_single_end_sam(Path::new(ifile))?.0
-    } else {
-        load_bed(Path::new(ifile))?
-    };
+    let track = super::input::load_tag_files(&ifiles, &format, true)?.0;
 
     let extsize = o.int("extsize").unwrap_or(0);
     if extsize <= 0 {
@@ -110,38 +97,19 @@ pub fn pileup(o: &Options) -> Result<()> {
 /// per chromosome with `pileup_from_LR` (unweighted; BEDPE/BAMPE carry no counts),
 /// and write in **sorted** chromosome order -- unlike the single-end path, which
 /// uses file order.
-fn pileup_pe(o: &Options, path: &Path, format: &str) -> Result<()> {
+fn pileup_pe(o: &Options, paths: &[String], format: &str) -> Result<()> {
     use std::collections::BTreeMap;
 
     // Collect (start, end) per chromosome name, preserving input order within each.
     let mut frags: BTreeMap<Vec<u8>, Vec<(u64, u64)>> = BTreeMap::new();
-    if format == "BAMPE" {
-        let (records, _) = macs_io::bam::bampe_fragments(path)?;
-        for fr in &records {
+    let track = super::input::load_fragment_files(paths, format)?;
+    for chrom in track.chroms() {
+        let name = track.genome().name(chrom).to_vec();
+        for fragment in track.frags(chrom) {
             frags
-                .entry(fr.chrom.clone())
+                .entry(name.clone())
                 .or_default()
-                .push((u64::from(fr.start), u64::from(fr.start + fr.len)));
-        }
-    } else {
-        use std::io::BufRead;
-        let mut r = std::io::BufReader::new(macs_io::open_maybe_gzip(path)?);
-        let mut line = Vec::new();
-        loop {
-            line.clear();
-            if r.read_until(b'\n', &mut line)? == 0 {
-                break;
-            }
-            let Some(rec) = macs_io::parse_bedpe_line(&line)? else {
-                continue;
-            };
-            if rec.chrom.is_empty() || rec.left < 0 || rec.right < rec.left {
-                continue;
-            }
-            frags
-                .entry(rec.chrom.clone())
-                .or_default()
-                .push((rec.left as u64, rec.right as u64));
+                .push((fragment.start, fragment.end));
         }
     }
 
@@ -182,7 +150,7 @@ fn pileup_pe(o: &Options, path: &Path, format: &str) -> Result<()> {
 /// (`pileup_from_LRC`), sorted chromosomes. A `--max-count` of 0 means "keep all
 /// counts" (upstream: "If this is set as 0, MACS3 will behave as the default setting
 /// to keep all counts").
-fn pileup_frag(o: &Options, path: &Path) -> Result<()> {
+fn pileup_frag(o: &Options, paths: &[String]) -> Result<()> {
     use std::collections::BTreeMap;
 
     // `--barcodes` allow-list, read once.
@@ -207,9 +175,9 @@ fn pileup_frag(o: &Options, path: &Path) -> Result<()> {
     let max_count = o.int("maxcount").unwrap_or(0).max(0) as u32;
 
     let mut frags: BTreeMap<Vec<u8>, Vec<(u64, u64, u32)>> = BTreeMap::new();
-    {
+    for path in paths {
         use std::io::BufRead;
-        let mut r = std::io::BufReader::new(macs_io::open_maybe_gzip(path)?);
+        let mut r = std::io::BufReader::new(macs_io::open_maybe_gzip(Path::new(path))?);
         let mut line = Vec::new();
         loop {
             line.clear();
@@ -232,9 +200,6 @@ fn pileup_frag(o: &Options, path: &Path) -> Result<()> {
             if max_count > 0 {
                 count = count.min(max_count);
             }
-            // A `--max-count` cap (or a zero count) can zero a row; upstream's
-            // weighted pileup contributes depth 0 for it, which is a no-op, so drop
-            // it here rather than carrying empty weight.
             if count == 0 {
                 continue;
             }

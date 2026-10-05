@@ -62,7 +62,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ORACLE_SRC = os.environ.get("MACS3_SRC", "/scratch/mdra00001/tmp/opencode/macs3-src")
-ORACLE_MACS3 = "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3"
+ORACLE_MACS3 = os.path.join(os.environ.get("MACS3_VENV", "/scratch/mdra00001/tmp/opencode/macs3-venv"), "bin", "macs3")
 OURS = os.path.join(ROOT, "target", "release", "macs3-rs")
 
 MAXRSS_RE = re.compile(r"Maximum resident set size \(kbytes\):\s*(\d+)")

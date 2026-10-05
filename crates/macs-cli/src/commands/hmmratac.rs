@@ -22,9 +22,8 @@
 //! Everything deterministic is ported. **Inference is exact** against hmmlearn --
 //! see `crates/macs-hmmratac/tests/hmm_inference.rs` (worst total-variation
 //! distance 1.4e-6) and F143 for why that needed hmmlearn's *inconsistent*
-//! matrix orientation. The single declared deviation is **self-training**, which
-//! needs hmmlearn's Baum-Welch (an SVD, a QR, and a specific `MT19937` draw);
-//! `--model` supplies a trained model instead.
+//! matrix orientation. Training uses the Rust Gaussian / Poisson Baum-Welch
+//! implementations in `macs-hmmratac` and writes the same JSON model schema.
 //!
 //! # Bins come out in *reverse* chromosome order
 //!
@@ -49,13 +48,12 @@
 //! bound memory. Each region's bins are its own HMM sequence, so decoding is
 //! independent per region; this port batches the same way and concatenates.
 //!
-//! # `--maxTrain` truncation is deterministic, not `randomly_pick`
+//! # Seeded training-region sampling
 //!
 //! When more training regions survive than `--maxTrain`, upstream calls
 //! `PeakIO.randomly_pick`, which shuffles with **Python's `random` module** -- a
-//! different stream from the NumPy one the EM downsample uses. That needs a port
-//! of `random.shuffle`; until then the cap keeps the first `--maxTrain` regions in
-//! (chromosome, position) order.
+//! different stream from the NumPy one the EM downsample uses. `PythonRandom`
+//! reproduces that seeded integer stream and Fisher-Yates shuffle.
 
 use std::collections::{BTreeMap, HashSet};
 use std::io::BufRead;
@@ -67,9 +65,9 @@ use macs_core::genome::ChromId;
 use macs_core::{Coord, Genome, MacsError, Result};
 use macs_hmmratac::em::{prepend_short, round_to_one_decimal, train_em, EmParams};
 use macs_hmmratac::{
-    accessible_regions_chromed, generate_states_path_chromed, generate_weight_mapping,
-    make_bdg_of_bins_from_regions, pileup_bdg_hmmratac, ExtractedBin, HmmType, ModelFile, ProbRow,
-    N_SIGNALS,
+    accessible_regions_chromed, extract_signals_from_regions, generate_states_path_chromed,
+    generate_weight_mapping, make_bdg_of_bins_from_regions, pileup_bdg_hmmratac, Covars,
+    ExtractedBin, HmmType, ModelFile, ProbRow, N_SIGNALS,
 };
 use macs_peaks::hmm_regions::RegionSet;
 use macs_rle::SignalTrack;
@@ -98,6 +96,16 @@ impl Outputs {
     fn training_regions(&self) -> PathBuf {
         self.outdir
             .join(format!("{}_training_regions.bed", self.name))
+    }
+    fn training_data(&self) -> PathBuf {
+        self.outdir.join(format!("{}_training_data.txt", self.name))
+    }
+    fn training_lengths(&self) -> PathBuf {
+        self.outdir
+            .join(format!("{}_training_lengths.txt", self.name))
+    }
+    fn model(&self) -> PathBuf {
+        self.outdir.join(format!("{}_model.json", self.name))
     }
     fn state_bdg(&self, k: &str) -> PathBuf {
         self.outdir.join(format!("{}_{}.bdg", self.name, k))
@@ -261,6 +269,215 @@ fn regions_of(genome: &Genome, v: &[(ChromId, Coord, Coord)]) -> RegionSet {
         rs.extend_chrom(c, list);
     }
     rs
+}
+
+/// Python's `random.seed(int); random.shuffle(list)` used by PeakIO.randomly_pick.
+/// This is CPython's MT19937 integer seeding plus getrandbits/rejection `randbelow`.
+struct PythonRandom {
+    state: [u32; 624],
+    index: usize,
+}
+
+impl PythonRandom {
+    fn seeded(seed: i64) -> Self {
+        let mut value = seed.unsigned_abs();
+        let mut key = Vec::new();
+        while value != 0 {
+            key.push(value as u32);
+            value >>= 32;
+        }
+        if key.is_empty() {
+            key.push(0);
+        }
+        let mut state = [0u32; 624];
+        state[0] = 19_650_218;
+        for i in 1..624 {
+            state[i] = 1_812_433_253u32
+                .wrapping_mul(state[i - 1] ^ (state[i - 1] >> 30))
+                .wrapping_add(i as u32);
+        }
+        let (mut i, mut j) = (1usize, 0usize);
+        for _ in 0..624.max(key.len()) {
+            state[i] = (state[i] ^ (state[i - 1] ^ (state[i - 1] >> 30)).wrapping_mul(1_664_525))
+                .wrapping_add(key[j])
+                .wrapping_add(j as u32);
+            i += 1;
+            j += 1;
+            if i >= 624 {
+                state[0] = state[623];
+                i = 1;
+            }
+            if j >= key.len() {
+                j = 0;
+            }
+        }
+        for _ in 0..623 {
+            state[i] = (state[i]
+                ^ (state[i - 1] ^ (state[i - 1] >> 30)).wrapping_mul(1_566_083_941))
+            .wrapping_sub(i as u32);
+            i += 1;
+            if i >= 624 {
+                state[0] = state[623];
+                i = 1;
+            }
+        }
+        state[0] = 0x8000_0000;
+        Self { state, index: 624 }
+    }
+
+    fn next_u32(&mut self) -> u32 {
+        if self.index >= 624 {
+            for i in 0..624 {
+                let y = (self.state[i] & 0x8000_0000) | (self.state[(i + 1) % 624] & 0x7fff_ffff);
+                let mut next = self.state[(i + 397) % 624] ^ (y >> 1);
+                if y & 1 != 0 {
+                    next ^= 0x9908_b0df;
+                }
+                self.state[i] = next;
+            }
+            self.index = 0;
+        }
+        let mut y = self.state[self.index];
+        self.index += 1;
+        y ^= y >> 11;
+        y ^= (y << 7) & 0x9d2c_5680;
+        y ^= (y << 15) & 0xefc6_0000;
+        y ^= y >> 18;
+        y
+    }
+
+    fn getrandbits(&mut self, bits: u32) -> u32 {
+        self.next_u32() >> (32 - bits)
+    }
+
+    fn below(&mut self, n: usize) -> usize {
+        let bits = usize::BITS - n.leading_zeros();
+        loop {
+            let v = self.getrandbits(bits) as usize;
+            if v < n {
+                return v;
+            }
+        }
+    }
+
+    fn shuffle<T>(&mut self, values: &mut [T]) {
+        for i in (1..values.len()).rev() {
+            let j = self.below(i + 1);
+            values.swap(i, j);
+        }
+    }
+}
+
+fn read_bed_regions(path: &str, genome: &Genome) -> Result<Vec<(ChromId, Coord, Coord)>> {
+    let text = std::fs::read_to_string(path)?;
+    let mut out = Vec::new();
+    for (line_no, line) in text.lines().enumerate() {
+        if line.is_empty()
+            || line.starts_with('#')
+            || line.starts_with("track")
+            || line.starts_with("browser")
+        {
+            continue;
+        }
+        let fields: Vec<&str> = line.split_whitespace().collect();
+        if fields.len() < 3 {
+            return Err(MacsError::InvalidParameter(format!(
+                "invalid BED region on line {} of {path}",
+                line_no + 1
+            )));
+        }
+        let start = fields[1].parse::<Coord>().map_err(|_| {
+            MacsError::InvalidParameter(format!(
+                "invalid BED start on line {} of {path}",
+                line_no + 1
+            ))
+        })?;
+        let end = fields[2].parse::<Coord>().map_err(|_| {
+            MacsError::InvalidParameter(format!(
+                "invalid BED end on line {} of {path}",
+                line_no + 1
+            ))
+        })?;
+        if end < start {
+            return Err(MacsError::InvalidParameter(format!(
+                "BED end precedes start on line {} of {path}",
+                line_no + 1
+            )));
+        }
+        let chrom = genome.get(fields[0].as_bytes()).ok_or_else(|| {
+            MacsError::InvalidParameter(format!(
+                "training region chromosome `{}` is absent from the fragment input",
+                fields[0]
+            ))
+        })?;
+        out.push((chrom, start, end));
+    }
+    Ok(out)
+}
+
+fn exclude_blacklisted(track: FragmentTrack, path: &str) -> Result<FragmentTrack> {
+    let mut blacklist: BTreeMap<Vec<u8>, Vec<(Coord, Coord)>> = BTreeMap::new();
+    for line in std::fs::read_to_string(path)?.lines() {
+        if line.is_empty()
+            || line.starts_with('#')
+            || line.starts_with("track")
+            || line.starts_with("browser")
+        {
+            continue;
+        }
+        let f: Vec<&str> = line.split_whitespace().collect();
+        if f.len() < 3 {
+            continue;
+        }
+        let (Ok(s), Ok(e)) = (f[1].parse::<Coord>(), f[2].parse::<Coord>()) else {
+            continue;
+        };
+        if e > s {
+            blacklist
+                .entry(f[0].as_bytes().to_vec())
+                .or_default()
+                .push((s, e));
+        }
+    }
+    for intervals in blacklist.values_mut() {
+        intervals.sort_unstable();
+        let mut merged: Vec<(Coord, Coord)> = Vec::with_capacity(intervals.len());
+        for &(start, end) in intervals.iter() {
+            if let Some(last) = merged.last_mut() {
+                if start <= last.1 {
+                    last.1 = last.1.max(end);
+                    continue;
+                }
+            }
+            merged.push((start, end));
+        }
+        *intervals = merged;
+    }
+    let mut b = if track.has_counts() {
+        FragTrackBuilder::with_barcodes()
+    } else {
+        FragTrackBuilder::new()
+    };
+    for c in track.chroms() {
+        let name = track.genome().name(c);
+        let masks = blacklist.get(name);
+        for (i, frag) in track.frags(c).iter().enumerate() {
+            let overlaps = masks.is_some_and(|xs| {
+                let next = xs.partition_point(|&(_, end)| end <= frag.start);
+                xs.get(next).is_some_and(|&(start, _)| start < frag.end)
+            });
+            if overlaps {
+                continue;
+            }
+            if track.has_counts() {
+                b.push_with_count(name, frag.start, frag.end, u32::from(track.counts(c)[i]));
+            } else {
+                b.push(name, frag.start, frag.end);
+            }
+        }
+    }
+    b.finalize();
+    Ok(b.build())
 }
 
 /// Bins and extracted rows for one chromosome's regions.
@@ -539,10 +756,7 @@ pub fn hmmratac(o: &Options) -> Result<()> {
             )))
         }
     };
-    let _ = hmm_type;
-    if o.flag("modelonly") && o.get("hmm_file").is_none() {
-        return Err(MacsError::InvalidParameter(SELF_TRAINING_DEVIATION.into()));
-    }
+    let random_seed = o.int("hmm_randomSeed").unwrap_or(10151);
 
     let name = o.get("name").unwrap_or("hmmratac").to_string();
     let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
@@ -566,6 +780,9 @@ pub fn hmmratac(o: &Options) -> Result<()> {
     )?;
     if o.flag("misc_remove_duplicates") {
         filter_frag_dup(&mut petrack, 1)?;
+    }
+    if let Some(blacklist) = o.get("blacklist") {
+        petrack = exclude_blacklisted(petrack, blacklist)?;
     }
     if petrack.total() == 0 {
         return Err(MacsError::InvalidParameter(
@@ -653,6 +870,15 @@ pub fn hmmratac(o: &Options) -> Result<()> {
         }
     }
     let digested = pileup_bdg_hmmratac(&genome, &frags, &weight_mapping);
+    if o.flag("save_digested") {
+        std::fs::create_dir_all(&outdir)?;
+        for (i, k) in ["short", "mono", "di", "tri"].iter().enumerate() {
+            std::fs::write(
+                out.digested(k),
+                bedgraph_text(&rows_of(&digested[i], &genome), &genome, k, k, true),
+            )?;
+        }
+    }
 
     // ---- fold-change track -------------------------------------------------
     let min_template = petrack.average_template_length().max(0.0) as Coord;
@@ -689,12 +915,174 @@ pub fn hmmratac(o: &Options) -> Result<()> {
         return Ok(());
     }
 
-    // ---- 4. the model ------------------------------------------------------
-    let model = match o.get("hmm_file") {
-        Some(p) => ModelFile::load(Path::new(p))?,
-        None => return Err(MacsError::InvalidParameter(SELF_TRAINING_DEVIATION.into())),
+    // ---- 3. select training regions and fit the HMM, or load a model --------
+    let model = if let Some(p) = o.get("hmm_file") {
+        ModelFile::load(Path::new(p))?
+    } else {
+        let training_regions = if let Some(path) = o.get("hmm_training_regions") {
+            let intervals = read_bed_regions(path, &genome)?;
+            regions_of(&genome, &intervals)
+        } else {
+            let mut peaks = Vec::new();
+            for (c, pks) in peakcall::call_peaks(&fc_bdg, lower as f32, min_template, flanking) {
+                for pk in pks {
+                    if pk.score >= lower as f32 && pk.score < upper as f32 {
+                        peaks.push((c, pk.start, pk.end));
+                    }
+                }
+            }
+            peaks.sort_by(|a, b| genome.name(a.0).cmp(genome.name(b.0)).then(a.1.cmp(&b.1)));
+            std::fs::create_dir_all(&outdir)?;
+            let report = peakcall::cutoff_analysis(
+                &fc_bdg,
+                flanking,
+                min_template,
+                o.int("cutoff_analysis_steps").unwrap_or(100),
+                0.0,
+                o.float("cutoff_analysis_max").unwrap_or(100.0) as f32,
+            );
+            std::fs::write(out.cutoff_analysis(), report)?;
+            if peaks.is_empty() {
+                return Err(MacsError::InvalidParameter(
+                    "Not enough training regions! Please adjust the lower or upper cutoff.".into(),
+                ));
+            }
+            if peaks.len() > max_train as usize {
+                PythonRandom::seeded(random_seed).shuffle(&mut peaks);
+                peaks.truncate(max_train as usize);
+            }
+            let mut rs = regions_of(&genome, &peaks);
+            rs.expand(flanking);
+            rs.merge_overlap();
+            if o.flag("save_train") {
+                std::fs::create_dir_all(&outdir)?;
+                std::fs::write(out.training_regions(), rs.to_bed_string())?;
+            }
+            rs
+        };
+        if training_regions.total() == 0 {
+            return Err(MacsError::InvalidParameter(
+                "Not enough training regions! Please adjust the lower or upper cutoff.".into(),
+            ));
+        }
+
+        let poisson = hmm_type == HmmType::Poisson;
+        let mut rows: Vec<Vec<f64>> = Vec::new();
+        let mut lengths = Vec::new();
+        let mut data_text = String::new();
+        // `extract_value_hmmr` pops the sorted chromosome list, so hmmlearn sees
+        // sequences from the last chromosome name to the first.
+        for c in training_regions.chroms_sorted().into_iter().rev() {
+            let signals: [&SignalTrack<f32>; N_SIGNALS] = [
+                &digested[0][&c],
+                &digested[1][&c],
+                &digested[2][&c],
+                &digested[3][&c],
+            ];
+            let extracted = extract_one_chrom(
+                &signals,
+                &genome,
+                c,
+                training_regions.chrom(c),
+                binsize,
+                poisson,
+            );
+            let td = extract_signals_from_regions(&extracted, poisson);
+            if o.flag("save_train") {
+                for (bin, values) in extracted.iter().zip(&td.rows) {
+                    data_text.push_str(&format!(
+                        "b'{}'\t{}\t{}\t{}\t{}\t{}\n",
+                        String::from_utf8_lossy(genome.name(c)),
+                        bin.pos,
+                        values[0],
+                        values[1],
+                        values[2],
+                        values[3]
+                    ));
+                }
+            }
+            rows.extend(td.rows.iter().map(|r| r.to_vec()));
+            lengths.extend(td.lengths);
+        }
+        if rows.is_empty()
+            || lengths.is_empty()
+            || rows
+                .iter()
+                .any(|row| row.len() != N_SIGNALS || row.iter().any(|value| !value.is_finite()))
+            || lengths.contains(&0)
+            || lengths.iter().sum::<usize>() != rows.len()
+        {
+            return Err(MacsError::InvalidParameter(
+                "Invalid or empty training data extracted from the training regions".into(),
+            ));
+        }
+        if o.flag("save_train") {
+            std::fs::create_dir_all(&outdir)?;
+            std::fs::write(out.training_data(), data_text)?;
+            std::fs::write(
+                out.training_lengths(),
+                lengths.iter().map(|n| format!("{n}\n")).collect::<String>(),
+            )?;
+        }
+        let mut rng = macs_stats::NumpyRng::from_seed_sequence(random_seed as u64);
+        let model = match hmm_type {
+            HmmType::Gaussian => {
+                let g = macs_hmmratac::baum_welch::train_gaussian(
+                    &rows, &lengths, 3, &mut rng, 10, 1e-2, 1e-3,
+                );
+                let sums: Vec<f64> = g.means.iter().map(|x| x.iter().sum()).collect();
+                let (io, ib, inuc) = state_indices(&sums);
+                ModelFile {
+                    hmm_type,
+                    startprob: g.log_start.iter().map(|x| x.exp()).collect(),
+                    transmat: g
+                        .log_trans
+                        .iter()
+                        .map(|r| r.iter().map(|x| x.exp()).collect())
+                        .collect(),
+                    means: g.means,
+                    covars: Covars::Full(g.covars),
+                    covariance_type: "full".into(),
+                    lambdas: Vec::new(),
+                    i_open_region: io,
+                    i_background_region: ib,
+                    i_nucleosomal_region: inuc,
+                    hmm_binsize: binsize,
+                    n_features: N_SIGNALS,
+                }
+            }
+            HmmType::Poisson => {
+                let p = macs_hmmratac::baum_welch::fit_poisson(&rows, &lengths, &mut rng, 10, 1e-2);
+                let sums: Vec<f64> = p.lambdas.iter().map(|x| x.iter().sum()).collect();
+                let (io, ib, inuc) = state_indices(&sums);
+                ModelFile {
+                    hmm_type,
+                    startprob: p.log_start.iter().map(|x| x.exp()).collect(),
+                    transmat: p
+                        .log_trans
+                        .iter()
+                        .map(|r| r.iter().map(|x| x.exp()).collect())
+                        .collect(),
+                    means: Vec::new(),
+                    covars: Covars::Diag(Vec::new()),
+                    covariance_type: "diag".into(),
+                    lambdas: p.lambdas,
+                    i_open_region: io,
+                    i_background_region: ib,
+                    i_nucleosomal_region: inuc,
+                    hmm_binsize: binsize,
+                    n_features: N_SIGNALS,
+                }
+            }
+        };
+        std::fs::create_dir_all(&outdir)?;
+        model.save(&out.model())?;
+        if o.flag("hmm_modelonly") {
+            return Ok(());
+        }
+        model
     };
-    let binsize = model.hmm_binsize.max(binsize);
+    let binsize = model.hmm_binsize;
     // ---- 5. decode ---------------------------------------------------------
     let mut candidates: Vec<(ChromId, Coord, Coord)> = Vec::new();
     for (c, peaks) in peakcall::call_peaks(&fc_bdg, prescan_cutoff as f32, min_template, flanking) {
@@ -733,50 +1121,11 @@ pub fn hmmratac(o: &Options) -> Result<()> {
         decoded.extend(decode(&model, &digested, &genome, &flat, binsize));
     }
 
-    // ---- 3. training regions (informational outputs only) ------------------
-    // Upstream writes these before training; with `--model` step 3 is skipped
-    // entirely. They are reproduced here so `--save-digested`/`--save-train`
-    // users still see the same files, but they cannot change the decode.
-    if o.get("hmm_file").is_none()
-        && o.get("hmm_training_regions").is_none()
-        && o.flag("save_train")
-    {
-        let mut kept: Vec<(ChromId, Coord, Coord)> = Vec::new();
-        for (c, peaks) in peakcall::call_peaks(&fc_bdg, lower as f32, min_template, flanking) {
-            for pk in peaks {
-                if pk.score >= lower as f32 && pk.score < upper as f32 {
-                    kept.push((c, pk.start, pk.end));
-                }
-            }
-        }
-        if kept.is_empty() {
-            return Err(MacsError::InvalidParameter(
-                "Not enough training regions! Please adjust the lower or upper cutoff.".into(),
-            ));
-        }
-        kept.truncate(max_train.max(0) as usize);
-        let mut rs = regions_of(&genome, &kept);
-        rs.expand(flanking);
-        rs.merge_overlap();
-        std::fs::create_dir_all(&outdir)?;
-        std::fs::write(out.training_regions(), rs.to_bed_string())?;
-    }
-
     // ---- 6. outputs --------------------------------------------------------
     std::fs::create_dir_all(&outdir)?;
-    if o.flag("save_digested") {
-        for (i, k) in ["short", "mono", "di", "tri"].iter().enumerate() {
-            std::fs::write(
-                out.digested(k),
-                // `--save-digested` uses the default `trackline=True`.
-                bedgraph_text(&rows_of(&digested[i]), &genome, k, k, true),
-            )?;
-        }
-    }
-
     let decoded: Vec<(ChromId, ProbRow)> = decoded;
     if o.flag("save_likelihoods") {
-        let (open, nuc, bg) = likelihood_rows(&decoded, binsize, &model);
+        let (open, nuc, bg) = likelihood_rows(&decoded, binsize, &model, &genome);
         for (i, (label, desc, src)) in [
             ("open", "Likelihoods of being Open States", &open),
             ("nuc", "Likelihoods of being Nucleosomal States", &nuc),
@@ -811,18 +1160,39 @@ pub fn hmmratac(o: &Options) -> Result<()> {
     Ok(())
 }
 
-/// The declared deviation, reported identically wherever it applies.
-const SELF_TRAINING_DEVIATION: &str =
-    "HMMRATAC self-training (hmmlearn Baum-Welch) is this port's one declared deviation and is \
-     not reproduced; supply a trained model with --model. Inference against a supplied model is \
-     exact.";
+fn state_indices(sums: &[f64]) -> (usize, usize, usize) {
+    let mut open = 0;
+    let mut background = 0;
+    for i in 1..sums.len() {
+        if sums[i] > sums[open] {
+            open = i;
+        }
+        if sums[i] < sums[background] {
+            background = i;
+        }
+    }
+    let nucleosomal = (0..sums.len())
+        .find(|&i| i != open && i != background)
+        .unwrap_or(0);
+    (open, background, nucleosomal)
+}
 
-fn rows_of(t: &BTreeMap<ChromId, SignalTrack<f32>>) -> Vec<BdgRow> {
+/// Flatten per-chromosome tracks into rows, in **sorted chromosome-name order**.
+///
+/// `generate_digested_signals` builds each bedGraph with
+/// `for chrom in sorted(certain_signals.keys())` (`HMMR_Signal_Processing.py:139`),
+/// and `write_bedGraph` emits in insertion order, so upstream's digested tracks are
+/// name-sorted. Iterating the `BTreeMap` directly would emit *ChromId* order, which
+/// is the fragment track's file order (`chrIV, chrV, chrXI, ...` for the yeast BAM)
+/// rather than `chrI, chrII, chrIII, ...` -- same rows, wrong sequence.
+fn rows_of(t: &BTreeMap<ChromId, SignalTrack<f32>>, genome: &Genome) -> Vec<BdgRow> {
+    let mut chroms: Vec<ChromId> = t.keys().copied().collect();
+    chroms.sort_by(|&a, &b| genome.name(a).cmp(genome.name(b)));
     let mut out = Vec::new();
-    for (c, t) in t {
+    for c in chroms {
         let mut prev = 0;
-        for r in t.runs() {
-            out.push((*c, prev, r.end, r.value));
+        for r in t[&c].runs() {
+            out.push((c, prev, r.end, r.value));
             prev = r.end;
         }
     }
@@ -844,6 +1214,7 @@ fn likelihood_rows(
     rows: &[(ChromId, ProbRow)],
     binsize: Coord,
     model: &ModelFile,
+    genome: &Genome,
 ) -> LikelihoodTracks {
     let mut open: Vec<BdgRow> = Vec::new();
     let mut nuc: Vec<BdgRow> = Vec::new();
@@ -866,22 +1237,54 @@ fn likelihood_rows(
             }
             bg.push((*chrom, prev_end, start, 1.0));
         }
-        open.push((*chrom, start, r.end, r.probs[model.i_open_region] as f32));
+        open.push((
+            *chrom,
+            start,
+            r.end,
+            oracle_probability(r.probs[model.i_open_region]),
+        ));
         nuc.push((
             *chrom,
             start,
             r.end,
-            r.probs[model.i_nucleosomal_region] as f32,
+            oracle_probability(r.probs[model.i_nucleosomal_region]),
         ));
         bg.push((
             *chrom,
             start,
             r.end,
-            r.probs[model.i_background_region] as f32,
+            oracle_probability(r.probs[model.i_background_region]),
         ));
         prev_end = r.end;
     }
-    (open, nuc, bg)
+    (
+        coalesce_bedgraph_rows(open, genome),
+        coalesce_bedgraph_rows(nuc, genome),
+        coalesce_bedgraph_rows(bg, genome),
+    )
+}
+
+/// The upstream posterior spool writes `%f` (six decimal places), then reads
+/// those rounded values back before adding them to each bedGraph track.
+fn oracle_probability(value: f64) -> f32 {
+    format!("{value:.6}").parse::<f64>().unwrap_or(0.0) as f32
+}
+
+/// `bedGraphIO.add_loc` sorts chromosome output by name and merges adjoining
+/// intervals whose values are exactly equal.
+fn coalesce_bedgraph_rows(mut rows: Vec<BdgRow>, genome: &Genome) -> Vec<BdgRow> {
+    rows.sort_by(|a, b| genome.name(a.0).cmp(genome.name(b.0)).then(a.1.cmp(&b.1)));
+    let mut merged: Vec<BdgRow> = Vec::with_capacity(rows.len());
+    for (chrom, start, end, value) in rows {
+        if let Some(last) = merged.last_mut() {
+            if last.0 == chrom && last.2 == start && last.3 == value {
+                last.2 = end;
+                continue;
+            }
+        }
+        merged.push((chrom, start, end, value));
+    }
+    merged
 }
 
 /// `save_states_bed`: `chrom\tstart\tend\tlabel`, skipping `bg`.

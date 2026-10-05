@@ -592,96 +592,6 @@ fn load_pe_text(
     })
 }
 
-/// Read a BAM as single-end tags or as fragments.
-///
-/// Each kept alignment contributes one 5' end per strand for single-end, and one
-/// whole `[lpos, rpos)` span for paired-end. `keep_dup` is applied afterwards by
-/// the caller, matching the text readers.
-/// Output of [`load_bam`]: the SE track, the optional paired fragments plus mean
-/// template length, and the mean query length (`BAMParser.tsize`, first-10 average).
-type BamLoad = (SingleEndTrack, Option<(FragmentTrack, f64)>, i64);
-
-fn load_bam(path: &Path, paired: bool, keep_dup: i64) -> Result<BamLoad> {
-    let mut acc = macs_io::bam::BamAccessor::open(path)?;
-    let mut se = SingleEndTrackBuilder::new();
-    let mut fb = FragTrackBuilder::new();
-    let mut n = 0u64;
-    let mut tl_sum = 0f64;
-    // The whole contig is one region query per reference; upstream does the same
-    // for `predictd`/`callpeak`'s model building and the reads come back in file
-    // order, which is what the duplicate filter needs.
-    for chrom in acc.chromosomes().to_vec() {
-        let len = acc.header().ref_length(&chrom).unwrap_or(0);
-        let reads = acc.reads_in_region(&chrom, 0, len.max(1), i32::MAX as u32)?;
-        for rd in &reads {
-            n += 1;
-            tl_sum += f64::from(rd.rpos - rd.lpos);
-            if paired {
-                fb.push(&chrom, u64::from(rd.lpos), u64::from(rd.rpos));
-            } else {
-                // plus -> leftmost end, minus -> rightmost (exclusive) end, matching
-                // upstream `bam_fw_binary_parse` which returns `pos + CIGAR sum`
-                // directly. The `- 1` this had put minus-strand 5' ends a base low;
-                // `callpeak` masked it behind the fragment extension, but exact
-                // breakpoints (pileup) exposed it.
-                if rd.strand == 1 {
-                    se.push(&chrom, u64::from(rd.rpos), macs_core::Strand::Minus);
-                } else {
-                    se.push(&chrom, u64::from(rd.lpos), macs_core::Strand::Plus);
-                }
-            }
-        }
-    }
-    se.finalize();
-    fb.finalize();
-    let mut se_t = se.build();
-    let mut fb_t = fb.build();
-    // `BAMParser.tsize()` (`Parser.py:1024`): mean `l_seq` (query length) over the
-    // first 10 valid records. Upstream reports this as `# tag size`, distinct from
-    // `d` (which is `--extsize` under `--nomodel`). Using `extsize` here reported
-    // 200 where upstream reports 36 on `tiny.bam`.
-    //
-    // `l_seq` is the query-consuming CIGAR length (M/I/S/=/X). Sampling the first 10
-    // in file order matches upstream's sequential scan; averaging all rows would
-    // differ when read lengths vary.
-    let mut tsize_sum = 0u64;
-    let mut tsize_n = 0u64;
-    if !paired {
-        // Re-scan for lengths; `reads_in_region` order is file order per reference,
-        // references in header order, matching the parser's sequential scan.
-        // (A second pass is cheaper than threading lengths through the track.)
-        'outer: for chrom in acc.chromosomes().to_vec() {
-            let len = acc.header().ref_length(&chrom).unwrap_or(0);
-            let reads = acc.reads_in_region(&chrom, 0, len.max(1), i32::MAX as u32)?;
-            for rd in &reads {
-                let mut qlen = 0u32;
-                for &w in &rd.cigar {
-                    match w & 0xF {
-                        0 | 1 | 4 | 7 | 8 => qlen += w >> 4,
-                        _ => {}
-                    }
-                }
-                if qlen > 0 {
-                    tsize_sum += u64::from(qlen);
-                    tsize_n += 1;
-                    if tsize_n >= 10 {
-                        break 'outer;
-                    }
-                }
-            }
-        }
-    }
-    let mean_qlen = tsize_sum.checked_div(tsize_n).unwrap_or(0) as i64;
-    if paired {
-        let mean = if n > 0 { tl_sum / n as f64 } else { 0.0 };
-        filter_frag_dup(&mut fb_t, keep_dup)?;
-        Ok((SingleEndTrack::default(), Some((fb_t, mean)), mean_qlen))
-    } else {
-        se_t.filter_dup(keep_dup)?;
-        Ok((se_t, None, mean_qlen))
-    }
-}
-
 /// `--keep-dup`: the integer form, or an error for the two symbolic values.
 ///
 /// `all` means no filtering and is handled by returning `i64::MAX` as the cap;
@@ -814,15 +724,32 @@ fn configure_pool() -> rayon::ThreadPool {
     }
 }
 
-fn pool_se(paths: &[String]) -> Result<(SingleEndTrack, f64)> {
+fn pool_se(paths: &[String], format: &str, infer_tsize: bool) -> Result<(SingleEndTrack, f64)> {
+    let first = paths
+        .first()
+        .ok_or_else(|| MacsError::InvalidParameter("-i/--ifile is required".into()))?;
+    let first_format = super::input::single_end_format(Path::new(first), format)?;
+    // `load_tag_files_options` asks only the first treatment parser for tsize,
+    // and skips that call when `--tsize` was supplied. Bowtie's parser can fail
+    // while estimating tsize on short files, but control parsers never estimate it.
+    if infer_tsize && first_format == "BOWTIE" {
+        super::input::validate_bowtie_tsize(Path::new(first))?;
+    }
     let mut b = SingleEndTrackBuilder::new();
-    let (mut sum, mut n) = (0f64, 0f64);
+    let mut first_mean = None;
     for p in paths {
-        let (t, mean) = load_se_text(Path::new(p))?;
-        if mean > 0.0 {
-            sum += mean * t.total() as f64;
-            n += t.total() as f64;
+        let path = Path::new(p);
+        // OptValidator assigns `guess_parser` for AUTO; `load_tag_files_options`
+        // invokes it for each file, so mixed-format pools must resolve each path.
+        let detected = super::input::single_end_format(path, format)?;
+        let (t, mean) = match detected.as_str() {
+            "BED" => load_se_text(path)?,
+            _ => super::input::load_single_end(path, &detected)?,
+        };
+        if paths.len() == 1 {
+            return Ok((t, mean));
         }
+        first_mean.get_or_insert(mean);
         let pos = t.positions();
         for c in pos.genome().ids_file_order() {
             let name = pos.genome().name(c).to_vec();
@@ -835,8 +762,22 @@ fn pool_se(paths: &[String]) -> Result<(SingleEndTrack, f64)> {
         }
     }
     b.finalize();
-    let mean = if n > 0.0 { sum / n } else { 0.0 };
-    Ok((b.build(), mean))
+    Ok((b.build(), first_mean.unwrap_or(0.0)))
+}
+
+/// Select the temporary directory used by callpeak's intermediate files.
+/// The flag matrix carries the upstream machine's `/scratch/.../tmp` default,
+/// so an omitted flag must use the current platform's standard temp directory.
+fn callpeak_tempdir(o: &Options) -> PathBuf {
+    let explicitly_set = o
+        .raw_argv
+        .iter()
+        .any(|arg| arg == "--tempdir" || arg.starts_with("--tempdir="));
+    if explicitly_set {
+        PathBuf::from(o.get("tempdir").unwrap_or_default())
+    } else {
+        std::env::temp_dir()
+    }
 }
 
 fn pool_pe(
@@ -1004,6 +945,12 @@ pub fn run(o: &Options) -> Result<()> {
     // `SeSignalSetup` when the SE path runs, so `scaling` can be recorded; `None` on the
     // paired-end paths, which compute their own ratio.
     let mut scaling_setup: Option<macs_peaks::callpeak::SeSignalSetup> = None;
+    let mut lambda_ladder: Option<String> = None;
+    let mut se_source: Option<SeSignalSource> = None;
+    let mut pe_source: Option<PeSignalSource> = None;
+    let mut stream_bdg: Option<(tempfile::NamedTempFile, tempfile::NamedTempFile)> = None;
+    let mut se_signal_spool: Option<tempfile::NamedTempFile> = None;
+    let tempdir = callpeak_tempdir(o);
     let (signals, d, paired_boundaries, lambda_bg, coord_shift) = if is_pe {
         let pe_cfg = PeConfig {
             tsize: 0.0,       // replaced below from the loaded track
@@ -1042,6 +989,7 @@ pub fn run(o: &Options) -> Result<()> {
             let mut treat = b.build();
             let mean = if n > 0.0 { sum / n } else { 0.0 };
             t0 = treat.total();
+            let pre_treatment = sdump_on.then(|| stagedump::pre_json_frag(&treat, "treatment"));
             if dup_policy == DupPolicy::Auto {
                 dup_bam = cal_max_dup_tags(gsize, t0)?;
                 max_dup_line = if dup_bam == i64::MAX {
@@ -1060,14 +1008,26 @@ pub fn run(o: &Options) -> Result<()> {
                 None
             } else {
                 let c = {
-                    let (frags, _) = macs_io::bam::bampe_fragments(Path::new(&ctrl_paths[0]))?;
                     let mut cb = FragTrackBuilder::new();
-                    for fr in &frags {
-                        cb.push(&fr.chrom, u64::from(fr.start), u64::from(fr.start + fr.len));
+                    for path in &ctrl_paths {
+                        let (frags, _) = macs_io::bam::bampe_fragments(Path::new(path))?;
+                        for fr in &frags {
+                            cb.push(
+                                &fr.chrom,
+                                u64::from(fr.start),
+                                u64::from(fr.start) + u64::from(fr.len),
+                            );
+                        }
                     }
                     cb.finalize();
                     let mut c = cb.build();
                     c0 = c.total();
+                    if sdump_on {
+                        let pre = pre_treatment
+                            .as_deref()
+                            .expect("the treatment pre-filter snapshot was recorded");
+                        sdump_pre = Some(stagedump::add_pre_control_frag(pre, Some(&c)));
+                    }
                     // The control gets the same duplicate filter as the treatment
                     // (`callpeak_cmd.py:130-137`). Omitting this emptied the control
                     // track entirely and reported `Redundant rate in control: 1.00`.
@@ -1079,6 +1039,12 @@ pub fn run(o: &Options) -> Result<()> {
                 };
                 Some(c)
             };
+            if sdump_on && ctrl.is_none() {
+                let pre = pre_treatment
+                    .as_deref()
+                    .expect("the treatment pre-filter snapshot was recorded");
+                sdump_pre = Some(stagedump::add_pre_control_frag(pre, None));
+            }
             tsize = (o.int("tsize").map_or(mean, |v| v as f64)) as i64;
             let mut cfg = pe_cfg;
             // F148: with `--nomodel` in PE mode, `options.d = options.tsize`
@@ -1107,34 +1073,48 @@ pub fn run(o: &Options) -> Result<()> {
             } else {
                 cfg.tsize as f32 as f64
             };
-            let r = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
-            let (signals, d, paired_boundaries, lambda_bg, coord_shift) = (
-                r.signals,
-                r.d,
-                r.paired_boundaries,
-                r.lambda_bg,
-                r.coord_shift,
-            );
-            {
-                if sdump_on {
-                    stagedump::record_reads(
-                        &mut sdump,
-                        None,
-                        ctrl.is_some(),
-                        tsize as f64,
-                        t1,
-                        c1,
-                        cfg_common.slocal,
-                        cfg_common.llocal,
-                    );
-                    stagedump::record_tracks(
-                        &mut sdump,
-                        &signal_tracks(&signals),
-                        &[],
-                        coord_shift,
-                    );
-                }
-                (signals, d, paired_boundaries, lambda_bg, coord_shift)
+            if sdump_on {
+                let r = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
+                record_pe_scaling_stage(&mut sdump, &treat, ctrl.as_ref(), &cfg);
+                lambda_ladder = Some(pe_lambda_ladder_json(
+                    &treat,
+                    ctrl.as_ref(),
+                    &cfg,
+                    r.lambda_bg,
+                ));
+                record_lambda_merged_stage(
+                    &mut sdump,
+                    &r.signals,
+                    r.coord_shift,
+                    spmr_denominator(o, t1, c1),
+                );
+                stagedump::record_reads(
+                    &mut sdump,
+                    sdump_pre.as_deref(),
+                    ctrl.is_some(),
+                    tsize as f64,
+                    t1,
+                    c1,
+                    cfg_common.slocal,
+                    cfg_common.llocal,
+                );
+                stagedump::record_tracks(
+                    &mut sdump,
+                    &signal_tracks(&r.signals),
+                    &[],
+                    r.coord_shift,
+                );
+                (
+                    r.signals,
+                    r.d,
+                    r.paired_boundaries,
+                    r.lambda_bg,
+                    r.coord_shift,
+                )
+            } else {
+                let (source, d, boundaries, lambda, shift) = PeSignalSource::new(treat, ctrl, cfg);
+                pe_source = Some(source);
+                (Vec::new(), d, boundaries, lambda, shift)
             }
         } else {
             let frag = format == "FRAG";
@@ -1153,12 +1133,7 @@ pub fn run(o: &Options) -> Result<()> {
             // `self.d` is the unweighted row mean (`mean_row`).
             let (mut treat, _count_weighted_mean, mean_row, pre_subset) =
                 pool_pe(&treat_paths, frag, barcode_set.as_ref())?;
-            // No `reads_pre_filter` snapshot on the paired-end paths: upstream's
-            // pre-filter view covers treatment *and* control, and the control is pooled
-            // later in this branch, so capturing it would mean pooling twice. The stage
-            // is therefore omitted rather than approximated -- `macs-compare` reports it
-            // as missing on our side, which is the honest signal. Every other stage is
-            // recorded.
+            let pre_treatment = sdump_on.then(|| stagedump::pre_json_frag(&treat, "treatment"));
             // With `--barcodes`, `t0` is the pooled total *before* subsetting
             // (`callpeak_cmd.py:80`), not the filtered track's total. Without a
             // barcode filter the two are the same.
@@ -1191,12 +1166,24 @@ pub fn run(o: &Options) -> Result<()> {
                     c.chroms().iter().map(|&cid| c.genome().name(cid)),
                 )?;
                 c0 = c.total();
+                if sdump_on {
+                    let pre = pre_treatment
+                        .as_deref()
+                        .expect("the treatment pre-filter snapshot was recorded");
+                    sdump_pre = Some(stagedump::add_pre_control_frag(pre, Some(&c)));
+                }
                 if dup != i64::MAX {
                     filter_frag_dup(&mut c, dup)?;
                 }
                 c1 = c.total();
                 Some(c)
             };
+            if sdump_on && ctrl.is_none() {
+                let pre = pre_treatment
+                    .as_deref()
+                    .expect("the treatment pre-filter snapshot was recorded");
+                sdump_pre = Some(stagedump::add_pre_control_frag(pre, None));
+            }
             // F258: the reported tag/fragment size is upstream's `self.d`, which
             // `Parser.py:1496` computes **unweighted**:
             //
@@ -1246,126 +1233,53 @@ pub fn run(o: &Options) -> Result<()> {
             } else {
                 cfg.tsize as f32 as f64
             };
-            let r = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
-            let (signals, d, paired_boundaries, lambda_bg, coord_shift) = (
-                r.signals,
-                r.d,
-                r.paired_boundaries,
-                r.lambda_bg,
-                r.coord_shift,
-            );
-            {
-                if sdump_on {
-                    stagedump::record_reads(
-                        &mut sdump,
-                        None,
-                        ctrl.is_some(),
-                        tsize as f64,
-                        t1,
-                        c1,
-                        cfg_common.slocal,
-                        cfg_common.llocal,
-                    );
-                    stagedump::record_tracks(
-                        &mut sdump,
-                        &signal_tracks(&signals),
-                        &[],
-                        coord_shift,
-                    );
-                }
-                (signals, d, paired_boundaries, lambda_bg, coord_shift)
+            if sdump_on {
+                let r = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
+                record_pe_scaling_stage(&mut sdump, &treat, ctrl.as_ref(), &cfg);
+                lambda_ladder = Some(pe_lambda_ladder_json(
+                    &treat,
+                    ctrl.as_ref(),
+                    &cfg,
+                    r.lambda_bg,
+                ));
+                record_lambda_merged_stage(
+                    &mut sdump,
+                    &r.signals,
+                    r.coord_shift,
+                    spmr_denominator(o, t1, c1),
+                );
+                stagedump::record_reads(
+                    &mut sdump,
+                    sdump_pre.as_deref(),
+                    ctrl.is_some(),
+                    tsize as f64,
+                    t1,
+                    c1,
+                    cfg_common.slocal,
+                    cfg_common.llocal,
+                );
+                stagedump::record_tracks(
+                    &mut sdump,
+                    &signal_tracks(&r.signals),
+                    &[],
+                    r.coord_shift,
+                );
+                (
+                    r.signals,
+                    r.d,
+                    r.paired_boundaries,
+                    r.lambda_bg,
+                    r.coord_shift,
+                )
+            } else {
+                let (source, d, boundaries, lambda, shift) = PeSignalSource::new(treat, ctrl, cfg);
+                pe_source = Some(source);
+                (Vec::new(), d, boundaries, lambda, shift)
             }
         }
-    } else if is_bam {
-        // Single-end mode with `--nomodel`: `options.d = options.extsize`
-        // (`callpeak_cmd.py:167`). Without `--nomodel` upstream would build a
-        // `PeakModel`; this port reports that rather than guessing a `d`.
-        let ext = if o.flag("nomodel") {
-            if extsize > 0 {
-                extsize
-            } else {
-                return Err(MacsError::InvalidParameter(
-                    "--extsize is required with --nomodel".into(),
-                ));
-            }
-        } else {
-            return Err(MacsError::InvalidParameter(
-                "--nomodel is required: this port does not build the single-end PeakModel, so it \
-                 cannot infer `d` from the treatment"
-                    .into(),
-            ));
-        };
-        let (mut treat, _, mean_qlen) = load_bam(Path::new(&treat_paths[0]), false, i64::MAX)?;
-        // `options.tsize` is `--tsize` if given, else the BAM-inferred mean query
-        // length (`BAMParser.tsize`), distinct from `d` (`--extsize` under `--nomodel`).
-        tsize = o
-            .int("tsize")
-            .unwrap_or(if mean_qlen > 0 { mean_qlen } else { ext });
-        t0 = treat.total();
-        let dup = match dup_policy {
-            DupPolicy::Fixed(v) => v,
-            DupPolicy::Auto => cal_max_dup_tags(gsize, t0)?,
-        };
-        // F185: see the paired-end site -- `auto` prints the filtering block too.
-        max_dup_line = (dup != i64::MAX).then_some(dup);
-        if dup != i64::MAX {
-            treat.filter_dup(dup)?;
-        }
-        t1 = treat.total();
-        let ctrl = if ctrl_paths.is_empty() {
-            None
-        } else {
-            let c = load_bam(Path::new(&ctrl_paths[0]), false, dup)?.0;
-            c0 = c.total();
-            c1 = c.total();
-            Some(c)
-        };
-        // Single-end mode with `--nomodel`: `options.d = options.extsize`
-        // (`callpeak_cmd.py:167`). Without `--nomodel` upstream would build a
-        // `PeakModel`; this port reports that rather than guessing a `d`.
-        let ext = if o.flag("nomodel") {
-            if extsize > 0 {
-                extsize
-            } else {
-                return Err(MacsError::InvalidParameter(
-                    "--extsize is required with --nomodel".into(),
-                ));
-            }
-        } else {
-            return Err(MacsError::InvalidParameter(
-                "--nomodel is required: this port does not build the single-end PeakModel, so it                  cannot infer `d` from the treatment"
-                    .into(),
-            ));
-        };
-        let cfg = SeConfig {
-            scaleto_large: o.get("scaleto").unwrap_or("small") == "large",
-            extsize: ext,
-            gsize: cfg_common.gsize,
-            slocal: cfg_common.slocal,
-            llocal: cfg_common.llocal,
-            qvalue: cfg_common.qvalue,
-            call_summits: cfg_common.call_summits,
-            broad: cfg_common.broad,
-            broad_cutoff: cfg_common.broad_cutoff,
-            nolambda: cfg_common.nolambda,
-            // F188: `maxgap = opt.maxgap or opt.tsize`; callpeak has no
-            // `--max-gap`, so it is the measured tag size.
-            max_gap: tsize.max(1) as macs_core::Coord,
-            // F189: see `ChromCall::p_cutoff`.
-            p_cutoff: cfg_common.p_cutoff,
-            // F160: `--shift` moves every 5' end before the single-end extension.
-            // It is ignored in paired-end mode because neither `PETrackI`
-            // pileup takes a shift argument.
-            end_shift: if is_pe {
-                0
-            } else {
-                o.int("shift").unwrap_or(0)
-            },
-        };
-        let (sigs, lambda_bg) = macs_peaks::callpeak::build_signals_se(&treat, ctrl.as_ref(), &cfg);
-        (sigs, ext.max(1) as u64, false, lambda_bg, 0i64)
     } else {
-        let (mut treat, mean_treat) = pool_se(&treat_paths)?;
+        let infer_tsize = o.int("tsize").unwrap_or(0) == 0;
+        let (mut treat, mean_treat) = pool_se(&treat_paths, &format, infer_tsize)?;
         if sdump_on {
             sdump_pre = Some(stagedump::pre_json_se(&treat));
         }
@@ -1386,11 +1300,14 @@ pub fn run(o: &Options) -> Result<()> {
         // (`callpeak_cmd.py:80`, `%d` so truncated), not `--extsize`. `d` itself is
         // the extsize, which is why a 190 bp fixture with `--extsize 200` reports
         // 190 in the header yet extends reads by 200.
-        tsize = mean_treat as i64;
+        tsize = o
+            .int("tsize")
+            .filter(|v| *v != 0)
+            .unwrap_or(mean_treat as i64);
         let ctrl = if ctrl_paths.is_empty() {
             None
         } else {
-            let (mut c, _mean_c) = pool_se(&ctrl_paths)?;
+            let (mut c, _mean_c) = pool_se(&ctrl_paths, &format, false)?;
             ensure_shared_chroms(
                 treat
                     .positions()
@@ -1405,12 +1322,24 @@ pub fn run(o: &Options) -> Result<()> {
                     .map(|cid| c.genome().name(cid)),
             )?;
             c0 = c.total();
+            if sdump_on {
+                let pre = sdump_pre
+                    .take()
+                    .expect("the treatment pre-filter snapshot was recorded");
+                sdump_pre = Some(stagedump::add_pre_control_se(&pre, Some(&c)));
+            }
             if dup != i64::MAX {
                 c.filter_dup(dup)?;
             }
             c1 = c.total();
             Some(c)
         };
+        if sdump_on && ctrl.is_none() {
+            let pre = sdump_pre
+                .take()
+                .expect("the treatment pre-filter snapshot was recorded");
+            sdump_pre = Some(stagedump::add_pre_control_se(&pre, None));
+        }
         if extsize <= 0 && !o.flag("nomodel") {
             return Err(MacsError::InvalidParameter(
                 "--extsize is required when the model cannot be fitted".into(),
@@ -1536,28 +1465,36 @@ pub fn run(o: &Options) -> Result<()> {
                 o.int("shift").unwrap_or(0)
             },
         };
-        // One pass, materialised. A streaming two-pass variant was implemented and
-        // measured, then removed: it bounds *live* memory to one chromosome but peak
-        // RSS here is dominated by read count rather than genome size (see
-        // docs/status.md, "Where the memory actually goes"), so it moved the number by
-        // ~5 MB while costing a second pass over the pileup -- 1.58 s -> 2.04 s against
-        // a >=3x wall-clock criterion. Losing a tenth of the speed margin to chase
-        // memory that is not the bottleneck is the wrong trade.
         let (setup_se, lambda_bg, _names) =
             macs_peaks::callpeak::se_setup(&treat, ctrl.as_ref(), &cfg);
+        lambda_ladder = Some(se_lambda_ladder_json(&setup_se, &cfg, ctrl.is_some()));
         scaling_setup = Some(setup_se);
-        let sigs = macs_peaks::callpeak::build_all_se_chromosomes(
-            &_names,
-            &treat,
-            ctrl.as_ref(),
-            &cfg,
-            &setup_se,
-        );
+        let has_ctrl = ctrl.is_some();
+        let sigs = if sdump_on {
+            // The stage harness intentionally records full tracks. Keep its
+            // materialized path isolated from normal peak calling.
+            macs_peaks::callpeak::build_all_se_chromosomes(
+                &_names,
+                &treat,
+                ctrl.as_ref(),
+                &cfg,
+                &setup_se,
+            )
+        } else {
+            se_source = Some(SeSignalSource {
+                treat,
+                ctrl,
+                cfg,
+                setup: setup_se,
+                names: _names,
+            });
+            Vec::new()
+        };
         if sdump_on {
             stagedump::record_reads(
                 &mut sdump,
                 sdump_pre.as_deref(),
-                ctrl.is_some(),
+                has_ctrl,
                 ext,
                 t1,
                 c1,
@@ -1576,14 +1513,21 @@ pub fn run(o: &Options) -> Result<()> {
             // to compare against and emitting it would register as "present only in ours"
             // on every fixture forever.
             stagedump::record_tracks(&mut sdump, &signal_tracks(&sigs), &[], 0);
+            record_lambda_merged_stage(&mut sdump, &sigs, 0, spmr_denominator(o, t1, c1));
         }
         (sigs, ext.trunc().max(1.0) as u64, false, lambda_bg, 0i64)
     };
     let _ = names_of;
+    stagedump::record_duplicates(
+        &mut sdump,
+        t0,
+        t1,
+        c0,
+        c1,
+        !ctrl_paths.is_empty(),
+        format == "FRAG",
+    );
 
-    if rss_trace {
-        eprintln!("rss[signals built] {} kB", rss_kb());
-    }
     // ---- call -------------------------------------------------------------
     // F165: a counted (`--format FRAG`) run is computed with its coordinates
     // shifted, but upstream's AFDR histogram measures the first span from
@@ -1592,13 +1536,7 @@ pub fn run(o: &Options) -> Result<()> {
     // The per-chromosome q-score tracks are read in exactly one place, the
     // `--broad` level-2 cutoff, so a narrow-mode run drops them.
     //
-    // A streaming source goes further: it reduces each chromosome to a histogram
-    // fragment, reduces those, and rebuilds the chromosome for peak calling, so the
-    // genome-wide signal tracks are never all live. Measured, that bounds *live*
-    // memory but does not move peak RSS -- RSS here is dominated by read count, not
-    // genome size (see docs/status.md, "Where the memory actually goes"), and the
-    // second pass costs 0.46 s. Correct, but the wrong optimisation; it should be
-    // revisited once the read representation shrinks.
+    // For single-end runs the signal source rebuilds one chromosome at a time.
     // `hist_pairs` is the p->q histogram, and is only materialised when a stage dump
     // was requested; see `build_qtable_from_with_hist`.
     // `--cutoff-analysis` is not just a report: the ladder's cutoffs are seeded into
@@ -1606,39 +1544,211 @@ pub fn run(o: &Options) -> Result<()> {
     // without the flag. That is why the flag is threaded into the table pass rather than
     // being a post-hoc dump.
     let cut_analysis = o.flag("cutoff_analysis");
-    let qparts = macs_peaks::callpeak::build_qtable_from_with_hist(
-        &signals,
-        paired_boundaries,
-        coord_shift,
-        cfg_common.broad,
-        sdump_on,
-        macs_peaks::callpeak::CutoffParams {
-            enabled: cut_analysis,
-            // F188: `maxgap = opt.maxgap or opt.tsize`, and callpeak defines no
-            // `--max-gap`, so the merge gap is the measured tag size -- the same value
-            // the peak caller uses. `min_length` is `opt.d`.
-            max_gap: tsize.max(1) as macs_core::Coord,
-            min_length: d,
-        },
-    );
-    let (table, qtracks) = (&qparts.table, &qparts.qtracks);
-    let (hist_pairs, cut_stats) = (&qparts.histogram, &qparts.cutoffs);
+    let (table, qtracks, cut_stats) = if let Some(source) = &se_source {
+        use std::io::{BufWriter, Write as _};
+        let mut histogram = macs_score::PScoreHistogram::new();
+        let ladder = cut_analysis.then(macs_peaks::callpeak::cutoff_ladder);
+        let mut cut_stats = macs_peaks::callpeak::CutoffStats::new();
+        let mut cache = PScoreCache::new();
+        let spool = tempfile::NamedTempFile::new_in(&tempdir)?;
+        let mut spool_writer = BufWriter::new(spool.as_file());
+        let mut stream_bodies = if o.flag("store_bdg") {
+            Some((
+                tempfile::NamedTempFile::new_in(&tempdir)?,
+                tempfile::NamedTempFile::new_in(&tempdir)?,
+            ))
+        } else {
+            None
+        };
+        let denominator: f64 = if o.flag("do_SPMR") {
+            if t1 as f64 <= c1 as f64 * 2.0 {
+                t1 as f64 / 1e6
+            } else {
+                c1 as f64 / 1e6
+            }
+        } else {
+            1.0
+        };
+        for name_bytes in &source.names {
+            let Some(signal) = source.chromosome(name_bytes) else {
+                spool_writer.write_all(&[0])?;
+                continue;
+            };
+            spool_writer.write_all(&[1])?;
+            write_signal_track(&mut spool_writer, &signal.treat)?;
+            if let Some(ctrl) = &signal.ctrl {
+                spool_writer.write_all(&[1])?;
+                write_signal_track(&mut spool_writer, ctrl)?;
+            } else {
+                spool_writer.write_all(&[0])?;
+            }
+            cache.clear();
+            let ptrack = macs_peaks::callpeak::se_pscore_track(&signal, &mut cache);
+            histogram.add_track_from(&ptrack, 0);
+            if let Some(ladder) = &ladder {
+                macs_peaks::callpeak::accumulate_cutoffs(
+                    &mut cut_stats,
+                    &ptrack,
+                    ladder,
+                    tsize.max(1) as macs_core::Coord,
+                    d,
+                );
+            }
+            if let (Some((tfile, cfile)), Some(_)) = (&mut stream_bodies, &signal.ctrl) {
+                let mut t_body = String::new();
+                let mut c_body = String::new();
+                append_paired_bdg_signal(
+                    &signal,
+                    coord_shift,
+                    denominator,
+                    &mut t_body,
+                    &mut c_body,
+                );
+                tfile.write_all(t_body.as_bytes())?;
+                cfile.write_all(c_body.as_bytes())?;
+            }
+        }
+        if let Some(ladder) = &ladder {
+            macs_peaks::callpeak::seed_cutoffs(&mut histogram, ladder);
+        }
+        if let Some((tfile, cfile)) = &mut stream_bodies {
+            tfile.as_file_mut().sync_all()?;
+            cfile.as_file_mut().sync_all()?;
+        }
+        spool_writer.flush()?;
+        drop(spool_writer);
+        spool.as_file().sync_all()?;
+        let table = macs_score::PqTable::from_histogram(&histogram);
+        let cut_stats = if cut_analysis {
+            cut_stats
+        } else {
+            macs_peaks::callpeak::CutoffStats::default()
+        };
+        stream_bdg = stream_bodies;
+        se_signal_spool = Some(spool);
+        (table, Vec::new(), cut_stats)
+    } else if let Some(source) = &mut pe_source {
+        use std::io::{BufWriter, Write as _};
+        let mut histogram = macs_score::PScoreHistogram::new();
+        let ladder = cut_analysis.then(macs_peaks::callpeak::cutoff_ladder);
+        let mut cut_stats = macs_peaks::callpeak::CutoffStats::new();
+        let mut cache = PScoreCache::new();
+        let spool = tempfile::NamedTempFile::new_in(&tempdir)?;
+        let mut spool_writer = BufWriter::new(spool.as_file());
+        let mut stream_bodies = if o.flag("store_bdg") {
+            Some((
+                tempfile::NamedTempFile::new_in(&tempdir)?,
+                tempfile::NamedTempFile::new_in(&tempdir)?,
+            ))
+        } else {
+            None
+        };
+        let denominator: f64 = if o.flag("do_SPMR") {
+            if t1 as f64 <= c1 as f64 * 2.0 {
+                t1 as f64 / 1e6
+            } else {
+                c1 as f64 / 1e6
+            }
+        } else {
+            1.0
+        };
+        let names = source.names.clone();
+        for name_bytes in &names {
+            let result = source.chromosome(name_bytes);
+            let Some(signal) = result.signals.into_iter().next() else {
+                spool_writer.write_all(&[0])?;
+                continue;
+            };
+            spool_writer.write_all(&[1])?;
+            write_signal_track(&mut spool_writer, &signal.treat)?;
+            if let Some(ctrl) = &signal.ctrl {
+                spool_writer.write_all(&[1])?;
+                write_signal_track(&mut spool_writer, ctrl)?;
+            } else {
+                spool_writer.write_all(&[0])?;
+            }
+            cache.clear();
+            let ptrack = macs_peaks::callpeak::se_pscore_track(&signal, &mut cache);
+            histogram.add_track_from(&ptrack, coord_shift);
+            if let Some(ladder) = &ladder {
+                macs_peaks::callpeak::accumulate_cutoffs(
+                    &mut cut_stats,
+                    &ptrack,
+                    ladder,
+                    tsize.max(1) as macs_core::Coord,
+                    d,
+                );
+            }
+            if let (Some((tfile, cfile)), Some(_)) = (&mut stream_bodies, &signal.ctrl) {
+                let mut t_body = String::new();
+                let mut c_body = String::new();
+                append_paired_bdg_signal(
+                    &signal,
+                    coord_shift,
+                    denominator,
+                    &mut t_body,
+                    &mut c_body,
+                );
+                tfile.write_all(t_body.as_bytes())?;
+                cfile.write_all(c_body.as_bytes())?;
+            }
+        }
+        if let Some(ladder) = &ladder {
+            macs_peaks::callpeak::seed_cutoffs(&mut histogram, ladder);
+        }
+        if let Some((tfile, cfile)) = &mut stream_bodies {
+            tfile.as_file_mut().sync_all()?;
+            cfile.as_file_mut().sync_all()?;
+        }
+        spool_writer.flush()?;
+        drop(spool_writer);
+        spool.as_file().sync_all()?;
+        let table = macs_score::PqTable::from_histogram(&histogram);
+        let cut_stats = if cut_analysis {
+            cut_stats
+        } else {
+            macs_peaks::callpeak::CutoffStats::default()
+        };
+        stream_bdg = stream_bodies;
+        se_signal_spool = Some(spool);
+        (table, Vec::new(), cut_stats)
+    } else {
+        let qparts = macs_peaks::callpeak::build_qtable_from_with_hist(
+            &signals,
+            paired_boundaries,
+            coord_shift,
+            cfg_common.broad,
+            sdump_on,
+            macs_peaks::callpeak::CutoffParams {
+                enabled: cut_analysis,
+                // F188: `maxgap = opt.maxgap or opt.tsize`, and callpeak defines no
+                // `--max-gap`, so the merge gap is the measured tag size -- the same
+                // value the peak caller uses. `min_length` is `opt.d`.
+                max_gap: tsize.max(1) as macs_core::Coord,
+                min_length: d,
+            },
+        );
+        (qparts.table, qparts.qtracks, qparts.cutoffs)
+    };
+    let (table, qtracks) = (&table, &qtracks);
+    let cut_stats = &cut_stats;
 
     if rss_trace {
+        eprintln!("rss[signals built] {} kB", rss_kb());
         eprintln!("rss[after qtable] {} kB", rss_kb());
     }
     if sdump_on {
-        // Named for what it is, deliberately **not** `qvalue_table`. Upstream's
-        // `qvalue_table` comes from `parse_cutoff_analysis`, i.e. the rows of
-        // `--cutoff-analysis` (`pscore qscore npeaks lpeaks avelpeak`) -- a p->q map
-        // with peak counts. This is the AFDR *histogram* the map is built from: related,
-        // but a different structure, and calling it `qvalue_table` would have the
-        // comparator report a structural mismatch as if it were a numeric one. Closing
-        // the gap needs us to emit `--cutoff-analysis` output, which is not implemented;
-        // until then the honest signal is that the stage is absent on our side.
-        sdump.put("pvalue_histogram", &stagedump::pairs_json(hist_pairs));
+        let cutoff_text = macs_peaks::callpeak::render_cutoff_analysis(
+            cut_stats,
+            &macs_peaks::callpeak::cutoff_ladder(),
+            table,
+        );
+        sdump.put("qvalue_table", &stagedump::cutoff_table_json(&cutoff_text));
     }
     if sdump_on {
+        if let Some(ladder) = lambda_ladder {
+            sdump.put("lambda_ladder", &ladder);
+        }
         // `scaling` records the treatment/control ratio and the two local windows --
         // the inputs to `lambda_bg`, so a p-score divergence can be traced to here.
         if let Some(setup) = scaling_setup {
@@ -1676,16 +1786,112 @@ pub fn run(o: &Options) -> Result<()> {
     // * the only cross-chromosome state, the AFDR histogram, is still accumulated
     //   sequentially below in chromosome order -- and its buckets are `i64`
     //   counters, so even a parallel reduce would be exact and order-independent.
-    let per_chrom: Vec<(String, Vec<macs_peaks::callpeak::Called>, bool)> = configure_pool()
-        .install(|| {
+    let per_chrom: Vec<(String, Vec<macs_peaks::callpeak::Called>, bool)> = if let Some(source) =
+        &se_source
+    {
+        let mut out = Vec::with_capacity(source.names.len());
+        let mut cache = PScoreCache::new();
+        let spool = se_signal_spool
+            .as_ref()
+            .expect("streamed SE signals are spooled during qtable construction");
+        let mut spool_reader = std::io::BufReader::new(std::fs::File::open(spool.path())?);
+        for name_bytes in &source.names {
+            let chrom = source
+                .treat
+                .genome()
+                .get(name_bytes)
+                .expect("signal source chromosome is interned in its genome");
+            let Some(signal) = read_spooled_signal(&mut spool_reader, name_bytes, chrom)? else {
+                continue;
+            };
+            cache.clear();
+            let qtrack = if cfg_common.broad {
+                let p = macs_peaks::callpeak::se_pscore_track(&signal, &mut cache);
+                macs_score::qscore_track(signal.chrom, &p, table, None)
+            } else {
+                EMPTY_TRACK.clone()
+            };
+            cache.clear();
+            let cc = ChromCall {
+                name: &signal.name,
+                chrom: signal.chrom,
+                treat: &signal.treat,
+                ctrl: signal.ctrl.as_ref(),
+                clamp_floor: 0,
+                zero_coord: 0,
+                qtrack: &qtrack,
+                table,
+                d,
+                max_gap: tsize.max(1) as macs_core::Coord,
+                p_cutoff: cfg_common.p_cutoff,
+                qvalue: cfg_common.qvalue,
+                broad: cfg_common.broad,
+                broad_cutoff: cfg_common.broad_cutoff,
+                call_summits: cfg_common.call_summits,
+                lambda_bg,
+            };
+            let called = call_chromosome(&cc, &mut cache);
+            let bad = cache.hit_bad_lambda();
+            out.push((signal.name, called, bad));
+        }
+        out
+    } else if let Some(source) = &pe_source {
+        let mut out = Vec::with_capacity(source.names.len());
+        let mut cache = PScoreCache::new();
+        let spool = se_signal_spool
+            .as_ref()
+            .expect("streamed PE signals are spooled during qtable construction");
+        let mut spool_reader = std::io::BufReader::new(std::fs::File::open(spool.path())?);
+        for name_bytes in &source.names {
+            let chrom = source
+                .treat
+                .genome()
+                .get(name_bytes)
+                .expect("paired signal chromosome is interned in its treatment genome");
+            let Some(signal) = read_spooled_signal(&mut spool_reader, name_bytes, chrom)? else {
+                continue;
+            };
+            cache.clear();
+            let qtrack = if cfg_common.broad {
+                let p = macs_peaks::callpeak::se_pscore_track(&signal, &mut cache);
+                macs_score::qscore_track(signal.chrom, &p, table, None)
+            } else {
+                EMPTY_TRACK.clone()
+            };
+            cache.clear();
+            let cc = ChromCall {
+                name: &signal.name,
+                chrom: signal.chrom,
+                treat: &signal.treat,
+                ctrl: signal.ctrl.as_ref(),
+                clamp_floor: coord_shift.max(0) as macs_core::Coord,
+                zero_coord: if cfg_common.nolambda {
+                    coord_shift.max(0) as macs_core::Coord
+                } else {
+                    0
+                },
+                qtrack: &qtrack,
+                table,
+                d,
+                max_gap: tsize.max(1) as macs_core::Coord,
+                p_cutoff: cfg_common.p_cutoff,
+                qvalue: cfg_common.qvalue,
+                broad: cfg_common.broad,
+                broad_cutoff: cfg_common.broad_cutoff,
+                call_summits: cfg_common.call_summits,
+                lambda_bg,
+            };
+            let called = call_chromosome(&cc, &mut cache);
+            let bad = cache.hit_bad_lambda();
+            out.push((signal.name, called, bad));
+        }
+        out
+    } else {
+        configure_pool().install(|| {
             use rayon::prelude::*;
             signals
                 .par_iter()
                 .enumerate()
-                // `map_init` calls the first closure once per worker slot and hands
-                // the second a mutable borrow of the result, so the cache is never
-                // shared across chromosomes. (It cannot be written as a bare path
-                // because the closure has no arguments to infer the item from.)
                 .map_init(PScoreCache::new, |cache: &mut PScoreCache, (k, s)| {
                     let cc = ChromCall {
                         name: &s.name,
@@ -1705,16 +1911,10 @@ pub fn run(o: &Options) -> Result<()> {
                         } else {
                             0
                         },
-                        // absent when `--broad` is off; see `EMPTY_TRACK`
                         qtrack: qtracks.get(k).unwrap_or(&EMPTY_TRACK),
                         table,
                         d,
-                        // F188: `PeakDetect.__init__` uses `opt.maxgap or
-                        // opt.tsize`, and callpeak defines no `--max-gap`, so
-                        // the merge gap is the measured tag size -- not `d`.
                         max_gap: tsize.max(1) as macs_core::Coord,
-                        // F189: `-p` selects the p-value scoring function for
-                        // both the narrow and the broad call.
                         p_cutoff: cfg_common.p_cutoff,
                         qvalue: cfg_common.qvalue,
                         broad: cfg_common.broad,
@@ -1722,14 +1922,13 @@ pub fn run(o: &Options) -> Result<()> {
                         call_summits: cfg_common.call_summits,
                         lambda_bg,
                     };
-                    let out = call_chromosome(&cc, cache);
-                    // F172: the zero-lambda rejection has to be raised before
-                    // any writer is opened, so it is carried out of the loop.
+                    let called = call_chromosome(&cc, cache);
                     let bad = cache.hit_bad_lambda();
-                    (s.name.clone(), out, bad)
+                    (s.name.clone(), called, bad)
                 })
                 .collect()
-        });
+        })
+    };
     for (name, called, bad) in per_chrom {
         // F172: upstream raises `ZeroDivisionError: float division` from
         // `PeakDetect.__call_peaks_w_control` when the control lambda is zero at
@@ -1878,22 +2077,35 @@ pub fn run(o: &Options) -> Result<()> {
     // from the paired union walk (`chr_pos_treat_ctrl`), not from the raw
     // pileups -- see `write_paired_bdg`.
     if o.flag("store_bdg") {
-        // `-B` needs every chromosome's tracks at once, so the streaming provider is
-        // materialised here -- and only here.
-        write_paired_bdg(
-            o,
-            &signals,
-            &outdir,
-            &name,
-            SpmrDenom {
-                treat_total: t1,
-                ctrl_total: c1,
-                // `--scaleto small` scales treatment down exactly when its
-                // (post-filter) read count exceeds double the control's
-                treat_scale_is_one: t1 as f64 <= c1 as f64 * 2.0,
-            },
-            coord_shift,
-        )?;
+        if let Some((treat_temp, ctrl_temp)) = stream_bdg.take() {
+            // Keep the full bedGraph bodies on disk until all chromosome calls
+            // have passed validation. A zero-lambda error therefore leaves no
+            // final bedGraph behind, and the streaming path never buffers the
+            // genome-wide text in RAM.
+            std::fs::copy(
+                treat_temp.path(),
+                outdir.join(format!("{name}_treat_pileup.bdg")),
+            )?;
+            std::fs::copy(
+                ctrl_temp.path(),
+                outdir.join(format!("{name}_control_lambda.bdg")),
+            )?;
+        } else {
+            write_paired_bdg(
+                o,
+                &signals,
+                &outdir,
+                &name,
+                SpmrDenom {
+                    treat_total: t1,
+                    ctrl_total: c1,
+                    // `--scaleto small` scales treatment down exactly when its
+                    // (post-filter) read count exceeds double the control's
+                    treat_scale_is_one: t1 as f64 <= c1 as f64 * 2.0,
+                },
+                coord_shift,
+            )?;
+        }
     }
 
     eprintln!(
@@ -1972,6 +2184,407 @@ struct SpmrDenom {
     treat_scale_is_one: bool,
 }
 
+/// Rebuild single-end chromosome signals on demand after pooling reads.
+///
+/// The inputs stay resident, but the genome-wide pileup and lambda tracks do
+/// not. The first pass reduces each chromosome to the q-value histogram; the
+/// second pass calls peaks and drops each chromosome before moving on.
+struct SeSignalSource {
+    treat: SingleEndTrack,
+    ctrl: Option<SingleEndTrack>,
+    cfg: SeConfig,
+    setup: macs_peaks::callpeak::SeSignalSetup,
+    names: Vec<Vec<u8>>,
+}
+
+impl SeSignalSource {
+    fn chromosome(&self, name: &[u8]) -> Option<macs_peaks::callpeak::ChromSignals> {
+        let chrom = self.treat.genome().get(name)?;
+        macs_peaks::callpeak::build_one_se_chromosome(
+            chrom,
+            name,
+            &self.treat,
+            self.ctrl.as_ref(),
+            &self.cfg,
+            &self.setup,
+        )
+    }
+}
+
+/// Paired-end input tracks remain resident, while only one chromosome's
+/// treatment/lambda signals are built at a time and spooled between passes.
+struct PeSignalSource {
+    treat: FragmentTrack,
+    ctrl: Option<FragmentTrack>,
+    cfg: PeConfig,
+    names: Vec<Vec<u8>>,
+    pending: Option<(Vec<u8>, macs_peaks::callpeak::PeResult)>,
+}
+
+impl PeSignalSource {
+    fn new(
+        treat: FragmentTrack,
+        ctrl: Option<FragmentTrack>,
+        cfg: PeConfig,
+    ) -> (Self, macs_core::Coord, bool, f32, i64) {
+        let mut names: Vec<Vec<u8>> = treat
+            .chroms()
+            .iter()
+            .map(|&chrom| treat.genome().name(chrom).to_vec())
+            .collect();
+        names.sort();
+        let pending = names.first().map(|name| {
+            (
+                name.clone(),
+                macs_peaks::callpeak::run_callpeak_pe_chromosome(&treat, ctrl.as_ref(), &cfg, name),
+            )
+        });
+        let metadata = if let Some((_, result)) = &pending {
+            (
+                result.d,
+                result.paired_boundaries,
+                result.lambda_bg,
+                result.coord_shift,
+            )
+        } else {
+            let result = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
+            (
+                result.d,
+                result.paired_boundaries,
+                result.lambda_bg,
+                result.coord_shift,
+            )
+        };
+        (
+            Self {
+                treat,
+                ctrl,
+                cfg,
+                names,
+                pending,
+            },
+            metadata.0,
+            metadata.1,
+            metadata.2,
+            metadata.3,
+        )
+    }
+
+    fn chromosome(&mut self, name: &[u8]) -> macs_peaks::callpeak::PeResult {
+        if self
+            .pending
+            .as_ref()
+            .is_some_and(|(pending_name, _)| pending_name.as_slice() == name)
+        {
+            return self.pending.take().expect("pending signal checked").1;
+        }
+        macs_peaks::callpeak::run_callpeak_pe_chromosome(
+            &self.treat,
+            self.ctrl.as_ref(),
+            &self.cfg,
+            name,
+        )
+    }
+}
+
+fn record_pe_scaling_stage(
+    sdump: &mut StageDump,
+    treat: &FragmentTrack,
+    ctrl: Option<&FragmentTrack>,
+    cfg: &PeConfig,
+) {
+    if !sdump.enabled() {
+        return;
+    }
+    let control_total = ctrl.map_or(0, FragmentTrack::total).saturating_mul(2);
+    let control_sum = if ctrl.is_some() {
+        (control_total as f64 * treat.average_template_length()) as i64 as f64
+    } else {
+        0.0
+    };
+    let ratio = if control_sum > 0.0 {
+        treat.length() as f64 / control_sum
+    } else {
+        0.0
+    };
+    let tocontrol = ctrl.is_some()
+        && macs_peaks::callpeak::to_control(cfg.scaleto_large, treat.total(), control_total, true);
+    sdump.put(
+        "scaling",
+        &stagedump::mixed_json(&[
+            ("ratio_treat2control", stagedump::num(ratio)),
+            ("sregion", stagedump::num(cfg.slocal as f64)),
+            ("lregion", stagedump::num(cfg.llocal as f64)),
+            ("tocontrol", tocontrol.to_string()),
+        ]),
+    );
+}
+
+fn se_lambda_ladder_json(
+    setup: &macs_peaks::callpeak::SeSignalSetup,
+    cfg: &macs_peaks::callpeak::SeConfig,
+    has_control: bool,
+) -> String {
+    let mut d_s = Vec::new();
+    let mut factors = Vec::new();
+    if !cfg.nolambda {
+        if has_control {
+            d_s.push(cfg.extsize);
+            let first = if setup.to_control {
+                1.0
+            } else {
+                setup.ratio_treat2control
+            };
+            factors.push(first);
+            if cfg.slocal != 0 {
+                d_s.push(cfg.slocal);
+                factors.push(if setup.to_control {
+                    cfg.extsize as f64 / cfg.slocal as f64
+                } else {
+                    cfg.extsize as f64 / cfg.slocal as f64 * setup.ratio_treat2control
+                });
+            }
+            if cfg.llocal > cfg.slocal {
+                d_s.push(cfg.llocal);
+                factors.push(if setup.to_control {
+                    cfg.extsize as f64 / cfg.llocal as f64
+                } else {
+                    cfg.extsize as f64 / cfg.llocal as f64 * setup.ratio_treat2control
+                });
+            }
+        } else if cfg.llocal > 0 {
+            d_s.push(cfg.llocal);
+            factors.push(cfg.extsize as f64 / cfg.llocal as f64);
+        }
+    }
+    let treat_scale = if setup.to_control && setup.ratio_treat2control != 0.0 {
+        (1.0 / setup.ratio_treat2control) as f32 as f64
+    } else {
+        1.0
+    };
+    stagedump::lambda_ladder_json(&d_s, &factors, setup.lambda_bg as f64, treat_scale)
+}
+
+fn pe_lambda_ladder_json(
+    treat: &FragmentTrack,
+    ctrl: Option<&FragmentTrack>,
+    cfg: &PeConfig,
+    lambda_bg: f32,
+) -> String {
+    let control_total = ctrl.map_or(0, FragmentTrack::total).saturating_mul(2);
+    let control_sum = if ctrl.is_some() {
+        (control_total as f64 * treat.average_template_length()) as i64 as f64
+    } else {
+        0.0
+    };
+    let ratio = if control_sum > 0.0 {
+        treat.length() as f64 / control_sum
+    } else {
+        0.0
+    };
+    let tocontrol = ctrl.is_some()
+        && macs_peaks::callpeak::to_control(cfg.scaleto_large, treat.total(), control_total, true);
+    let mut d_s = Vec::new();
+    let mut factors = Vec::new();
+    if !cfg.nolambda {
+        if ctrl.is_some() {
+            let d = cfg.tsize_exact as i64;
+            d_s.push(d);
+            let ratio_factor = if tocontrol { 1.0 } else { ratio };
+            factors.push(ratio_factor);
+            if cfg.slocal > 0 {
+                d_s.push(cfg.slocal);
+                factors.push(cfg.tsize_exact / cfg.slocal as f64 * ratio_factor);
+            }
+            if cfg.llocal > cfg.slocal && cfg.llocal > 0 {
+                d_s.push(cfg.llocal);
+                factors.push(cfg.tsize_exact / cfg.llocal as f64 * ratio_factor);
+            }
+        } else if cfg.llocal > 0 {
+            d_s.push(cfg.llocal);
+            factors.push(treat.length() as f64 / (cfg.llocal as f64 * treat.total() as f64 * 2.0));
+        }
+    }
+    let treat_scale = if tocontrol && ratio != 0.0 {
+        (1.0 / ratio) as f32 as f64
+    } else {
+        1.0
+    };
+    stagedump::lambda_ladder_json(&d_s, &factors, lambda_bg as f64, treat_scale)
+}
+
+fn record_lambda_merged_stage(
+    sdump: &mut StageDump,
+    signals: &[macs_peaks::callpeak::ChromSignals],
+    coord_shift: i64,
+    denominator: f64,
+) {
+    if !sdump.enabled() {
+        return;
+    }
+    let (mut treat_body, mut ctrl_body) = (String::new(), String::new());
+    for signal in signals {
+        append_paired_bdg_signal(
+            signal,
+            coord_shift,
+            denominator,
+            &mut treat_body,
+            &mut ctrl_body,
+        );
+    }
+    sdump.put("lambda_merged", &stagedump::bedgraph_body_json(&ctrl_body));
+}
+
+fn spmr_denominator(o: &Options, treat_total: u64, ctrl_total: u64) -> f64 {
+    if !o.flag("do_SPMR") {
+        return 1.0;
+    }
+    if treat_total as f64 <= ctrl_total as f64 * 2.0 {
+        treat_total as f64 / 1e6
+    } else {
+        ctrl_total as f64 / 1e6
+    }
+}
+
+/// Store raw RLE runs so the peak pass can reuse the first pass's pileups
+/// without holding every chromosome in memory or recomputing the pileup.
+/// Coordinates are u64 and values are written as their exact f32 bit pattern.
+fn write_signal_track<W: std::io::Write>(
+    writer: &mut W,
+    track: &macs_rle::SignalTrack<f32>,
+) -> std::io::Result<()> {
+    writer.write_all(&track.start().to_le_bytes())?;
+    writer.write_all(&track.end().to_le_bytes())?;
+    writer.write_all(&(track.runs().len() as u64).to_le_bytes())?;
+    for run in track.runs() {
+        writer.write_all(&run.end.to_le_bytes())?;
+        writer.write_all(&run.value.to_bits().to_le_bytes())?;
+    }
+    Ok(())
+}
+
+fn read_signal_track<R: std::io::Read>(
+    reader: &mut R,
+    chrom: ChromId,
+) -> std::io::Result<macs_rle::SignalTrack<f32>> {
+    let mut coord_buf = [0u8; 8];
+    reader.read_exact(&mut coord_buf)?;
+    let start = u64::from_le_bytes(coord_buf);
+    reader.read_exact(&mut coord_buf)?;
+    let end = u64::from_le_bytes(coord_buf);
+    reader.read_exact(&mut coord_buf)?;
+    let run_count = usize::try_from(u64::from_le_bytes(coord_buf)).map_err(|_| {
+        std::io::Error::new(std::io::ErrorKind::InvalidData, "too many signal runs")
+    })?;
+    let mut runs = Vec::with_capacity(run_count);
+    for _ in 0..run_count {
+        reader.read_exact(&mut coord_buf)?;
+        let run_end = u64::from_le_bytes(coord_buf);
+        let mut value_buf = [0u8; 4];
+        reader.read_exact(&mut value_buf)?;
+        runs.push(macs_rle::Run::new(
+            run_end,
+            f32::from_bits(u32::from_le_bytes(value_buf)),
+        ));
+    }
+    Ok(macs_rle::SignalTrack::from_runs_exact(
+        chrom, start, end, runs,
+    ))
+}
+
+fn read_spooled_signal<R: std::io::Read>(
+    reader: &mut R,
+    name: &[u8],
+    chrom: ChromId,
+) -> std::io::Result<Option<macs_peaks::callpeak::ChromSignals>> {
+    let mut marker = [0u8; 1];
+    reader.read_exact(&mut marker)?;
+    if marker[0] == 0 {
+        return Ok(None);
+    }
+    if marker[0] != 1 {
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::InvalidData,
+            "invalid signal spool record marker",
+        ));
+    }
+    let treat = read_signal_track(reader, chrom)?;
+    reader.read_exact(&mut marker)?;
+    let ctrl = match marker[0] {
+        0 => None,
+        1 => Some(read_signal_track(reader, chrom)?),
+        _ => {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                "invalid control spool marker",
+            ));
+        }
+    };
+    Ok(Some(macs_peaks::callpeak::ChromSignals {
+        name: String::from_utf8_lossy(name).into_owned(),
+        chrom,
+        treat,
+        ctrl,
+    }))
+}
+
+#[cfg(test)]
+mod signal_spool_tests {
+    use super::*;
+
+    #[test]
+    fn binary_spool_preserves_raw_runs_and_optional_control_alignment() {
+        let chrom = ChromId(0);
+        let treat = macs_rle::SignalTrack::from_runs_exact(
+            chrom,
+            3,
+            30,
+            vec![
+                macs_rle::Run::new(8, f32::from_bits(0x8000_0000)),
+                macs_rle::Run::new(17, 2.5),
+                macs_rle::Run::new(30, 2.5),
+            ],
+        );
+        let ctrl = macs_rle::SignalTrack::from_runs_exact(
+            chrom,
+            0,
+            30,
+            vec![macs_rle::Run::new(11, 0.25), macs_rle::Run::new(30, 0.5)],
+        );
+        let mut bytes = Vec::new();
+        bytes.push(1); // present
+        write_signal_track(&mut bytes, &treat).unwrap();
+        bytes.push(1); // control present
+        write_signal_track(&mut bytes, &ctrl).unwrap();
+        bytes.push(0); // next chromosome absent
+
+        let mut reader = std::io::Cursor::new(bytes);
+        let signal = read_spooled_signal(&mut reader, b"chr1", chrom)
+            .unwrap()
+            .unwrap();
+        assert_eq!((signal.treat.start(), signal.treat.end()), (3, 30));
+        assert_eq!(
+            signal
+                .treat
+                .runs()
+                .iter()
+                .map(|run| (run.end, run.value.to_bits()))
+                .collect::<Vec<_>>(),
+            treat
+                .runs()
+                .iter()
+                .map(|run| (run.end, run.value.to_bits()))
+                .collect::<Vec<_>>()
+        );
+        let decoded_ctrl = signal.ctrl.unwrap();
+        assert_eq!((decoded_ctrl.start(), decoded_ctrl.end()), (0, 30));
+        assert_eq!(decoded_ctrl.runs(), ctrl.runs());
+        assert!(read_spooled_signal(&mut reader, b"chr2", chrom)
+            .unwrap()
+            .is_none());
+    }
+}
+
 fn write_paired_bdg(
     o: &Options,
     signals: &[macs_peaks::callpeak::ChromSignals],
@@ -2032,6 +2645,24 @@ fn write_paired_bdg(
     std::fs::write(outdir.join(format!("{name}_treat_pileup.bdg")), treat_bdg)?;
     std::fs::write(outdir.join(format!("{name}_control_lambda.bdg")), ctrl_bdg)?;
     Ok(())
+}
+
+fn append_paired_bdg_signal(
+    signal: &macs_peaks::callpeak::ChromSignals,
+    coord_shift: i64,
+    denominator: f64,
+    treat_body: &mut String,
+    ctrl_body: &mut String,
+) {
+    let Some(ctrl) = &signal.ctrl else { return };
+    let shift = |p: macs_core::Coord| p as i64 - coord_shift;
+    let (raw_pos, treat, control) = macs_peaks::callpeak::paired_union(&signal.treat, ctrl);
+    if raw_pos.is_empty() {
+        return;
+    }
+    let pos: Vec<i64> = raw_pos.iter().map(|p| shift(*p)).collect();
+    coalesce_into(treat_body, &signal.name, &pos, &treat, denominator);
+    coalesce_into(ctrl_body, &signal.name, &pos, &control, denominator);
 }
 
 fn coalesce_into(out: &mut String, chrom: &str, pos: &[i64], vals: &[f32], denom: f64) {

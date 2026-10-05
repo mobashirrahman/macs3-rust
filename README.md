@@ -1,8 +1,8 @@
 # macs3-rs
 
-A pure-Rust reimplementation of [MACS3](https://github.com/macs3-project/MACS3)
-(Model-based Analysis for ChIP-Seq), targeting **byte-for-byte output parity**
-with MACS3 3.0.5.
+A Rust implementation of [MACS3](https://github.com/macs3-project/MACS)
+(Model-based Analysis for ChIP-Seq), with a narrow C FFI bridge to fermi-lite,
+targeting **byte-for-byte output parity** with MACS3 3.0.5.
 
 > **Status: not yet a drop-in replacement.** See [Compatibility](#compatibility)
 > for exactly which invocations are byte-identical and which are not. Read it
@@ -12,7 +12,10 @@ with MACS3 3.0.5.
 
 MACS3 is a Cython/Python toolkit; this is a from-scratch Rust implementation of
 the same numerics, validated differentially against the pinned upstream at
-commit `c5443190e3edfeb301cc94acf450e2b2c026a223` (v3.0.5).
+commit `c5443190e3edfeb301cc94acf450e2b2c026a223` (v3.0.5). Oracle runs pin
+`OPENBLAS_CORETYPE=Haswell` alongside the numerical dependency versions in
+`oracle/ENV.lock`; Rust reproduces that reduction order without a runtime BLAS
+dependency.
 
 The goal is stricter than upstream's own test suite: upstream's `test/cmdlinetest`
 accepts a Jaccard index > 0.99 on peak files, whereas this project compares
@@ -35,7 +38,7 @@ a different answer.
 | `macs-bedgraph` | `BedGraph.py` port |
 | `macs-hmmratac` | HMM peak calling for ATAC-seq / scATAC-seq |
 | `macs-callvar` | variant calling in peaks, incl. a fermi-lite FFI bridge |
-| `macs-cli` | the `macs3-rs` binary: all 14 subcommands |
+| `macs-cli` | the `macs3-rs` binary: dispatch for all 14 upstream subcommands (coverage varies by command) |
 | `macs-compare` | differential comparator used by the test gates |
 
 ## Install
@@ -59,58 +62,77 @@ upstream rejects would break drop-in compatibility. Output is byte-identical at
 
 ## Compatibility
 
-Verified differentially against upstream 3.0.5 on two corpora: a generated
-7685-invocation `callpeak` flag matrix, and upstream's own `test/cmdlinetest`
-run on real CTCF ChIP-seq data (5.0 M + 5.0 M reads, and the yeast ATAC BAM).
+Verified differentially against upstream 3.0.5 on a generated 7685-invocation
+`callpeak` matrix, upstream's `test/cmdlinetest`, and command-specific oracle
+checks. This is not yet full parity across every flag of all 14 commands; the
+current measured results and open differences are tracked in [status](docs/status.md).
 
-| corpus | result |
+| corpus (recorded baseline) | result |
 |---|---|
 | generated flag matrix, 7685 invocations | **7204 / 7204 cases byte-identical**, 22456 / 22456 files, 0 exit-status mismatches |
-| upstream `test/cmdlinetest`, 163 output files | **103 byte-identical**, 17 differing, 43 not produced |
-| CLI accept/reject, 255 malformed-value probes | **1 exit-status mismatch** (an upstream crash on `--tempdir`) |
+| fresh upstream `test/cmdlinetest`, 20 command groups | **All 163 artifacts produced**; current scATAC, Gaussian, and Poisson checks pass (see status) |
+| CLI accept/reject, 255 malformed-value probes | Historical: **1 mismatch** for `--tempdir`; custom-directory handling is now implemented and checked against upstream |
 
 **Byte-identical:**
 
 - `callpeak` single-end, `--nomodel` (`--extsize`, `--shift`, `--nolambda`, `--SPMR`)
-- `callpeak` single-end, **model mode** — the default invocation; `d`, `*_model.r`,
-  `# alternative fragment length(s)` and all five outputs match on real data
+- `callpeak` single-end, **model mode** — on checked real data, `d`, alternative
+  fragment length(s), peak outputs, and `*_model.r` match
 - `callpeak` paired-end with `-f BEDPE` and `-f BAMPE`, narrow and broad
 - `callpeak -f FRAG`, with and without `--barcodes`
 - `predictd`, single-end (BED/BAM/SAM) and both paired-end modes
 - `refinepeak` (single-end BED/BAM/SAM; paired-end is SE-only upstream)
 - `pileup`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE/FRAG)
 - `filterdup`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE)
-- `randsample`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE single-chromosome byte-identical)
-- `callvar`, both `-F off` and `-F auto`
+- `randsample`, single-chromosome SE and PE; multi-contig sampling uses sorted
+  chromosomes, while upstream uses hash-randomized set iteration
+- `callvar`, `-F off`, `-F auto`, and `-F on`
+- fresh real-data `callpeak --call-summits` runs for SE, BEDPE, and BAMPE; the
+  summit-related files are byte-identical after normalizing the XLS command-line
+  header (see `oracle/check_real_summit_bytes.py`)
 - the `bdgopt` / `bdgcmp` / `cmbreps` / `bdgdiff` bedGraph family
 - `bdgpeakcall`, `bdgbroadcall`, gzipped input throughout
 - every `<subcommand> --help` (captured from the pinned oracle)
 
-**Known differences (17 files on upstream's own test):**
+**Historical differences and current checks:**
 
 | area | state |
 |---|---|
-| summit tie-break | 1 peak in 724–735 differs on SE `--call-summits` and both PE modes (8 bp or a lower-scoring summit) |
-| `*_model.r` | 1 line in 17: ~1e-12 relative tail in the `ycorr` vector |
+| summit tie-break | The older recorded comparison had one differing peak per tested mode; the fresh real-data SE/BEDPE/BAMPE check now matches summit-related outputs byte-for-byte |
+| `*_model.r` | The older correlation rounding gap is resolved; fresh predictd and source-SE model files are byte-identical against the pinned Haswell oracle |
 | contig ordering | `filterdup` on 50k contigs: content identical, order differs (upstream hash-randomized, non-deterministic run to run) |
-| `callvar` VCF | `##Program_Args` echoes the replay's outdir, otherwise identical |
-| `hmmratac` | 43 output files not produced: BAM input now loads and `--model` inference is byte-identical, but hmmlearn self-training is unimplemented so the *default* invocation refuses |
-| `hmmratac` | 43 output files not produced: hmmlearn Baum-Welch self-training unimplemented (see below) |
+| `callvar` VCF | `##Program_Args` echoes the replay's outdir, otherwise identical on the recorded corpus |
+| `hmmratac` | This older corpus predates self-training support. Gaussian and Poisson default training now run; fresh yeast oracle checks cover training and decoded output (see [status](docs/status.md)). |
 
 
 ## Input formats
 
-Single-end `BED`, `BAM`, `SAM`, `ELAND`, `BOWTIE` and paired-end `BEDPE`, `BAMPE`,
-`FRAG` are supported where upstream supports them. Two notes:
+Single-end `BED`, `BAM`, `SAM`, `ELAND`, `ELANDMULTI`, `ELANDEXPORT`, `BOWTIE`
+and paired-end `BEDPE`, `BAMPE`, `FRAG` loaders are available. Pooled single-end
+and BAM inputs do not require an index. Format-specific behavior and command
+coverage still vary; see [status](docs/status.md). Parser details:
 
 - Upstream's SAM parser crashes on any minus-strand read (`TypeError` in CIGAR
   parsing), making `-f SAM` effectively unusable upstream. This port parses SAM
   correctly and is byte-identical on inputs upstream can handle.
+- Legacy parsing also preserves pinned upstream failures: ELANDMULTI rejects its
+  bytes-to-integer conversion, and BOWTIE tag-size inference rejects fewer than ten successful
+  records. ELAND and ELANDEXPORT remain usable.
 - SE BAM 5' ends use the exclusive rightmost directly, matching
   `bam_fw_binary_parse`; BAMPE fragments use `abs(TLEN)` with leftmost-only
   proper pairs, matching `bampe_pe_binary_parse`. No `.bai` index is required.
 
 ## Performance
+
+The table below is the original benchmark baseline. On the same real 5M-read
+single-end CTCF workload (`--nomodel --extsize 200`, one thread), a newer Rust
+run took 11.31 s and used 265,788 kB peak RSS; pinned upstream took 32.0 s and
+used 297,628 kB. That's about 2.8x speed and 0.89x upstream RSS, so it does not
+meet the release targets of at least 3x speed and at most 0.5x RSS on this workload.
+The fresh summit check matches narrowPeak and summits byte-for-byte; the XLS
+difference is only the output-directory command line header. Performance work
+continues, and this single workload is not the full benchmark matrix. See
+[status](docs/status.md) for current progress.
 
 Measured on real CTCF ChIP-seq data (5.0 M treatment + 5.0 M control reads,
 human `hs` genome size), median of 3, release build:
@@ -121,17 +143,16 @@ human `hs` genome size), median of 3, release build:
 | SE `--nomodel --SPMR` | 34.0 s / 294 MB | 4.8 s / 2304 MB | **7.0x** | **7.9x** |
 | SE `--nomodel`, no control | 23.9 s / 171 MB | 7.2 s / 1391 MB | **3.3x** | **8.1x** |
 
-Wall clock is 3-7x better. **Peak memory is 8-10x worse than upstream**, which
-is a serious regression on real workloads and the main outstanding engineering
-problem. Threading scales poorly here (~7% from 1 to 16 threads), so a
-sequential stage dominates.
+At the time of this baseline, wall clock was 3–7x better and peak memory was
+8–10x higher than upstream. Those RSS figures have since been substantially
+reduced and must not be read as current measurements.
 
 ## Testing
 
 ```sh
-cargo test --workspace          # 716 unit / differential / regression tests
-cargo clippy --workspace --all-targets
-cargo fmt --check
+cargo test --workspace
+cargo clippy --workspace --all-targets -- -D warnings
+cargo fmt --all --check
 ```
 
 The differential corpora under `tests/` and the oracle harness under `oracle/`

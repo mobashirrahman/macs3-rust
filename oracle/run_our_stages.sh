@@ -30,10 +30,17 @@ replay() {
   [ "$mode" = "se" ] && extra=(--nomodel --extsize 200)
   local cargs=()
   [ -f "$ctrl" ] && cargs=(-c "$ctrl")
-  MACS3_RS_DUMP_STAGES="$dst" "$REPO/target/release/macs3-rs" callpeak \
+  local log="$dst/run.log"
+  if MACS3_RS_DUMP_STAGES="$dst" "$REPO/target/release/macs3-rs" callpeak \
       -n "ours_$mode" -g "$gsize" -t "$treat" "${cargs[@]}" -f "$fmt" \
-      "${extra[@]}" --outdir "$dst" >/dev/null 2>&1 || {
-        echo "FAIL  $group/$name [$mode] (macs3-rs exited $?)"; return 0; }
+      "${extra[@]}" --cutoff-analysis -B --outdir "$dst" >"$log" 2>&1; then
+    :
+  else
+    local rc=$?
+    echo "FAIL  $group/$name [$mode] (macs3-rs failed; log: $log)" >&2
+    cat "$log" >&2
+    return "$rc"
+  fi
   echo "ok    $group/$name [$mode]"
 }
 

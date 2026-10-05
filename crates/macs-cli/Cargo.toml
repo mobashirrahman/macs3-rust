@@ -27,3 +27,4 @@ macs-peaks = { workspace = true }
 macs-track = { workspace = true }
 macs-rle = { workspace = true }
 macs-hmmratac = { workspace = true }
+tempfile = "3"

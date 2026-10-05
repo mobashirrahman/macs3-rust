@@ -13,7 +13,7 @@ set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BAM="$ROOT/tests/fixtures/bam/reads.bam"
 GOLDEN="$ROOT/tests/golden/bam"
-PY="${MACS3_ORACLE_PYTHON:-/scratch/mdra00001/tmp/opencode/macs3-venv/bin/python}"
+PY="${MACS3_ORACLE_PYTHON:-${MACS3_VENV:-/scratch/mdra00001/tmp/opencode/macs3-venv}/bin/python}"
 DUMP="$ROOT/target/debug/macs-io-dump"
 
 REGENERATE=0

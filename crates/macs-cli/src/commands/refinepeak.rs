@@ -16,13 +16,8 @@ use std::collections::HashMap;
 use std::path::Path;
 
 use macs_core::{MacsError, Result, Strand};
-use macs_track::SingleEndTrack;
 
 use crate::Options;
-
-fn load_bed(path: &Path) -> Result<SingleEndTrack> {
-    super::input::load_single_end_bed(path)
-}
 
 /// A peak from the `--bedfile`: `chrom start end name`.
 #[derive(Debug, Clone, PartialEq)]
@@ -117,22 +112,14 @@ pub fn refinepeak(o: &Options) -> Result<()> {
     let bedfile = o
         .get("bedfile")
         .ok_or_else(|| MacsError::InvalidParameter("-b/--bedfile is required".into()))?;
-    let ifile = o
-        .get("ifile")
-        .ok_or_else(|| MacsError::InvalidParameter("-i/--ifile is required".into()))?;
+    let ifiles = super::input::input_files(o)?;
     let format = o.get("format").unwrap_or("AUTO").to_uppercase();
     if format == "BAMPE" || format == "BEDPE" {
         return Err(MacsError::InvalidParameter(
             "paired-end input is not yet supported".into(),
         ));
     }
-    let track = if format == "BAM" {
-        super::input::load_single_end_bam(Path::new(ifile))?.0
-    } else if format == "SAM" {
-        super::input::load_single_end_sam(Path::new(ifile))?.0
-    } else {
-        load_bed(Path::new(ifile))?
-    };
+    let track = super::input::load_single_end_files(&ifiles, &format)?.0;
     let peaks = read_peaks(Path::new(bedfile))?;
     let w = o.int("windowsize").unwrap_or(200);
     let cutoff = o.float("cutoff").unwrap_or(5.0);

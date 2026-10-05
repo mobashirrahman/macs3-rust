@@ -34,7 +34,7 @@
 //! / narrow / `--call-summits` modes while the boundaries do not.
 
 use crate::driver::{pair_treat_ctrl, PairedSignal};
-use crate::regions::{segment_regions, CallParams, Chunk, Peak, Reject, ScoreKind};
+use crate::regions::{CallParams, Chunk, Peak, Reject, ScoreKind};
 
 use macs_core::Coord;
 use macs_score::{PScoreCache, PqTable};
@@ -198,35 +198,34 @@ pub fn call_chromosome_paired(
         .collect();
 
     // AND across criteria, matching apply_multiple_cutoffs
-    let above: Vec<usize> = (0..n)
-        .filter(|i| {
+    // Build chunks directly from the cutoff scan. An intermediate `Vec<usize>`
+    // of every passing position was kept alive beside this larger `Vec<Chunk>`.
+    // On dense real-data chromosomes those indices alone cost tens of MB.
+    let chunks: Vec<Chunk> = (0..n)
+        .filter(|&i| {
             criteria
                 .iter()
                 .enumerate()
-                .all(|(k, c)| scores[k][*i] > c.cutoff)
+                .all(|(k, c)| scores[k][i] > c.cutoff)
+        })
+        .map(|i| Chunk {
+            // end is the run's own position; start is the previous run's,
+            // with the first forced to 0 (F5 and upstream's fix-up).
+            start: if i == 0 { 0 } else { paired.pos[i - 1] },
+            end: paired.pos[i],
+            treat: paired.treat[i],
+            ctrl: paired.ctrl[i],
+            score_index: i,
         })
         .collect();
-    if above.is_empty() {
+    if chunks.is_empty() {
         return (Vec::new(), 0);
     }
-
-    // chunks: end is the run's own position, start is the previous run's, with
-    // the first forced to 0 (F5 + the upstream `if above_cutoff[0] == 0` fix-up)
-    let chunks: Vec<Chunk> = above
-        .iter()
-        .map(|i| Chunk {
-            start: if *i == 0 { 0 } else { paired.pos[i - 1] },
-            end: paired.pos[*i],
-            treat: paired.treat[*i],
-            ctrl: paired.ctrl[*i],
-            score_index: *i,
-        })
-        .collect();
 
     if std::env::var("CALLPEAK_CHUNKS").is_ok() {
         eprintln!("CHUNKS {} REGIONS_PENDING", chunks.len());
     }
-    let regions = segment_regions(&chunks, params.max_gap);
+    let regions = crate::regions::segment_region_ranges(&chunks, params.max_gap);
     if std::env::var("CALLPEAK_CHUNKS").is_ok() {
         eprintln!("REGIONS {}", regions.len());
     }
@@ -240,7 +239,8 @@ pub fn call_chromosome_paired(
         .map(|(k, c)| (scores[k].as_slice(), c.cutoff))
         .collect();
 
-    for region in &regions {
+    for range in &regions {
+        let region = &chunks[range.clone()];
         let r = if params.call_summits {
             crate::regions::close_peak_with_subpeaks(
                 region,

@@ -11,7 +11,7 @@
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-VENV="/scratch/mdra00001/tmp/opencode/macs3-venv"
+VENV="${MACS3_VENV:-/scratch/mdra00001/tmp/opencode/macs3-venv}"
 WORK="${E2E_WORK:-/tmp/e2e_work}"
 MACS3_SRC="${MACS3_SRC:-/scratch/mdra00001/tmp/opencode/macs3-src}"
 # Must match the golden runs, which fix -g at 2e6 for every fixture.

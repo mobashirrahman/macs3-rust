@@ -17,6 +17,7 @@
 //!
 //! [`macs_stats::NumpyRng`] implements that stream. The samplers here are kept
 //! separate from the storage types so the RNG dependency is explicit and testable.
+//! Counted and ordinary paired-end tracks intentionally use different NumPy RNGs.
 
 use macs_core::Result;
 
@@ -40,7 +41,7 @@ pub fn sample_percent(track: &mut SingleEndTrack, percent: f64, seed: i64) -> Re
     // through `np.random.seed(seed)` / `np.random.shuffle` -- the *old* `RandomState`
     // API, not `default_rng`. `randsample` and `filterdup` both come through here and
     // are byte-identical against the oracle with this stream; switching it to PCG64
-    // breaks them. `sample_frag_percent` below is the one that needs PCG64 (F206).
+    // breaks them.
     let mut rng = macs_stats::NumpyRng::seeded(seed);
     let mut total: u64 = 0;
     for chrom in chroms {
@@ -165,16 +166,10 @@ pub fn retained_count(v: f64) -> usize {
 /// fragments whenever counts vary -- on the `mfrag` fixture it keeps 125 rows
 /// carrying 160 fragments, not 40 rows.
 ///
-/// # The RNG is a `SeedSequence`-keyed MT19937, and this port does not match it
+/// # The RNG is a `SeedSequence`-keyed MT19937
 ///
-/// Upstream uses `RandomState(MT19937(SeedSequence(seed)))`. This port's
-/// [`macs_stats::randomstate_from_seed_sequence`] reproduces the
-/// `SeedSequence` key -- verified against the installed NumPy -- but its
-/// `MT19937` array-seeding stage does not yet reproduce NumPy's, so the
-/// **permutation differs**. That is why this sampler is not claimed exact: with
-/// `--no-fragem` the EM is skipped and `means`/`stddevs` come straight from the
-/// user, which *is* exact; without it the EM sees a different 10% down-sample.
-/// See F144 in `docs/upstream-findings.md`.
+/// Upstream uses `RandomState(MT19937(SeedSequence(seed)))` for counted tracks.
+/// [`macs_stats::randomstate_from_seed_sequence`] reproduces this seeded stream.
 ///
 /// # The two track classes sample from different generators
 ///
@@ -200,9 +195,19 @@ pub fn sample_frag_percent(
     let genome = track.genome();
     let mut chroms = track.chroms();
     chroms.sort_by(|&a, &b| genome.name(a).cmp(genome.name(b)));
+    if track.has_counts() {
+        return sample_counted_frag_percent(
+            track,
+            &chroms,
+            percent,
+            seed,
+            min_fraglen,
+            max_fraglen,
+        );
+    }
     // F206: `PETrackI.sample_percent_copy` (`PairedEndTrack.py:653-659`) seeds
-    // `np.random.default_rng(seed)` -- **PCG64** -- so this is the one sampler that must
-    // not use the legacy MT19937 stream. They are not interchangeable: with the legacy
+    // `np.random.default_rng(seed)` -- **PCG64** -- so this PETrackI sampler must not
+    // use the legacy MT19937 stream. They are not interchangeable: with the legacy
     // stream the EM down-sample retained 1041 fragments where upstream retains 1040,
     // which shifts HMMRATAC's fitted nucleosome means by a few bp and so moves every
     // accessible region derived from the digested signals.
@@ -275,9 +280,100 @@ pub fn sample_frag_percent(
     Ok(out)
 }
 
+/// `PETrackII.sample_percent_copy`: counted FRAG tracks use a distinct
+/// SeedSequence MT19937 stream and round the per-chromosome fragment target to
+/// an integer. `PETrackI` uses PCG64 and rounds the target to five decimal
+/// places before truncating, so these paths must remain separate.
+fn sample_counted_frag_percent(
+    track: &FragmentTrack,
+    chroms: &[macs_core::ChromId],
+    percent: f64,
+    seed: i64,
+    min_fraglen: macs_core::Coord,
+    max_fraglen: macs_core::Coord,
+) -> Result<Vec<macs_core::Coord>> {
+    let mut rng = macs_stats::NumpyRng::from_seed_sequence(seed as u64);
+    let mut out = Vec::new();
+    let percent = percent as f32;
+    for &chrom in chroms {
+        let fragments = track.frags(chrom);
+        let counts = track.counts(chrom);
+        let n: u64 = counts.iter().map(|&count| u64::from(count)).sum();
+        // Cython evaluates `n * percent` as f32 because `percent` is a
+        // cython.float, then calls Python's ties-to-even `round` and casts to
+        // uint. Convert the f32 product back to f64 before matching `round`.
+        let product = (n as f32) * percent;
+        let n_sample = macs_stats::py_round(f64::from(product), 0).max(0.0) as usize;
+        if n == 0 || n_sample == 0 {
+            continue;
+        }
+
+        let mut indices = Vec::with_capacity(n as usize);
+        for (index, &count) in counts.iter().enumerate() {
+            indices.extend(std::iter::repeat_n(index, usize::from(count)));
+        }
+        rng.shuffle(&mut indices);
+        indices.truncate(n_sample.min(indices.len()));
+        indices.sort_unstable(); // np.unique(..., return_counts=True)
+        let mut previous: Option<usize> = None;
+        let mut multiplicity = 0u32;
+        for index in indices {
+            if previous == Some(index) {
+                multiplicity += 1;
+                continue;
+            }
+            if let Some(old) = previous {
+                let fragment = fragments[old];
+                let length = fragment.end.saturating_sub(fragment.start);
+                if length >= min_fraglen && length <= max_fraglen {
+                    out.extend(std::iter::repeat_n(length, multiplicity as usize));
+                }
+            }
+            previous = Some(index);
+            multiplicity = 1;
+        }
+        if let Some(old) = previous {
+            let fragment = fragments[old];
+            let length = fragment.end.saturating_sub(fragment.start);
+            if length >= min_fraglen && length <= max_fraglen {
+                out.extend(std::iter::repeat_n(length, multiplicity as usize));
+            }
+        }
+    }
+    Ok(out)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn counted_fragment_sampler_matches_numpy_randomstate() {
+        let mut builder = crate::FragTrackBuilder::with_barcodes();
+        // This byte-sorted-first chromosome rounds 1 * 0.5 to zero (ties-even)
+        // and must not consume any MT19937 draws before chrA/chrB are sampled.
+        builder.push_with_count(b"chr0", 0, 200, 1);
+        for (chrom, base) in [(b"chrB".as_slice(), 0u64), (b"chrA".as_slice(), 1000u64)] {
+            for (index, count) in [1u32, 2, 3, 4, 5, 6].into_iter().enumerate() {
+                let start = base + index as u64 * 1000;
+                let length = 100 + index as u64 * 10;
+                builder.push_with_count(chrom, start, start + length, count);
+            }
+        }
+        builder.finalize();
+        let track = builder.build();
+        let sampled = sample_frag_percent(&track, 0.5, 10151, 0, 1000).unwrap();
+        // Pinned PETrackII.sample_percent_copy(0.5, seed=10151): chromosomes
+        // are byte-sorted; counts are expanded before shuffle; unique indices
+        // restore the original per-chromosome row order.
+        assert_eq!(
+            sampled,
+            vec![
+                100, 110, 120, 140, 140, 140, 150, 150, 150, 150, 110, 120, 120, 130, 140, 140,
+                140, 140, 150, 150,
+            ]
+        );
+    }
 
     #[test]
     fn retained_count_truncates_after_rounding_to_five_decimals() {

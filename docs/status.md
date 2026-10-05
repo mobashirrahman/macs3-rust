@@ -1,9 +1,65 @@
 # macs3-rs port status
 
-Live status against the gate definitions in `PORTING_PLAN.md`. A gate is green
-only when its pass criteria are met by real command output, not by assertion.
+## Current snapshot — 2026-10-05
 
-Last updated: 2026-10-01.
+This snapshot supersedes older status notes below where they conflict. The project
+has live implementations across the CLI, but command coverage is uneven and it is
+not yet a full all-flags, all-corpus replacement.
+
+- **Final validation:** 753 workspace release tests pass with zero failures and
+  zero ignored tests; formatting and strict Clippy pass. The golden replay passes
+  7,204 cases and matches all 22,456 files, with zero exit-status mismatches across
+  481 rejection cases.
+- **HMMRATAC self-training is implemented for Gaussian and Poisson models.**
+  `oracle/check_hmm_training.py` runs fresh pinned-oracle training and decoding checks.
+  On the yeast 500k fixture, training regions and feature rows match (feature-row max
+  deviation 2.53e-12); model max deviations are 2.52e-10 (Gaussian) and 3.87e-12
+  (Poisson). Accessible-region intervals and state outputs match exactly for both
+  model types. `oracle/check_hmmratac.py` separately gates inference and signal output.
+- **Input support includes pooled single-end and BAM reads without an index**, plus
+  legacy parsers. Utility commands pool all supplied inputs, detect AUTO per file, and retain the
+  first-file tag-size estimate. ELAND and ELANDEXPORT match fresh comparisons;
+  compiled upstream ELANDMULTI and BOWTIE tag-size inference failures are reproduced.
+- Seeded multi-contig `randsample` has a documented ordering difference: upstream
+  seeds NumPy once and iterates a Python set of chromosomes. Two fresh upstream
+  processes with the same seed selected different rows (50,752/100,000 overlap);
+  fixing `PYTHONHASHSEED=0` made upstream repeatable. Rust uses sorted chromosomes.
+- **Counted scATAC FRAG sampling is implemented with upstream MT19937 and
+  count-weighted, ties-even quotas.** Fresh scATAC training arrays and state outputs
+  match exactly; model deviation is below 3e-12 and accessible-base Jaccard is 1.0.
+- The fresh upstream command suite produces all 163 expected artifacts. The
+  corrected intermediate recorder and Rust capture pass all 11 observable stages:
+  3,745 numeric leaves and 23 exact leaves. This comparison is mandatory in CI.
+- Explicit callpeak `--tempdir` controls temporary spools and preserves upstream
+  rejection of nonexistent directories; omitted flags use the platform temp path.
+- The two formerly ignored oracle tests now use committed Poisson and correlated
+  HMM captures and run without Python.
+- **CI provisions a private pinned MACS3 oracle** and runs differential gates for
+  Gaussian and Poisson HMM training, HMM inference, and all three callvar modes: no assembly, automatic assembly, and forced assembly.
+- **Performance remains active work.** On real CTCF 5M treatment + 5M control BED.gz,
+  `--nomodel --extsize 200`, one thread, Rust measured 11.31 s and 265,788 kB peak RSS;
+  pinned upstream measured 32.0 s and 297,628 kB. Rust narrowPeak and summits matched
+  byte-for-byte; the XLS differed only in its output-directory command line header.
+  This is about 2.8x faster at 0.89x upstream RSS, so it does not meet the release
+  targets of at least 3x speedup and at most 0.5x RSS on this workload. It is one
+  workload, not the full benchmark matrix. The older 2.3–3.0 GB Rust RSS figures below
+  are historical baseline measurements.
+- **The C fermi-lite assembler bridge is intentionally retained.** Replacing it with
+  a pure-Rust assembler remains post-v1.0 scope; the existing bridge is tested in CI.
+- `oracle/check_real_summit_bytes.py` reruns source-tree CTCF SE, BEDPE, and BAMPE
+  examples against the fresh pinned oracle. The checked narrowPeak, summit, treatment,
+  and control outputs match byte-for-byte; the XLS command-line header is normalized
+  because it contains the different executable and temporary output paths. The source
+  SE `*_model.r` is also byte-identical after reproducing NumPy/OpenBLAS Haswell
+  dot-product reduction. Fresh predictd/randsample checks pass 6/6. Do not read the
+  historical command and gate rows below as a current all-14-command parity claim.
+
+## Historical snapshot — 2026-10-01
+
+The detailed gate and test tables below preserve the prior status snapshot and its
+then-current findings. Newer work can supersede those rows; in particular, their
+HMM self-training, callvar, command-coverage, and test-count entries are historical.
+Use the current snapshot above for current high-level status.
 
 ---
 

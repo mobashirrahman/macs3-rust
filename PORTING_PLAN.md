@@ -1,10 +1,15 @@
 # macs3-rs — Porting Plan
 
-**Objective:** a fully independent, pure-Rust reimplementation of MACS3 3.0.5 that is a
-drop-in replacement for the `macs3` Python package (CLI + library semantics), produces
-bit-comparable scientific results, and delivers a large performance and memory win.
+**Objective:** a Rust reimplementation of MACS3 3.0.5 that is a drop-in replacement for
+the `macs3` Python package (CLI + library semantics), produces bit-comparable scientific
+results, and delivers a large performance and memory win. The fermi-lite assembler is a
+deliberate C FFI exception, retained beyond v1.0; a pure-Rust replacement is post-v1.0
+scope.
 
-**Status:** plan of record. Nothing is implemented yet.
+**Status:** this is the original plan of record; implementation is active and substantial
+portions are complete. See [the live status](docs/status.md) for measured coverage,
+including the remaining compatibility and performance work. Historical milestones below
+remain useful as targets, not as a claim that no code exists.
 
 ---
 
@@ -97,8 +102,8 @@ Compatibility target is the full MACS3 3.0.5 CLI surface:
 | `refinepeak` | **Numeric** | |
 | `callpeak -f FRAG` | **Numeric** | |
 | `hmmratac` (inference) | **Exact** | fixed exported model |
-| `hmmratac` (training) | **Biological** | HMM EM + RNG non-determinism; declared deviation |
-| `callvar` | **Biological → Numeric** | VCF records comparable; fermi-lite replaced last |
+| `hmmratac` (training) | **Oracle-checked numeric** | Gaussian and Poisson self-training are implemented; see G13 evidence in `docs/status.md` |
+| `callvar` | **Exact on gated fixtures** | Both explicit and `--fermi` paths are tested; existing fermi-lite FFI is retained beyond v1.0 scope |
 
 ### 2.2 Non-goals (v1.0)
 
@@ -642,13 +647,13 @@ control over numerics, initialisation, randomness, and convergence.
 - Posterior probabilities match upstream within 1e-4; state assignments and output
   regions identical. This isolates the *inference* implementation from *training*.
 
-**G13b — training (Biological):**
-- Self-trained Rust model produces regions with Jaccard ≥ 0.98, boundary displacement
-  ≤ 25 bp, summit displacement ≤ 10 bp vs. upstream on the corpus.
-- Documented explicitly in the README and compatibility matrix: **HMMRATAC training is
-  the one declared non-exact deviation**, caused by EM initialisation, RNG, and
-  cross-architecture FP behaviour (upstream itself warns output can differ across
-  architectures).
+**G13b — training (oracle-checked):**
+- Gaussian and Poisson self-training are implemented and checked against a fresh run of
+  the pinned oracle by `oracle/check_hmm_training.py`. On the yeast 500k fixture, training
+  regions and feature rows match (feature values within 2.53e-12); fitted model values
+  are within 2.52e-10 (Gaussian) and 3.87e-12 (Poisson), and accessible-region intervals
+  match exactly for both types. These are measured fixture results, not a claim of all-
+  flags or all-corpus parity.
 - Decode store uses buffered binary blocks in a temp file, not JSON: bounded RSS on a
   1M-candidate run (< 500 MB), verified.
 
@@ -664,15 +669,16 @@ control over numerics, initialisation, randomness, and convergence.
 1. **Bridge (v0.x):** thin C FFI to upstream `fermi-lite`, so callvar is functionally
    complete early. A de novo assembler must never be on the critical path of the peak
    caller.
-2. **Pure Rust (v1.0+):** read correction, overlap discovery, unitig graph, unitig
+2. **Pure Rust (post-v1.0 scope):** read correction, overlap discovery, unitig graph, unitig
    extraction, local realignment — reimplemented, each step gated by a unitig-level
    oracle fixture set (graph shape + contig sequences), which is a *much* easier
    equivalence test than end-to-end VCF.
 
 **G14 pass criteria:**
 - SNV records: identical REF/ALT, QUAL within 1e-3 relative, genotype concordant.
-- INDEL records: identical REF/ALT and left-normalisation, after the pure-Rust assembler
-  lands.
+- INDEL records: identical REF/ALT and left-normalisation on gated fixtures; the
+  fermi-lite assembler bridge is retained, with a pure-Rust assembler remaining
+  post-v1.0 scope.
 - VCF header (##fileformat, ##contig, ##INFO, ##FILTER, ##FORMAT, column order) byte-
   identical; sample-column formatting identical.
 - Known-issue list (`docs/callvar-known-issues.md`) is empty of unreproduced upstream
@@ -824,10 +830,10 @@ Pinned MACS3 runs in its own hermetic container; the Rust side never depends on 
 | `0.5` | `callpeak` narrow | G9 |
 | `0.6` | `callpeak` broad, `--call-summits`, `refinepeak` | G10, G11 |
 | `0.7` | FRAG / single-cell | G12 |
-| `0.8` | `hmmratac` (inference exact, training biological) | G13 |
+| `0.8` | `hmmratac` (inference and Gaussian/Poisson training oracle-checked) | G13 |
 | `0.9` | `callvar` via fermi-lite bridge | G14-bridge |
 | **`1.0`** | **drop-in replacement**: 14/14 commands, M1–M12 met | G15 |
-| `1.1+` | pure-Rust assembler, FFT correlation, library ergonomics, bindings | post-v1.0 |
+| `1.1+` | optional pure-Rust assembler, FFT correlation, library ergonomics, bindings | post-v1.0 |
 
 **v1.0 announcement is gated on:** 14/14 commands, 100% corpus parity at declared
 tolerances, ≥ 3× end-to-end speedup on the headline matrix, ≤ 50% peak RSS, byte-identical
@@ -928,8 +934,9 @@ yield, per `macs-compare`:
 * byte-identical `*.xls`, `*_peaks.narrowPeak`, `*_summits.bed`, `*_model.r`;
 * identical output at `--threads 1` and `--threads 32`;
 
-and `macs3-rs` does it with **≥ 3× lower wall-clock and ≤ 50% peak RSS**, with the
-single documented exception of HMMRATAC self-training biological equivalence.
+and `macs3-rs` does it with **≥ 3× lower wall-clock and ≤ 50% peak RSS** across the
+release benchmark matrix. HMMRATAC training is checked against the pinned oracle as
+documented under G13; full release claims still depend on the complete matrix.
 
 All 14 subcommands present. Zero panics. Zero failing or ignored tests. Published
 benchmarks. Published compatibility matrix generated by CI. Drop-in for existing

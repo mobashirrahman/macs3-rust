@@ -11,39 +11,27 @@
 //!   `number > total` before writing anything.
 //! * `--seed` >= 0 seeds NumPy's global RNG; negative uses the global state.
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use macs_core::{MacsError, Result, Strand};
-use macs_track::SingleEndTrack;
 
 use crate::Options;
 
-fn load_bed(path: &Path) -> Result<SingleEndTrack> {
-    super::input::load_single_end_bed(path)
-}
-
 pub fn randsample(o: &Options) -> Result<()> {
-    let ifile = o
-        .get("ifile")
-        .ok_or_else(|| MacsError::InvalidParameter("-i/--ifile is required".into()))?;
+    let ifiles = super::input::input_files(o)?;
     let format = o.get("format").unwrap_or("BED").to_uppercase();
     // Paired-end modes sample fragments (`randsample_cmd.py:45-72`). FRAG is still
     // rejected: it needs barcode/count handling on top of fragment sampling.
     if format == "BAMPE" || format == "BEDPE" {
-        return randsample_pe(o, Path::new(ifile), &format);
+        return randsample_pe(o, &ifiles, &format);
     }
     if format == "FRAG" {
         return Err(MacsError::InvalidParameter(
             "paired-end input is not yet supported".into(),
         ));
     }
-    let mut track = if format == "BAM" {
-        super::input::load_single_end_bam(Path::new(ifile))?.0
-    } else if format == "SAM" {
-        super::input::load_single_end_sam(Path::new(ifile))?.0
-    } else {
-        load_bed(Path::new(ifile))?
-    };
+    let infer_tsize = matches!(o.int("tsize"), None | Some(0));
+    let (mut track, inferred_size) = super::input::load_tag_files(&ifiles, &format, infer_tsize)?;
     let t0 = track.total();
 
     // percentage (default upstream) and optional -n override
@@ -70,14 +58,12 @@ pub fn randsample(o: &Options) -> Result<()> {
                 "--tsize must be > 0 (got {v})"
             )))
         }
-        None => match macs_io::detect_tsize(Path::new(ifile), &format)? {
-            Some(v) => v,
-            None => {
-                return Err(MacsError::InvalidParameter(
-                    "could not estimate tag size from the input; pass -s/--tsize".into(),
-                ))
-            }
-        },
+        None if inferred_size > 0.0 => inferred_size.trunc() as i32,
+        None => {
+            return Err(MacsError::InvalidParameter(
+                "could not estimate tag size from the input; pass -s/--tsize".into(),
+            ))
+        }
     };
     eprintln!("randsample: tag size is determined as {fw} bps");
     let seed = o.int("seed").unwrap_or(-1);
@@ -121,37 +107,18 @@ pub fn randsample(o: &Options) -> Result<()> {
 /// Single-chromosome output is byte-identical; multi-chromosome inherits the
 /// single-chromosome stream per chromosome in sorted order (upstream iterates a
 /// set, so only sorted content can match there).
-fn randsample_pe(o: &crate::Options, path: &Path, format: &str) -> Result<()> {
+fn randsample_pe(o: &crate::Options, paths: &[String], format: &str) -> Result<()> {
     use std::collections::BTreeMap;
 
     let mut frags: BTreeMap<Vec<u8>, Vec<(u64, u64)>> = BTreeMap::new();
-    if format == "BAMPE" {
-        let (records, _) = macs_io::bam::bampe_fragments(path)?;
-        for fr in &records {
+    let track = super::input::load_fragment_files(paths, format)?;
+    for chrom in track.chroms() {
+        let name = track.genome().name(chrom).to_vec();
+        for fragment in track.frags(chrom) {
             frags
-                .entry(fr.chrom.clone())
+                .entry(name.clone())
                 .or_default()
-                .push((u64::from(fr.start), u64::from(fr.start + fr.len)));
-        }
-    } else {
-        use std::io::BufRead;
-        let mut r = std::io::BufReader::new(macs_io::open_maybe_gzip(path)?);
-        let mut line = Vec::new();
-        loop {
-            line.clear();
-            if r.read_until(b'\n', &mut line)? == 0 {
-                break;
-            }
-            let Some(rec) = macs_io::parse_bedpe_line(&line)? else {
-                continue;
-            };
-            if rec.chrom.is_empty() || rec.left < 0 || rec.right < rec.left {
-                continue;
-            }
-            frags
-                .entry(rec.chrom.clone())
-                .or_default()
-                .push((rec.left as u64, rec.right as u64));
+                .push((fragment.start, fragment.end));
         }
     }
     let t0: u64 = frags.values().map(|v| v.len() as u64).sum();
