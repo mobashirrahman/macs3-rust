@@ -24,8 +24,6 @@
 <text x="502.0" y="433" font-size="11.5" text-anchor="middle" fill="#c3c2b7">6×</text>
 <line x1="277.0" y1="88" x2="277.0" y2="417" stroke="#8a8983" stroke-width="1.5"/>
 <text x="277.0" y="82" font-size="11.5" text-anchor="middle" fill="#c3c2b7">MACS3</text>
-<line x1="367.0" y1="88" x2="367.0" y2="417" stroke="#8a8983" stroke-width="1.5"/>
-<text x="367.0" y="82" font-size="11.5" text-anchor="middle" fill="#c3c2b7">target</text>
 <path d="M232,96h149.2a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-149.2z" fill="#3987e5"/>
 <text x="392.2" y="107.5" font-size="12.5" font-weight="600" fill="#1a1a19" stroke="#1a1a19" stroke-width="5" stroke-linejoin="round">3.4×</text>
 <text x="392.2" y="107.5" font-size="12.5" font-weight="600" fill="#ffffff">3.4×</text>

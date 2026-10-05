@@ -90,7 +90,7 @@ def performance(t):
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="{FONT}" role="img" aria-label="macs3-rs is 2.3 to 4.9 times faster than MACS3 and uses 16 to 101 percent of its peak memory across twelve workloads">
 <rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="10" fill="{t["surface"]}" stroke="{t["border"]}"/>
 {chr(10).join(rows)}
-{panel(t, a_x, pw, "Speedup over MACS3", "wall clock, higher is better", speed, 6, [0, 2, 4, 6], lambda v: f"{v:.1f}×" if v % 1 else f"{v:.0f}×", [(1, "MACS3"), (3, "target")])}
+{panel(t, a_x, pw, "Speedup over MACS3", "wall clock, higher is better", speed, 6, [0, 2, 4, 6], lambda v: f"{v:.1f}×" if v % 1 else f"{v:.0f}×", [(1, "MACS3")])}
 {panel(t, b_x, pw, "Peak memory vs MACS3", "share of upstream RSS, lower is better", mem, 125, [0, 25, 75], lambda v: f"{v:.0f}%", [(50, "target"), (100, "MACS3")])}
 </svg>
 '''

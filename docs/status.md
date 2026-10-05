@@ -6,7 +6,7 @@ This snapshot supersedes older status notes below where they conflict. The proje
 has live implementations across the CLI, but command coverage is uneven and it is
 not yet a full all-flags, all-corpus replacement.
 
-- **Final validation:** 753 workspace release tests pass with zero failures and
+- **Final validation:** 806 workspace release tests pass with zero failures and
   zero ignored tests; formatting and strict Clippy pass. The golden replay passes
   7,204 cases and matches all 22,456 files, with zero exit-status mismatches across
   481 rejection cases.
@@ -51,10 +51,25 @@ not yet a full all-flags, all-corpus replacement.
   term, the q value before the clamp and the `pre_q` seed are f32 upstream);
   `bdgcmp -m logFE|ppois|qpois` now exits 1 with no output file where upstream
   raises. All five 5M-read `pileup`/`bdg*` outputs are byte-identical; workspace
-  tests are at 771. `hmmratac --save-training-data` now prints values as Python's
+  tests are at 806. `hmmratac --save-training-data` now prints values as Python's
   `repr` does (ties-to-even on the last digit), taking upstream's `cmdlinetest`
   to 154 of 163 files byte-identical. `filterdup` output still has the same rows in a different
   chromosome order.
+- **Continuation fixes verified:** `callpeak -p` is honored; fresh 5M-read
+  `--call-summits` runs now match all eight files across model and `--nomodel`
+  modes, after reproducing Haswell OpenBLAS's fused dot-product reduction.
+  `bdgcmp` fractional pseudocounts and fold enrichment use the pinned NumPy's
+  float32 arithmetic; `bdgopt multiply` does too. `refinepeak` preserves same-start
+  peak order and upstream's read cursor. Separate negative option values parse
+  correctly, including the negative no-control `--llocal` case that previously
+  panicked. These checks establish parity for the tested cases, not every CLI edge.
+- **CI portability:** live-reference tests resolve the provisioned source and
+  interpreter and skip explicitly when absent. All 806 release tests pass both
+  with the pinned oracle and in a snapshot containing neither `.oracle` nor
+  `ENV.provisioned` (five live-reference checks report skips there). NumPy-based
+  probes use the pinned interpreter, and the Savitzky–Golay differential has a
+  checked-in Rust probe. Tracked fuzz build output has been removed. The workflow
+  was checked locally; GitHub Actions itself has not been run in this continuation.
 - **The C fermi-lite assembler bridge is intentionally retained.** Replacing it with
   a pure-Rust assembler remains post-v1.0 scope; the existing bridge is tested in CI.
 - `oracle/check_real_summit_bytes.py` reruns source-tree CTCF SE, BEDPE, and BAMPE

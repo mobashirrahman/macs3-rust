@@ -28,6 +28,8 @@ current measured results and open differences are tracked in [status](status.md)
 - fresh real-data `callpeak --call-summits` runs for SE, BEDPE, and BAMPE; the
   summit-related files are byte-identical after normalizing the XLS command-line
   header (see `oracle/check_real_summit_bytes.py`)
+- 5M-read `callpeak --call-summits`, in model and `--nomodel` modes: all eight
+  output files match, including the model script and cutoff analysis
 - the `bdgopt` / `bdgcmp` / `cmbreps` / `bdgdiff` bedGraph family
 - `bdgpeakcall`, `bdgbroadcall`, gzipped input throughout
 - every `<subcommand> --help` (captured from the pinned oracle)
