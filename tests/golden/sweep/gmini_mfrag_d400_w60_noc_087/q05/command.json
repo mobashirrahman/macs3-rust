@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gmini_mfrag_d400_w60_noc_087_q05",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05",
+    "<ROOT>/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_noc_087/treat.frag",
+    "<ROOT>/tests/fixtures/sweep/gmini_mfrag_d400_w60_noc_087/treat.frag",
     "-f",
     "FRAG",
     "--nomodel",
@@ -20,13 +20,13 @@
   ],
   "files": {
     "gmini_mfrag_d400_w60_noc_087_q05_peaks.narrowPeak": "4e1076f5c5c921938c8b28fceaf4db5f593d596e7a576664992cdf3da047f07a",
-    "gmini_mfrag_d400_w60_noc_087_q05_peaks.xls": "d09c670eee45f4a56a543d227b36ebac59cc472e477462c287fa4a25ffaf7a3f",
+    "gmini_mfrag_d400_w60_noc_087_q05_peaks.xls": "f4724538d9e21c63e7c2b79127dd3ec27ebbe7393772994329e842d600508f92",
     "gmini_mfrag_d400_w60_noc_087_q05_summits.bed": "798700dff842eee5afafc438b9b71d933bdd987e643249e55da556e46d8ef0da"
   },
   "fixture": "sweep/gmini_mfrag_d400_w60_noc_087",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "WARNING @ 30 Sep 2026 11:42:22: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:42:22: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d400_w60_noc_087_q05 -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_noc_087/treat.frag -f FRAG --nomodel --extsize 200 -q 0.5\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d400_w60_noc_087_q05\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d400_w60_noc_087/treat.frag']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:42:22: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:42:22: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #1 mean fragment size is determined as 150.6 bp from treatment \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #1 fragment size = 150.6 \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05/gmini_mfrag_d400_w60_noc_087_q05_peaks.xls \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05/gmini_mfrag_d400_w60_noc_087_q05_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05/gmini_mfrag_d400_w60_noc_087_q05_summits.bed \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] Done! \n",
+  "stderr_tail": "WARNING @ 30 Sep 2026 11:42:22: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 11:42:22: [32 MB] \n# Command line: callpeak -n gmini_mfrag_d400_w60_noc_087_q05 -g 48200 --outdir <ROOT>/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05 -t <ROOT>/tests/fixtures/sweep/gmini_mfrag_d400_w60_noc_087/treat.frag -f FRAG --nomodel --extsize 200 -q 0.5\n# ARGUMENTS LIST:\n# name = gmini_mfrag_d400_w60_noc_087_q05\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gmini_mfrag_d400_w60_noc_087/treat.frag']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:42:22: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:42:22: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #1 mean fragment size is determined as 150.6 bp from treatment \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #1 fragment size = 150.6 \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:42:22: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05/gmini_mfrag_d400_w60_noc_087_q05_peaks.xls \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05/gmini_mfrag_d400_w60_noc_087_q05_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gmini_mfrag_d400_w60_noc_087/q05/gmini_mfrag_d400_w60_noc_087_q05_summits.bed \nINFO  @ 30 Sep 2026 11:42:22: [34 MB] Done! \n",
   "stdout_tail": "",
   "variant": "q05",
   "wall_seconds": 0.173

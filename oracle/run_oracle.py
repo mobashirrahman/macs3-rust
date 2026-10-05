@@ -15,7 +15,19 @@ supports for that fixture's mode, and records:
 
 It also probes the option matrix (q-value cutoffs, `--call-summits`, broad
 calling, `--keep-dup`, `--nolambda`, `--nomodel`) for the fixtures that support
-it, because most of the compatibility surface is in the options, not the data.
+it, because most of the compatibility surface is in the options, not in the data.
+
+# The recording is path-independent
+
+A run names the directory it was made in: `command.json` stores the argv, and every
+`*_peaks.xls` header echoes the input paths. Committed verbatim, the corpus would
+only replay from the one absolute path the recording machine had, so **everything
+recorded here is written with the neutral tokens of `oracle/run_golden.py`** --
+`<ROOT>` for this checkout, `macs3` for the interpreter -- in the argv, in the log
+tails, and in the recorded bytes themselves. `run_golden.py` expands the token back
+to whatever checkout it is running in; nothing downstream has to know where the
+recording happened. `oracle/relocate_golden.py` did this once for the corpus that
+was recorded before the rule existed, and `--check` is what keeps it true.
 
 Usage:
     /path/to/macs3-venv/bin/python oracle/run_oracle.py \\
@@ -33,6 +45,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from gen_fixtures import GENOMES  # noqa: E402
+from run_golden import neutralise, recording_substitutions  # noqa: E402
 
 
 def sha256(path):
@@ -41,6 +54,18 @@ def sha256(path):
         for chunk in iter(lambda: fh.read(1 << 20), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def neutralise_file(path, subs):
+    """Rewrite one recorded output in place; True when its bytes changed."""
+    with open(path, "rb") as fh:
+        old = fh.read()
+    new = neutralise(old, subs)
+    if new == old:
+        return False
+    with open(path, "wb") as fh:
+        fh.write(new)
+    return True
 
 
 def read_manifest(fixture_dir):
@@ -75,7 +100,7 @@ def macs3_version(macs3_bin):
         return f"unknown ({exc})"
 
 
-def run_one(macs3_bin, fixture_dir, out_dir, opts, gsize, timeout=900):
+def run_one(macs3_bin, fixture_dir, out_dir, opts, gsize, subs, timeout=900):
     os.makedirs(out_dir, exist_ok=True)
     name = os.path.basename(opts.get("name", "run"))
     cmd = [macs3_bin, "callpeak", "-n", name, "-g", str(gsize), "--outdir", out_dir]
@@ -88,20 +113,23 @@ def run_one(macs3_bin, fixture_dir, out_dir, opts, gsize, timeout=900):
         rc, out, err = -1, "", "TIMEOUT"
     elapsed = time.time() - started
 
+    # Neutralise the recorded bytes *before* hashing them: a recorded digest is a
+    # claim about the committed bytes, so it has to describe the tokenised file.
     files = {}
     for fn in sorted(os.listdir(out_dir)):
         p = os.path.join(out_dir, fn)
         if os.path.isfile(p) and fn != "command.json":
+            neutralise_file(p, subs)
             files[fn] = sha256(p)
 
     record = {
         "fixture": opts.get("fixture", ""),
         "variant": opts.get("variant", ""),
         "mode": opts.get("mode", "se"),
-        "command": cmd,
+        "command": [neutralise(t.encode(), subs).decode() for t in cmd],
         "returncode": rc,
-        "stdout_tail": out[-4000:],
-        "stderr_tail": err[-4000:],
+        "stdout_tail": neutralise(out[-4000:].encode(), subs).decode(errors="replace"),
+        "stderr_tail": neutralise(err[-4000:].encode(), subs).decode(errors="replace"),
         "wall_seconds": round(elapsed, 3),
         "files": files,
     }
@@ -199,6 +227,20 @@ def main():
     golden_root = os.path.abspath(args.golden)
     os.makedirs(golden_root, exist_ok=True)
 
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # `<ROOT>` stands for the checkout, so a recording is only path-independent if the
+    # paths it prints really are under it. Say so rather than writing a corpus that
+    # only compares clean by accident.
+    for label, path in (("--fixtures", fixtures_root), ("--golden", golden_root)):
+        if os.path.commonpath([repo_root, path]) != repo_root:
+            sys.stderr.write(
+                f"run_oracle: {label} ({path}) is outside the checkout ({repo_root}); "
+                f"recorded paths outside it cannot be written as <ROOT>\n"
+            )
+            return 2
+    subs = recording_substitutions(repo_root, interpreter=macs3_bin,
+                                   macs3_src=os.environ.get("MACS3_SRC"))
+
     version = macs3_version(macs3_bin)
     sys.stderr.write(f"oracle: {version}\n")
 
@@ -230,7 +272,7 @@ def main():
                     shutil.rmtree(out_dir)
                 v["fixture"] = key
                 v["name"] = f"{name}_{v['variant']}"
-                rec = run_one(macs3_bin, fdir, out_dir, v, gsize)
+                rec = run_one(macs3_bin, fdir, out_dir, v, gsize, subs)
                 summary["fixtures"][key]["variants"][v["variant"]] = {
                     "returncode": rec["returncode"],
                     "files": rec["files"],

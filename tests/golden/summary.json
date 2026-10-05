@@ -8,7 +8,7 @@
           "files": {
             "out_of_range_B_control_lambda.bdg": "16891d3803e48bc6c51d856b7af9d40252871801e90042b14212ae720f8f14e6",
             "out_of_range_B_peaks.narrowPeak": "7860152ec897e79c03d9524375a518ef0b20145abd1eb02109e4a7b8efed00a6",
-            "out_of_range_B_peaks.xls": "344343945f9fd2c60d796a7775d5a19a36cfe11d0c3b24c07855d72c5a64fe4e",
+            "out_of_range_B_peaks.xls": "c5a42df074f8faf17c8130ac3814b81583aa88eaea3c18b77c94be78d313a8fd",
             "out_of_range_B_summits.bed": "2a1484b7120bf79066b0bba37adce5a8167a6bd50a12e31bcdcc87fe7429bd79",
             "out_of_range_B_treat_pileup.bdg": "2765c2729915c7b944c4c6fbf50b709bf140af6ebd4b780217d4fcdbe16ae694"
           },
@@ -19,7 +19,7 @@
           "files": {
             "out_of_range_broad_peaks.broadPeak": "53105a31c4c087f49de606d21d66d3d1afb9b3a13362899413c90f98c7fd1855",
             "out_of_range_broad_peaks.gappedPeak": "1c3043d7d0b19268ec8bc0844ea27f196db05ac3dfdd04235228c74d9ee9876b",
-            "out_of_range_broad_peaks.xls": "181da22e3174631e15d7b7f3a402dd84817e910a01840c06cac647de787cd034"
+            "out_of_range_broad_peaks.xls": "edb8289b667490bfc3c22b2736eee5aa8cde4a21a53ed8186c1be4933a8edb5a"
           },
           "returncode": 0,
           "wall_seconds": 0.229
@@ -27,7 +27,7 @@
         "bw300": {
           "files": {
             "out_of_range_bw300_peaks.narrowPeak": "48a2f8f9577e6cca20e8f69a1cb160ae907a363c8364b113d6d6a956b98467cc",
-            "out_of_range_bw300_peaks.xls": "a50099bee0fa6b0ee608ba05285b8e0fdd9909f38b12765e109c871e87ec3977",
+            "out_of_range_bw300_peaks.xls": "bff614ff438dff0e9aa929c00e4e8d4ac0b01415db05756611f6143daca9111f",
             "out_of_range_bw300_summits.bed": "549bf69af826ca482bcfe8c3ffc0f214e86acab0701201ec7bb64783c6482f33"
           },
           "returncode": 0,
@@ -36,7 +36,7 @@
         "call_summits": {
           "files": {
             "out_of_range_call_summits_peaks.narrowPeak": "e62809a722f01f89bec0fff6678b0c7001ae2120c52fba2eefdf591bf8ad0de3",
-            "out_of_range_call_summits_peaks.xls": "9e6efddd0f0c8f46457e24c32e2eb82f2a4f6487891efcb66abdb41dd94f35d8",
+            "out_of_range_call_summits_peaks.xls": "4a89059e646d60364cce3c6eec61e69965d3015401f798de3789ba85d85ea1df",
             "out_of_range_call_summits_summits.bed": "2288c7d6b2a99f90a7547f1abea83a7f5d85f81f66087d112bf3c57a996e4c52"
           },
           "returncode": 0,
@@ -45,7 +45,7 @@
         "default": {
           "files": {
             "out_of_range_default_peaks.narrowPeak": "e6ba4c366579f303dcbbad0e1cb10912adad62bce13d58d1ba88f9c7456be4ff",
-            "out_of_range_default_peaks.xls": "f38fba739c95824ba1c11acbea9b7a7df85b841b3bebef3e96c5e5e34ff04589",
+            "out_of_range_default_peaks.xls": "396f8e7f28db609bb066803dbd01beb025379aff903db4d35a0064dc6a534801",
             "out_of_range_default_summits.bed": "3e9c9521ab8360119debcd260be73487ef682a1d3ab72e9125cfad64e96498e5"
           },
           "returncode": 0,
@@ -54,7 +54,7 @@
         "gsize_numeric": {
           "files": {
             "out_of_range_gsize_numeric_peaks.narrowPeak": "0a331d0c04853011961b3d26cea0940b5b30c071186c1affaaea04de15860732",
-            "out_of_range_gsize_numeric_peaks.xls": "a927392c4a49e238182e72624f77af46fb95c329b4a637e374212c08c72099bd",
+            "out_of_range_gsize_numeric_peaks.xls": "8652094614d15690f3198ece819ab6e9f9b96538cb7a0f533858a1de18e147f5",
             "out_of_range_gsize_numeric_summits.bed": "8b3c9b750e3e0fcaced068cd0cff7f71936777cf20610814c309f44faaaa725f"
           },
           "returncode": 0,
@@ -63,7 +63,7 @@
         "keepdup1": {
           "files": {
             "out_of_range_keepdup1_peaks.narrowPeak": "f230b837027b7190b7207cc0d25dacd6c34d3a17f485af878e364c43f2a391ea",
-            "out_of_range_keepdup1_peaks.xls": "d2321896b0bf1585a17cb03a27688b01770967073f697f1692f4062153f5e334",
+            "out_of_range_keepdup1_peaks.xls": "1e2a262b1f4086575b103a284b012a6171ee49a7fcd611ae58e7a5e99ce0d903",
             "out_of_range_keepdup1_summits.bed": "127fef1b5828b856367307d1993b6a08c34a132060ff30caf2c3de5b4abe865e"
           },
           "returncode": 0,
@@ -72,7 +72,7 @@
         "keepdup_all": {
           "files": {
             "out_of_range_keepdup_all_peaks.narrowPeak": "af54381b0531b24617e3dd3205958ed4c8a97cc574ebda3c64a6865ee5cc17a9",
-            "out_of_range_keepdup_all_peaks.xls": "55126ee597ac9bcdef50d6d4587be4a8d6d43453b6020e88ccfb59ecf5b3c496",
+            "out_of_range_keepdup_all_peaks.xls": "cf2368ae182815fff292c05a1f899d188a840bf9afca60a49b22a36d401bc628",
             "out_of_range_keepdup_all_summits.bed": "d9ab63c620bc979ecb70b93c00cbef2170e2d84fce06e187deb5f67d560a3766"
           },
           "returncode": 0,
@@ -81,7 +81,7 @@
         "keepdup_auto": {
           "files": {
             "out_of_range_keepdup_auto_peaks.narrowPeak": "6e9ba4fc4e5258f0107129586b8c720a9c5bd1a2d55f0874e983dcb82a1c8a64",
-            "out_of_range_keepdup_auto_peaks.xls": "02de5cb9915a65f33146d2174da072397c1b442ba3a96de86250f74af3ca886a",
+            "out_of_range_keepdup_auto_peaks.xls": "64e7e81315e3ac3fb3a21949d90956bcc6e1fd5a5f1d9696235d4b4345163785",
             "out_of_range_keepdup_auto_summits.bed": "2eaff1007d3296bf41373b2c167ee01faa90d7d706b49f3c87a7d07927295d7f"
           },
           "returncode": 0,
@@ -90,7 +90,7 @@
         "mfold_3_20": {
           "files": {
             "out_of_range_mfold_3_20_peaks.narrowPeak": "27a7e761a367141e148e2414e039635a88fac1da828ff3c2bf4f5bf385031e5b",
-            "out_of_range_mfold_3_20_peaks.xls": "5817df0b6f30723a12e900a8b41c36620def8d237bd1bf2f120a948e2bd2ac7e",
+            "out_of_range_mfold_3_20_peaks.xls": "e182aad7ef707f63c88270868fc614edc2ceef1826b1cccb101a3860429d6108",
             "out_of_range_mfold_3_20_summits.bed": "cb7b007369130a2007990a89c84730fbe7f97cf5b9b275550a07feee19a187b6"
           },
           "returncode": 0,
@@ -104,7 +104,7 @@
         "nolambda": {
           "files": {
             "out_of_range_nolambda_peaks.narrowPeak": "30cdb573dcce1f6e78f98ad27e0e4ceb3495ef217fbc075dd62df83c72859983",
-            "out_of_range_nolambda_peaks.xls": "1ac8291e07400a004cb2a095996aaeb13ca4c67c86e6484dc03b4bcad48a8122",
+            "out_of_range_nolambda_peaks.xls": "a9622ebeb54c6b17c83a2b0db47dd1d3aaba856b84d442f027c84a0e90c33843",
             "out_of_range_nolambda_summits.bed": "8a0e1dda38f61112424bda806c6fed7ebb733fd9395bd0ad55affaa4d582d8b3"
           },
           "returncode": 0,
@@ -113,7 +113,7 @@
         "nomodel_extsize": {
           "files": {
             "out_of_range_nomodel_extsize_peaks.narrowPeak": "510ca15fdfbb1194cde4eea908a65864e31c507fbc2b0e26ad39579ca7e9dd2b",
-            "out_of_range_nomodel_extsize_peaks.xls": "aad2853f2893944b94054d10ca4e4839ad32644bf53398d4e3878f916347b5cd",
+            "out_of_range_nomodel_extsize_peaks.xls": "b5a6ea7a8d2d695ec9f963acfe84cef958f5bd891307a526746a20a82e93f358",
             "out_of_range_nomodel_extsize_summits.bed": "c6863f825bf1ca272a757c3596aa425f2c6d2e556a38246661870ef350f3d2be"
           },
           "returncode": 0,
@@ -122,7 +122,7 @@
         "nomodel_shift": {
           "files": {
             "out_of_range_nomodel_shift_peaks.narrowPeak": "467b7d13d5542f94d1acbdb886a8fbf6ffc5f9e057eea11983e9cb534574c62b",
-            "out_of_range_nomodel_shift_peaks.xls": "bc88e64b65e7e47eb7d35f7634320ed8b4cc75babf63ceb75d0444995146ba2b",
+            "out_of_range_nomodel_shift_peaks.xls": "d2e0da8e8f03196831eb219e47f453338b9e075bb979e9cc9e47c747fdad5465",
             "out_of_range_nomodel_shift_summits.bed": "b6b8c0dd80f5b22bc7451dc22de2ea2ac7669c2f507be9b8432b1bb7785bf5f0"
           },
           "returncode": 0,
@@ -131,7 +131,7 @@
         "q001": {
           "files": {
             "out_of_range_q001_peaks.narrowPeak": "b297454eb18b4bf1f7192549cb7f178fd5f4d8467d8b4df241008bafddee4548",
-            "out_of_range_q001_peaks.xls": "b79183d1ca4cedb84beb71f422b79ce2ac9854e257dc381a0b7c27e84c46463c",
+            "out_of_range_q001_peaks.xls": "b79a1c9b83f901bb29dae35e695a40b61c2957d92f846f2b2e4d409d0617015b",
             "out_of_range_q001_summits.bed": "c4ad570e80a49a2f3c5b44fa3da5b608552004fa15cc77c89bb37fdbe386043f"
           },
           "returncode": 0,
@@ -140,7 +140,7 @@
         "q05": {
           "files": {
             "out_of_range_q05_peaks.narrowPeak": "ac8d4c2ce5e2ddb40b1e4303de1dee0b57594bd4b1c356b5890fde640ac62b8b",
-            "out_of_range_q05_peaks.xls": "5f58e70e7462c7d10f3a8ab4eaf7e6277d58b91fb244f019ee6e77d4afe00c89",
+            "out_of_range_q05_peaks.xls": "65e2b7466e4d812087c17861aa25ab31951c1a2148fe2c450fe36b56273c06ce",
             "out_of_range_q05_summits.bed": "d96531a53709fde6f97372bd6cdcf368ea2c69d8faac836514bacefc1adbe127"
           },
           "returncode": 0,
@@ -149,7 +149,7 @@
         "scale_to_large": {
           "files": {
             "out_of_range_scale_to_large_peaks.narrowPeak": "eb61d93aa0b99b00c661583f6b70b459119f8d9e4076a93234ba617a7ead5a76",
-            "out_of_range_scale_to_large_peaks.xls": "2e2f635965e0ea6df3e3163fcf2900ad4ce20d056cbdd83f044f04add24706ff",
+            "out_of_range_scale_to_large_peaks.xls": "fd16a4a6ade29fec362f29bec0e7fddf2fec9115c3f2f63eff50acd7df82481e",
             "out_of_range_scale_to_large_summits.bed": "49c7ba081d7becefce19893b6682ce8f268f232f793f5bb8131637c768961bc8"
           },
           "returncode": 0,
@@ -158,7 +158,7 @@
         "shift_only": {
           "files": {
             "out_of_range_shift_only_peaks.narrowPeak": "cfb3aa25d355be1e038b072302c289e7148d1f467aa07e42f9a1810f34257ed2",
-            "out_of_range_shift_only_peaks.xls": "9acee5e2ecda14e5ee87a22d3ae7211ae3952388ccd80bcd48638b1a3522682f",
+            "out_of_range_shift_only_peaks.xls": "a7aef8833a9f7465b0139c1a4f07dbfc47d39c7eb2cd8e2d967ea54f5d96870d",
             "out_of_range_shift_only_summits.bed": "3f8999d7d8e1cd2c14261b9520f4e2b667bbeb10a76f0a3aca712ca59a5b923a"
           },
           "returncode": 0,
@@ -167,7 +167,7 @@
         "slocal_500_llocal_2000": {
           "files": {
             "out_of_range_slocal_500_llocal_2000_peaks.narrowPeak": "bc11a88e6b20cccd1cde9ee307747dc4e4ab3c26d31799517bbb966a716158aa",
-            "out_of_range_slocal_500_llocal_2000_peaks.xls": "3fe04bd5eb69656c5255c721e19ff8cf4731fbcb7fc5156b00de00323efbc11c",
+            "out_of_range_slocal_500_llocal_2000_peaks.xls": "65f80628a09ddc936b7a6d53b6bb4707b07d3ac6c7de7a8f8a52718ed49c6407",
             "out_of_range_slocal_500_llocal_2000_summits.bed": "a491749373b8b3f3326e7c216914aee62d9375dda5a558332ed216234debab93"
           },
           "returncode": 0,
@@ -176,7 +176,7 @@
         "spmr": {
           "files": {
             "out_of_range_spmr_peaks.narrowPeak": "9a40047779fa37731f22b9e1f9e6c701c3d7c9ed9e6d4ec7a6216e77a7d8bf55",
-            "out_of_range_spmr_peaks.xls": "29b1c5943dbf44f95d257a76bc6a5d9342cbea74fe4cda1b602eb656699f94e2",
+            "out_of_range_spmr_peaks.xls": "16ed6ac094fe58f8129befc792454f269750d7582e6c5dbb43ab459c299a9f2f",
             "out_of_range_spmr_summits.bed": "efbe7641f4e0fc1b19dab84aca203a67dbeeb31461825145a25d52b98370254c"
           },
           "returncode": 0,

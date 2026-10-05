@@ -1,17 +1,17 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "dup_rate_1.0_keepdup_all",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/se_dup/dup_rate_1.0/keepdup_all",
+    "<ROOT>/tests/golden/se_dup/dup_rate_1.0/keepdup_all",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_dup/dup_rate_1.0/treat.bed",
+    "<ROOT>/tests/fixtures/se_dup/dup_rate_1.0/treat.bed",
     "-c",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_dup/dup_rate_1.0/ctrl.bed",
+    "<ROOT>/tests/fixtures/se_dup/dup_rate_1.0/ctrl.bed",
     "-f",
     "BED",
     "--nomodel",
@@ -22,13 +22,13 @@
   ],
   "files": {
     "dup_rate_1.0_keepdup_all_peaks.narrowPeak": "733a0ee41b3ae699ffe2a5369a90ed8c69bf974a5f9dfe6f900254c8ede46a25",
-    "dup_rate_1.0_keepdup_all_peaks.xls": "731264ba3482d58dc732b4208748249dd3e4edf40a35debff71efea7f19d4a28",
+    "dup_rate_1.0_keepdup_all_peaks.xls": "7fb36ce2342b89a9e61a247a4769ee72a036ddf1cc032244e39be3b5aecf59da",
     "dup_rate_1.0_keepdup_all_summits.bed": "3ccc3da605d3b2a9665d8e087d1340bbaed9a5317d0289083a2a506842ddf5b5"
   },
   "fixture": "se_dup/dup_rate_1.0",
   "mode": "se",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:23: [32 MB] \n# Command line: callpeak -n dup_rate_1.0_keepdup_all -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/se_dup/dup_rate_1.0/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/se_dup/dup_rate_1.0/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/se_dup/dup_rate_1.0/ctrl.bed -f BED --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = dup_rate_1.0_keepdup_all\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_dup/dup_rate_1.0/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_dup/dup_rate_1.0/ctrl.bed']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:23: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:23: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:23: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1 tag size is determined as 113 bps \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1 tag size = 113.0 \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1  total tags in treatment: 6000 \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1  total tags in control: 1200 \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:23: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/se_dup/dup_rate_1.0/keepdup_all/dup_rate_1.0_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:26:23: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/se_dup/dup_rate_1.0/keepdup_all/dup_rate_1.0_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:23: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/se_dup/dup_rate_1.0/keepdup_all/dup_rate_1.0_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:26:23: [35 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:23: [32 MB] \n# Command line: callpeak -n dup_rate_1.0_keepdup_all -g 48200 --outdir <ROOT>/tests/golden/se_dup/dup_rate_1.0/keepdup_all -t <ROOT>/tests/fixtures/se_dup/dup_rate_1.0/treat.bed -c <ROOT>/tests/fixtures/se_dup/dup_rate_1.0/ctrl.bed -f BED --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = dup_rate_1.0_keepdup_all\n# format = BED\n# ChIP-seq file = ['<ROOT>/tests/fixtures/se_dup/dup_rate_1.0/treat.bed']\n# control file = ['<ROOT>/tests/fixtures/se_dup/dup_rate_1.0/ctrl.bed']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:23: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:23: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:23: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1 tag size is determined as 113 bps \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1 tag size = 113.0 \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1  total tags in treatment: 6000 \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1  total tags in control: 1200 \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:23: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:23: [35 MB] #4 Write output xls file... <ROOT>/tests/golden/se_dup/dup_rate_1.0/keepdup_all/dup_rate_1.0_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:26:23: [35 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/se_dup/dup_rate_1.0/keepdup_all/dup_rate_1.0_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:23: [35 MB] #4 Write summits bed file... <ROOT>/tests/golden/se_dup/dup_rate_1.0/keepdup_all/dup_rate_1.0_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:26:23: [35 MB] Done! \n",
   "stdout_tail": "",
   "variant": "keepdup_all",
   "wall_seconds": 0.194

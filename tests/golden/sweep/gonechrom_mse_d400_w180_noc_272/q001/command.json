@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gonechrom_mse_d400_w180_noc_272_q001",
     "-g",
     "12000",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001",
+    "<ROOT>/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_272/treat.bed",
+    "<ROOT>/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_272/treat.bed",
     "-f",
     "BED",
     "--nomodel",
@@ -20,13 +20,13 @@
   ],
   "files": {
     "gonechrom_mse_d400_w180_noc_272_q001_peaks.narrowPeak": "ca0e9329ee99c1a8b24b631e90ac625817bd235d84915e959b3fd0b119be6732",
-    "gonechrom_mse_d400_w180_noc_272_q001_peaks.xls": "7133dada707c8a9c60b848c7f47891edd9f0a0be4b6fb6a37690e68f1b85b54d",
+    "gonechrom_mse_d400_w180_noc_272_q001_peaks.xls": "2f490493d30acd00cd60dcbf214b951dd503e6370bd0fc0660f060f73c1f8aca",
     "gonechrom_mse_d400_w180_noc_272_q001_summits.bed": "b75bcf53101b1df1d7c49f5662b1ea506bf43d6d14f5e9637e336c7e16d545ae"
   },
   "fixture": "sweep/gonechrom_mse_d400_w180_noc_272",
   "mode": "se",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 12:25:23: [32 MB] \n# Command line: callpeak -n gonechrom_mse_d400_w180_noc_272_q001 -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_272/treat.bed -f BED --nomodel --extsize 200 -q 0.01\n# ARGUMENTS LIST:\n# name = gonechrom_mse_d400_w180_noc_272_q001\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_272/treat.bed']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 1.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:25:23: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:25:23: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1  total tags in treatment: 400 \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1  tags after filtering in treatment: 240 \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1  Redundant rate of treatment: 0.40 \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:25:23: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001/gonechrom_mse_d400_w180_noc_272_q001_peaks.xls \nINFO  @ 30 Sep 2026 12:25:23: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001/gonechrom_mse_d400_w180_noc_272_q001_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:25:23: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001/gonechrom_mse_d400_w180_noc_272_q001_summits.bed \nINFO  @ 30 Sep 2026 12:25:23: [34 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:25:23: [32 MB] \n# Command line: callpeak -n gonechrom_mse_d400_w180_noc_272_q001 -g 12000 --outdir <ROOT>/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001 -t <ROOT>/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_272/treat.bed -f BED --nomodel --extsize 200 -q 0.01\n# ARGUMENTS LIST:\n# name = gonechrom_mse_d400_w180_noc_272_q001\n# format = BED\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gonechrom_mse_d400_w180_noc_272/treat.bed']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 1.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:25:23: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:25:23: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1  total tags in treatment: 400 \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1  tags after filtering in treatment: 240 \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1  Redundant rate of treatment: 0.40 \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:25:23: [33 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:25:23: [34 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001/gonechrom_mse_d400_w180_noc_272_q001_peaks.xls \nINFO  @ 30 Sep 2026 12:25:23: [34 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001/gonechrom_mse_d400_w180_noc_272_q001_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:25:23: [34 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gonechrom_mse_d400_w180_noc_272/q001/gonechrom_mse_d400_w180_noc_272_q001_summits.bed \nINFO  @ 30 Sep 2026 12:25:23: [34 MB] Done! \n",
   "stdout_tail": "",
   "variant": "q001",
   "wall_seconds": 0.164

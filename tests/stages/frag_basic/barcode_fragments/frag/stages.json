@@ -1,5 +1,5 @@
 {
- "_argv": "callpeak -n stages -g 1000000 --outdir tests/stages/frag_basic/barcode_fragments/frag -t /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag -f FRAG -c /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag --gsize 48200 --cutoff-analysis -B",
+ "_argv": "callpeak -n stages -g 1000000 --outdir tests/stages/frag_basic/barcode_fragments/frag -t <ROOT>/tests/fixtures/frag_basic/barcode_fragments/treat.frag -f FRAG -c <ROOT>/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag --gsize 48200 --cutoff-analysis -B",
  "d": 98,
  "duplicates": {
   "ctrl_total": 7995.0,

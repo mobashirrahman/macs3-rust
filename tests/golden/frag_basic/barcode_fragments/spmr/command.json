@@ -1,30 +1,30 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "barcode_fragments_spmr",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/spmr",
+    "<ROOT>/tests/golden/frag_basic/barcode_fragments/spmr",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag",
+    "<ROOT>/tests/fixtures/frag_basic/barcode_fragments/treat.frag",
     "-c",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag",
+    "<ROOT>/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag",
     "-f",
     "FRAG",
     "--SPMR"
   ],
   "files": {
     "barcode_fragments_spmr_peaks.narrowPeak": "f31eb28c4fbb15be9ba9a56fb1b784057507d19c524e0eee4a71e2470c66d7a3",
-    "barcode_fragments_spmr_peaks.xls": "91513dd031ff0498e46585c6ac1061b031f3d61ab832dbfc2c27361df929ec9c",
+    "barcode_fragments_spmr_peaks.xls": "c598ed2d25748e7ad058a1b6b1bdc9e68a82b8d10be937195a90e183029a9436",
     "barcode_fragments_spmr_summits.bed": "1f51238642cb1d60c971d1004f94e3e719a5c60d9540704031d2c979589c5e71"
   },
   "fixture": "frag_basic/barcode_fragments",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "WARNING @ 30 Sep 2026 12:18:27: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:18:27: [32 MB] \n# Command line: callpeak -n barcode_fragments_spmr -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/spmr -t /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag -f FRAG --SPMR\n# ARGUMENTS LIST:\n# name = barcode_fragments_spmr\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:18:27: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:18:27: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:18:27: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1 mean fragment size is determined as 98.3 bp from treatment \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1 note: mean fragment size in control is 98.3 bp -- value ignored \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1 fragment size = 98.3 \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1  total fragments in treatment: 7995 \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1  total fragments in control: 7995 \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:18:27: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/spmr/barcode_fragments_spmr_peaks.xls \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/spmr/barcode_fragments_spmr_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/spmr/barcode_fragments_spmr_summits.bed \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] Done! \n",
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:18:27: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:18:27: [32 MB] \n# Command line: callpeak -n barcode_fragments_spmr -g 48200 --outdir <ROOT>/tests/golden/frag_basic/barcode_fragments/spmr -t <ROOT>/tests/fixtures/frag_basic/barcode_fragments/treat.frag -c <ROOT>/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag -f FRAG --SPMR\n# ARGUMENTS LIST:\n# name = barcode_fragments_spmr\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/frag_basic/barcode_fragments/treat.frag']\n# control file = ['<ROOT>/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:18:27: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:18:27: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:18:27: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1 mean fragment size is determined as 98.3 bp from treatment \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1 note: mean fragment size in control is 98.3 bp -- value ignored \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1 fragment size = 98.3 \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1  total fragments in treatment: 7995 \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1  total fragments in control: 7995 \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:18:27: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:18:27: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] #4 Write output xls file... <ROOT>/tests/golden/frag_basic/barcode_fragments/spmr/barcode_fragments_spmr_peaks.xls \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/frag_basic/barcode_fragments/spmr/barcode_fragments_spmr_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] #4 Write summits bed file... <ROOT>/tests/golden/frag_basic/barcode_fragments/spmr/barcode_fragments_spmr_summits.bed \nINFO  @ 30 Sep 2026 12:18:27: [36 MB] Done! \n",
   "stdout_tail": "",
   "variant": "spmr",
   "wall_seconds": 0.217

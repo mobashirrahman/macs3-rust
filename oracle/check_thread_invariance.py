@@ -21,6 +21,11 @@ Rayon is only used for per-chromosome work, so the interesting failures are chro
 races, shared-cache mutation, and non-deterministic accumulation order -- all of which this catches
 only if the corpus actually contains multi-chromosome inputs, which it does.
 
+Both sides are replays from the same recorded argv, so this gate is about the thread count and
+nothing else. The recorded argv spells the checkout root `<ROOT>` (see `oracle/relocate_golden.py`)
+and `run_golden.rewrite_argv` expands it to whichever checkout this is running in, so the two runs
+differ only in `MACS3_RS_THREADS` and their scratch directories.
+
 Usage:
     oracle/check_thread_invariance.py [--jobs N] [--limit N] [--threads 32] [--verbose]
 Exit status is 0 only when every compared file is identical.

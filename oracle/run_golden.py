@@ -10,14 +10,28 @@ state the acceptance criterion directly:
 `oracle/run_peak_e2e.sh` compares *coordinates*, which cannot see a score that moved
 in the fourth decimal (F149). This script compares the files themselves.
 
-The recorded argv is reused verbatim except for three substitutions, so nothing
+The recorded argv is reused verbatim except for four substitutions, so nothing
 here can quietly diverge from the corpus:
 
-* `argv[0]` (the `macs3` interpreter) becomes the `macs3-rs` binary;
+* `argv[0]` (the recorded `macs3` interpreter) becomes the `macs3-rs` binary;
 * `--outdir <path>` becomes a scratch directory, so the golden files are never
   written over;
+* `<ROOT>` in any recorded path is expanded to this checkout;
 * the recorded `--outdir` prefix is stripped from any path echoed back in the
-  xls `# Command line:` header -- see `HEADER_REWRITE` below.
+  xls `# Command line:` header, which is dropped anyway -- see `_norm`.
+
+# The recorded path vocabulary
+
+The corpus is *recorded data*, and a recording names the directory it was made in.
+`oracle/relocate_golden.py` rewrites those names to the neutral tokens below, so a
+clone in any directory replays the same corpus; the tools here map between the token
+and the checkout they are actually running in:
+
+* replaying a recorded command expands `<ROOT>` to *this* checkout;
+* comparing a replay against the recording maps *this* checkout back to `<ROOT>`.
+
+Nothing else about the bytes is touched: a difference in a count, a score, a peak row
+or a file length still fails, exactly as before.
 
 Usage:
     oracle/run_golden.py [--variant default] [--fixture SUBSTR] [--mechanism ...]
@@ -37,6 +51,63 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GOLDEN = os.path.join(ROOT, "tests", "golden")
+
+# The recorded path vocabulary. `tests/golden/**` and `tests/stages/**` are committed
+# recordings, so they must not name the checkout they were made in; these tokens are
+# what they name instead. `relocate_golden.py` writes them, `run_oracle.py` and
+# `record_stages.py` write them when they record, and the helpers below are the only
+# place a token is turned back into a real path or a real path back into a token.
+ROOT_TOKEN = "<ROOT>"  # this checkout: `<ROOT>/tests/fixtures/se_basic/x/treat.bed`
+MACS3_TOKEN = "macs3"  # the recorded interpreter, i.e. `argv[0]`; never expanded again
+MACS3_SRC_TOKEN = "<MACS3_SRC>"  # the pinned upstream source checkout
+TMP_TOKEN = "<TMP>"  # the author's scratchpad, if a recording ever names one
+HOME_TOKEN = "<HOME>"  # the author's home, the last-resort catch-all
+
+
+def substitution_table(pairs) -> list[tuple[bytes, bytes]]:
+    """`(needle, token)` pairs as byte pairs, longest needle first.
+
+    Longest-first is what makes the specificity work: `<MACS3_SRC>` has to be tried
+    before the scratchpad it sits in, and `<ROOT>` before the home directory. A pair
+    with no needle -- an unknown interpreter, a source tree that was not located --
+    drops out rather than matching everything.
+    """
+    live = [(a, b) for a, b in (p for p in pairs if p and p[0])]
+    live.sort(key=lambda p: -len(p[0]))
+    return [(a.encode(), b.encode()) for a, b in live]
+
+
+def neutralise(data: bytes, subs: list[tuple[bytes, bytes]]) -> bytes:
+    for needle, token in subs:
+        data = data.replace(needle, token)
+    return data
+
+
+def recording_substitutions(
+    root: str, interpreter: str | None = None, macs3_src: str | None = None
+) -> list[tuple[bytes, bytes]]:
+    """The table a *live* recording needs: this checkout's paths, as tokens.
+
+    The mirror image of [`relocate_golden.RECORDED_SUBSTITUTIONS`], which is keyed to
+    the prefixes already baked into the corpus.
+    """
+    return substitution_table(
+        [
+            (f"{root.rstrip('/')}/", f"{ROOT_TOKEN}/"),
+            (interpreter, MACS3_TOKEN),
+            (f"{macs3_src.rstrip('/')}/", f"{MACS3_SRC_TOKEN}/") if macs3_src else None,
+        ]
+    )
+
+
+def expand_root(text: str) -> str:
+    """Recorded text -> real paths, for replaying a recorded invocation."""
+    return text.replace(ROOT_TOKEN, ROOT)
+
+
+def neutralise_root(text: str) -> str:
+    """Real paths -> recorded text, for comparing a replay against the recording."""
+    return text.replace(ROOT + "/", ROOT_TOKEN + "/")
 
 
 def recorded_cases(variants: list[str]) -> list[tuple[str, str, dict]]:
@@ -61,8 +132,8 @@ def recorded_cases(variants: list[str]) -> list[tuple[str, str, dict]]:
 
 
 def rewrite_argv(argv: list[str], outdir: str) -> list[str]:
-    """Swap the interpreter and the output directory out of a recorded argv."""
-    new = list(argv)
+    """Replay a recorded argv against this checkout."""
+    new = [expand_root(tok) for tok in argv]
     new[0] = "<BIN>"
     for i, tok in enumerate(new):
         if tok == "--outdir" and i + 1 < len(new):
@@ -70,7 +141,9 @@ def rewrite_argv(argv: list[str], outdir: str) -> list[str]:
         elif tok.startswith("--outdir="):
             new[i] = f"--outdir={outdir}"
         elif "/tests/fixtures/" in tok:
-            # Replay committed inputs at the current checkout prefix.
+            # Replay committed inputs at the current checkout prefix. The recorded path
+            # is `<ROOT>/tests/fixtures/...`, so `expand_root` already pointed it here;
+            # re-rooting it makes the invariant explicit rather than incidental.
             new[i] = os.path.join(ROOT, "tests", "fixtures", tok.split("/tests/fixtures/", 1)[1])
     return new
 
@@ -92,9 +165,9 @@ def run_one(
     argv_l = cfg["command"]
     for i, tok in enumerate(argv_l):
         if tok == "--outdir" and i + 1 < len(argv_l):
-            golden_out = argv_l[i + 1]
+            golden_out = expand_root(argv_l[i + 1])
         elif tok.startswith("--outdir="):
-            golden_out = tok.split("=", 1)[1]
+            golden_out = expand_root(tok.split("=", 1)[1])
     if mechanism:
         # The mechanism is a harness-level switch, not a recorded flag: the two
         # `macs-callpeak-e2e` mechanisms cover both p-value branches upstream.
@@ -162,6 +235,13 @@ def _xls_equal_ignoring_paths(a: bytes, b: bytes, scratch: str, golden_out: str 
 
 
 def _norm(blob: bytes, scratch: str, golden_out: str | None) -> list[bytes]:
+    """Drop the invocation lines and map every live path back to a token.
+
+    The recording spells the checkout root as `<ROOT>` (see the module docstring), so
+    the replay's absolute paths are mapped onto the same token and the two sides can
+    be compared. Nothing but the path spelling is touched: the substitution is
+    whole-prefix, and every other byte of the line is compared as it stands.
+    """
     out = []
     for line in blob.splitlines():
         if line.startswith(b"# Command line:"):
@@ -170,7 +250,7 @@ def _norm(blob: bytes, scratch: str, golden_out: str | None) -> list[bytes]:
         text = text.replace(scratch, "<OUTDIR>")
         if golden_out:
             text = text.replace(golden_out, "<OUTDIR>")
-        text = text.replace(ROOT + "/", "<ROOT>/")
+        text = neutralise_root(text)
         out.append(text.encode())
     return out
 

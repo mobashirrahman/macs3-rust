@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gtiny_mse_d4000_w180_noc_289_default",
     "-g",
     "3500",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default",
+    "<ROOT>/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w180_noc_289/treat.bed",
+    "<ROOT>/tests/fixtures/sweep/gtiny_mse_d4000_w180_noc_289/treat.bed",
     "-f",
     "BED",
     "--nomodel",
@@ -18,13 +18,13 @@
   ],
   "files": {
     "gtiny_mse_d4000_w180_noc_289_default_peaks.narrowPeak": "dd840d5ad6ba203ff8fc164d36e68706fe93dcf5e1aeb2509267bffce65394f0",
-    "gtiny_mse_d4000_w180_noc_289_default_peaks.xls": "12bd2986e1372055b718d81bf31dc67872c5211f574fb31646c381584a1cf737",
+    "gtiny_mse_d4000_w180_noc_289_default_peaks.xls": "cbfb796273416b6da230afc8dfdd3789db93d63f35b6a4a4f93a34f8ce165ccf",
     "gtiny_mse_d4000_w180_noc_289_default_summits.bed": "9837e2678eabd9e856989bfc96d4fec2ea79730a407bd571c5a9730209187418"
   },
   "fixture": "sweep/gtiny_mse_d4000_w180_noc_289",
   "mode": "se",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 12:33:13: [32 MB] \n# Command line: callpeak -n gtiny_mse_d4000_w180_noc_289_default -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w180_noc_289/treat.bed -f BED --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gtiny_mse_d4000_w180_noc_289_default\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mse_d4000_w180_noc_289/treat.bed']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:33:13: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:33:13: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1  total tags in treatment: 4000 \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #1  tags after filtering in treatment: 464 \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #1  Redundant rate of treatment: 0.88 \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default/gtiny_mse_d4000_w180_noc_289_default_peaks.xls \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default/gtiny_mse_d4000_w180_noc_289_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default/gtiny_mse_d4000_w180_noc_289_default_summits.bed \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:33:13: [32 MB] \n# Command line: callpeak -n gtiny_mse_d4000_w180_noc_289_default -g 3500 --outdir <ROOT>/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default -t <ROOT>/tests/fixtures/sweep/gtiny_mse_d4000_w180_noc_289/treat.bed -f BED --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gtiny_mse_d4000_w180_noc_289_default\n# format = BED\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gtiny_mse_d4000_w180_noc_289/treat.bed']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:33:13: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:33:13: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1  total tags in treatment: 4000 \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:33:13: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #1  tags after filtering in treatment: 464 \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #1  Redundant rate of treatment: 0.88 \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default/gtiny_mse_d4000_w180_noc_289_default_peaks.xls \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default/gtiny_mse_d4000_w180_noc_289_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gtiny_mse_d4000_w180_noc_289/default/gtiny_mse_d4000_w180_noc_289_default_summits.bed \nINFO  @ 30 Sep 2026 12:33:13: [34 MB] Done! \n",
   "stdout_tail": "",
   "variant": "default",
   "wall_seconds": 0.192

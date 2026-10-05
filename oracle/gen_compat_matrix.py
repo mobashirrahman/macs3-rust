@@ -14,6 +14,10 @@ Two design choices worth stating, because they are what keep the matrix honest:
 * **Absence is reported as such.** A `(command, variant)` pair with zero recorded
   invocations is emitted with `0` and an explicit "not covered" marker, so a gap in
   the matrix reads as a gap instead of silently shrinking.
+* **It replays in this checkout, from a recording that names none.** The recorded
+  argv spells the checkout root `<ROOT>` (`oracle/relocate_golden.py`), and
+  `run_golden.run_one` expands it, so the matrix is the same set of numbers in any
+  directory. The counters below come from that replay; they are not a lookup.
 """
 from __future__ import annotations
 

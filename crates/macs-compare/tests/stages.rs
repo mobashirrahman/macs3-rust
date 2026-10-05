@@ -3,8 +3,14 @@
 //! The comparator is what the stage-by-stage test layer (L3) actually runs, so it
 //! needs to be *shown* to fail: a comparator that always reports "ok" is worse than
 //! none, because it would gate L3 green.
+//!
+//! It also needs to be shown to be *path-independent*. The recorded corpus is
+//! committed with `<ROOT>` in place of the checkout it was recorded in
+//! (`oracle/relocate_golden.py`); if a path ever reached a compared leaf, L3 would
+//! fail in every clone except the one that made the recording, for a reason that has
+//! nothing to do with MACS3.
 
-use macs_compare::stages::{compare_stage, compare_trees, parse, Json};
+use macs_compare::stages::{compare_stage, compare_trees, parse, Json, ROOT_TOKEN};
 use std::path::Path;
 
 const GOLD: &str = r#"{
@@ -211,6 +217,75 @@ fn the_recorded_stage_corpus_parses_and_has_the_expected_stages() {
         "qvalue_table only had {} leaves",
         qt.numeric
     );
+}
+
+#[test]
+fn the_command_line_is_not_stage_data_and_names_no_checkout() {
+    // `_argv` records the invocation, so it names the checkout -- rewritten to the
+    // neutral token, never to a path. `compare_trees` skips `_`-prefixed stages, so
+    // this is recorded rather than compared; the point is that the corpus itself stays
+    // comparable from any directory.
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .join("tests/stages");
+    if !root.exists() {
+        return; // not checked out here
+    }
+    let mut checked = 0;
+    for dir in macs_compare::stages::stage_dirs(&root).unwrap() {
+        let text = std::fs::read_to_string(dir.join("stages.json")).unwrap();
+        let Json::Obj(map) = parse(&text).expect("stages.json parses") else {
+            panic!("top level must be an object");
+        };
+        let Some(Json::Str(argv)) = map.get("_argv") else {
+            continue;
+        };
+        checked += 1;
+        assert!(
+            argv.contains(ROOT_TOKEN),
+            "{dir:?}/stages.json records a checkout path instead of {ROOT_TOKEN}: {argv:?}"
+        );
+        assert!(
+            !argv.contains(&format!("{ROOT_TOKEN}{ROOT_TOKEN}")),
+            "{dir:?}: doubled token means the rewrite ran twice"
+        );
+    }
+    assert!(checked > 0, "no run recorded an _argv");
+}
+
+#[test]
+fn recorded_leaves_name_no_path() {
+    // The property `oracle/relocate_golden.py` buys, asserted where a regression
+    // would actually show up. `_argv` and the `peak_files` leaves are allowed to name
+    // a path -- they are skipped by design -- but a compared leaf is stage data, and a
+    // path in one would make L3 fail in every clone but the recording one.
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .join("tests/stages");
+    if !root.exists() {
+        return; // not checked out here
+    }
+    let leaves = macs_compare::stages::compared_strings(&root).expect("walk the corpus");
+    assert!(
+        !leaves.is_empty(),
+        "the corpus has no compared string leaves"
+    );
+    for (key, value) in leaves {
+        assert!(
+            !value.starts_with('/') && !value.contains(":\\"),
+            "compared leaf {key} names a path: {value:?}"
+        );
+        assert!(
+            !value.contains(ROOT_TOKEN),
+            "compared leaf {key} embeds {ROOT_TOKEN}: {value:?}"
+        );
+    }
 }
 
 #[test]

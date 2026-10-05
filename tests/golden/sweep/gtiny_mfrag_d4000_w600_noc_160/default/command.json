@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gtiny_mfrag_d4000_w600_noc_160_default",
     "-g",
     "3500",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default",
+    "<ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_noc_160/treat.frag",
+    "<ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_noc_160/treat.frag",
     "-f",
     "FRAG",
     "--nomodel",
@@ -18,13 +18,13 @@
   ],
   "files": {
     "gtiny_mfrag_d4000_w600_noc_160_default_peaks.narrowPeak": "9a9233ea706b46f250f0420e5fe7a9bd19a937b53e505242f358cf30a7ad69a4",
-    "gtiny_mfrag_d4000_w600_noc_160_default_peaks.xls": "b978b03e56fed41d684cbd4addada5a4b6dce9dcccf4e8c519e70b78881f9b60",
+    "gtiny_mfrag_d4000_w600_noc_160_default_peaks.xls": "4f0a5d89001b3bbc4e1d2f533958465e1fd966ed44ac881653f520cfbc1eb5c3",
     "gtiny_mfrag_d4000_w600_noc_160_default_summits.bed": "ded0b56b632b3ecfb12a6fb1197b0e2586082e3f8c017131ca6a1314391b750c"
   },
   "fixture": "sweep/gtiny_mfrag_d4000_w600_noc_160",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "WARNING @ 30 Sep 2026 12:28:41: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:28:41: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d4000_w600_noc_160_default -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_noc_160/treat.frag -f FRAG --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d4000_w600_noc_160_default\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_noc_160/treat.frag']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:28:41: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:28:41: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default/gtiny_mfrag_d4000_w600_noc_160_default_peaks.xls \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default/gtiny_mfrag_d4000_w600_noc_160_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default/gtiny_mfrag_d4000_w600_noc_160_default_summits.bed \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] Done! \n",
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:28:41: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:28:41: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d4000_w600_noc_160_default -g 3500 --outdir <ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default -t <ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_noc_160/treat.frag -f FRAG --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d4000_w600_noc_160_default\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w600_noc_160/treat.frag']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:28:41: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:28:41: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:28:41: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default/gtiny_mfrag_d4000_w600_noc_160_default_peaks.xls \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default/gtiny_mfrag_d4000_w600_noc_160_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w600_noc_160/default/gtiny_mfrag_d4000_w600_noc_160_default_summits.bed \nINFO  @ 30 Sep 2026 12:28:41: [35 MB] Done! \n",
   "stdout_tail": "",
   "variant": "default",
   "wall_seconds": 0.239

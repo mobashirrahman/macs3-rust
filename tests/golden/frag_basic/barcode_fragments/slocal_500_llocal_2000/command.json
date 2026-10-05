@@ -1,17 +1,17 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "barcode_fragments_slocal_500_llocal_2000",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000",
+    "<ROOT>/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag",
+    "<ROOT>/tests/fixtures/frag_basic/barcode_fragments/treat.frag",
     "-c",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag",
+    "<ROOT>/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag",
     "-f",
     "FRAG",
     "--slocal",
@@ -21,13 +21,13 @@
   ],
   "files": {
     "barcode_fragments_slocal_500_llocal_2000_peaks.narrowPeak": "386c2e21c822876323f94efd17a55c3e6f17c99d98f7c16684d400e2aea60d44",
-    "barcode_fragments_slocal_500_llocal_2000_peaks.xls": "570dce766e65dd95ee247e139b196b284f6e804eef58a07d6876c2b7f9eb7a57",
+    "barcode_fragments_slocal_500_llocal_2000_peaks.xls": "887923df2bd8be83b4e14753e2a18584b0f850c9d97c45204e936f3f4e8e508b",
     "barcode_fragments_slocal_500_llocal_2000_summits.bed": "4bd875f27ee337a0164b92f21da6dc0eb24190b21fc0a827b261fd97b720a8d0"
   },
   "fixture": "frag_basic/barcode_fragments",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "WARNING @ 30 Sep 2026 12:18:26: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:18:26: [32 MB] \n# Command line: callpeak -n barcode_fragments_slocal_500_llocal_2000 -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag -f FRAG --slocal 500 --llocal 2000\n# ARGUMENTS LIST:\n# name = barcode_fragments_slocal_500_llocal_2000\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 500 bps and 2000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:18:26: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:18:26: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:18:26: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1 mean fragment size is determined as 98.3 bp from treatment \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1 note: mean fragment size in control is 98.3 bp -- value ignored \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1 fragment size = 98.3 \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1  total fragments in treatment: 7995 \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1  total fragments in control: 7995 \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:18:26: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:18:26: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:18:26: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000/barcode_fragments_slocal_500_llocal_2000_peaks.xls \nINFO  @ 30 Sep 2026 12:18:26: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000/barcode_fragments_slocal_500_llocal_2000_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:18:26: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000/barcode_fragments_slocal_500_llocal_2000_summits.bed \nINFO  @ 30 Sep 2026 12:18:26: [36 MB] Done! \n",
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:18:26: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:18:26: [32 MB] \n# Command line: callpeak -n barcode_fragments_slocal_500_llocal_2000 -g 48200 --outdir <ROOT>/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000 -t <ROOT>/tests/fixtures/frag_basic/barcode_fragments/treat.frag -c <ROOT>/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag -f FRAG --slocal 500 --llocal 2000\n# ARGUMENTS LIST:\n# name = barcode_fragments_slocal_500_llocal_2000\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/frag_basic/barcode_fragments/treat.frag']\n# control file = ['<ROOT>/tests/fixtures/frag_basic/barcode_fragments/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 500 bps and 2000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:18:26: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:18:26: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:18:26: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1 mean fragment size is determined as 98.3 bp from treatment \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1 note: mean fragment size in control is 98.3 bp -- value ignored \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1 fragment size = 98.3 \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1  total fragments in treatment: 7995 \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1  total fragments in control: 7995 \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:18:26: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:18:26: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:18:26: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:18:26: [36 MB] #4 Write output xls file... <ROOT>/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000/barcode_fragments_slocal_500_llocal_2000_peaks.xls \nINFO  @ 30 Sep 2026 12:18:26: [36 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000/barcode_fragments_slocal_500_llocal_2000_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:18:26: [36 MB] #4 Write summits bed file... <ROOT>/tests/golden/frag_basic/barcode_fragments/slocal_500_llocal_2000/barcode_fragments_slocal_500_llocal_2000_summits.bed \nINFO  @ 30 Sep 2026 12:18:26: [36 MB] Done! \n",
   "stdout_tail": "",
   "variant": "slocal_500_llocal_2000",
   "wall_seconds": 0.194

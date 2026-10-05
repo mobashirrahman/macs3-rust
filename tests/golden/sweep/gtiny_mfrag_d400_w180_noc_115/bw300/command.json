@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gtiny_mfrag_d400_w180_noc_115_bw300",
     "-g",
     "3500",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300",
+    "<ROOT>/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag",
+    "<ROOT>/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag",
     "-f",
     "FRAG",
     "--nomodel",
@@ -20,13 +20,13 @@
   ],
   "files": {
     "gtiny_mfrag_d400_w180_noc_115_bw300_peaks.narrowPeak": "3e7dfb4e4b2b0eca3e2e4ab4e841b279c1aa6b7ff8d0b1c40deca0d209f95098",
-    "gtiny_mfrag_d400_w180_noc_115_bw300_peaks.xls": "8a01d24996a1976fdd3dc261a4bf10fe79d0fcf36f79967e945bf67a49f86e7f",
+    "gtiny_mfrag_d400_w180_noc_115_bw300_peaks.xls": "f5d4662797dfed1667218ddb676a42ddd44daef747660ee9711a7669a04b2f77",
     "gtiny_mfrag_d400_w180_noc_115_bw300_summits.bed": "e1795052caa278d1bc8fb80f387c1f9c062c2759ced7cc5c31959798915e31ec"
   },
   "fixture": "sweep/gtiny_mfrag_d400_w180_noc_115",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "WARNING @ 30 Sep 2026 12:29:22: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:29:22: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d400_w180_noc_115_bw300 -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag -f FRAG --nomodel --extsize 200 --bw 300\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d400_w180_noc_115_bw300\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:29:22: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:29:22: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:29:22: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:29:22: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300/gtiny_mfrag_d400_w180_noc_115_bw300_peaks.xls \nINFO  @ 30 Sep 2026 12:29:22: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300/gtiny_mfrag_d400_w180_noc_115_bw300_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:29:22: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300/gtiny_mfrag_d400_w180_noc_115_bw300_summits.bed \nINFO  @ 30 Sep 2026 12:29:22: [35 MB] Done! \n",
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:29:22: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:29:22: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d400_w180_noc_115_bw300 -g 3500 --outdir <ROOT>/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300 -t <ROOT>/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag -f FRAG --nomodel --extsize 200 --bw 300\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d400_w180_noc_115_bw300\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gtiny_mfrag_d400_w180_noc_115/treat.frag']\n# control file = None\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:29:22: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:29:22: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:29:22: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:29:22: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:29:22: [35 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300/gtiny_mfrag_d400_w180_noc_115_bw300_peaks.xls \nINFO  @ 30 Sep 2026 12:29:22: [35 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300/gtiny_mfrag_d400_w180_noc_115_bw300_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:29:22: [35 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d400_w180_noc_115/bw300/gtiny_mfrag_d400_w180_noc_115_bw300_summits.bed \nINFO  @ 30 Sep 2026 12:29:22: [35 MB] Done! \n",
   "stdout_tail": "",
   "variant": "bw300",
   "wall_seconds": 0.175

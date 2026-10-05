@@ -1,17 +1,17 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all",
     "-g",
     "3500",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all",
+    "<ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/treat.frag",
+    "<ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/treat.frag",
     "-c",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/ctrl.frag",
+    "<ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/ctrl.frag",
     "-f",
     "FRAG",
     "--nomodel",
@@ -22,13 +22,13 @@
   ],
   "files": {
     "gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_peaks.narrowPeak": "79d5e1f8571228974ee7627202b0c03b9e9f8ab0d81100ce31f13ebe07223901",
-    "gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_peaks.xls": "a09c3607f9b11376248f25a41b49432bf11bb11e391574c406055f553f26bebc",
+    "gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_peaks.xls": "34f0ce1476cf673a532d015a644cd3cf68a54afb88e051ecf3537ec9ea3d3432",
     "gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_summits.bed": "a742443bf778a2b7c2e8bcb00a0882e53ae5db7c0abb629d40473009f37c15f0"
   },
   "fixture": "sweep/gtiny_mfrag_d4000_w60_ctrl_025",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 12:28:49: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all -g 3500 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/ctrl.frag -f FRAG --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/ctrl.frag']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:28:49: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:28:49: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:28:49: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1 note: mean fragment size in control is 168.9 bp -- value ignored \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1  total fragments in control: 15994 \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all/gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all/gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all/gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:28:49: [32 MB] \n# Command line: callpeak -n gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all -g 3500 --outdir <ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all -t <ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/treat.frag -c <ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/ctrl.frag -f FRAG --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/treat.frag']\n# control file = ['<ROOT>/tests/fixtures/sweep/gtiny_mfrag_d4000_w60_ctrl_025/ctrl.frag']\n# effective genome size = 3.50e+03\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:28:49: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:28:49: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:28:49: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1 note: mean fragment size in control is 168.9 bp -- value ignored \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1  total fragments in treatment: 15994 \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1  total fragments in control: 15994 \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:28:49: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all/gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all/gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gtiny_mfrag_d4000_w60_ctrl_025/keepdup_all/gtiny_mfrag_d4000_w60_ctrl_025_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:28:49: [36 MB] Done! \n",
   "stdout_tail": "",
   "variant": "keepdup_all",
   "wall_seconds": 0.264

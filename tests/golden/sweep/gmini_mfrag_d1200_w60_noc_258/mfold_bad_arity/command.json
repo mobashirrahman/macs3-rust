@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gmini_mfrag_d1200_w60_noc_258_mfold_bad_arity",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mfrag_d1200_w60_noc_258/mfold_bad_arity",
+    "<ROOT>/tests/golden/sweep/gmini_mfrag_d1200_w60_noc_258/mfold_bad_arity",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mfrag_d1200_w60_noc_258/treat.frag",
+    "<ROOT>/tests/fixtures/sweep/gmini_mfrag_d1200_w60_noc_258/treat.frag",
     "-f",
     "FRAG",
     "--nomodel",

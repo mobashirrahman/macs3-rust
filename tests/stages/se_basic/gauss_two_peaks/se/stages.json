@@ -1,5 +1,5 @@
 {
- "_argv": "callpeak -n stages -g 1000000 --outdir tests/stages/se_basic/gauss_two_peaks/se -t /scratch/mdra00001/MACS3-rust/tests/fixtures/se_basic/gauss_two_peaks/treat.bed -f BED -c /scratch/mdra00001/MACS3-rust/tests/fixtures/se_basic/gauss_two_peaks/ctrl.bed --gsize 48200 --nomodel --extsize 200 --cutoff-analysis -B",
+ "_argv": "callpeak -n stages -g 1000000 --outdir tests/stages/se_basic/gauss_two_peaks/se -t <ROOT>/tests/fixtures/se_basic/gauss_two_peaks/treat.bed -f BED -c <ROOT>/tests/fixtures/se_basic/gauss_two_peaks/ctrl.bed --gsize 48200 --nomodel --extsize 200 --cutoff-analysis -B",
  "d": 200,
  "duplicates": {
   "ctrl_after_filter": 195.0,

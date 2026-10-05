@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gmini_mpe_d400_w600_noc_138_default",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default",
+    "<ROOT>/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_138/treat.bedpe",
+    "<ROOT>/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_138/treat.bedpe",
     "-f",
     "BEDPE",
     "--nomodel",
@@ -18,13 +18,13 @@
   ],
   "files": {
     "gmini_mpe_d400_w600_noc_138_default_peaks.narrowPeak": "8fde59c6da143105b85ccb0d2a39d9d829d589ec182279a330c5fb3d99880146",
-    "gmini_mpe_d400_w600_noc_138_default_peaks.xls": "ebaea7295cddc8cf49744817a7ce0233462ccde6688660db10bcdcbee8c7f106",
+    "gmini_mpe_d400_w600_noc_138_default_peaks.xls": "44d9a128aecafc2cb80a9d6d529914cae0b7028e8cb583e6b52a6fd7b7f25052",
     "gmini_mpe_d400_w600_noc_138_default_summits.bed": "d0e3a84bc260f6f93200b217c65318a69ef4ed4e449bed851b0f90cd940477fa"
   },
   "fixture": "sweep/gmini_mpe_d400_w600_noc_138",
   "mode": "pe",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 11:44:19: [32 MB] \n# Command line: callpeak -n gmini_mpe_d400_w600_noc_138_default -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_138/treat.bedpe -f BEDPE --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gmini_mpe_d400_w600_noc_138_default\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_138/treat.bedpe']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:44:19: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:44:19: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 mean fragment size is determined as 114.6 bp from treatment \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 fragment size = 114.6 \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1  total fragments in treatment: 400 \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1  fragments after filtering in treatment: 119 \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1  Redundant rate of treatment: 0.70 \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default/gmini_mpe_d400_w600_noc_138_default_peaks.xls \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default/gmini_mpe_d400_w600_noc_138_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default/gmini_mpe_d400_w600_noc_138_default_summits.bed \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 11:44:19: [32 MB] \n# Command line: callpeak -n gmini_mpe_d400_w600_noc_138_default -g 48200 --outdir <ROOT>/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default -t <ROOT>/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_138/treat.bedpe -f BEDPE --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = gmini_mpe_d400_w600_noc_138_default\n# format = BEDPE\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gmini_mpe_d400_w600_noc_138/treat.bedpe']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 11:44:19: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 11:44:19: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 mean fragment size is determined as 114.6 bp from treatment \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 fragment size = 114.6 \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1  total fragments in treatment: 400 \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 user defined the maximum fragments... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 filter out redundant fragments by allowing at most 1 identical fragment(s) \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1  fragments after filtering in treatment: 119 \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1  Redundant rate of treatment: 0.70 \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 11:44:19: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default/gmini_mpe_d400_w600_noc_138_default_peaks.xls \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default/gmini_mpe_d400_w600_noc_138_default_peaks.narrowPeak \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gmini_mpe_d400_w600_noc_138/default/gmini_mpe_d400_w600_noc_138_default_summits.bed \nINFO  @ 30 Sep 2026 11:44:19: [34 MB] Done! \n",
   "stdout_tail": "",
   "variant": "default",
   "wall_seconds": 0.149

@@ -15,6 +15,12 @@ list and commits the result.
 upstream's arithmetic and ordering; only the observation is ours. Nothing is
 patched into the oracle, so `verify_oracle_clean.sh` still passes.
 
+The dump records the command line it was driven with, and that command line names
+the checkout. So every recorded file is written with the neutral tokens of
+`oracle/run_golden.py` -- `<ROOT>` for this checkout, `<MACS3_SRC>` for the pinned
+upstream tree -- and `macs-compare --stages` sees the same corpus whatever directory
+the repository is in. `relocate_golden.py --check` is what keeps it true.
+
 Usage:
     python3 oracle/record_stages.py --out tests/stages [--limit N]
 """
@@ -25,6 +31,10 @@ import json
 import os
 import subprocess
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from run_golden import neutralise, recording_substitutions  # noqa: E402
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FIXTURES = os.path.join(REPO, "tests", "fixtures")
@@ -81,6 +91,23 @@ def genome_size(fixture_dir: str) -> str:
     return str(total) if total else "2000000"
 
 
+def neutralise_tree(out: str, subs) -> int:
+    """Rewrite every recorded file in `out` so it names tokens, not this checkout."""
+    changed = 0
+    for name in sorted(os.listdir(out)):
+        p = os.path.join(out, name)
+        if not os.path.isfile(p):
+            continue
+        with open(p, "rb") as fh:
+            old = fh.read()
+        new = neutralise(old, subs)
+        if new != old:
+            with open(p, "wb") as fh:
+                fh.write(new)
+            changed += 1
+    return changed
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", default=os.path.join(REPO, "tests", "stages"))
@@ -88,9 +115,17 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
+    # The pinned checkout, from the environment when the caller set it up
+    # (`oracle/provision_oracle.sh`) and otherwise from the vendored `.oracle`
+    # symlink. Never a path baked in at authoring time: this script has to run from
+    # whichever machine is re-recording, and it has to say where it looked.
+    src = os.environ.get("MACS3_SRC") or os.path.join(REPO, ".oracle", "macs3-src")
+    if not os.path.isdir(src):
+        print(f"record_stages: no MACS3 checkout at {src}; set MACS3_SRC", file=sys.stderr)
+        return 2
     env = dict(os.environ)
-    src = os.environ.get("MACS3_SRC", "/scratch/mdra00001/tmp/opencode/macs3-src")
     env["PYTHONPATH"] = src + os.pathsep + env.get("PYTHONPATH", "")
+    subs = recording_substitutions(REPO, macs3_src=src)
 
     made, skipped = [], []
     for group, name, mode in SELECTION:
@@ -147,8 +182,12 @@ def main() -> int:
                     ok = True
             except (OSError, ValueError) as e:
                 print(f"  {group}/{name}: unreadable stages.json: {e}", file=sys.stderr)
+        # The dump echoed the paths it was driven with; take them back out before the
+        # corpus is committed, whether or not the run is one we keep.
+        neutralised = neutralise_tree(out, subs)
         (made if ok else skipped).append(
             f"{group}/{name} [{mode}]: {'ok' if ok else 'FAILED rc=%s' % p.returncode}"
+            f"{f' ({neutralised} files tokenised)' if neutralised else ''}"
         )
         if not ok:
             print(p.stderr[-600:], file=sys.stderr)

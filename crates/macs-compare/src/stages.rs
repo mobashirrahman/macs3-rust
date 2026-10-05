@@ -25,6 +25,19 @@
 //! Stages are reported in pipeline order, not alphabetically, so the first `FAIL` is
 //! the earliest stage that went wrong. `STAGE_ORDER` is that order; anything not
 //! listed sorts after it, which keeps a newly added stage visible instead of dropped.
+//!
+//! # Paths are not stage data
+//!
+//! A stage dump records the command line it was driven with, and a command line names
+//! the checkout. The corpus is committed with that path rewritten to the neutral token
+//! `<ROOT>` (`oracle/relocate_golden.py`), so a replay -- which writes the live path --
+//! and the recording agree on everything that is compared. Exactly two places in a
+//! dump are allowed to name a path, and both are outside the comparison: `_argv`,
+//! which is a `_`-prefixed top-level key that `compare_trees` skips, and the leaves
+//! under [`FILE_KEYS`], which name a sibling file that is already known to live under a
+//! different root on each side. `recorded_leaves_name_no_path` in the test suite
+//! asserts that for the committed corpus, because a path leaking into a compared leaf
+//! would make L3 fail for a reason that has nothing to do with MACS3.
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -66,6 +79,14 @@ const FILE_KEYS: &[&str] = &[
     "final_peaks.peaks.xls",
     "final_peaks.summits.bed",
 ];
+
+/// The neutral token the recorded corpus spells this checkout with.
+///
+/// `oracle/relocate_golden.py` rewrites the recording's absolute paths to it, and
+/// `oracle/run_golden.py` expands it back per checkout for the golden corpus. Nothing
+/// here expands or compares it -- it is named so a leaf that has leaked one is
+/// recognisable, which is what [`compared_strings`] is for.
+pub const ROOT_TOKEN: &str = "<ROOT>";
 
 /// One stage's verdict, aggregated across every recorded run.
 #[derive(Debug, Clone, PartialEq)]
@@ -549,6 +570,42 @@ pub fn compare_trees(golden: &Path, ours: &Path, tol: f64) -> Result<TreeReport,
     rep.stages = agg.into_values().collect();
     rep.stages.sort_by_key(|s| (s.rank(), s.name.clone()));
     Ok(rep)
+}
+
+/// The exact-match leaves this comparator would compare, as `(run:key, value)`.
+///
+/// A diagnostic, not a verdict: everything [`compare_trees`] reaches and [`is_file_key`]
+/// does not skip. It exists because a leaf that names a checkout path is a *corpus*
+/// defect, not a pipeline divergence, and "L3 fails on `treat_file`" is otherwise
+/// indistinguishable from "L3 found a real difference".
+pub fn compared_strings(root: &Path) -> Result<Vec<(String, String)>, String> {
+    let mut out = Vec::new();
+    for dir in stage_dirs(root)? {
+        let text = std::fs::read_to_string(dir.join("stages.json"))
+            .map_err(|e| format!("{}: {e}", dir.display()))?;
+        let Json::Obj(map) = parse(&text)? else {
+            return Err(format!(
+                "{}/stages.json: top level must be an object",
+                dir.display()
+            ));
+        };
+        for (name, payload) in map {
+            if name.starts_with('_') {
+                continue; // `_argv` and friends: the command line, not stage data
+            }
+            let mut leaves = BTreeMap::new();
+            walk_stage(&name, &payload, &mut leaves);
+            for (key, leaf) in leaves {
+                if is_file_key(&key) {
+                    continue;
+                }
+                if let Leaf::Exact(v) = leaf {
+                    out.push((format!("{}:{key}", rel(root, &dir)), v));
+                }
+            }
+        }
+    }
+    Ok(out)
 }
 
 fn gv(j: &Json, key: &str) -> Option<Json> {

@@ -1,17 +1,17 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "out_of_range_nomodel_extsize",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/frag_counts/out_of_range/nomodel_extsize",
+    "<ROOT>/tests/golden/frag_counts/out_of_range/nomodel_extsize",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_counts/out_of_range/treat.frag",
+    "<ROOT>/tests/fixtures/frag_counts/out_of_range/treat.frag",
     "-c",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_counts/out_of_range/ctrl.frag",
+    "<ROOT>/tests/fixtures/frag_counts/out_of_range/ctrl.frag",
     "-f",
     "FRAG",
     "--nomodel",
@@ -23,13 +23,13 @@
   ],
   "files": {
     "out_of_range_nomodel_extsize_peaks.narrowPeak": "510ca15fdfbb1194cde4eea908a65864e31c507fbc2b0e26ad39579ca7e9dd2b",
-    "out_of_range_nomodel_extsize_peaks.xls": "aad2853f2893944b94054d10ca4e4839ad32644bf53398d4e3878f916347b5cd",
+    "out_of_range_nomodel_extsize_peaks.xls": "b5a6ea7a8d2d695ec9f963acfe84cef958f5bd891307a526746a20a82e93f358",
     "out_of_range_nomodel_extsize_summits.bed": "c6863f825bf1ca272a757c3596aa425f2c6d2e556a38246661870ef350f3d2be"
   },
   "fixture": "frag_counts/out_of_range",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "WARNING @ 30 Sep 2026 12:34:51: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:34:51: [32 MB] \n# Command line: callpeak -n out_of_range_nomodel_extsize -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/frag_counts/out_of_range/nomodel_extsize -t /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_counts/out_of_range/treat.frag -c /scratch/mdra00001/MACS3-rust/tests/fixtures/frag_counts/out_of_range/ctrl.frag -f FRAG --nomodel --extsize 200 --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = out_of_range_nomodel_extsize\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_counts/out_of_range/treat.frag']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/frag_counts/out_of_range/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:34:51: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:34:51: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:34:51: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1 mean fragment size is determined as 40.0 bp from treatment \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1 note: mean fragment size in control is 40.0 bp -- value ignored \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1 fragment size = 40.0 \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1  total fragments in treatment: 168399 \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1  total fragments in control: 168399 \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:34:51: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:34:51: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:34:51: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_counts/out_of_range/nomodel_extsize/out_of_range_nomodel_extsize_peaks.xls \nINFO  @ 30 Sep 2026 12:34:51: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_counts/out_of_range/nomodel_extsize/out_of_range_nomodel_extsize_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:34:51: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/frag_counts/out_of_range/nomodel_extsize/out_of_range_nomodel_extsize_summits.bed \nINFO  @ 30 Sep 2026 12:34:51: [36 MB] Done! \n",
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:34:51: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:34:51: [32 MB] \n# Command line: callpeak -n out_of_range_nomodel_extsize -g 48200 --outdir <ROOT>/tests/golden/frag_counts/out_of_range/nomodel_extsize -t <ROOT>/tests/fixtures/frag_counts/out_of_range/treat.frag -c <ROOT>/tests/fixtures/frag_counts/out_of_range/ctrl.frag -f FRAG --nomodel --extsize 200 --nomodel --extsize 200\n# ARGUMENTS LIST:\n# name = out_of_range_nomodel_extsize\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/frag_counts/out_of_range/treat.frag']\n# control file = ['<ROOT>/tests/fixtures/frag_counts/out_of_range/ctrl.frag']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:34:51: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:34:51: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:34:51: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1 mean fragment size is determined as 40.0 bp from treatment \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1 note: mean fragment size in control is 40.0 bp -- value ignored \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1 fragment size = 40.0 \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1  total fragments in treatment: 168399 \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1  total fragments in control: 168399 \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:34:51: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:34:51: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:34:51: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:34:51: [36 MB] #4 Write output xls file... <ROOT>/tests/golden/frag_counts/out_of_range/nomodel_extsize/out_of_range_nomodel_extsize_peaks.xls \nINFO  @ 30 Sep 2026 12:34:51: [36 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/frag_counts/out_of_range/nomodel_extsize/out_of_range_nomodel_extsize_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:34:51: [36 MB] #4 Write summits bed file... <ROOT>/tests/golden/frag_counts/out_of_range/nomodel_extsize/out_of_range_nomodel_extsize_summits.bed \nINFO  @ 30 Sep 2026 12:34:51: [36 MB] Done! \n",
   "stdout_tail": "",
   "variant": "nomodel_extsize",
   "wall_seconds": 0.224

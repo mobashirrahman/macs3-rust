@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "no_control_q05",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/q05",
+    "<ROOT>/tests/golden/se_edge/no_control/q05",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/no_control/treat.bed",
+    "<ROOT>/tests/fixtures/se_edge/no_control/treat.bed",
     "-f",
     "BED",
     "--nomodel",
@@ -20,13 +20,13 @@
   ],
   "files": {
     "no_control_q05_peaks.narrowPeak": "7402f898d4933116a2e804538793142dfe5b0f9f00786be907a573cf7f42a187",
-    "no_control_q05_peaks.xls": "5ef2413437f6a0dd7fa2397131d7abceaeeaa42caf4b02b96dda6f3a6c97f55c",
+    "no_control_q05_peaks.xls": "da5cd4cd7d3f8c7e3ea3fa434a12bf080c7c402717251e5e4018db0f537d8d37",
     "no_control_q05_summits.bed": "f299dd8a7fb9309265cdae6f1872259b489ab6cb3ce671f4d546443c343fe165"
   },
   "fixture": "se_edge/no_control",
   "mode": "se",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:36: [32 MB] \n# Command line: callpeak -n no_control_q05 -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/q05 -t /scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/no_control/treat.bed -f BED --nomodel --extsize 200 -q 0.5\n# ARGUMENTS LIST:\n# name = no_control_q05\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_edge/no_control/treat.bed']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:36: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:36: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1  total tags in treatment: 2500 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1  tags after filtering in treatment: 1257 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1  Redundant rate of treatment: 0.50 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/q05/no_control_q05_peaks.xls \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/q05/no_control_q05_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/se_edge/no_control/q05/no_control_q05_summits.bed \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:36: [32 MB] \n# Command line: callpeak -n no_control_q05 -g 48200 --outdir <ROOT>/tests/golden/se_edge/no_control/q05 -t <ROOT>/tests/fixtures/se_edge/no_control/treat.bed -f BED --nomodel --extsize 200 -q 0.5\n# ARGUMENTS LIST:\n# name = no_control_q05\n# format = BED\n# ChIP-seq file = ['<ROOT>/tests/fixtures/se_edge/no_control/treat.bed']\n# control file = None\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-01\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:36: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:36: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1  total tags in treatment: 2500 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 user defined the maximum tags... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 filter out redundant tags at the same location and the same strand by allowing at most 1 tag(s) \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1  tags after filtering in treatment: 1257 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1  Redundant rate of treatment: 0.50 \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:36: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write output xls file... <ROOT>/tests/golden/se_edge/no_control/q05/no_control_q05_peaks.xls \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/se_edge/no_control/q05/no_control_q05_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] #4 Write summits bed file... <ROOT>/tests/golden/se_edge/no_control/q05/no_control_q05_summits.bed \nINFO  @ 30 Sep 2026 12:26:36: [34 MB] Done! \n",
   "stdout_tail": "",
   "variant": "q05",
   "wall_seconds": 0.19

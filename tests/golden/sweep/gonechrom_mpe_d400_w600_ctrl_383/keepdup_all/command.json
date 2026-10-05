@@ -1,17 +1,17 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gonechrom_mpe_d400_w600_ctrl_383_keepdup_all",
     "-g",
     "12000",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all",
+    "<ROOT>/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/treat.bedpe",
+    "<ROOT>/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/treat.bedpe",
     "-c",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/ctrl.bedpe",
+    "<ROOT>/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/ctrl.bedpe",
     "-f",
     "BEDPE",
     "--nomodel",
@@ -22,13 +22,13 @@
   ],
   "files": {
     "gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_peaks.narrowPeak": "09ef34d2e68a087bd46371af3b0c51eab4ad0c5dd90d3fa8aa6e62d4ce07a64e",
-    "gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_peaks.xls": "c51090523a5db554fc5e7baf9fc70761d6fd5fab1e9d19fd43a5867816e6d763",
+    "gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_peaks.xls": "2711aeab7950e0bb9f744056113fc08fe26e9bc0851ab38c2ef19190201026b5",
     "gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_summits.bed": "7fbceb292ba4d198bde514d7a2be2eb59819ebb27499b4a32cb03be360c47fa4"
   },
   "fixture": "sweep/gonechrom_mpe_d400_w600_ctrl_383",
   "mode": "pe",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 12:23:02: [32 MB] \n# Command line: callpeak -n gonechrom_mpe_d400_w600_ctrl_383_keepdup_all -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/treat.bedpe -c /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/ctrl.bedpe -f BEDPE --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gonechrom_mpe_d400_w600_ctrl_383_keepdup_all\n# format = BEDPE\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/treat.bedpe']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/ctrl.bedpe']\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:23:02: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:23:02: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:23:02: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1 note: mean fragment size in control is 178.1 bp -- value ignored \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1  total fragments in treatment: 400 \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1  total fragments in control: 400 \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:23:02: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all/gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:23:02: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all/gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:23:02: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all/gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:23:02: [35 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:23:02: [32 MB] \n# Command line: callpeak -n gonechrom_mpe_d400_w600_ctrl_383_keepdup_all -g 12000 --outdir <ROOT>/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all -t <ROOT>/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/treat.bedpe -c <ROOT>/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/ctrl.bedpe -f BEDPE --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = gonechrom_mpe_d400_w600_ctrl_383_keepdup_all\n# format = BEDPE\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/treat.bedpe']\n# control file = ['<ROOT>/tests/fixtures/sweep/gonechrom_mpe_d400_w600_ctrl_383/ctrl.bedpe']\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:23:02: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:23:02: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:23:02: [33 MB] #1.2 read input fragments... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1 note: mean fragment size in control is 178.1 bp -- value ignored \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1  total fragments in treatment: 400 \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1  total fragments in control: 400 \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:23:02: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:23:02: [35 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all/gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:23:02: [35 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all/gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:23:02: [35 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gonechrom_mpe_d400_w600_ctrl_383/keepdup_all/gonechrom_mpe_d400_w600_ctrl_383_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:23:02: [35 MB] Done! \n",
   "stdout_tail": "",
   "variant": "keepdup_all",
   "wall_seconds": 0.178

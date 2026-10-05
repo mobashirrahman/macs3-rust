@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gonechrom_mfrag_d400_w600_noc_143_shift_only",
     "-g",
     "12000",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only",
+    "<ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w600_noc_143/treat.frag",
+    "<ROOT>/tests/fixtures/sweep/gonechrom_mfrag_d400_w600_noc_143/treat.frag",
     "-f",
     "FRAG",
     "--nomodel",
@@ -22,13 +22,13 @@
   ],
   "files": {
     "gonechrom_mfrag_d400_w600_noc_143_shift_only_peaks.narrowPeak": "43704f579dfc2ad35180f88374e2e5dd8841e50c66d9c68cc3863bcdc73a2d29",
-    "gonechrom_mfrag_d400_w600_noc_143_shift_only_peaks.xls": "3cc58ed567961585fb675e361506441284a6512e971ca96a91bcc91ea419c05a",
+    "gonechrom_mfrag_d400_w600_noc_143_shift_only_peaks.xls": "ac69254e8ef11b0e167dce57035b588d5eff414c69b51336f41c7050bc2ff817",
     "gonechrom_mfrag_d400_w600_noc_143_shift_only_summits.bed": "4d8f605d1b4186e97387b1bae8c736855f279b65b9a8a73636df5e3d063274c8"
   },
   "fixture": "sweep/gonechrom_mfrag_d400_w600_noc_143",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "WARNING @ 30 Sep 2026 12:20:35: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:20:35: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d400_w600_noc_143_shift_only -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w600_noc_143/treat.frag -f FRAG --nomodel --extsize 200 --shift -100 --extsize 200\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d400_w600_noc_143_shift_only\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w600_noc_143/treat.frag']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:20:35: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:20:35: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:20:35: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:20:35: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only/gonechrom_mfrag_d400_w600_noc_143_shift_only_peaks.xls \nINFO  @ 30 Sep 2026 12:20:35: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only/gonechrom_mfrag_d400_w600_noc_143_shift_only_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:20:35: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only/gonechrom_mfrag_d400_w600_noc_143_shift_only_summits.bed \nINFO  @ 30 Sep 2026 12:20:35: [35 MB] Done! \n",
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:20:35: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:20:35: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d400_w600_noc_143_shift_only -g 12000 --outdir <ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only -t <ROOT>/tests/fixtures/sweep/gonechrom_mfrag_d400_w600_noc_143/treat.frag -f FRAG --nomodel --extsize 200 --shift -100 --extsize 200\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d400_w600_noc_143_shift_only\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gonechrom_mfrag_d400_w600_noc_143/treat.frag']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n \nINFO  @ 30 Sep 2026 12:20:35: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:20:35: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:20:35: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:20:35: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:20:35: [35 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only/gonechrom_mfrag_d400_w600_noc_143_shift_only_peaks.xls \nINFO  @ 30 Sep 2026 12:20:35: [35 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only/gonechrom_mfrag_d400_w600_noc_143_shift_only_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:20:35: [35 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w600_noc_143/shift_only/gonechrom_mfrag_d400_w600_noc_143_shift_only_summits.bed \nINFO  @ 30 Sep 2026 12:20:35: [35 MB] Done! \n",
   "stdout_tail": "",
   "variant": "shift_only",
   "wall_seconds": 0.176

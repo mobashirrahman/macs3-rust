@@ -1,5 +1,5 @@
 {
- "_argv": "callpeak -n stages -g 1000000 --outdir tests/stages/pe_basic/nucleosome_ladder/pe -t /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/nucleosome_ladder/treat.bedpe -f BEDPE -c /scratch/mdra00001/MACS3-rust/tests/fixtures/pe_basic/nucleosome_ladder/ctrl.bedpe --gsize 48200 --cutoff-analysis -B",
+ "_argv": "callpeak -n stages -g 1000000 --outdir tests/stages/pe_basic/nucleosome_ladder/pe -t <ROOT>/tests/fixtures/pe_basic/nucleosome_ladder/treat.bedpe -f BEDPE -c <ROOT>/tests/fixtures/pe_basic/nucleosome_ladder/ctrl.bedpe --gsize 48200 --cutoff-analysis -B",
  "d": 90,
  "duplicates": {
   "ctrl_after_filter": 53.0,

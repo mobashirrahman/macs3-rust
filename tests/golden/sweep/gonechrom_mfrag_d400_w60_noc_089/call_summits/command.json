@@ -1,15 +1,15 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "gonechrom_mfrag_d400_w60_noc_089_call_summits",
     "-g",
     "12000",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits",
+    "<ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w60_noc_089/treat.frag",
+    "<ROOT>/tests/fixtures/sweep/gonechrom_mfrag_d400_w60_noc_089/treat.frag",
     "-f",
     "FRAG",
     "--nomodel",
@@ -19,13 +19,13 @@
   ],
   "files": {
     "gonechrom_mfrag_d400_w60_noc_089_call_summits_peaks.narrowPeak": "4efc97141fec01403f6bbf1a46a57f99b0a836c6e2b6e6a4b7cc83c4e36155f3",
-    "gonechrom_mfrag_d400_w60_noc_089_call_summits_peaks.xls": "4f456317a093120f831872e5e7dc91523017ce19b53ef499186e91993e420016",
+    "gonechrom_mfrag_d400_w60_noc_089_call_summits_peaks.xls": "8db1f129d46f62cbb067aecb8e1011dae87018b2234c60379b5f1045125d2187",
     "gonechrom_mfrag_d400_w60_noc_089_call_summits_summits.bed": "b075ac9a606e909f3e665edcbd8daf2df5f4384382b72de2812767c00c1987c7"
   },
   "fixture": "sweep/gonechrom_mfrag_d400_w60_noc_089",
   "mode": "frag",
   "returncode": 0,
-  "stderr_tail": "WARNING @ 30 Sep 2026 12:20:50: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d400_w60_noc_089_call_summits -g 12000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits -t /scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w60_noc_089/treat.frag -f FRAG --nomodel --extsize 200 --call-summits\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d400_w60_noc_089_call_summits\n# format = FRAG\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/sweep/gonechrom_mfrag_d400_w60_noc_089/treat.frag']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n# Searching for subpeak summits is on\n \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #3 Going to call summits inside each peak ... \nINFO  @ 30 Sep 2026 12:20:50: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:20:50: [33 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:20:50: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits/gonechrom_mfrag_d400_w60_noc_089_call_summits_peaks.xls \nINFO  @ 30 Sep 2026 12:20:50: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits/gonechrom_mfrag_d400_w60_noc_089_call_summits_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:20:50: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits/gonechrom_mfrag_d400_w60_noc_089_call_summits_summits.bed \nINFO  @ 30 Sep 2026 12:20:50: [35 MB] Done! \n",
+  "stderr_tail": "WARNING @ 30 Sep 2026 12:20:50: [32 MB] Since the format is 'FRAG', `--keep-dup` will be set as 'all'. \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] \n# Command line: callpeak -n gonechrom_mfrag_d400_w60_noc_089_call_summits -g 12000 --outdir <ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits -t <ROOT>/tests/fixtures/sweep/gonechrom_mfrag_d400_w60_noc_089/treat.frag -f FRAG --nomodel --extsize 200 --call-summits\n# ARGUMENTS LIST:\n# name = gonechrom_mfrag_d400_w60_noc_089_call_summits\n# format = FRAG\n# ChIP-seq file = ['<ROOT>/tests/fixtures/sweep/gonechrom_mfrag_d400_w60_noc_089/treat.frag']\n# control file = None\n# effective genome size = 1.20e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 10000 bps\n# Broad region calling is off\n# Paired-End mode is on\n# Searching for subpeak summits is on\n \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 read fragment files... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 read treatment fragments... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 mean fragment size is determined as 180.0 bp from treatment \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 fragment size = 180.0 \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1  total fragments in treatment: 1597 \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:20:50: [32 MB] #3 Going to call summits inside each peak ... \nINFO  @ 30 Sep 2026 12:20:50: [33 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:20:50: [33 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:20:50: [35 MB] #4 Write output xls file... <ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits/gonechrom_mfrag_d400_w60_noc_089_call_summits_peaks.xls \nINFO  @ 30 Sep 2026 12:20:50: [35 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits/gonechrom_mfrag_d400_w60_noc_089_call_summits_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:20:50: [35 MB] #4 Write summits bed file... <ROOT>/tests/golden/sweep/gonechrom_mfrag_d400_w60_noc_089/call_summits/gonechrom_mfrag_d400_w60_noc_089_call_summits_summits.bed \nINFO  @ 30 Sep 2026 12:20:50: [35 MB] Done! \n",
   "stdout_tail": "",
   "variant": "call_summits",
   "wall_seconds": 0.138

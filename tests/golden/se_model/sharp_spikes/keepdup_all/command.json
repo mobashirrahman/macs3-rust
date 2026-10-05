@@ -1,17 +1,17 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "sharp_spikes_keepdup_all",
     "-g",
     "2000000",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/se_model/sharp_spikes/keepdup_all",
+    "<ROOT>/tests/golden/se_model/sharp_spikes/keepdup_all",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_model/sharp_spikes/treat.bed",
+    "<ROOT>/tests/fixtures/se_model/sharp_spikes/treat.bed",
     "-c",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_model/sharp_spikes/ctrl.bed",
+    "<ROOT>/tests/fixtures/se_model/sharp_spikes/ctrl.bed",
     "-f",
     "BED",
     "--nomodel",
@@ -22,13 +22,13 @@
   ],
   "files": {
     "sharp_spikes_keepdup_all_peaks.narrowPeak": "0170bfe6f38454ad8c6c18eb5e4fa6b7c851be1454d09855d7f2ccf68980db6a",
-    "sharp_spikes_keepdup_all_peaks.xls": "52c6824e17fb6271d96cd44dcfdf22755e0b7fa2190a3df3b04a1594a0ba2878",
+    "sharp_spikes_keepdup_all_peaks.xls": "79b7084e78cf8fa54309420f6152aa89b7fc40aabf9fed4a22f2786aa0caa028",
     "sharp_spikes_keepdup_all_summits.bed": "021e67cec5aae50f98bb0a7413c6680e3d7549157770267f273fdbd51c6b8462"
   },
   "fixture": "se_model/sharp_spikes",
   "mode": "se",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:51: [32 MB] \n# Command line: callpeak -n sharp_spikes_keepdup_all -g 2000000 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/se_model/sharp_spikes/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/se_model/sharp_spikes/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/se_model/sharp_spikes/ctrl.bed -f BED --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = sharp_spikes_keepdup_all\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_model/sharp_spikes/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_model/sharp_spikes/ctrl.bed']\n# effective genome size = 2.00e+06\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:51: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:51: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:51: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1  total tags in treatment: 3000 \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1  total tags in control: 2000 \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:51: [36 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/se_model/sharp_spikes/keepdup_all/sharp_spikes_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:26:51: [36 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/se_model/sharp_spikes/keepdup_all/sharp_spikes_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:51: [36 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/se_model/sharp_spikes/keepdup_all/sharp_spikes_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:26:51: [36 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:26:51: [32 MB] \n# Command line: callpeak -n sharp_spikes_keepdup_all -g 2000000 --outdir <ROOT>/tests/golden/se_model/sharp_spikes/keepdup_all -t <ROOT>/tests/fixtures/se_model/sharp_spikes/treat.bed -c <ROOT>/tests/fixtures/se_model/sharp_spikes/ctrl.bed -f BED --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = sharp_spikes_keepdup_all\n# format = BED\n# ChIP-seq file = ['<ROOT>/tests/fixtures/se_model/sharp_spikes/treat.bed']\n# control file = ['<ROOT>/tests/fixtures/se_model/sharp_spikes/ctrl.bed']\n# effective genome size = 2.00e+06\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:26:51: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:26:51: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:26:51: [33 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1 tag size is determined as 200 bps \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1 tag size = 200.0 \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1  total tags in treatment: 3000 \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1  total tags in control: 2000 \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:26:51: [34 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:26:51: [36 MB] #4 Write output xls file... <ROOT>/tests/golden/se_model/sharp_spikes/keepdup_all/sharp_spikes_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:26:51: [36 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/se_model/sharp_spikes/keepdup_all/sharp_spikes_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:26:51: [36 MB] #4 Write summits bed file... <ROOT>/tests/golden/se_model/sharp_spikes/keepdup_all/sharp_spikes_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:26:51: [36 MB] Done! \n",
   "stdout_tail": "",
   "variant": "keepdup_all",
   "wall_seconds": 0.201

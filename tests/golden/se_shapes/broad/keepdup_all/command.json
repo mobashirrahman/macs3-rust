@@ -1,17 +1,17 @@
 {
   "command": [
-    "/scratch/mdra00001/tmp/opencode/macs3-venv/bin/macs3",
+    "macs3",
     "callpeak",
     "-n",
     "broad_keepdup_all",
     "-g",
     "48200",
     "--outdir",
-    "/scratch/mdra00001/MACS3-rust/tests/golden/se_shapes/broad/keepdup_all",
+    "<ROOT>/tests/golden/se_shapes/broad/keepdup_all",
     "-t",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_shapes/broad/treat.bed",
+    "<ROOT>/tests/fixtures/se_shapes/broad/treat.bed",
     "-c",
-    "/scratch/mdra00001/MACS3-rust/tests/fixtures/se_shapes/broad/ctrl.bed",
+    "<ROOT>/tests/fixtures/se_shapes/broad/ctrl.bed",
     "-f",
     "BED",
     "--nomodel",
@@ -22,13 +22,13 @@
   ],
   "files": {
     "broad_keepdup_all_peaks.narrowPeak": "47d814e5081dc12ec89cf500edac23201e6c1b3b8d0c05795246e97b760f8620",
-    "broad_keepdup_all_peaks.xls": "dee95a3b772ad6450f6608b91df881c70650a1780d1fc6673ecd5d4ece78470f",
+    "broad_keepdup_all_peaks.xls": "8186295bbf6c7f4b11230e5018f988d96f3e8f5e4aca7e6337062ac761c8bf89",
     "broad_keepdup_all_summits.bed": "91c9b7c0b7536ae55b4a517b3a52809b0bd741981b4f63723ce3605df400c868"
   },
   "fixture": "se_shapes/broad",
   "mode": "se",
   "returncode": 0,
-  "stderr_tail": "INFO  @ 30 Sep 2026 12:27:05: [32 MB] \n# Command line: callpeak -n broad_keepdup_all -g 48200 --outdir /scratch/mdra00001/MACS3-rust/tests/golden/se_shapes/broad/keepdup_all -t /scratch/mdra00001/MACS3-rust/tests/fixtures/se_shapes/broad/treat.bed -c /scratch/mdra00001/MACS3-rust/tests/fixtures/se_shapes/broad/ctrl.bed -f BED --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = broad_keepdup_all\n# format = BED\n# ChIP-seq file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_shapes/broad/treat.bed']\n# control file = ['/scratch/mdra00001/MACS3-rust/tests/fixtures/se_shapes/broad/ctrl.bed']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:27:05: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:27:05: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1 tag size is determined as 148 bps \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1 tag size = 148.0 \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1  total tags in treatment: 6000 \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1  total tags in control: 250 \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #4 Write output xls file... /scratch/mdra00001/MACS3-rust/tests/golden/se_shapes/broad/keepdup_all/broad_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #4 Write peak in narrowPeak format file... /scratch/mdra00001/MACS3-rust/tests/golden/se_shapes/broad/keepdup_all/broad_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #4 Write summits bed file... /scratch/mdra00001/MACS3-rust/tests/golden/se_shapes/broad/keepdup_all/broad_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] Done! \n",
+  "stderr_tail": "INFO  @ 30 Sep 2026 12:27:05: [32 MB] \n# Command line: callpeak -n broad_keepdup_all -g 48200 --outdir <ROOT>/tests/golden/se_shapes/broad/keepdup_all -t <ROOT>/tests/fixtures/se_shapes/broad/treat.bed -c <ROOT>/tests/fixtures/se_shapes/broad/ctrl.bed -f BED --nomodel --extsize 200 --keep-dup all\n# ARGUMENTS LIST:\n# name = broad_keepdup_all\n# format = BED\n# ChIP-seq file = ['<ROOT>/tests/fixtures/se_shapes/broad/treat.bed']\n# control file = ['<ROOT>/tests/fixtures/se_shapes/broad/ctrl.bed']\n# effective genome size = 4.82e+04\n# band width = 300\n# model fold = [5, 50]\n# qvalue cutoff = 5.00e-02\n# The maximum gap between significant sites is assigned as the read length/tag size.\n# The minimum length of peaks is assigned as the predicted fragment length \"d\".\n# Larger dataset will be scaled towards smaller dataset.\n# Range for calculating regional lambda is: 1000 bps and 10000 bps\n# Broad region calling is off\n# Paired-End mode is off\n \nINFO  @ 30 Sep 2026 12:27:05: [32 MB] #1 read tag files... \nINFO  @ 30 Sep 2026 12:27:05: [32 MB] #1 read treatment tags... \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1.2 read input tags... \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1 tag size is determined as 148 bps \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1 tag size = 148.0 \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1  total tags in treatment: 6000 \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1  total tags in control: 250 \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #1 finished! \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #2 Build Peak Model... \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #2 Skipped... \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #2 Use 200 as fragment length \nINFO  @ 30 Sep 2026 12:27:05: [34 MB] #3 Call peaks... \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #3 Pre-compute pvalue-qvalue table... \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #3 Call peaks for each chromosome... \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #4 Write output xls file... <ROOT>/tests/golden/se_shapes/broad/keepdup_all/broad_keepdup_all_peaks.xls \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #4 Write peak in narrowPeak format file... <ROOT>/tests/golden/se_shapes/broad/keepdup_all/broad_keepdup_all_peaks.narrowPeak \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] #4 Write summits bed file... <ROOT>/tests/golden/se_shapes/broad/keepdup_all/broad_keepdup_all_summits.bed \nINFO  @ 30 Sep 2026 12:27:05: [35 MB] Done! \n",
   "stdout_tail": "",
   "variant": "keepdup_all",
   "wall_seconds": 0.179
