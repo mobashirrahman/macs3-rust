@@ -49,8 +49,36 @@ Real CTCF ChIP-seq, 5 M treatment + 5 M control reads, median of 3 runs:
 | Single-end, no control | 22.9 s / 169 MB | 6.7 s / 88 MB | **3.4×** | 52% |
 | Paired-end BAM | 1.41 s / 80 MB | 0.41 s / 31 MB | **3.4×** | 39% |
 
-The speed target (≥3×) is met on every workload. The memory target (≤50% of
-upstream) is met for paired-end only; single-end is still 2–12 points above it.
+The speed target (≥3×) is met on every `callpeak` workload. The memory target
+(≤50% of upstream) is met for paired-end only; single-end is still 2–12 points
+above it.
+
+The same host, on the other subcommands in the release benchmark matrix:
+
+| workload | MACS3 3.0.5 | macs3-rs | speedup | peak memory |
+|---|---|---|---|---|
+| `pileup`, single-end | 7.6 s / 137 MB | 3.3 s / 35 MB | 2.3× | **25%** |
+| `filterdup` | 5.5 s / 137 MB | 1.6 s / 23 MB | 3.4× | **17%** |
+| `randsample` | 4.2 s / 137 MB | 1.5 s / 53 MB | 2.8× | **38%** |
+| `bdgpeakcall` | 7.3 s / 106 MB | 1.5 s / 81 MB | 4.9× | 76% |
+| `bdgopt -m p2q` | 10.8 s / 107 MB | 2.1 s / 117 MB | 5.1× | 109% |
+| `cmbreps -m max` | 49.7 s / 401 MB | 8.8 s / 405 MB | 5.6× | 101% |
+| `bdgcmp -m ppois` | 60.6 s / 625 MB | 21.4 s / 598 MB | 2.8× | 96% |
+
+Two honest notes on the matrix. The speed target is **missed** on `pileup`
+(2.3×), `randsample` (2.8×) and `bdgcmp` (2.8×) — these are I/O- and
+parse-bound, not compute-bound. The memory target is missed on the `bdg`
+family, where both sides hold the parsed bedGraph and the port is at parity
+(`cmbreps` 101%, `bdgcmp` 96%), so halving it needs a streaming two-file merge
+rather than a smaller structure.
+
+Where the single-end memory goes (measured): ~43 MB is the two resident
+position arrays, then ~86 MB for one chromosome's signal build plus the q-table
+histogram — the parallel window's working set. Every writer streams; holding
+whole files as strings is what made `pileup` (313 MB), `filterdup` (158 MB),
+`cmbreps` (1096 MB) and `bdgcmp` (1383 MB) *worse* than upstream before it was
+fixed, and capping glibc's per-thread malloc arenas to one by re-exec saved a
+further 25% (237 MB against 177 MB at the same wall clock).
 
 ## Quick start
 
