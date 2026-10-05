@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Regenerate the README figures in docs/figures/ (light and dark SVG pairs).
 
-The numbers are the measured ones from the README's performance table (real CTCF
-ChIP-seq, 5.0 M treatment + 5.0 M control reads, median of 3, release build) and
-from `oracle/run_golden.sh`. Edit them here when either is re-measured.
+The benchmark numbers are the medians printed by `scripts/bench_real.py` (real
+CTCF ChIP-seq, 5.0 M treatment + 5.0 M control reads, three runs per side); the
+parity numbers are from `oracle/run_golden.sh`. Edit them here when re-measured.
 
 Usage:  python3 scripts/make_figures.py
 """
@@ -13,18 +13,25 @@ OUT = Path(__file__).resolve().parent.parent / "docs" / "figures"
 
 # (workload, macs3 seconds, macs3-rs seconds, macs3 MB, macs3-rs MB)
 BENCH = [
-    ("Single-end, bedGraph out (-B)", 42.7, 11.9, 304, 186),
-    ("Single-end, --SPMR", 32.3, 8.1, 299, 173),
-    ("Single-end, model mode", 44.4, 11.9, 296, 183),
-    ("Single-end, no control", 22.9, 6.7, 169, 88),
-    ("Paired-end BAM", 1.41, 0.41, 80, 31),
+    ("callpeak, single-end -B", 42.9, 12.6, 294, 165),
+    ("callpeak, single-end --SPMR", 32.4, 8.4, 303, 139),
+    ("callpeak, single-end --broad", 38.0, 10.5, 291, 152),
+    ("callpeak, no control", 17.3, 4.6, 165, 76),
+    ("callpeak, paired-end BAM", 1.22, 0.34, 80, 26),
+    ("pileup", 7.5, 3.2, 134, 32),
+    ("filterdup", 5.4, 1.56, 134, 22),
+    ("randsample", 4.5, 1.71, 134, 94),
+    ("bdgpeakcall", 20.1, 4.5, 225, 200),
+    ("bdgopt -m p2q", 29.1, 5.9, 231, 234),
+    ("cmbreps -m max", 43.8, 10.0, 391, 194),
+    ("bdgcmp -m ppois", 56.6, 18.7, 611, 195),
 ]
 
 TILES = [
     ("7,204 / 7,204", "recorded runs byte-identical"),
     ("22,456 / 22,456", "output files byte-identical"),
     ("0", "exit-status mismatches"),
-    ("3.4–4.0×", "faster on real ChIP-seq"),
+    ("2.3–4.9×", "faster across 12 workloads"),
 ]
 
 THEMES = {
@@ -34,6 +41,7 @@ THEMES = {
                  grid="#383835", ref="#8a8983", bar="#3987e5"),
 }
 
+TOP, PITCH = 96, 27
 FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
 
 
@@ -45,7 +53,7 @@ def bar(x, y, w, h, fill):
 
 
 def panel(t, x0, width, title, subtitle, values, vmax, ticks, fmt, refs):
-    top, pitch, h = 96, 34, 16
+    top, pitch, h = TOP, PITCH, 14
     scale = width / vmax
     bottom = top + pitch * len(values) - (pitch - h) + 10
     out = [f'<text x="{x0}" y="40" font-size="15" font-weight="600" fill="{t["text"]}">{title}</text>',
@@ -64,7 +72,7 @@ def panel(t, x0, width, title, subtitle, values, vmax, ticks, fmt, refs):
         y = top + i * pitch
         out.append(bar(x0, y, v * scale, h, t["bar"]))
         # Value at the tip, over a surface-coloured halo so a reference line never cuts it.
-        label = f'x="{x0 + v * scale + 7:.1f}" y="{y + 12.5}" font-size="12.5" font-weight="600"'
+        label = f'x="{x0 + v * scale + 7:.1f}" y="{y + 11.5}" font-size="12.5" font-weight="600"'
         out.append(f'<text {label} fill="{t["surface"]}" stroke="{t["surface"]}" stroke-width="5" '
                    f'stroke-linejoin="round">{fmt(v)}</text>')
         out.append(f'<text {label} fill="{t["text"]}">{fmt(v)}</text>')
@@ -72,16 +80,17 @@ def panel(t, x0, width, title, subtitle, values, vmax, ticks, fmt, refs):
 
 
 def performance(t):
-    W, H, label_x, a_x, b_x, pw = 880, 300, 24, 232, 572, 270
+    W, label_x, a_x, b_x, pw = 880, 24, 232, 572, 270
+    H = TOP + PITCH * len(BENCH) + 36
     rows = []
     for i, (name, *_rest) in enumerate(BENCH):
-        rows.append(f'<text x="{label_x}" y="{96 + i * 34 + 12.5}" font-size="12.5" fill="{t["text"]}">{name}</text>')
+        rows.append(f'<text x="{label_x}" y="{TOP + i * PITCH + 11.5}" font-size="12.5" fill="{t["text"]}">{name}</text>')
     speed = [m / r for _, m, r, _, _ in BENCH]
     mem = [100 * r / m for _, _, _, m, r in BENCH]
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="{FONT}" role="img" aria-label="macs3-rs is 3.4 to 4.0 times faster than MACS3 and uses 39 to 62 percent of its peak memory across five callpeak workloads">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="{FONT}" role="img" aria-label="macs3-rs is 2.3 to 4.9 times faster than MACS3 and uses 16 to 101 percent of its peak memory across twelve workloads">
 <rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="10" fill="{t["surface"]}" stroke="{t["border"]}"/>
 {chr(10).join(rows)}
-{panel(t, a_x, pw, "Speedup over MACS3", "wall clock, higher is better", speed, 5, [0, 2, 4], lambda v: f"{v:.1f}×" if v % 1 else f"{v:.0f}×", [(1, "MACS3"), (3, "target")])}
+{panel(t, a_x, pw, "Speedup over MACS3", "wall clock, higher is better", speed, 6, [0, 2, 4, 6], lambda v: f"{v:.1f}×" if v % 1 else f"{v:.0f}×", [(1, "MACS3"), (3, "target")])}
 {panel(t, b_x, pw, "Peak memory vs MACS3", "share of upstream RSS, lower is better", mem, 125, [0, 25, 75], lambda v: f"{v:.0f}%", [(50, "target"), (100, "MACS3")])}
 </svg>
 '''

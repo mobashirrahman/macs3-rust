@@ -65,7 +65,7 @@ run_case() {
 		ra+=("${a//@OUT@/$r}")
 	done
 
-	PYTHONPATH="$ORACLE_SRC" timeout 900 python3 "$ORACLE_SRC/bin/macs3" \
+	PYTHONPATH="$ORACLE_SRC" timeout 900 "$ORACLE_PY" "$ORACLE_SRC/bin/macs3" \
 		"$sub" "${ua[@]}" >"$WORK/$name.up.log" 2>&1
 	local urc=$?
 	"$OURS" "$sub" "${ra[@]}" >"$WORK/$name.rs.log" 2>&1
@@ -101,6 +101,12 @@ run_case() {
 LOCK="$ROOT/oracle/ENV.lock"
 [ ! -f "$ROOT/oracle/ENV.provisioned" ] || LOCK="$ROOT/oracle/ENV.provisioned"
 ORACLE_SRC="${MACS3_SRC:-$(dirname "$(dirname "$(grep '^MACS3_PATH=' "$LOCK" | cut -d= -f2-)")")}"
+# Run upstream under the pinned interpreter when one is provisioned: `*_model.r` is
+# only byte-identical against the pinned NumPy, and a bare `python3` is whatever the
+# host has first on PATH.
+ORACLE_PY="python3"
+VENV="$(grep '^MACS3_VENV=' "$LOCK" | cut -d= -f2-)"
+[ -z "$VENV" ] || [ ! -x "$VENV/bin/python" ] || ORACLE_PY="$VENV/bin/python"
 
 echo "predictd / randsample oracle comparison"
 

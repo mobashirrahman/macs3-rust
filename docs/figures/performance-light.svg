@@ -1,62 +1,113 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" width="880" height="300" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" role="img" aria-label="macs3-rs is 3.4 to 4.0 times faster than MACS3 and uses 39 to 62 percent of its peak memory across five callpeak workloads">
-<rect x="0.5" y="0.5" width="879" height="299" rx="10" fill="#fcfcfb" stroke="#e6e5e0"/>
-<text x="24" y="108.5" font-size="12.5" fill="#0b0b0b">Single-end, bedGraph out (-B)</text>
-<text x="24" y="142.5" font-size="12.5" fill="#0b0b0b">Single-end, --SPMR</text>
-<text x="24" y="176.5" font-size="12.5" fill="#0b0b0b">Single-end, model mode</text>
-<text x="24" y="210.5" font-size="12.5" fill="#0b0b0b">Single-end, no control</text>
-<text x="24" y="244.5" font-size="12.5" fill="#0b0b0b">Paired-end BAM</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 456" width="880" height="456" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" role="img" aria-label="macs3-rs is 2.3 to 4.9 times faster than MACS3 and uses 16 to 101 percent of its peak memory across twelve workloads">
+<rect x="0.5" y="0.5" width="879" height="455" rx="10" fill="#fcfcfb" stroke="#e6e5e0"/>
+<text x="24" y="107.5" font-size="12.5" fill="#0b0b0b">callpeak, single-end -B</text>
+<text x="24" y="134.5" font-size="12.5" fill="#0b0b0b">callpeak, single-end --SPMR</text>
+<text x="24" y="161.5" font-size="12.5" fill="#0b0b0b">callpeak, single-end --broad</text>
+<text x="24" y="188.5" font-size="12.5" fill="#0b0b0b">callpeak, no control</text>
+<text x="24" y="215.5" font-size="12.5" fill="#0b0b0b">callpeak, paired-end BAM</text>
+<text x="24" y="242.5" font-size="12.5" fill="#0b0b0b">pileup</text>
+<text x="24" y="269.5" font-size="12.5" fill="#0b0b0b">filterdup</text>
+<text x="24" y="296.5" font-size="12.5" fill="#0b0b0b">randsample</text>
+<text x="24" y="323.5" font-size="12.5" fill="#0b0b0b">bdgpeakcall</text>
+<text x="24" y="350.5" font-size="12.5" fill="#0b0b0b">bdgopt -m p2q</text>
+<text x="24" y="377.5" font-size="12.5" fill="#0b0b0b">cmbreps -m max</text>
+<text x="24" y="404.5" font-size="12.5" fill="#0b0b0b">bdgcmp -m ppois</text>
 <text x="232" y="40" font-size="15" font-weight="600" fill="#0b0b0b">Speedup over MACS3</text>
 <text x="232" y="60" font-size="12.5" fill="#52514e">wall clock, higher is better</text>
-<line x1="232.0" y1="88" x2="232.0" y2="258" stroke="#e6e5e0"/>
-<text x="232.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">0×</text>
-<line x1="340.0" y1="88" x2="340.0" y2="258" stroke="#e6e5e0"/>
-<text x="340.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">2×</text>
-<line x1="448.0" y1="88" x2="448.0" y2="258" stroke="#e6e5e0"/>
-<text x="448.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">4×</text>
-<line x1="286.0" y1="88" x2="286.0" y2="258" stroke="#8a8983" stroke-width="1.5"/>
-<text x="286.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">MACS3</text>
-<line x1="394.0" y1="88" x2="394.0" y2="258" stroke="#8a8983" stroke-width="1.5"/>
-<text x="394.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">target</text>
-<path d="M232,96h189.8a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-189.8z" fill="#2a78d6"/>
-<text x="432.8" y="108.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.6×</text>
-<text x="432.8" y="108.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.6×</text>
-<path d="M232,130h211.3a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-211.3z" fill="#2a78d6"/>
-<text x="454.3" y="142.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">4.0×</text>
-<text x="454.3" y="142.5" font-size="12.5" font-weight="600" fill="#0b0b0b">4.0×</text>
-<path d="M232,164h197.5a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-197.5z" fill="#2a78d6"/>
-<text x="440.5" y="176.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.7×</text>
-<text x="440.5" y="176.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.7×</text>
-<path d="M232,198h180.6a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-180.6z" fill="#2a78d6"/>
-<text x="423.6" y="210.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.4×</text>
-<text x="423.6" y="210.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.4×</text>
-<path d="M232,232h181.7a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-181.7z" fill="#2a78d6"/>
-<text x="424.7" y="244.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.4×</text>
-<text x="424.7" y="244.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.4×</text>
+<line x1="232.0" y1="88" x2="232.0" y2="417" stroke="#e6e5e0"/>
+<text x="232.0" y="433" font-size="11.5" text-anchor="middle" fill="#52514e">0×</text>
+<line x1="322.0" y1="88" x2="322.0" y2="417" stroke="#e6e5e0"/>
+<text x="322.0" y="433" font-size="11.5" text-anchor="middle" fill="#52514e">2×</text>
+<line x1="412.0" y1="88" x2="412.0" y2="417" stroke="#e6e5e0"/>
+<text x="412.0" y="433" font-size="11.5" text-anchor="middle" fill="#52514e">4×</text>
+<line x1="502.0" y1="88" x2="502.0" y2="417" stroke="#e6e5e0"/>
+<text x="502.0" y="433" font-size="11.5" text-anchor="middle" fill="#52514e">6×</text>
+<line x1="277.0" y1="88" x2="277.0" y2="417" stroke="#8a8983" stroke-width="1.5"/>
+<text x="277.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">MACS3</text>
+<line x1="367.0" y1="88" x2="367.0" y2="417" stroke="#8a8983" stroke-width="1.5"/>
+<text x="367.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">target</text>
+<path d="M232,96h149.2a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-149.2z" fill="#2a78d6"/>
+<text x="392.2" y="107.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.4×</text>
+<text x="392.2" y="107.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.4×</text>
+<path d="M232,123h169.6a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-169.6z" fill="#2a78d6"/>
+<text x="412.6" y="134.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.9×</text>
+<text x="412.6" y="134.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.9×</text>
+<path d="M232,150h158.9a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-158.9z" fill="#2a78d6"/>
+<text x="401.9" y="161.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.6×</text>
+<text x="401.9" y="161.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.6×</text>
+<path d="M232,177h165.2a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-165.2z" fill="#2a78d6"/>
+<text x="408.2" y="188.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.8×</text>
+<text x="408.2" y="188.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.8×</text>
+<path d="M232,204h157.5a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-157.5z" fill="#2a78d6"/>
+<text x="400.5" y="215.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.6×</text>
+<text x="400.5" y="215.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.6×</text>
+<path d="M232,231h101.5a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-101.5z" fill="#2a78d6"/>
+<text x="344.5" y="242.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">2.3×</text>
+<text x="344.5" y="242.5" font-size="12.5" font-weight="600" fill="#0b0b0b">2.3×</text>
+<path d="M232,258h151.8a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-151.8z" fill="#2a78d6"/>
+<text x="394.8" y="269.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.5×</text>
+<text x="394.8" y="269.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.5×</text>
+<path d="M232,285h114.4a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-114.4z" fill="#2a78d6"/>
+<text x="357.4" y="296.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">2.6×</text>
+<text x="357.4" y="296.5" font-size="12.5" font-weight="600" fill="#0b0b0b">2.6×</text>
+<path d="M232,312h197.0a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-197.0z" fill="#2a78d6"/>
+<text x="440.0" y="323.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">4.5×</text>
+<text x="440.0" y="323.5" font-size="12.5" font-weight="600" fill="#0b0b0b">4.5×</text>
+<path d="M232,339h217.9a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-217.9z" fill="#2a78d6"/>
+<text x="460.9" y="350.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">4.9×</text>
+<text x="460.9" y="350.5" font-size="12.5" font-weight="600" fill="#0b0b0b">4.9×</text>
+<path d="M232,366h193.1a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-193.1z" fill="#2a78d6"/>
+<text x="436.1" y="377.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">4.4×</text>
+<text x="436.1" y="377.5" font-size="12.5" font-weight="600" fill="#0b0b0b">4.4×</text>
+<path d="M232,393h132.2a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-132.2z" fill="#2a78d6"/>
+<text x="375.2" y="404.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.0×</text>
+<text x="375.2" y="404.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.0×</text>
 <text x="572" y="40" font-size="15" font-weight="600" fill="#0b0b0b">Peak memory vs MACS3</text>
 <text x="572" y="60" font-size="12.5" fill="#52514e">share of upstream RSS, lower is better</text>
-<line x1="572.0" y1="88" x2="572.0" y2="258" stroke="#e6e5e0"/>
-<text x="572.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">0%</text>
-<line x1="626.0" y1="88" x2="626.0" y2="258" stroke="#e6e5e0"/>
-<text x="626.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">25%</text>
-<line x1="734.0" y1="88" x2="734.0" y2="258" stroke="#e6e5e0"/>
-<text x="734.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">75%</text>
-<line x1="680.0" y1="88" x2="680.0" y2="258" stroke="#8a8983" stroke-width="1.5"/>
+<line x1="572.0" y1="88" x2="572.0" y2="417" stroke="#e6e5e0"/>
+<text x="572.0" y="433" font-size="11.5" text-anchor="middle" fill="#52514e">0%</text>
+<line x1="626.0" y1="88" x2="626.0" y2="417" stroke="#e6e5e0"/>
+<text x="626.0" y="433" font-size="11.5" text-anchor="middle" fill="#52514e">25%</text>
+<line x1="734.0" y1="88" x2="734.0" y2="417" stroke="#e6e5e0"/>
+<text x="734.0" y="433" font-size="11.5" text-anchor="middle" fill="#52514e">75%</text>
+<line x1="680.0" y1="88" x2="680.0" y2="417" stroke="#8a8983" stroke-width="1.5"/>
 <text x="680.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">target</text>
-<line x1="788.0" y1="88" x2="788.0" y2="258" stroke="#8a8983" stroke-width="1.5"/>
+<line x1="788.0" y1="88" x2="788.0" y2="417" stroke="#8a8983" stroke-width="1.5"/>
 <text x="788.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">MACS3</text>
-<path d="M572,96h128.2a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-128.2z" fill="#2a78d6"/>
-<text x="711.2" y="108.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">61%</text>
-<text x="711.2" y="108.5" font-size="12.5" font-weight="600" fill="#0b0b0b">61%</text>
-<path d="M572,130h121.0a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-121.0z" fill="#2a78d6"/>
-<text x="704.0" y="142.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">58%</text>
-<text x="704.0" y="142.5" font-size="12.5" font-weight="600" fill="#0b0b0b">58%</text>
-<path d="M572,164h129.5a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-129.5z" fill="#2a78d6"/>
-<text x="712.5" y="176.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">62%</text>
-<text x="712.5" y="176.5" font-size="12.5" font-weight="600" fill="#0b0b0b">62%</text>
-<path d="M572,198h108.5a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-108.5z" fill="#2a78d6"/>
-<text x="691.5" y="210.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">52%</text>
-<text x="691.5" y="210.5" font-size="12.5" font-weight="600" fill="#0b0b0b">52%</text>
-<path d="M572,232h79.7a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-79.7z" fill="#2a78d6"/>
-<text x="662.7" y="244.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">39%</text>
-<text x="662.7" y="244.5" font-size="12.5" font-weight="600" fill="#0b0b0b">39%</text>
+<path d="M572,96h117.2a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-117.2z" fill="#2a78d6"/>
+<text x="700.2" y="107.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">56%</text>
+<text x="700.2" y="107.5" font-size="12.5" font-weight="600" fill="#0b0b0b">56%</text>
+<path d="M572,123h95.1a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-95.1z" fill="#2a78d6"/>
+<text x="678.1" y="134.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">46%</text>
+<text x="678.1" y="134.5" font-size="12.5" font-weight="600" fill="#0b0b0b">46%</text>
+<path d="M572,150h108.8a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-108.8z" fill="#2a78d6"/>
+<text x="691.8" y="161.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">52%</text>
+<text x="691.8" y="161.5" font-size="12.5" font-weight="600" fill="#0b0b0b">52%</text>
+<path d="M572,177h95.5a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-95.5z" fill="#2a78d6"/>
+<text x="678.5" y="188.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">46%</text>
+<text x="678.5" y="188.5" font-size="12.5" font-weight="600" fill="#0b0b0b">46%</text>
+<path d="M572,204h66.2a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-66.2z" fill="#2a78d6"/>
+<text x="649.2" y="215.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">32%</text>
+<text x="649.2" y="215.5" font-size="12.5" font-weight="600" fill="#0b0b0b">32%</text>
+<path d="M572,231h47.6a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-47.6z" fill="#2a78d6"/>
+<text x="630.6" y="242.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">24%</text>
+<text x="630.6" y="242.5" font-size="12.5" font-weight="600" fill="#0b0b0b">24%</text>
+<path d="M572,258h31.5a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-31.5z" fill="#2a78d6"/>
+<text x="614.5" y="269.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">16%</text>
+<text x="614.5" y="269.5" font-size="12.5" font-weight="600" fill="#0b0b0b">16%</text>
+<path d="M572,285h147.5a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-147.5z" fill="#2a78d6"/>
+<text x="730.5" y="296.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">70%</text>
+<text x="730.5" y="296.5" font-size="12.5" font-weight="600" fill="#0b0b0b">70%</text>
+<path d="M572,312h188.0a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-188.0z" fill="#2a78d6"/>
+<text x="771.0" y="323.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">89%</text>
+<text x="771.0" y="323.5" font-size="12.5" font-weight="600" fill="#0b0b0b">89%</text>
+<path d="M572,339h214.8a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-214.8z" fill="#2a78d6"/>
+<text x="797.8" y="350.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">101%</text>
+<text x="797.8" y="350.5" font-size="12.5" font-weight="600" fill="#0b0b0b">101%</text>
+<path d="M572,366h103.2a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-103.2z" fill="#2a78d6"/>
+<text x="686.2" y="377.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">50%</text>
+<text x="686.2" y="377.5" font-size="12.5" font-weight="600" fill="#0b0b0b">50%</text>
+<path d="M572,393h64.9a4,4 0 0 1 4,4v6a4,4 0 0 1 -4,4h-64.9z" fill="#2a78d6"/>
+<text x="647.9" y="404.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">32%</text>
+<text x="647.9" y="404.5" font-size="12.5" font-weight="600" fill="#0b0b0b">32%</text>
 </svg>

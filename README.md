@@ -2,11 +2,11 @@
 
 A Rust reimplementation of [MACS3](https://github.com/macs3-project/MACS), the
 standard peak caller for ChIP-seq and ATAC-seq. Same command line, **byte-identical
-output**, 3.4–4.0× faster.
+output** on the recorded `callpeak` corpus, 2.3–4.9× faster.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/figures/parity-dark.svg">
-  <img src="docs/figures/parity-light.svg" alt="7,204 of 7,204 recorded runs byte-identical; 22,456 of 22,456 output files byte-identical; 0 exit-status mismatches; 3.4 to 4.0 times faster on real ChIP-seq">
+  <img src="docs/figures/parity-light.svg" alt="7,204 of 7,204 recorded runs byte-identical; 22,456 of 22,456 output files byte-identical; 0 exit-status mismatches; 2.3 to 4.9 times faster across 12 workloads">
 </picture>
 
 > **Development project.** All 14 subcommands are implemented and the recorded
@@ -23,10 +23,17 @@ fourth decimal is a different answer.
 |---|---|
 | `callpeak` flag matrix, 7,204 runs across 425 fixtures and 19 option variants | **22,456 / 22,456 files byte-identical** |
 | Invalid invocations, 481 cases | **0 exit-status mismatches** |
-| Real CTCF data: single-end, BEDPE, BAMPE | peaks, summits and signal tracks byte-identical |
-| `hmmratac` on yeast ATAC-seq | accessible regions identical (Jaccard 1.0) |
-| `callvar`, with and without assembly | VCF records identical |
-| 1 thread vs 32 threads | byte-identical output |
+| `callpeak` on 5 M + 5 M real CTCF reads, five modes | 17 / 17 files byte-identical |
+| `pileup`, `bdgcmp`, `cmbreps`, `bdgopt`, `bdgpeakcall` on the same data | 5 / 5 files byte-identical |
+| MACS3's own `cmdlinetest` suite, 14 subcommands | passes; 153 / 163 output files byte-identical |
+| `hmmratac` on yeast ATAC-seq | 1,605 / 1,605 accessible regions identical |
+| `callvar`, assembly off / auto / on | 22 / 22, 16 / 16, 15 / 15 VCF records identical |
+| 1 thread vs 32 threads, all 7,685 recorded runs | byte-identical output |
+
+The 10 `cmdlinetest` files that differ: seven `hmmratac` model files agree to
+2 × 10⁻¹⁰ but not to the byte, one training-data dump is numerically equal, and
+two outputs on a 50,000-contig input depend on MACS3's unordered chromosome
+iteration.
 
 Getting there meant reproducing upstream's arithmetic exactly: float32 widths,
 NumPy's summation order, its Mersenne Twister stream, and a number of upstream
@@ -36,62 +43,36 @@ bugs. The [findings log](docs/upstream-findings.md) records each one.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/figures/performance-dark.svg">
-  <img src="docs/figures/performance-light.svg" alt="Speedup over MACS3 and peak memory relative to MACS3 for five callpeak workloads">
+  <img src="docs/figures/performance-light.svg" alt="Speedup over MACS3 and peak memory relative to MACS3 for twelve workloads">
 </picture>
 
-Real CTCF ChIP-seq, 5.0 M treatment + 5.0 M control reads, human `hs` genome
-size, release build, single run:
-
-| `callpeak` workload | MACS3 3.0.5 | macs3-rs | speedup | peak memory |
-|---|---|---|---|---|
-| Single-end, bedGraph out (`-B`) | 44.3 s / 301 MB | 12.9 s / 169 MB | **3.4×** | 56% |
-| Single-end, `--SPMR` | 32.8 s / 303 MB | 8.7 s / 142 MB | **3.8×** | **47%** |
-| Single-end, broad | 51.7 s / 309 MB | 14.9 s / 168 MB | **3.5×** | 54% |
-| Single-end, no control | 23.1 s / 173 MB | 7.2 s / 87 MB | **3.2×** | **50%** |
-| Paired-end BAM | 1.41 s / 80 MB | 0.41 s / 31 MB | **3.4×** | **39%** |
-
-The same host, on the rest of the release benchmark matrix:
+Real CTCF ChIP-seq, 5 M treatment + 5 M control reads, median of 3 runs on a
+Ryzen 7 3700X. Reproduce with [`scripts/bench_real.py`](scripts/bench_real.py).
 
 | workload | MACS3 3.0.5 | macs3-rs | speedup | peak memory |
 |---|---|---|---|---|
-| `pileup`, single-end | 7.8 s / 138 MB | 3.4 s / 33 MB | 2.3× | **24%** |
-| `filterdup` | 5.7 s / 138 MB | 1.6 s / 23 MB | 3.6× | **17%** |
-| `randsample` | 4.2 s / 138 MB | 1.5 s / 52 MB | 2.8× | **37%** |
-| `bdgpeakcall` | 7.5 s / 107 MB | 1.7 s / 81 MB | 4.4× | 76% |
-| `bdgopt -m p2q` | 10.9 s / 106 MB | 2.4 s / 117 MB | 4.6× | 110% |
-| `cmbreps -m max` | 44.6 s / 401 MB | 10.1 s / 199 MB | 4.4× | **50%** |
-| `bdgcmp -m ppois` | 60.4 s / 626 MB | 19.6 s / 199 MB | 3.1× | **32%** |
+| `callpeak`, single-end `-B` | 42.9 s / 294 MB | 12.6 s / 165 MB | **3.4×** | 56% |
+| `callpeak`, single-end `--SPMR` | 32.4 s / 303 MB | 8.4 s / 139 MB | **3.9×** | **46%** |
+| `callpeak`, single-end `--broad` | 38.0 s / 291 MB | 10.5 s / 152 MB | **3.6×** | 52% |
+| `callpeak`, no control | 17.3 s / 165 MB | 4.6 s / 76 MB | **3.8×** | **46%** |
+| `callpeak`, paired-end BAM | 1.22 s / 80 MB | 0.34 s / 26 MB | **3.6×** | **32%** |
+| `pileup` | 7.5 s / 134 MB | 3.2 s / 32 MB | 2.3× | **24%** |
+| `filterdup` | 5.4 s / 134 MB | 1.56 s / 22 MB | **3.5×** | **16%** |
+| `randsample` | 4.5 s / 134 MB | 1.71 s / 94 MB | 2.6× | 70% |
+| `bdgpeakcall` | 20.1 s / 225 MB | 4.5 s / 200 MB | **4.5×** | 89% |
+| `bdgopt -m p2q` | 29.1 s / 231 MB | 5.9 s / 234 MB | **4.9×** | 101% |
+| `cmbreps -m max` | 43.8 s / 391 MB | 10.0 s / 194 MB | **4.4×** | **50%** |
+| `bdgcmp -m ppois` | 56.6 s / 611 MB | 18.7 s / 195 MB | **3.0×** | **32%** |
 
-Two honest notes. The speed target (≥3×) is **missed** on `pileup` (2.3×) and
-`randsample` (2.8×), which are I/O-bound, not compute-bound. The memory target
-(≤50%) is met on seven of the eleven workloads; `callpeak -B`/`--broad` sit at
-54–56%, and the two still above the line are input-bound: `bdgpeakcall` (76%)
-and `bdgopt` (110%) each parse the same bedGraph upstream parses, and that
-parse *is* the peak (72 MB of the 107 MB upstream total), so halving it means
-streaming the input, not shrinking the output.
+Bold marks a met target: at least 3× faster, at most 50% of MACS3's memory.
 
-Where the memory goes, measured:
+- **Speed:** met on 10 of 12. `pileup` and `randsample` miss it.
+- **Memory:** met on 7 of 12. `callpeak -B` and `--broad` are just over;
+  `randsample`, `bdgpeakcall` and `bdgopt` hold their whole parsed input.
 
-* `callpeak` SE: ~43 MB is the two resident position arrays, then one
-  chromosome's signal build plus the q-table histogram — the parallel window's
-  working set. `CHUNK` chromosomes are built at once and the window is the
-  memory/speed dial.
-* the bedGraph and spool bodies are streamed to per-chromosome temp files and
-  concatenated, so `-B` no longer buffers a chromosome's ~38 MB of text.
-* every writer streams. Holding whole files as strings is what made `pileup`
-  (313 MB), `filterdup` (158 MB), `cmbreps` (1096 MB) and `bdgcmp` (1383 MB)
-  *worse* than upstream; all are fixed.
-* `bdgcmp` and `cmbreps` no longer build their whole-genome result. The
-  bedGraph merge emits one row per breakpoint of *either* input — 25 M rows on
-  the benchmark, more than both inputs — and every scorer but `qpois` is a pure
-  function of `(treat, ctrl)`, so the row is scored and written during the walk
-  instead. `cmbreps`' combined track is likewise written as it is produced.
-  Together those took `bdgcmp` from 598 MB to 199 MB and `cmbreps` from 376 MB
-  to 199 MB.
-* `MALLOC_ARENA_MAX=1` and `MALLOC_TRIM_THRESHOLD_=0` are applied by re-exec
-  (glibc reads them before `main`). The arena cap stops per-thread retention;
-  trimming on free returns the chunked passes' dropped chromosomes to the OS
-  instead of letting RSS creep up across the pass. A user-set value wins.
+Streaming output instead of buffering it accounts for the largest gains:
+`bdgcmp` fell from 1,383 MB to 195 MB and `pileup` from 314 MB to 32 MB.
+[Where the memory goes](docs/compatibility.md#where-the-memory-goes) has the breakdown.
 
 ## Quick start
 
@@ -106,12 +87,17 @@ must a drop-in replacement.
 
 ## Status
 
-- **Open:** single-end peak memory, as above.
-- **Open:** the byte-parity corpus covers `callpeak`; the other 13 commands are
-  checked by smaller command-specific comparisons.
-- **Declared deviations:** seeded `randsample` on multiple contigs (MACS3 itself
-  is not repeatable there), and `callvar` still calls the original fermi-lite
-  assembler through a small C bridge.
+Byte parity is established for `callpeak`. The other 13 commands are checked by
+smaller comparisons; running them on the 5 M-read data found three output
+differences in `bdgpeakcall`, `bdgopt` and `bdgcmp`, all now fixed and covered
+by tests.
+
+- **Known difference:** on multi-chromosome input `filterdup` writes the same
+  rows in a different chromosome order, and seeded `randsample` picks different
+  reads. MACS3's own output is not repeatable in either case.
+- **Open:** the two speed and five memory targets above.
+- **Open:** `callvar` still calls the original fermi-lite assembler through a
+  small C bridge.
 
 Details: [compatibility by command](docs/compatibility.md) ·
 [current status](docs/status.md) · [porting plan](PORTING_PLAN.md)
@@ -124,7 +110,7 @@ Details: [compatibility by command](docs/compatibility.md) ·
 vendored, so the reference cannot be edited to make a test pass.
 
 ```sh
-cargo test --workspace     # 753 tests
+cargo test --workspace     # 767 tests
 oracle/run_golden.sh       # replay every recorded run and compare bytes
 ```
 

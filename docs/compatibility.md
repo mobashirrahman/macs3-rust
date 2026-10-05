@@ -60,16 +60,27 @@ coverage still vary; see [status](status.md). Parser details:
   `bam_fw_binary_parse`; BAMPE fragments use `abs(TLEN)` with leftmost-only
   proper pairs, matching `bampe_pe_binary_parse`. No `.bai` index is required.
 
-## Where the single-end memory goes
+## Where the memory goes
 
-Measured on the 5 M-read CTCF fixture:
-
-* ~43 MB is the two resident u32 position arrays (10 M reads);
-* ~86 MB is one chromosome's signal build plus the q-table histogram, which is
-  the parallel window's working set: `CHUNK` chromosomes are built at once and the
-  window is the memory/speed dial. `CHUNK = 2` is the shipping setting; `CHUNK = 1`
-  reaches 0.54x at the cost of the `-B` workload's speed (2.8x);
-* the bedGraph and spool bodies are **streamed to per-chromosome temp files** and
-  concatenated at the end, so `-B` no longer buffers a chromosome's ~38 MB of text;
-* `MALLOC_ARENA_MAX` is capped to 1 by re-exec, because glibc's per-thread arenas
-  retain freed blocks (237 MB against 177 MB at the same wall clock).
+* `callpeak` SE: ~43 MB is the two resident position arrays, then one
+  chromosome's signal build plus the q-table histogram — the parallel window's
+  working set. `CHUNK` chromosomes are built at once and the window is the
+  memory/speed dial.
+* the local-lambda merge builds its track directly (`over_two_pv_array_track`),
+  sized exactly up front; the old path held five tracks at once per fold.
+* the bedGraph and spool bodies are streamed to per-chromosome temp files and
+  concatenated, so `-B` no longer buffers a chromosome's ~38 MB of text.
+* every writer streams. Holding whole files as strings is what made `pileup`
+  (313 MB), `filterdup` (158 MB), `cmbreps` (1096 MB) and `bdgcmp` (1383 MB)
+  *worse* than upstream; all are fixed.
+* `bdgcmp` and `cmbreps` no longer build their whole-genome result. The
+  bedGraph merge emits one row per breakpoint of *either* input — 25 M rows on
+  the benchmark, more than both inputs — and every scorer but `qpois` is a pure
+  function of `(treat, ctrl)`, so the row is scored and written during the walk
+  instead. `cmbreps`' combined track is likewise written as it is produced.
+  Together those took `bdgcmp` from 598 MB to 199 MB and `cmbreps` from 376 MB
+  to 199 MB.
+* `MALLOC_ARENA_MAX=1` and `MALLOC_TRIM_THRESHOLD_=0` are applied by re-exec
+  (glibc reads them before `main`). The arena cap stops per-thread retention;
+  trimming on free returns the chunked passes' dropped chromosomes to the OS
+  instead of letting RSS creep up across the pass. A user-set value wins.

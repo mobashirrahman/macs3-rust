@@ -36,13 +36,23 @@ not yet a full all-flags, all-corpus replacement.
   HMM captures and run without Python.
 - **CI provisions a private pinned MACS3 oracle** and runs differential gates for
   Gaussian and Poisson HMM training, HMM inference, and all three callvar modes: no assembly, automatic assembly, and forced assembly.
-- **Performance: speed target met, memory target partly met.** On real CTCF 5M
-  treatment + 5M control reads (median of 3), Rust is 3.4-4.0x faster than pinned
-  upstream on all five benchmarked `callpeak` workloads, at 0.39-0.62x its peak RSS.
-  The release targets are at least 3x and at most 0.5x: BAMPE meets the memory
-  target (0.39x), the single-end paths do not yet (0.52-0.62x). The per-workload
-  table is in the README. The older 2.3-3.0 GB Rust RSS figures below are historical
-  baseline measurements.
+- **Performance: both targets partly met.** Re-measured with `scripts/bench_real.py`
+  (real CTCF 5M treatment + 5M control reads, median of 3): Rust is 2.3-4.9x faster
+  than pinned upstream across twelve workloads, at 0.16-1.01x its peak RSS. The
+  release targets are at least 3x and at most 0.5x. Speed is met on 10 of 12
+  (`pileup` 2.3x and `randsample` 2.6x miss); memory is met on 7 of 12 (`callpeak
+  -B` 0.56x, `--broad` 0.52x, `randsample` 0.70x, `bdgpeakcall` 0.89x, `bdgopt`
+  1.01x miss). The per-workload table is in the README. The older 2.3-3.0 GB Rust
+  RSS figures below are historical baseline measurements.
+- **Differences found on the 5M-read data, fixed.** `bdgpeakcall` restarted peak
+  numbering per chromosome (upstream numbers continuously); `bdgbroadcall` emitted
+  peaks on chromosomes with no level-1 peak and ignored `-o` for the name prefix;
+  `bdgopt -m p2q` differed by 1e-5 on 227,084 of 2,577,274 rows (the `-log10(N)`
+  term, the q value before the clamp and the `pre_q` seed are f32 upstream);
+  `bdgcmp -m logFE|ppois|qpois` now exits 1 with no output file where upstream
+  raises. All five 5M-read `pileup`/`bdg*` outputs are byte-identical; workspace
+  tests are at 767. `filterdup` output still has the same rows in a different
+  chromosome order.
 - **The C fermi-lite assembler bridge is intentionally retained.** Replacing it with
   a pure-Rust assembler remains post-v1.0 scope; the existing bridge is tested in CI.
 - `oracle/check_real_summit_bytes.py` reruns source-tree CTCF SE, BEDPE, and BAMPE
