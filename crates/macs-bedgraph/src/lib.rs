@@ -460,6 +460,127 @@ impl BedGraph {
         out
     }
 
+    /// [`overlie`] written straight to disk, one chromosome at a time.
+    ///
+    /// `overlie` builds a whole output `BedGraph` on top of the fully parsed inputs.
+    /// On the benchmark inputs that merge result is another ~130 MB against 201 MB
+    /// of inputs, and it was `cmbreps`' remaining peak (`overlie`'s output is only
+    /// ever written, never queried). This walks the same merge and emits each
+    /// chromosome's rows as they are produced, so only one chromosome's merged runs
+    /// are live at a time. Bytes are `BedGraph::write`'s exactly: same track line,
+    /// same name order, same `%.5f`, same `[0, first_breakpoint)` first row.
+    pub fn overlie_write(
+        &self,
+        others: &[&BedGraph],
+        op: Op,
+        path: &Path,
+        trackline: bool,
+        name: &str,
+        description: &str,
+    ) -> Result<()> {
+        use std::io::Write as _;
+        let mut out = std::io::BufWriter::new(std::fs::File::create(path).map_err(MacsError::Io)?);
+        if trackline {
+            writeln!(
+                out,
+                "track type=bedGraph name=\"{}\" description=\"{}\" visibility=2 alwaysZero=on",
+                name.replace('"', "\\\""),
+                description.replace('"', "\\\"")
+            )
+            .map_err(MacsError::Io)?;
+        }
+        let mut common_names: Vec<Vec<u8>> = self
+            .chroms_sorted()
+            .iter()
+            .map(|&c| self.genome.name(c).to_vec())
+            .collect();
+        for o in others {
+            let on: Vec<Vec<u8>> = o
+                .chroms_sorted()
+                .iter()
+                .map(|&c| o.genome.name(c).to_vec())
+                .collect();
+            common_names.retain(|n| on.contains(n));
+        }
+        for cname in common_names {
+            let self_chrom = self.genome.get(&cname).expect("common chrom in self");
+            let mut tracks: Vec<&SignalTrack<f32>> = Vec::new();
+            tracks.push(self.tracks.get(&self_chrom).expect("common chrom in self"));
+            for o in others {
+                let oc = o.genome.get(&cname).expect("common chrom in other");
+                tracks.push(o.tracks.get(&oc).expect("common chrom in other"));
+            }
+            // The walk `overlie_chrom` performs, inlined so its result never has to
+            // exist as a Vec either -- only the pending (coalesced) pair is live.
+            let label = String::from_utf8_lossy(&cname);
+            let runs: Vec<&[macs_rle::Run<f32>]> = tracks.iter().map(|t| t.runs()).collect();
+            let mut idx = vec![0usize; tracks.len()];
+            let mut pre_p: Coord = 0;
+            let mut pre: Coord = 0;
+            let mut pending: Option<(Coord, f32)> = None;
+            loop {
+                let mut lowest = Coord::MAX;
+                let mut vals: Vec<f32> = Vec::with_capacity(tracks.len());
+                let mut exhausted = false;
+                for (i, rr) in runs.iter().enumerate() {
+                    match rr.get(idx[i]) {
+                        Some(r) => {
+                            lowest = lowest.min(r.end);
+                            vals.push(r.value);
+                        }
+                        None => {
+                            exhausted = true;
+                            break;
+                        }
+                    }
+                }
+                if exhausted {
+                    break;
+                }
+                if lowest > pre_p {
+                    let v = op.apply(&vals);
+                    match pending {
+                        Some((_, lv)) if lv == v => pending = Some((lowest, lv)),
+                        Some((pe, pv)) => {
+                            writeln!(
+                                out,
+                                "{}\t{}\t{}\t{}",
+                                label,
+                                pre,
+                                pe,
+                                macs_score::bedgraph_value(pv)
+                            )
+                            .map_err(MacsError::Io)?;
+                            pre = pe;
+                            pending = Some((lowest, v));
+                        }
+                        None => pending = Some((lowest, v)),
+                    }
+                }
+                pre_p = lowest;
+                for (i, rr) in runs.iter().enumerate() {
+                    if let Some(r) = rr.get(idx[i]) {
+                        if r.end == lowest {
+                            idx[i] += 1;
+                        }
+                    }
+                }
+            }
+            if let Some((pe, pv)) = pending {
+                writeln!(
+                    out,
+                    "{}\t{}\t{}\t{}",
+                    label,
+                    pre,
+                    pe,
+                    macs_score::bedgraph_value(pv)
+                )
+                .map_err(MacsError::Io)?;
+            }
+        }
+        out.flush().map_err(MacsError::Io)
+    }
+
     /// `extract_value`: for each interval where `other`'s value is `> 0`,
     /// report `self`'s value over that interval as `(start, end, value)`.
     ///

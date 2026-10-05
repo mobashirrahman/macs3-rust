@@ -87,11 +87,22 @@ pub fn cmbreps(o: &Options) -> Result<()> {
     }
     let first = &tracks[0];
     let others: Vec<&BedGraph> = tracks[1..].iter().collect();
-    let combined = first.overlie(&others, op);
-    write_out(
-        o,
-        &combined,
-        &format!("{}_combined_scores", method.to_uppercase()),
+    // Streamed: the combined track is only ever written, so building it as a
+    // `BedGraph` first costs a whole extra copy of the genome's runs.
+    let ofile = o
+        .get("ofile")
+        .ok_or_else(|| MacsError::InvalidParameter("-o/--ofile is required".into()))?;
+    let outdir = o.get("outdir").unwrap_or(".");
+    std::fs::create_dir_all(outdir)?;
+    let desc = format!("{}_combined_scores", method.to_uppercase());
+    let name = desc.trim_end_matches("_combined_scores");
+    first.overlie_write(
+        &others,
+        op,
+        &Path::new(outdir).join(ofile),
+        true,
+        &desc,
+        &format!("Scores calculated by {}", name.to_uppercase()),
     )
 }
 
