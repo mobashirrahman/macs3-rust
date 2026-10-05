@@ -313,21 +313,32 @@ pub fn cutoff_analysis(
     min_score: f32,
     max_score: f32,
 ) -> String {
-    // `minv`, `maxv` and `maxv - minv` are `cython.float`, i.e. f32; only then
-    // is the difference widened to a Python float for the division, and only
-    // `np.arange` widens again to f64. Computing the step in f32 shifts the whole
-    // ladder by 0.01 on this fixture.
+    // `minv`, `maxv` and `s` are all `cython.float`, i.e. C float:
+    //   * `maxv - minv` is evaluated in f32 and only then widened to double for
+    //     the division by `steps` (`BedGraph.c:28941`), and
+    //   * the quotient is *stored back into the C float `s`*, so the step
+    //     `np.arange` is handed is the f32 rounding of `f64(span) / steps`.
+    // `np.arange` itself widens all three arguments to f64.
     let minv = min_score.max(bg_summary_min(bg));
     let maxv = max_score.min(bg_summary_max(bg));
-    let span = f64::from(maxv - minv);
-    let s = span / steps as f64;
-    let mut cutoffs: Vec<f64> = Vec::new();
+    let s = (f64::from(maxv - minv) / steps as f64) as f32;
+    let mut cutoffs: Vec<f32> = Vec::new();
     if s > 0.0 {
         // `np.arange(minv, maxv, s)` -- half-open at the top, and its length is
-        // `ceil((maxv - minv) / s)`, which is one short of `maxv` being reached.
-        let n = (span / s).ceil().max(0.0) as usize;
+        // `ceil((maxv - minv) / s)` computed in f64 from the *widened* arguments,
+        // which is one short of `maxv` being reached.
+        let step = f64::from(s);
+        let n = ((f64::from(maxv) - f64::from(minv)) / step).ceil().max(0.0) as usize;
         for i in 0..n {
-            cutoffs.push(round3(f64::from(minv) + i as f64 * s));
+            // `cutoff_list` holds f64 entries; `cutoff = cutoff_list[n]` assigns
+            // into a `cython.float` (`BedGraph.py:1281`), so every ladder entry is
+            // narrowed to f32 *before* it is compared or printed (`BedGraph.c:29325`
+            // and `:30006`). The narrowing is load-bearing: `round(v, 3)` of a
+            // ladder step lands on `0.995`/`0.975`/`0.325`..., whose nearest f64
+            // sits just *below* the decimal midpoint while their f32 image sits
+            // just above, so `%.2f` prints `1.00`/`0.98`/`0.32` and not
+            // `0.99`/`0.97`/`0.33`.
+            cutoffs.push(round3(f64::from(minv) + i as f64 * step) as f32);
         }
     }
     let mut npeaks = vec![0i64; cutoffs.len()];
@@ -343,8 +354,8 @@ pub fn cutoff_analysis(
             let mut lastp: Coord = 0;
             for (i, r) in runs.iter().enumerate() {
                 // `score_array > cutoff`: the comparison widens the f32 score to
-                // f64 against an f64 cutoff.
-                if f64::from(r.value) <= cutoff {
+                // f64 against the f32 cutoff, also widened to f64.
+                if f64::from(r.value) <= f64::from(cutoff) {
                     continue;
                 }
                 let te = r.end;

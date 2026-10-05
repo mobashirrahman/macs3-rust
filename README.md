@@ -116,7 +116,7 @@ Details: [compatibility by command](docs/compatibility.md) ·
 vendored, so the reference cannot be edited to make a test pass.
 
 ```sh
-cargo test --workspace     # 806 tests
+cargo test --workspace     # 897 tests
 oracle/run_golden.sh       # replay every recorded run and compare bytes
 ```
 

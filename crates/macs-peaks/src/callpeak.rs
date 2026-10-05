@@ -2151,10 +2151,13 @@ pub fn bedgraph_cutoff_analysis(
     }
     let minv = minv.max(min_score);
     let maxv = maxv.min(max_score);
-    // `s = float(maxv - minv) / steps`. A zero-width range makes upstream's
+    // `s = float(maxv - minv) / steps`, with `maxv - minv` evaluated in f32 (both
+    // operands are `cython.float`) and the quotient stored back into the
+    // `cython.float s` of `BedGraph.py:1309`, so the step `np.arange` is handed is
+    // the f32 rounding of `f64(span) / steps`. A zero-width range makes upstream's
     // `np.arange(minv, maxv, 0)` raise; there is no cutoff to report, so the report is
     // header-only rather than a crash or a division by zero.
-    let s = (f64::from(maxv) - f64::from(minv)) / steps as f64;
+    let s = ((maxv - minv) as f64 / steps as f64) as f32;
     // `!(s > 0.0)` rather than `s <= 0.0`, so a NaN range (a track whose values are
     // not finite) is rejected too: upstream's `np.arange(minv, maxv, 0)` raises there,
     // and the honest outcome is a header-only report rather than a division by zero or
@@ -2166,9 +2169,13 @@ pub fn bedgraph_cutoff_analysis(
     // `np.arange(minv, maxv, s)` with `round(v, 3)`. `arange` is exclusive of `maxv`,
     // so the count is `ceil((maxv - minv) / s)`, which is `steps` for a range that
     // divides evenly.
-    let n = (((f64::from(maxv) - f64::from(minv)) / s).ceil() as usize).max(1);
+    let step = f64::from(s);
+    let n = (((f64::from(maxv) - f64::from(minv)) / step).ceil() as usize).max(1);
+    // `cutoff = cutoff_list[n]` narrows each entry into a `cython.float`
+    // (`BedGraph.py:1281`), so the ladder is f32: `%.2f` of an f32 reads the f32
+    // image of the rounded cutoff, not the wider f64.
     let ladder: Vec<f32> = (0..n)
-        .map(|i| ((f64::from(minv) + i as f64 * s) * 1e3).round() / 1e3)
+        .map(|i| ((f64::from(minv) + i as f64 * step) * 1e3).round() / 1e3)
         .map(|v| v as f32)
         .collect();
 

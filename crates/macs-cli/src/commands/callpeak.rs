@@ -723,11 +723,13 @@ fn keep_dup(o: &Options) -> Result<i64> {
 ///   `PeakDetect.py:76-78`), `--max-gap` and `--min-length` reach the same two
 ///   `cython.int` parameters, and `--shift` reaches `CallerFromAlignments`'s
 ///   `end_shift` (`PeakDetect.py:234`, `CallPeakUnit.py:440`).
-/// * `PeakDetect.py:187-190` asserts `d <= slocal <= llocal`, but only on the
+/// * `PeakDetect.py:185-188` asserts `d <= slocal <= llocal`, but only on the
 ///   **with-control** branch: without `-c` those windows are never consulted and
 ///   `--slocal 20000 --llocal 10000` runs. The reference's no-control branch raises
 ///   the same `OverflowError` from `CallerFromAlignments`'s `d` instead
-///   (`PeakDetect.py:349`).
+///   (`PeakDetect.py:349`). Single-end reaches those asserts from here, because
+///   `--extsize` is already known; paired-end has to wait for the treatment track,
+///   so it calls [`check_control_windows`] from the load branch instead.
 ///
 /// A value of exactly `2**31 - 1` still fits, and negative values do not overflow
 /// (they only trip the `assert self.fw > 0` inside `print_to_bed`).
@@ -814,15 +816,67 @@ fn opt_validate_callpeak(o: &Options, format: &str, extsize: i64, pe_mode: bool)
         } else {
             let slocal = o.int("smalllocal").unwrap_or(1000);
             let llocal = o.int("largelocal").unwrap_or(10000);
-            let d = extsize;
-            // `if self.sregion:` / `if self.lregion:` are truthiness tests, so a window
-            // set to 0 is skipped rather than asserted against.
-            if (slocal != 0 && d > slocal) || (llocal != 0 && (d > llocal || slocal > llocal)) {
-                return Err(MacsError::InvalidParameter(format!(
-                    "AssertionError: can't be smaller than {d}!"
-                )));
-            }
+            check_control_windows(slocal, llocal, extsize as f64)?;
         }
+    }
+    Ok(())
+}
+
+/// `PeakDetect.__call_peaks_w_control`'s three `assert`s (`PeakDetect.py:185-188`),
+/// the only window validation `callpeak` has:
+///
+/// ```python
+/// if self.sregion:
+///     assert self.d <= self.sregion, f"{self.sregion:} can't be smaller than {self.d:}!"
+/// if self.lregion:
+///     assert self.d <= self.lregion, f"{self.lregion:} can't be smaller than {self.d:}!"
+///     assert self.sregion <= self.lregion, f"{self.lregion:} can't be smaller than {self.sregion:}!"
+/// ```
+///
+/// `if self.sregion:` / `if self.lregion:` are truthiness tests on the `--slocal` /
+/// `--llocal` ints, so a window of 0 skips its `assert` -- and note that the
+/// `sregion <= lregion` pair is only reachable through `lregion`, so `--llocal 0`
+/// also drops the `--slocal` ordering check.
+///
+/// `d` is `self.d`, which is **not** the same number in every mode:
+///
+/// * single-end passes `--extsize` (`callpeak_cmd.py:167`, `options.d = options.extsize`
+///   under `--nomodel`), an `int`;
+/// * paired-end passes `options.d = options.tsize` (`callpeak_cmd.py:165`), and
+///   `options.tsize` is the treatment's *measured mean fragment length*
+///   (`load_frag_files_options`, `:362`, `options.tsize = tp.d`). `Parser.py:1496`
+///   computes it as `cython.cast(cython.float, m) / i`, so it is a **C float** and a
+///   mean of `1500.5` prints as `1500.5` and compares as `1500.5` -- which is why
+///   `--slocal 1500` is refused for a pair of 1500 and 1501 bp fragments while
+///   `--slocal 1501` is accepted.
+///
+/// So the paired-end caller must pass the measured mean, not a truncated integer, and
+/// the messages carry it the way Python's `str` would (an integral float keeps its
+/// `.0`).
+fn check_control_windows(slocal: i64, llocal: i64, d: f64) -> Result<()> {
+    let py = |v: f64| {
+        if v.fract() == 0.0 {
+            format!("{v:.1}")
+        } else {
+            format!("{v}")
+        }
+    };
+    let too_small = |window: i64| {
+        MacsError::InvalidParameter(format!(
+            "AssertionError: {window} can't be smaller than {}!",
+            py(d)
+        ))
+    };
+    if slocal != 0 && d > slocal as f64 {
+        return Err(too_small(slocal));
+    }
+    if llocal != 0 && d > llocal as f64 {
+        return Err(too_small(llocal));
+    }
+    if llocal != 0 && slocal > llocal {
+        return Err(MacsError::InvalidParameter(format!(
+            "AssertionError: {llocal} can't be smaller than {slocal}!"
+        )));
     }
     Ok(())
 }
@@ -1276,6 +1330,16 @@ pub fn run(o: &Options) -> Result<()> {
                 cfg.tsize as f32 as f64
             };
             tsize_exact = cfg.tsize_exact;
+            // `PeakDetect.py:185-188` runs for every paired-end call with a control,
+            // and there `self.d` is `options.tsize`: the treatment's measured mean
+            // fragment length as the parser reports it, so a fractional one reaches the
+            // comparison (`--slocal 1500` is refused for 1500 and 1501 bp fragments,
+            // `--slocal 1501` is not). Only reachable now, because that number is not
+            // known until the treatment track has been read -- which is also why
+            // upstream raises here rather than in `opt_validate_callpeak`.
+            if ctrl.is_some() {
+                check_control_windows(cfg_common.slocal, cfg_common.llocal, tsize_exact)?;
+            }
             if sdump_on {
                 let r = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
                 record_pe_scaling_stage(&mut sdump, &treat, ctrl.as_ref(), &cfg);
@@ -1438,6 +1502,16 @@ pub fn run(o: &Options) -> Result<()> {
                 cfg.tsize as f32 as f64
             };
             tsize_exact = cfg.tsize_exact;
+            // `PeakDetect.py:185-188` runs for every paired-end call with a control,
+            // and there `self.d` is `options.tsize`: the treatment's measured mean
+            // fragment length as the parser reports it, so a fractional one reaches the
+            // comparison (`--slocal 1500` is refused for 1500 and 1501 bp fragments,
+            // `--slocal 1501` is not). Only reachable now, because that number is not
+            // known until the treatment track has been read -- which is also why
+            // upstream raises here rather than in `opt_validate_callpeak`.
+            if ctrl.is_some() {
+                check_control_windows(cfg_common.slocal, cfg_common.llocal, tsize_exact)?;
+            }
             if sdump_on {
                 let r = macs_peaks::callpeak::run_callpeak_pe(&treat, ctrl.as_ref(), &cfg);
                 record_pe_scaling_stage(&mut sdump, &treat, ctrl.as_ref(), &cfg);
