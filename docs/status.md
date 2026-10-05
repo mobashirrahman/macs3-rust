@@ -36,14 +36,13 @@ not yet a full all-flags, all-corpus replacement.
   HMM captures and run without Python.
 - **CI provisions a private pinned MACS3 oracle** and runs differential gates for
   Gaussian and Poisson HMM training, HMM inference, and all three callvar modes: no assembly, automatic assembly, and forced assembly.
-- **Performance remains active work.** On real CTCF 5M treatment + 5M control BED.gz,
-  `--nomodel --extsize 200`, one thread, Rust measured 11.31 s and 265,788 kB peak RSS;
-  pinned upstream measured 32.0 s and 297,628 kB. Rust narrowPeak and summits matched
-  byte-for-byte; the XLS differed only in its output-directory command line header.
-  This is about 2.8x faster at 0.89x upstream RSS, so it does not meet the release
-  targets of at least 3x speedup and at most 0.5x RSS on this workload. It is one
-  workload, not the full benchmark matrix. The older 2.3–3.0 GB Rust RSS figures below
-  are historical baseline measurements.
+- **Performance: speed target met, memory target partly met.** On real CTCF 5M
+  treatment + 5M control reads (median of 3), Rust is 3.4-4.0x faster than pinned
+  upstream on all five benchmarked `callpeak` workloads, at 0.39-0.62x its peak RSS.
+  The release targets are at least 3x and at most 0.5x: BAMPE meets the memory
+  target (0.39x), the single-end paths do not yet (0.52-0.62x). The per-workload
+  table is in the README. The older 2.3-3.0 GB Rust RSS figures below are historical
+  baseline measurements.
 - **The C fermi-lite assembler bridge is intentionally retained.** Replacing it with
   a pure-Rust assembler remains post-v1.0 scope; the existing bridge is tested in CI.
 - `oracle/check_real_summit_bytes.py` reruns source-tree CTCF SE, BEDPE, and BAMPE

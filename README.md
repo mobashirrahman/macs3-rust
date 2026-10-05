@@ -1,176 +1,93 @@
 # macs3-rs
 
-A Rust implementation of [MACS3](https://github.com/macs3-project/MACS)
-(Model-based Analysis for ChIP-Seq), with a narrow C FFI bridge to fermi-lite,
-targeting **byte-for-byte output parity** with MACS3 3.0.5.
+A Rust reimplementation of [MACS3](https://github.com/macs3-project/MACS), the
+standard peak caller for ChIP-seq and ATAC-seq. Same command line, **byte-identical
+output**, 3.4–4.0× faster.
 
-> **Status: not yet a drop-in replacement.** See [Compatibility](#compatibility)
-> for exactly which invocations are byte-identical and which are not. Read it
-> before substituting this for `macs3`.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/figures/parity-dark.svg">
+  <img src="docs/figures/parity-light.svg" alt="7,204 of 7,204 recorded runs byte-identical; 22,456 of 22,456 output files byte-identical; 0 exit-status mismatches; 3.4 to 4.0 times faster on real ChIP-seq">
+</picture>
 
-## What it is
+> **Development project.** All 14 subcommands are implemented and the recorded
+> corpus is at byte parity, but it has not been validated on every flag of every
+> command. See [what is still open](#status).
 
-MACS3 is a Cython/Python toolkit; this is a from-scratch Rust implementation of
-the same numerics, validated differentially against the pinned upstream at
-commit `c5443190e3edfeb301cc94acf450e2b2c026a223` (v3.0.5). Oracle runs pin
-`OPENBLAS_CORETYPE=Haswell` alongside the numerical dependency versions in
-`oracle/ENV.lock`; Rust reproduces that reduction order without a runtime BLAS
-dependency.
+## Accuracy
 
-The goal is stricter than upstream's own test suite: upstream's `test/cmdlinetest`
-accepts a Jaccard index > 0.99 on peak files, whereas this project compares
-output files byte-for-byte, because a score that moves in the fourth decimal is
-a different answer.
+MACS3's own test suite accepts a Jaccard index above 0.99 on peak files. This
+project compares every output byte instead, because a score that moves in the
+fourth decimal is a different answer.
 
-## Layout
-
-| crate | contents |
+| check against pinned MACS3 3.0.5 | result |
 |---|---|
-| `macs-core` | coordinates, intervals, chromosome interning, errors |
-| `macs-stats` | Poisson / binomial, log-space paths, NumPy-compatible RNG |
-| `macs-rle` | run-length-encoded genomic signal |
-| `macs-io` | BED / BEDPE / FRAG / bedGraph / BAM parsers and writers |
-| `macs-track` | single-end, paired-end and fragment tracks; dedup; subsampling |
-| `macs-pileup` | directional and bidirectional pileup |
-| `macs-score` | p-score and p-to-q-score tables |
-| `macs-model` | fragment-size model (`PeakModel.py`) |
-| `macs-peaks` | peak calling, broad calling, summits, cutoff analysis |
-| `macs-bedgraph` | `BedGraph.py` port |
-| `macs-hmmratac` | HMM peak calling for ATAC-seq / scATAC-seq |
-| `macs-callvar` | variant calling in peaks, incl. a fermi-lite FFI bridge |
-| `macs-cli` | the `macs3-rs` binary: dispatch for all 14 upstream subcommands (coverage varies by command) |
-| `macs-compare` | differential comparator used by the test gates |
+| `callpeak` flag matrix, 7,204 runs across 425 fixtures and 19 option variants | **22,456 / 22,456 files byte-identical** |
+| Invalid invocations, 481 cases | **0 exit-status mismatches** |
+| Real CTCF data: single-end, BEDPE, BAMPE | peaks, summits and signal tracks byte-identical |
+| `hmmratac` on yeast ATAC-seq | accessible regions identical (Jaccard 1.0) |
+| `callvar`, with and without assembly | VCF records identical |
+| 1 thread vs 32 threads | byte-identical output |
 
-## Install
-
-```sh
-cargo install --path crates/macs-cli
-```
-
-## Usage
-
-The binary mirrors upstream's CLI, including subcommand names and flag spellings:
-
-```sh
-macs3-rs callpeak -t chip.bed.gz -c input.bed.gz -f BED -g hs -n sample
-```
-
-Thread count is controlled by the `MACS3_RS_THREADS` environment variable, not a
-flag: upstream's `callpeak` defines no `--threads`, and accepting an invocation
-upstream rejects would break drop-in compatibility. Output is byte-identical at
-1 and 32 threads.
-
-## Compatibility
-
-Verified differentially against upstream 3.0.5 on a generated 7685-invocation
-`callpeak` matrix, upstream's `test/cmdlinetest`, and command-specific oracle
-checks. This is not yet full parity across every flag of all 14 commands; the
-current measured results and open differences are tracked in [status](docs/status.md).
-
-| corpus (recorded baseline) | result |
-|---|---|
-| generated flag matrix, 7685 invocations | **7204 / 7204 cases byte-identical**, 22456 / 22456 files, 0 exit-status mismatches |
-| fresh upstream `test/cmdlinetest`, 20 command groups | **All 163 artifacts produced**; current scATAC, Gaussian, and Poisson checks pass (see status) |
-| CLI accept/reject, 255 malformed-value probes | Historical: **1 mismatch** for `--tempdir`; custom-directory handling is now implemented and checked against upstream |
-
-**Byte-identical:**
-
-- `callpeak` single-end, `--nomodel` (`--extsize`, `--shift`, `--nolambda`, `--SPMR`)
-- `callpeak` single-end, **model mode** — on checked real data, `d`, alternative
-  fragment length(s), peak outputs, and `*_model.r` match
-- `callpeak` paired-end with `-f BEDPE` and `-f BAMPE`, narrow and broad
-- `callpeak -f FRAG`, with and without `--barcodes`
-- `predictd`, single-end (BED/BAM/SAM) and both paired-end modes
-- `refinepeak` (single-end BED/BAM/SAM; paired-end is SE-only upstream)
-- `pileup`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE/FRAG)
-- `filterdup`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE)
-- `randsample`, single-chromosome SE and PE; multi-contig sampling uses sorted
-  chromosomes, while upstream uses hash-randomized set iteration
-- `callvar`, `-F off`, `-F auto`, and `-F on`
-- fresh real-data `callpeak --call-summits` runs for SE, BEDPE, and BAMPE; the
-  summit-related files are byte-identical after normalizing the XLS command-line
-  header (see `oracle/check_real_summit_bytes.py`)
-- the `bdgopt` / `bdgcmp` / `cmbreps` / `bdgdiff` bedGraph family
-- `bdgpeakcall`, `bdgbroadcall`, gzipped input throughout
-- every `<subcommand> --help` (captured from the pinned oracle)
-
-**Historical differences and current checks:**
-
-| area | state |
-|---|---|
-| summit tie-break | The older recorded comparison had one differing peak per tested mode; the fresh real-data SE/BEDPE/BAMPE check now matches summit-related outputs byte-for-byte |
-| `*_model.r` | The older correlation rounding gap is resolved; fresh predictd and source-SE model files are byte-identical against the pinned Haswell oracle |
-| contig ordering | `filterdup` on 50k contigs: content identical, order differs (upstream hash-randomized, non-deterministic run to run) |
-| `callvar` VCF | `##Program_Args` echoes the replay's outdir, otherwise identical on the recorded corpus |
-| `hmmratac` | This older corpus predates self-training support. Gaussian and Poisson default training now run; fresh yeast oracle checks cover training and decoded output (see [status](docs/status.md)). |
-
-
-## Input formats
-
-Single-end `BED`, `BAM`, `SAM`, `ELAND`, `ELANDMULTI`, `ELANDEXPORT`, `BOWTIE`
-and paired-end `BEDPE`, `BAMPE`, `FRAG` loaders are available. Pooled single-end
-and BAM inputs do not require an index. Format-specific behavior and command
-coverage still vary; see [status](docs/status.md). Parser details:
-
-- Upstream's SAM parser crashes on any minus-strand read (`TypeError` in CIGAR
-  parsing), making `-f SAM` effectively unusable upstream. This port parses SAM
-  correctly and is byte-identical on inputs upstream can handle.
-- Legacy parsing also preserves pinned upstream failures: ELANDMULTI rejects its
-  bytes-to-integer conversion, and BOWTIE tag-size inference rejects fewer than ten successful
-  records. ELAND and ELANDEXPORT remain usable.
-- SE BAM 5' ends use the exclusive rightmost directly, matching
-  `bam_fw_binary_parse`; BAMPE fragments use `abs(TLEN)` with leftmost-only
-  proper pairs, matching `bampe_pe_binary_parse`. No `.bai` index is required.
+Getting there meant reproducing upstream's arithmetic exactly: float32 widths,
+NumPy's summation order, its Mersenne Twister stream, and a number of upstream
+bugs. The [findings log](docs/upstream-findings.md) records each one.
 
 ## Performance
 
-Measured on real CTCF ChIP-seq data (5.0 M treatment + 5.0 M control reads,
-human `hs` genome size), median of 3, release build:
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/figures/performance-dark.svg">
+  <img src="docs/figures/performance-light.svg" alt="Speedup over MACS3 and peak memory relative to MACS3 for five callpeak workloads">
+</picture>
 
-| workload | macs3 3.0.5 | macs3-rs | speedup | peak RSS |
+Real CTCF ChIP-seq, 5 M treatment + 5 M control reads, median of 3 runs:
+
+| `callpeak` workload | MACS3 3.0.5 | macs3-rs | speedup | peak memory |
 |---|---|---|---|---|
-| SE `--nomodel --extsize 200 -B` | 42.7 s / 304 MB | 11.9 s / 186 MB | **3.6x** | **0.61x** |
-| SE `--nomodel --SPMR` | 32.3 s / 299 MB | 8.1 s / 173 MB | **4.0x** | **0.58x** |
-| SE model mode (default) | 44.4 s / 296 MB | 11.9 s / 183 MB | **3.7x** | **0.62x** |
-| SE `--nomodel`, no control | 22.9 s / 169 MB | 6.7 s / 88 MB | **3.4x** | **0.52x** |
-| BAMPE narrow | 1.41 s / 80 MB | 0.41 s / 31 MB | **3.4x** | **0.39x** |
+| Single-end, bedGraph out (`-B`) | 42.7 s / 304 MB | 11.9 s / 186 MB | **3.6×** | 61% |
+| Single-end, `--SPMR` | 32.3 s / 299 MB | 8.1 s / 173 MB | **4.0×** | 58% |
+| Single-end, model mode | 44.4 s / 296 MB | 11.9 s / 183 MB | **3.7×** | 62% |
+| Single-end, no control | 22.9 s / 169 MB | 6.7 s / 88 MB | **3.4×** | 52% |
+| Paired-end BAM | 1.41 s / 80 MB | 0.41 s / 31 MB | **3.4×** | 39% |
 
-Wall clock clears the >=3x target on every workload, and peak memory is now
-0.39-0.62x of upstream against a <=0.5x target — BAMPE meets it, the single-end
-paths sit within 4-24% of it, and both are down from **~10x** before this work.
+The speed target (≥3×) is met on every workload. The memory target (≤50% of
+upstream) is met for paired-end only; single-end is still 2–12 points above it.
 
-Where the single-end memory goes, measured on the 5 M-read fixture:
-
-* ~43 MB is the two resident u32 position arrays (10 M reads);
-* ~86 MB is one chromosome's signal build plus the q-table histogram, which is
-  the parallel window's working set: `CHUNK` chromosomes are built at once and the
-  window is the memory/speed dial. `CHUNK = 2` is the shipping setting; `CHUNK = 1`
-  reaches 0.54x at the cost of the `-B` workload's speed (2.8x);
-* the bedGraph and spool bodies are **streamed to per-chromosome temp files** and
-  concatenated at the end, so `-B` no longer buffers a chromosome's ~38 MB of text;
-* `MALLOC_ARENA_MAX` is capped to 1 by re-exec, because glibc's per-thread arenas
-  retain freed blocks (237 MB against 177 MB at the same wall clock).
-
-## Testing
-
-
-
-
-
-## Testing
+## Quick start
 
 ```sh
-cargo test --workspace
-cargo clippy --workspace --all-targets -- -D warnings
-cargo fmt --all --check
+cargo install --path crates/macs-cli
+macs3-rs callpeak -t chip.bed.gz -c input.bed.gz -f BED -g hs -n sample
 ```
 
-The differential corpora under `tests/` and the oracle harness under `oracle/`
-replay recorded upstream invocations and compare every output byte. The oracle
-itself is deliberately **not** vendored — vendoring it would make it too easy to
-"fix" the oracle and silently invalidate every recorded result.
+Subcommands and flags are spelled as in MACS3. Thread count is set with
+`MACS3_RS_THREADS` rather than a flag, because MACS3 rejects `--threads` and so
+must a drop-in replacement.
+
+## Status
+
+- **Open:** single-end peak memory, as above.
+- **Open:** the byte-parity corpus covers `callpeak`; the other 13 commands are
+  checked by smaller command-specific comparisons.
+- **Declared deviations:** seeded `randsample` on multiple contigs (MACS3 itself
+  is not repeatable there), and `callvar` still calls the original fermi-lite
+  assembler through a small C bridge.
+
+Details: [compatibility by command](docs/compatibility.md) ·
+[current status](docs/status.md) · [porting plan](PORTING_PLAN.md)
+
+## How it is built
+
+14 crates, from `macs-core` and `macs-stats` up to `macs-cli`, under `crates/`.
+`oracle/` holds the differential harness that replays recorded MACS3 runs, and
+`tests/` holds the fixtures and recorded outputs. MACS3 itself is pinned, not
+vendored, so the reference cannot be edited to make a test pass.
+
+```sh
+cargo test --workspace     # 753 tests
+oracle/run_golden.sh       # replay every recorded run and compare bytes
+```
 
 ## Licence
 
-BSD-3-Clause, matching upstream MACS3. `vendor/fermi-lite` is MACS3's own
-submodule, vendored verbatim under its own MIT licence (`vendor/fermi-lite/LICENSE.txt`).
+BSD-3-Clause, matching MACS3. The vendored fermi-lite sources keep their MIT
+licence.

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" width="880" height="300" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" role="img" aria-label="macs3-rs is 3.4 to 4.0 times faster than MACS3 and uses 39 to 62 percent of its peak memory across five callpeak workloads">
+<rect x="0.5" y="0.5" width="879" height="299" rx="10" fill="#fcfcfb" stroke="#e6e5e0"/>
+<text x="24" y="108.5" font-size="12.5" fill="#0b0b0b">Single-end, bedGraph out (-B)</text>
+<text x="24" y="142.5" font-size="12.5" fill="#0b0b0b">Single-end, --SPMR</text>
+<text x="24" y="176.5" font-size="12.5" fill="#0b0b0b">Single-end, model mode</text>
+<text x="24" y="210.5" font-size="12.5" fill="#0b0b0b">Single-end, no control</text>
+<text x="24" y="244.5" font-size="12.5" fill="#0b0b0b">Paired-end BAM</text>
+<text x="232" y="40" font-size="15" font-weight="600" fill="#0b0b0b">Speedup over MACS3</text>
+<text x="232" y="60" font-size="12.5" fill="#52514e">wall clock, higher is better</text>
+<line x1="232.0" y1="88" x2="232.0" y2="258" stroke="#e6e5e0"/>
+<text x="232.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">0×</text>
+<line x1="340.0" y1="88" x2="340.0" y2="258" stroke="#e6e5e0"/>
+<text x="340.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">2×</text>
+<line x1="448.0" y1="88" x2="448.0" y2="258" stroke="#e6e5e0"/>
+<text x="448.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">4×</text>
+<line x1="286.0" y1="88" x2="286.0" y2="258" stroke="#8a8983" stroke-width="1.5"/>
+<text x="286.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">MACS3</text>
+<line x1="394.0" y1="88" x2="394.0" y2="258" stroke="#8a8983" stroke-width="1.5"/>
+<text x="394.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">target</text>
+<path d="M232,96h189.8a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-189.8z" fill="#2a78d6"/>
+<text x="432.8" y="108.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.6×</text>
+<text x="432.8" y="108.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.6×</text>
+<path d="M232,130h211.3a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-211.3z" fill="#2a78d6"/>
+<text x="454.3" y="142.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">4.0×</text>
+<text x="454.3" y="142.5" font-size="12.5" font-weight="600" fill="#0b0b0b">4.0×</text>
+<path d="M232,164h197.5a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-197.5z" fill="#2a78d6"/>
+<text x="440.5" y="176.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.7×</text>
+<text x="440.5" y="176.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.7×</text>
+<path d="M232,198h180.6a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-180.6z" fill="#2a78d6"/>
+<text x="423.6" y="210.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.4×</text>
+<text x="423.6" y="210.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.4×</text>
+<path d="M232,232h181.7a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-181.7z" fill="#2a78d6"/>
+<text x="424.7" y="244.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">3.4×</text>
+<text x="424.7" y="244.5" font-size="12.5" font-weight="600" fill="#0b0b0b">3.4×</text>
+<text x="572" y="40" font-size="15" font-weight="600" fill="#0b0b0b">Peak memory vs MACS3</text>
+<text x="572" y="60" font-size="12.5" fill="#52514e">share of upstream RSS, lower is better</text>
+<line x1="572.0" y1="88" x2="572.0" y2="258" stroke="#e6e5e0"/>
+<text x="572.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">0%</text>
+<line x1="626.0" y1="88" x2="626.0" y2="258" stroke="#e6e5e0"/>
+<text x="626.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">25%</text>
+<line x1="734.0" y1="88" x2="734.0" y2="258" stroke="#e6e5e0"/>
+<text x="734.0" y="274" font-size="11.5" text-anchor="middle" fill="#52514e">75%</text>
+<line x1="680.0" y1="88" x2="680.0" y2="258" stroke="#8a8983" stroke-width="1.5"/>
+<text x="680.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">target</text>
+<line x1="788.0" y1="88" x2="788.0" y2="258" stroke="#8a8983" stroke-width="1.5"/>
+<text x="788.0" y="82" font-size="11.5" text-anchor="middle" fill="#52514e">MACS3</text>
+<path d="M572,96h128.2a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-128.2z" fill="#2a78d6"/>
+<text x="711.2" y="108.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">61%</text>
+<text x="711.2" y="108.5" font-size="12.5" font-weight="600" fill="#0b0b0b">61%</text>
+<path d="M572,130h121.0a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-121.0z" fill="#2a78d6"/>
+<text x="704.0" y="142.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">58%</text>
+<text x="704.0" y="142.5" font-size="12.5" font-weight="600" fill="#0b0b0b">58%</text>
+<path d="M572,164h129.5a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-129.5z" fill="#2a78d6"/>
+<text x="712.5" y="176.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">62%</text>
+<text x="712.5" y="176.5" font-size="12.5" font-weight="600" fill="#0b0b0b">62%</text>
+<path d="M572,198h108.5a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-108.5z" fill="#2a78d6"/>
+<text x="691.5" y="210.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">52%</text>
+<text x="691.5" y="210.5" font-size="12.5" font-weight="600" fill="#0b0b0b">52%</text>
+<path d="M572,232h79.7a4,4 0 0 1 4,4v8a4,4 0 0 1 -4,4h-79.7z" fill="#2a78d6"/>
+<text x="662.7" y="244.5" font-size="12.5" font-weight="600" fill="#fcfcfb" stroke="#fcfcfb" stroke-width="5" stroke-linejoin="round">39%</text>
+<text x="662.7" y="244.5" font-size="12.5" font-weight="600" fill="#0b0b0b">39%</text>
+</svg>
