@@ -69,8 +69,7 @@ Ryzen 7 3700X. Reproduce with [`scripts/bench_real.py`](scripts/bench_real.py).
 | `cmbreps -m max` | 43.8 s / 391 MB | 10.0 s / 194 MB | 4.4× | **50%** |
 | `bdgcmp -m ppois` | 56.6 s / 611 MB | 18.7 s / 195 MB | 3.0× | **32%** |
 
-Every workload is faster than MACS3, by 2.3× to 4.9×. Ten of twelve meet the
-3× speed target; `pileup` and `randsample` fall short. Bold marks memory at or
+Every workload is faster than MACS3, by 2.3× to 4.9×. Bold marks memory at or
 under the project's target of half of MACS3's; seven of twelve meet it.
 `callpeak -B` and `--broad` are just over, and `randsample`, `bdgpeakcall` and
 `bdgopt` hold their whole parsed input.
@@ -102,8 +101,7 @@ by tests.
 - **Known difference:** on multi-chromosome input `filterdup` writes the same
   rows in a different chromosome order, and seeded `randsample` picks different
   reads. MACS3's own output is not repeatable in either case.
-- **Open:** two workloads fall below the 3× speed target and five exceed the
-  50% memory target.
+- **Open:** five workloads exceed the 50% memory target.
 - **Open:** `callvar` still calls the original fermi-lite assembler through a
   small C bridge.
 

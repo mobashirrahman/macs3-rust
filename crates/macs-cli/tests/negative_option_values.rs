@@ -152,15 +152,26 @@ fn the_parsed_value_is_the_negative_number() {
 fn a_token_outside_the_negative_number_pattern_is_still_a_usage_error() {
     // `-1.` (no digit after the dot), `-1e-3` (no exponent branch) and `-9x` match
     // neither alternative of `^-\d+$|^-\d*\.\d+$`
+    //
+    // `-i`/`-o` are given here because `parse_args` reports the leftovers *after*
+    // `_parse_known_args` has checked the required actions (`argparse.py:2185-2210`
+    // then `argparse.py:1913-1917`), and the reference says the same: bare
+    // `macs3 bdgopt -p -9x` is "the following arguments are required", while
+    // `macs3 bdgopt -i in.bdg -o o.bdg -p -9x` is
+    // "unrecognized arguments: -9x". Both exit 2.
+    for bad in ["-9x", "-1e-3", "-1.", "-.e3", "--9x"] {
+        let e = parse("bdgopt", &["-i", "in.bdg", "-o", "o.bdg", "-p", bad])
+            .expect_err("must be rejected");
+        assert_eq!(e, format!("error: unrecognized arguments: {bad}"));
+    }
     for bad in ["-9x", "-1e-3", "-1.", "-.e3", "--9x"] {
         let e = parse("bdgopt", &["-p", bad]).expect_err("must be rejected");
         assert!(
-            e.contains("unrecognized") || e.contains("expected"),
+            e.contains("unrecognized") || e.contains("expected") || e.contains("required"),
             "{bad}: {e}"
         );
     }
     // a bare unknown flag is still the "unrecognized arguments" usage error
-    let e = parse("bdgopt", &["-9x"]).expect_err("must be rejected");
-    assert!(e.contains("unrecognized"), "{e}");
-    assert!(e.contains("-9x"), "{e}");
+    let e = parse("bdgopt", &["-i", "in.bdg", "-o", "o.bdg", "-9x"]).expect_err("must be rejected");
+    assert_eq!(e, "error: unrecognized arguments: -9x");
 }
