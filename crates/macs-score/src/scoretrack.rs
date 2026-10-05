@@ -461,12 +461,18 @@ impl ScoreTrack2 {
         column: usize,
     ) -> macs_core::Result<()> {
         assert!((1..=3).contains(&column), "column should be 1, 2 or 3");
-        let mut out = String::new();
+        // Stream: the whole-file `String` this used to build is hundreds of MB on a
+        // real `--bdg` track and made `bdgcmp` the worst command against the RSS
+        // target (1383 MB against upstream's 626 MB). Bytes unchanged.
+        use std::io::Write as _;
+        let mut out = std::io::BufWriter::new(std::fs::File::create(path).map_err(MacsError::Io)?);
         if self.trackline {
-            out.push_str(&format!(
-                "track type=bedGraph name=\"{}\" description=\"{}\"\n",
+            writeln!(
+                out,
+                "track type=bedGraph name=\"{}\" description=\"{}\"",
                 name, description
-            ));
+            )
+            .map_err(MacsError::Io)?;
         }
         for chrom in self.chroms_sorted() {
             let e = &self.data[&chrom];
@@ -483,20 +489,26 @@ impl ScoreTrack2 {
             for (i, &v) in values.iter().enumerate().skip(1) {
                 let p = e.pos[i - 1];
                 if (pre_v - v).abs() > 1e-5 {
-                    out.push_str(&row(&self.genome, chrom, pre, p, pre_v));
+                    write!(out, "{}", row(&self.genome, chrom, pre, p, pre_v))
+                        .map_err(MacsError::Io)?;
                     pre_v = v;
                     pre = p;
                 }
             }
-            out.push_str(&row(
-                &self.genome,
-                chrom,
-                pre,
-                *e.pos.last().expect("non-empty"),
-                pre_v,
-            ));
+            write!(
+                out,
+                "{}",
+                row(
+                    &self.genome,
+                    chrom,
+                    pre,
+                    *e.pos.last().expect("non-empty"),
+                    pre_v,
+                )
+            )
+            .map_err(MacsError::Io)?;
         }
-        std::fs::write(path, out).map_err(MacsError::Io)
+        out.flush().map_err(MacsError::Io)
     }
 }
 

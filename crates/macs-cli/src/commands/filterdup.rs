@@ -108,29 +108,35 @@ pub fn filterdup(o: &Options) -> Result<()> {
     }
 
     // print_to_bed
+    // Stream to a buffered writer; the whole-file `String` is hundreds of MB on a
+    // real run and made `filterdup` exceed upstream's peak RSS. Bytes unchanged.
+    use std::io::Write as _;
     let ofile = o.get("outputfile").unwrap_or("stdout");
-    let mut out = String::new();
+    let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
+    let mut file: Option<std::fs::File> = None;
+    if ofile != "stdout" {
+        std::fs::create_dir_all(&outdir)?;
+        file = Some(std::fs::File::create(outdir.join(ofile))?);
+    }
+    let mut out = std::io::BufWriter::new(match file {
+        Some(f) => Box::new(f) as Box<dyn std::io::Write>,
+        None => Box::new(std::io::stdout()) as Box<dyn std::io::Write>,
+    });
     let pos = track.positions();
     for chrom in pos.chroms_sorted() {
         let name = String::from_utf8_lossy(track.genome().name(chrom));
         for &p in pos.strand(chrom, Strand::Plus) {
-            out.push_str(&format!("{name}\t{p}\t{}\t.\t.\t+\n", p + fw as u32));
+            writeln!(out, "{name}\t{p}\t{}\t.\t.\t+", p + fw as u32)?;
         }
         for &p in pos.strand(chrom, Strand::Minus) {
             // Upstream writes negative starts verbatim (`chrIV -11 39`); it does
             // not clamp at zero. `saturating_sub` hid every minus-strand tag within
             // `fw` of the contig start behind a `0`, diverging on real data.
             let lo = i64::from(p) - fw;
-            out.push_str(&format!("{name}\t{lo}\t{p}\t.\t.\t-\n"));
+            writeln!(out, "{name}\t{lo}\t{p}\t.\t.\t-")?;
         }
     }
-    if ofile == "stdout" {
-        print!("{out}");
-    } else {
-        let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
-        std::fs::create_dir_all(&outdir)?;
-        std::fs::write(outdir.join(ofile), out)?;
-    }
+    out.flush()?;
     Ok(())
 }
 
