@@ -39,46 +39,59 @@ bugs. The [findings log](docs/upstream-findings.md) records each one.
   <img src="docs/figures/performance-light.svg" alt="Speedup over MACS3 and peak memory relative to MACS3 for five callpeak workloads">
 </picture>
 
-Real CTCF ChIP-seq, 5 M treatment + 5 M control reads, median of 3 runs:
+Real CTCF ChIP-seq, 5.0 M treatment + 5.0 M control reads, human `hs` genome
+size, release build, single run:
 
 | `callpeak` workload | MACS3 3.0.5 | macs3-rs | speedup | peak memory |
 |---|---|---|---|---|
-| Single-end, bedGraph out (`-B`) | 42.7 s / 304 MB | 11.9 s / 186 MB | **3.6×** | 61% |
-| Single-end, `--SPMR` | 32.3 s / 299 MB | 8.1 s / 173 MB | **4.0×** | 58% |
-| Single-end, model mode | 44.4 s / 296 MB | 11.9 s / 183 MB | **3.7×** | 62% |
-| Single-end, no control | 22.9 s / 169 MB | 6.7 s / 88 MB | **3.4×** | 52% |
-| Paired-end BAM | 1.41 s / 80 MB | 0.41 s / 31 MB | **3.4×** | 39% |
+| Single-end, bedGraph out (`-B`) | 44.3 s / 301 MB | 12.9 s / 169 MB | **3.4×** | 56% |
+| Single-end, `--SPMR` | 32.8 s / 303 MB | 8.7 s / 142 MB | **3.8×** | **47%** |
+| Single-end, broad | 51.7 s / 309 MB | 14.9 s / 168 MB | **3.5×** | 54% |
+| Single-end, no control | 23.1 s / 173 MB | 7.2 s / 87 MB | **3.2×** | **50%** |
+| Paired-end BAM | 1.41 s / 80 MB | 0.41 s / 31 MB | **3.4×** | **39%** |
 
-The speed target (≥3×) is met on every `callpeak` workload. The memory target
-(≤50% of upstream) is met for paired-end only; single-end is still 2–12 points
-above it.
-
-The same host, on the other subcommands in the release benchmark matrix:
+The same host, on the rest of the release benchmark matrix:
 
 | workload | MACS3 3.0.5 | macs3-rs | speedup | peak memory |
 |---|---|---|---|---|
-| `pileup`, single-end | 7.6 s / 137 MB | 3.3 s / 35 MB | 2.3× | **25%** |
-| `filterdup` | 5.5 s / 137 MB | 1.6 s / 23 MB | 3.4× | **17%** |
-| `randsample` | 4.2 s / 137 MB | 1.5 s / 53 MB | 2.8× | **38%** |
-| `bdgpeakcall` | 7.3 s / 106 MB | 1.5 s / 81 MB | 4.9× | 76% |
-| `bdgopt -m p2q` | 10.8 s / 107 MB | 2.1 s / 117 MB | 5.1× | 109% |
-| `cmbreps -m max` | 49.7 s / 401 MB | 8.8 s / 405 MB | 5.6× | 101% |
-| `bdgcmp -m ppois` | 60.6 s / 625 MB | 21.4 s / 598 MB | 2.8× | 96% |
+| `pileup`, single-end | 7.8 s / 138 MB | 3.4 s / 33 MB | 2.3× | **24%** |
+| `filterdup` | 5.7 s / 138 MB | 1.6 s / 23 MB | 3.6× | **17%** |
+| `randsample` | 4.2 s / 138 MB | 1.5 s / 52 MB | 2.8× | **37%** |
+| `bdgpeakcall` | 7.5 s / 107 MB | 1.7 s / 81 MB | 4.4× | 76% |
+| `bdgopt -m p2q` | 10.9 s / 106 MB | 2.4 s / 117 MB | 4.6× | 110% |
+| `cmbreps -m max` | 44.6 s / 401 MB | 10.1 s / 199 MB | 4.4× | **50%** |
+| `bdgcmp -m ppois` | 60.4 s / 626 MB | 19.6 s / 199 MB | 3.1× | **32%** |
 
-Two honest notes on the matrix. The speed target is **missed** on `pileup`
-(2.3×), `randsample` (2.8×) and `bdgcmp` (2.8×) — these are I/O- and
-parse-bound, not compute-bound. The memory target is missed on the `bdg`
-family, where both sides hold the parsed bedGraph and the port is at parity
-(`cmbreps` 101%, `bdgcmp` 96%), so halving it needs a streaming two-file merge
-rather than a smaller structure.
+Two honest notes. The speed target (≥3×) is **missed** on `pileup` (2.3×) and
+`randsample` (2.8×), which are I/O-bound, not compute-bound. The memory target
+(≤50%) is met on seven of the eleven workloads; `callpeak -B`/`--broad` sit at
+54–56%, and the two still above the line are input-bound: `bdgpeakcall` (76%)
+and `bdgopt` (110%) each parse the same bedGraph upstream parses, and that
+parse *is* the peak (72 MB of the 107 MB upstream total), so halving it means
+streaming the input, not shrinking the output.
 
-Where the single-end memory goes (measured): ~43 MB is the two resident
-position arrays, then ~86 MB for one chromosome's signal build plus the q-table
-histogram — the parallel window's working set. Every writer streams; holding
-whole files as strings is what made `pileup` (313 MB), `filterdup` (158 MB),
-`cmbreps` (1096 MB) and `bdgcmp` (1383 MB) *worse* than upstream before it was
-fixed, and capping glibc's per-thread malloc arenas to one by re-exec saved a
-further 25% (237 MB against 177 MB at the same wall clock).
+Where the memory goes, measured:
+
+* `callpeak` SE: ~43 MB is the two resident position arrays, then one
+  chromosome's signal build plus the q-table histogram — the parallel window's
+  working set. `CHUNK` chromosomes are built at once and the window is the
+  memory/speed dial.
+* the bedGraph and spool bodies are streamed to per-chromosome temp files and
+  concatenated, so `-B` no longer buffers a chromosome's ~38 MB of text.
+* every writer streams. Holding whole files as strings is what made `pileup`
+  (313 MB), `filterdup` (158 MB), `cmbreps` (1096 MB) and `bdgcmp` (1383 MB)
+  *worse* than upstream; all are fixed.
+* `bdgcmp` and `cmbreps` no longer build their whole-genome result. The
+  bedGraph merge emits one row per breakpoint of *either* input — 25 M rows on
+  the benchmark, more than both inputs — and every scorer but `qpois` is a pure
+  function of `(treat, ctrl)`, so the row is scored and written during the walk
+  instead. `cmbreps`' combined track is likewise written as it is produced.
+  Together those took `bdgcmp` from 598 MB to 199 MB and `cmbreps` from 376 MB
+  to 199 MB.
+* `MALLOC_ARENA_MAX=1` and `MALLOC_TRIM_THRESHOLD_=0` are applied by re-exec
+  (glibc reads them before `main`). The arena cap stops per-thread retention;
+  trimming on free returns the chunked passes' dropped chromosomes to the OS
+  instead of letting RSS creep up across the pass. A user-set value wins.
 
 ## Quick start
 
