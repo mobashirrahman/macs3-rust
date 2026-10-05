@@ -39,7 +39,8 @@ mod scoretrack;
 pub use pqtable::{qscore_track, PqTable, QScoreSink};
 pub use pscore::{pscore, pscore_track, pseudocounted_inputs, PScoreCache, PScoreHistogram};
 pub use scoretrack::{
-    log_lr_asym, log_lr_sym, DiffPeak, NormMethod, ScoreMethod, ScoreTrack, ScoreTrack2, TwoScores,
+    bedgraph_value, log_lr_asym, log_lr_sym, score_value, DiffPeak, NormMethod, ScoreMethod,
+    ScoreTrack, ScoreTrack2, TwoScores,
 };
 
 use macs_core::Coord;

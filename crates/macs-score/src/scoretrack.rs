@@ -151,6 +151,24 @@ impl ScoreTrack2 {
         e.score.push(0.0);
     }
 
+    /// Reserve room for `n` merged rows on `chromosome`.
+    ///
+    /// `add` pushes into four vectors and lets each grow by doubling, so a merge of
+    /// `n` rows transiently holds the old and new blocks of every column at once --
+    /// on the 16 M-row control bedGraph of the benchmark that is ~390 MB of peak
+    /// against a final 258 MB table, and it was the `bdgcmp` peak RSS. Reserving
+    /// first makes each column allocate once. The bound callers pass is the sum of
+    /// the two inputs' run counts, which over-reserves (the walk stops at the first
+    /// exhausted cursor); untouched capacity is not resident, so RSS follows the
+    /// rows actually pushed.
+    pub fn reserve(&mut self, chrom: ChromId, n: usize) {
+        let e = self.data.entry(chrom).or_default();
+        e.pos.reserve(n);
+        e.treat.reserve(n);
+        e.ctrl.reserve(n);
+        e.score.reserve(n);
+    }
+
     /// Chromosome ids in byte-wise name order.
     pub fn chroms_sorted(&self) -> Vec<ChromId> {
         let mut ids: Vec<ChromId> = self.data.keys().copied().collect();
@@ -512,14 +530,30 @@ impl ScoreTrack2 {
     }
 }
 
+/// A bedGraph value in upstream's `%.5f` format.
+///
+/// Rust renders `f32::NAN` as `NaN`; glibc's `printf` and Python's `%f` render it
+/// as `nan`, and the byte identity gate compares output files, so the spelling is
+/// observable. Real `bdgcmp -m logLR` output hits it: a whole chromosome whose score
+/// is NaN collapses to a single row (every `abs(pre_v - v) > 1e-5` comparison is
+/// false against NaN, on both sides) and that row is `nan`. `inf`/`-inf` already
+/// agree between the two formatters.
+pub fn bedgraph_value(value: f32) -> String {
+    if value.is_nan() {
+        "nan".to_string()
+    } else {
+        format!("{value:.5}")
+    }
+}
+
 /// One bedGraph row in upstream's format.
 fn row(genome: &Genome, chrom: ChromId, start: Coord, end: Coord, value: f32) -> String {
     format!(
-        "{}\t{}\t{}\t{:.5}\n",
+        "{}\t{}\t{}\t{}\n",
         String::from_utf8_lossy(genome.name(chrom)),
         start,
         end,
-        value
+        bedgraph_value(value)
     )
 }
 
@@ -542,6 +576,37 @@ fn pscore_interval(treat: f32, ctrl: f32, pseudocount: f32) -> f32 {
     let v = poisson_cdf(observed, f64::from(expectation), false, true)
         .expect("pseudocounted control is positive");
     (-v) as f32
+}
+
+/// One row's score for the bedGraph scorers that are pure functions of
+/// `(treat, ctrl)`.
+///
+/// Extracted from the `ScoreTrack2::compute_*` methods so a caller can score a
+/// row during a merge walk instead of materialising the whole score table. The
+/// arithmetic is copied from those methods verbatim -- including where the
+/// pseudocount is added in `f32` versus `f64` and where the division rounds --
+/// and [`score_row`]'s doc comments explain why each form is the observable one.
+///
+/// Returns `None` for the methods that are not row-local: `Q` needs the
+/// genome-wide p-value table, `SPMR` needs a track-wide scale factor, and `None`
+/// means no method has been selected. Those keep the materialising path.
+pub fn score_value(method: ScoreMethod, treat: f32, ctrl: f32, pseudocount: f32) -> Option<f32> {
+    Some(match method {
+        ScoreMethod::P => pscore_interval(treat, ctrl, pseudocount),
+        ScoreMethod::Subtract => treat - ctrl,
+        ScoreMethod::LogLR => log_lr_asym(treat + pseudocount, ctrl + pseudocount),
+        ScoreMethod::SymLogLR => log_lr_sym(treat + pseudocount, ctrl + pseudocount),
+        ScoreMethod::LogFE => {
+            let ratio = (treat + pseudocount) / (ctrl + pseudocount);
+            f64::from(ratio).log10() as f32
+        }
+        ScoreMethod::FE => {
+            let pc = f64::from(pseudocount);
+            ((f64::from(treat) + pc) / (f64::from(ctrl) + pc)) as f32
+        }
+        ScoreMethod::Max => treat.max(ctrl),
+        ScoreMethod::Q | ScoreMethod::SPMR | ScoreMethod::None => return None,
+    })
 }
 
 /// The two likelihood-ratio formulas, evaluated the way C does.

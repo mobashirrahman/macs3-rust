@@ -67,25 +67,25 @@ pub fn bdgcmp(o: &Options) -> Result<()> {
     // upstream: `pseudo_depth = 1.0/scaling_factor`, "a trick to override SPMR"
     let pseudo_depth = (1.0 / sfactor) as f32;
 
-    let tbtrack = read_bed(Path::new(tfile))?;
-    let cbtrack = read_bed(Path::new(cfile))?;
-
-    let mut sbtrack = tbtrack.make_score_track_for_macs(&cbtrack, pseudo_depth, pseudo_depth);
-    if (sfactor - 1.0).abs() > 1e-6 {
-        eprintln!(
-            "Values in your input bedGraph files will be multiplied by {:.6} ...",
-            sfactor
-        );
-        sbtrack.change_normalization_method(NormMethod::Million);
-    }
-    sbtrack.set_pseudocount(o.float("pseudocount").unwrap_or(0.0) as f32);
-
     let methods: Vec<String> = o.get_all("method").to_vec();
     let methods = if methods.is_empty() {
         vec!["ppois".to_string()]
     } else {
         methods
     };
+
+    let tbtrack = read_bed(Path::new(tfile))?;
+    let cbtrack = read_bed(Path::new(cfile))?;
+
+    // upstream prints the rescale notice while building the score track, before the
+    // method is validated; kept here so a bad method on a rescaled run reports both.
+    if (sfactor - 1.0).abs() > 1e-6 {
+        eprintln!(
+            "Values in your input bedGraph files will be multiplied by {:.6} ...",
+            sfactor
+        );
+    }
+
     for m in &methods {
         if !BDCMP_METHODS.iter().any(|(n, _)| n == m) {
             return Err(MacsError::InvalidParameter(format!("Invalid method: {m}")));
@@ -98,8 +98,51 @@ pub fn bdgcmp(o: &Options) -> Result<()> {
         ));
     }
     let oprefix = o.get("oprefix").unwrap_or("bdgcmp").to_string();
-
     let dir = outdir(o)?;
+
+    // Fast path: a single method that is a pure function of `(treat, ctrl)` and the
+    // identity normalisation. The materialising path below builds the whole 25 M-row
+    // score table (~400 MB on the benchmark) before writing any of it; streaming the
+    // merge keeps only the two parsed inputs. `qpois` needs the genome-wide p-value
+    // table, SPMR a track scale, and `-S` rewrites treat/ctrl before scoring, so all
+    // three keep the old path -- as do repeated methods, which are skipped rather
+    // than recomputed and would otherwise re-read the inputs per method.
+    let distinct: Vec<&String> = {
+        let mut d: Vec<&String> = Vec::new();
+        for m in &methods {
+            if !d.contains(&m) {
+                d.push(m);
+            }
+        }
+        d
+    };
+    if distinct.len() == 1 && (sfactor - 1.0).abs() <= 1e-6 {
+        let method = distinct[0];
+        let sm = BDCMP_METHODS
+            .iter()
+            .find(|(n, _)| n == method)
+            .expect("validated")
+            .1;
+        // `score_value` is row-local for every other method; probing it with dummy
+        // inputs is not safe (the p-score asserts a positive lambda).
+        if !matches!(sm, ScoreMethod::Q | ScoreMethod::SPMR | ScoreMethod::None) {
+            let ofile = if ofiles.is_empty() {
+                format!("{oprefix}_{method}.bdg")
+            } else {
+                ofiles[0].clone()
+            };
+            let pc = o.float("pseudocount").unwrap_or(0.0) as f32;
+            tbtrack.stream_score_bedgraph(&cbtrack, sm, pc, &dir.join(&ofile))?;
+            return Ok(());
+        }
+    }
+
+    let mut sbtrack = tbtrack.make_score_track_for_macs(&cbtrack, pseudo_depth, pseudo_depth);
+    if (sfactor - 1.0).abs() > 1e-6 {
+        sbtrack.change_normalization_method(NormMethod::Million);
+    }
+    sbtrack.set_pseudocount(o.float("pseudocount").unwrap_or(0.0) as f32);
+
     let mut done: Vec<String> = Vec::new();
     for (i, method) in methods.iter().enumerate() {
         if done.contains(method) {

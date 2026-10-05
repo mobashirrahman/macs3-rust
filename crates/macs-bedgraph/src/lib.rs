@@ -212,6 +212,7 @@ impl BedGraph {
         for chrom in common {
             let r1 = self.tracks[&chrom].runs();
             let r2 = other.tracks[&chrom].runs();
+            st.reserve(chrom, r1.len() + r2.len());
             let (mut i1, mut i2) = (0usize, 0usize);
             while let (Some(p1), Some(p2)) = (r1.get(i1).map(|x| x.end), r2.get(i2).map(|x| x.end))
             {
@@ -226,6 +227,97 @@ impl BedGraph {
             }
         }
         st
+    }
+
+    /// Stream the `ScoreTrackII` score for one method, chromosome by chromosome.
+    ///
+    /// `make_score_track_for_macs` walks the same head-to-head merge, but stores
+    /// every emitted row in a table that is later scored. On the benchmark that
+    /// table is **25 M rows** -- the merge emits one row per distinct breakpoint
+    /// of *either* input, so it is larger than both -- at 16 bytes a row
+    /// (`pos`/`treat`/`ctrl`/`score`), 400 MB, on top of the 200 MB of parsed
+    /// inputs. That is the `bdgcmp` peak RSS, and upstream pays it too.
+    ///
+    /// Every bdgcmp scorer but `qpois` is a pure function of `(treat, ctrl,
+    /// pseudocount)`, so the row does not have to exist: this walks the merge,
+    /// scores each pair in place and writes the run structure
+    /// `ScoreTrack2::write_bedgraph` column 3 would have written -- the same
+    /// `|pre_v - v| > 1e-5` change test, the same `[pre, pos[i-1])` intervals,
+    /// the same unconditional final row, the same `%.5f` formatting.
+    ///
+    /// `method` must be one [`macs_score::score_value`] accepts; the caller is
+    /// responsible for falling back for `qpois` (which needs the genome-wide
+    /// p-value table) and for any normalisation other than the identity, since
+    /// the scaling would have been applied to `treat`/`ctrl` before scoring.
+    pub fn stream_score_bedgraph(
+        &self,
+        other: &BedGraph,
+        method: macs_score::ScoreMethod,
+        pseudocount: f32,
+        path: &Path,
+    ) -> Result<()> {
+        use std::io::Write as _;
+        let mut out = std::io::BufWriter::new(std::fs::File::create(path).map_err(MacsError::Io)?);
+        let mut common: Vec<ChromId> = self
+            .tracks
+            .keys()
+            .copied()
+            .filter(|c| other.tracks.contains_key(c))
+            .collect();
+        common.sort_by(|&a, &b| self.genome.name(a).cmp(self.genome.name(b)));
+        for chrom in common {
+            let r1 = self.tracks[&chrom].runs();
+            let r2 = other.tracks[&chrom].runs();
+            if r1.is_empty() || r2.is_empty() {
+                continue;
+            }
+            let name = self.genome.name(chrom);
+            let (mut i1, mut i2) = (0usize, 0usize);
+            let mut pre: Coord = 0;
+            let mut pre_v = 0.0f32;
+            let mut have = false;
+            let mut prev_end: Coord = 0;
+            while let (Some(p1), Some(p2)) = (r1.get(i1).map(|x| x.end), r2.get(i2).map(|x| x.end))
+            {
+                let v = macs_score::score_value(method, r1[i1].value, r2[i2].value, pseudocount)
+                    .expect("caller selected a streamable method");
+                if !have {
+                    pre_v = v;
+                    have = true;
+                } else if (pre_v - v).abs() > 1e-5 {
+                    writeln!(
+                        out,
+                        "{}\t{}\t{}\t{}",
+                        String::from_utf8_lossy(name),
+                        pre,
+                        prev_end,
+                        macs_score::bedgraph_value(pre_v)
+                    )
+                    .map_err(MacsError::Io)?;
+                    pre = prev_end;
+                    pre_v = v;
+                }
+                prev_end = p1.min(p2);
+                if p1 <= p2 {
+                    i1 += 1;
+                }
+                if p2 <= p1 {
+                    i2 += 1;
+                }
+            }
+            if have {
+                writeln!(
+                    out,
+                    "{}\t{}\t{}\t{}",
+                    String::from_utf8_lossy(name),
+                    pre,
+                    prev_end,
+                    macs_score::bedgraph_value(pre_v)
+                )
+                .map_err(MacsError::Io)?;
+            }
+        }
+        out.flush().map_err(MacsError::Io)
     }
 
     /// Iterate every `(chrom, track)` in name order.
@@ -534,8 +626,15 @@ impl BedGraph {
             let cname = String::from_utf8_lossy(self.genome.name(chrom));
             let mut pre = 0u32;
             for r in t.runs() {
-                writeln!(out, "{}\t{}\t{}\t{:.5}", cname, pre, r.end, r.value)
-                    .map_err(MacsError::Io)?;
+                writeln!(
+                    out,
+                    "{}\t{}\t{}\t{}",
+                    cname,
+                    pre,
+                    r.end,
+                    macs_score::bedgraph_value(r.value)
+                )
+                .map_err(MacsError::Io)?;
                 pre = r.end;
             }
         }
