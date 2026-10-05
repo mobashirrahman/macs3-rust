@@ -58,7 +58,13 @@ pub fn pileup(o: &Options) -> Result<()> {
     let ofile = o.get("outputfile").unwrap_or("pileup.bedGraph");
     let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
     std::fs::create_dir_all(&outdir)?;
-    let mut out = String::new();
+    // Stream to a buffered writer rather than accumulating the whole bedGraph in a
+    // `String`. The genome-wide text is hundreds of MB on a real run (5 M reads ->
+    // ~500 MB here) and the whole thing was held resident alongside the read track,
+    // which made `pileup` the one command using *more* memory than upstream
+    // (313 MB against 138 MB). Row order and formatting are unchanged.
+    use std::io::Write as _;
+    let mut out = std::io::BufWriter::new(std::fs::File::create(outdir.join(ofile))?);
 
     let pos = track.positions();
     // File order, not sorted order: upstream's `pileup_and_write_se` iterates
@@ -83,11 +89,11 @@ pub fn pileup(o: &Options) -> Result<()> {
         let mut pre = 0u32;
         for r in t.runs() {
             let v = r.value.max(baseline);
-            out.push_str(&format!("{name}\t{pre}\t{}\t{v:.5}\n", r.end));
+            writeln!(out, "{name}\t{pre}\t{}\t{v:.5}", r.end)?;
             pre = r.end;
         }
     }
-    std::fs::write(outdir.join(ofile), out)?;
+    out.flush()?;
     Ok(())
 }
 
@@ -116,7 +122,9 @@ fn pileup_pe(o: &Options, paths: &[String], format: &str) -> Result<()> {
     let ofile = o.get("outputfile").unwrap_or("pileup.bedGraph");
     let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
     std::fs::create_dir_all(&outdir)?;
-    let mut out = String::new();
+    // Buffered writer, not a whole-file `String`: see the SE path's note.
+    use std::io::Write as _;
+    let mut out = std::io::BufWriter::new(std::fs::File::create(outdir.join(ofile))?);
     // BTreeMap iterates keys in byte-lexicographic order, which is upstream's
     // `sorted(chrlengths.keys())`.
     for (name, spans) in &frags {
@@ -135,11 +143,11 @@ fn pileup_pe(o: &Options, paths: &[String], format: &str) -> Result<()> {
         );
         let mut pre = 0u32;
         for r in t.runs() {
-            out.push_str(&format!("{cname}\t{pre}\t{}\t{:.5}\n", r.end, r.value));
+            writeln!(out, "{cname}\t{pre}\t{}\t{:.5}", r.end, r.value)?;
             pre = r.end;
         }
     }
-    std::fs::write(outdir.join(ofile), out)?;
+    out.flush()?;
     Ok(())
 }
 
@@ -214,7 +222,8 @@ fn pileup_frag(o: &Options, paths: &[String]) -> Result<()> {
     let ofile = o.get("outputfile").unwrap_or("pileup.bedGraph");
     let outdir = PathBuf::from(o.get("outdir").unwrap_or("."));
     std::fs::create_dir_all(&outdir)?;
-    let mut out = String::new();
+    use std::io::Write as _;
+    let mut out = std::io::BufWriter::new(std::fs::File::create(outdir.join(ofile))?);
     for (name, spans) in &frags {
         let cname = String::from_utf8_lossy(name);
         let weighted: Vec<(u32, u32, f32)> =
@@ -228,10 +237,10 @@ fn pileup_frag(o: &Options, paths: &[String]) -> Result<()> {
         );
         let mut pre = 0u32;
         for r in t.runs() {
-            out.push_str(&format!("{cname}\t{pre}\t{}\t{:.5}\n", r.end, r.value));
+            writeln!(out, "{cname}\t{pre}\t{}\t{:.5}", r.end, r.value)?;
             pre = r.end;
         }
     }
-    std::fs::write(outdir.join(ofile), out)?;
+    out.flush()?;
     Ok(())
 }
