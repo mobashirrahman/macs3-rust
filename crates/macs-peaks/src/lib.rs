@@ -32,18 +32,10 @@ pub use driver::{
     combine_control_scales, nolambda_control, pair_for_chromosome, pair_treat_ctrl, LambdaScale,
     LambdaScales, PairedSignal,
 };
-pub use merge::{over_max_tracks, over_two_pv_array, pointwise_max, track_from_pv, Reducer};
-
-/// [`over_two_pv_array`] as a track-to-track operation, for callers that already
-/// hold [`SignalTrack`]s. The merged track's span ends wherever the merge stopped,
-/// which can be short of either input's end (F35).
-pub fn over_two_pv_array_track(
-    a: &macs_rle::SignalTrack<f32>,
-    b: &macs_rle::SignalTrack<f32>,
-) -> macs_rle::SignalTrack<f32> {
-    let (pos, val) = over_two_pv_array(a, b, Reducer::Max);
-    track_from_pv(b.chrom(), a.start().min(b.start()), &pos, &val)
-}
+pub use merge::{
+    over_max_tracks, over_two_pv_array, over_two_pv_array_track, pointwise_max, track_from_pv,
+    Reducer,
+};
 pub use peakyness::{enforce_peakyness, hard_clip, internal_minima, is_valid_peak, too_flat};
 pub use precomputes::{
     accumulate_histogram, chromosome_cutoff_stats, cutoff_ladder, pre_computes,

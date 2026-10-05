@@ -66,6 +66,48 @@ impl Reducer {
     }
 }
 
+/// The head-to-head walk shared by every `over_two_pv_*` entry point.
+///
+/// Emits `(min(p1, p2), apply(v1, v2))` per step, advancing the smaller cursor
+/// (both on a tie), and stops as soon as either cursor is exhausted -- the
+/// tail-truncation and tie rules described at the top of the module. Callers only
+/// choose what to do with each emitted pair, which is what lets the track
+/// builder below skip the legacy `[pos, val]` intermediate without changing a
+/// single emitted pair.
+pub(crate) fn over_two_pv_walk(
+    a_runs: &[Run<f32>],
+    b_runs: &[Run<f32>],
+    func: Reducer,
+    emit: &mut impl FnMut(Coord, f32),
+) {
+    let (l1, l2) = (a_runs.len(), b_runs.len());
+    let (mut i1, mut i2) = (0usize, 0usize);
+    while i1 < l1 && i2 < l2 {
+        let v1 = a_runs[i1].value;
+        let v2 = b_runs[i2].value;
+        let value = func.apply(v1, v2);
+
+        let p1 = a_runs[i1].end;
+        let p2 = b_runs[i2].end;
+        match p1.cmp(&p2) {
+            std::cmp::Ordering::Less => {
+                emit(p1, value);
+                i1 += 1;
+            }
+            std::cmp::Ordering::Greater => {
+                emit(p2, value);
+                i2 += 1;
+            }
+            std::cmp::Ordering::Equal => {
+                // one entry, both cursors advance
+                emit(p1, value);
+                i1 += 1;
+                i2 += 1;
+            }
+        }
+    }
+}
+
 /// Merge two end-indexed tracks with a pointwise reducer.
 ///
 /// Returns `(positions, values)` in the legacy `[p, v]` form upstream works in.
@@ -82,32 +124,10 @@ pub fn over_two_pv_array(
 
     let mut pos: Vec<Coord> = Vec::with_capacity(l1 + l2);
     let mut val: Vec<f32> = Vec::with_capacity(l1 + l2);
-
-    let (mut i1, mut i2) = (0usize, 0usize);
-    while i1 < l1 && i2 < l2 {
-        let v1 = a_runs[i1].value;
-        let v2 = b_runs[i2].value;
-        val.push(func.apply(v1, v2));
-
-        let p1 = a_runs[i1].end;
-        let p2 = b_runs[i2].end;
-        match p1.cmp(&p2) {
-            std::cmp::Ordering::Less => {
-                pos.push(p1);
-                i1 += 1;
-            }
-            std::cmp::Ordering::Greater => {
-                pos.push(p2);
-                i2 += 1;
-            }
-            std::cmp::Ordering::Equal => {
-                // one entry, both cursors advance
-                pos.push(p1);
-                i1 += 1;
-                i2 += 1;
-            }
-        }
-    }
+    over_two_pv_walk(a_runs, b_runs, func, &mut |p, v| {
+        pos.push(p);
+        val.push(v);
+    });
     // F168: the tail of the longer array is **dropped**, and that is upstream's
     // behaviour -- verified against the compiled `over_two_pv_array` with
     // controlled inputs rather than by reading the source:
@@ -132,6 +152,40 @@ pub fn over_two_pv_array(
     // instead gives 320 and 480, reaching the `llocal` extent and changing every
     // control value outside the `d` window.
     (pos, val)
+}
+
+/// [`over_two_pv_array`] as a track-to-track `max` merge.
+///
+/// The merged track's span ends wherever the merge stopped, which can be short of
+/// either input's end (F35). The emitted pairs are identical to
+/// `over_two_pv_array`'s by construction -- the same walk -- so this and
+/// `track_from_pv(chrom, start, pos, val)` return byte-identical tracks.
+///
+/// It exists as a separate entry point because of allocation, not behaviour. Going
+/// through the `[pos, val]` form costs 8 bytes per emitted pair for the temporaries
+/// on top of the run vector itself, and it sizes that vector at `l1 + l2` when the
+/// walk stops at the first exhausted cursor. The local-lambda chain folds three
+/// scales per chromosome with the accumulator and the next scale both live, so on
+/// chr1 of the 5 M-read fixture those transients were the single-end peak RSS
+/// driver. Here the walk runs twice -- count, then fill -- and the run vector is
+/// sized exactly and never grows.
+pub fn over_two_pv_array_track(a: &SignalTrack<f32>, b: &SignalTrack<f32>) -> SignalTrack<f32> {
+    let a_runs = a.runs();
+    let b_runs = b.runs();
+    let chrom = b.chrom();
+    let start = a.start().min(b.start());
+    let mut n = 0usize;
+    over_two_pv_walk(a_runs, b_runs, Reducer::Max, &mut |_, _| n += 1);
+    if n == 0 {
+        return SignalTrack::empty(chrom, start, start);
+    }
+    let mut runs: Vec<Run<f32>> = Vec::with_capacity(n);
+    over_two_pv_walk(a_runs, b_runs, Reducer::Max, &mut |p, v| {
+        runs.push(Run::new(p, v));
+    });
+    debug_assert_eq!(runs.len(), n);
+    let end = runs[runs.len() - 1].end.max(start);
+    SignalTrack::from_runs_exact(chrom, start, end, runs)
 }
 
 /// Pointwise max-fold of 2..=3 tracks in a **single pass**.

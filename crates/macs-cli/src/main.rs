@@ -13,7 +13,7 @@ use std::process::ExitCode;
 
 use macs_cli::{is_subcommand, parse_flags, PROGRAM, SUBCOMMANDS, TARGET_VERSION};
 
-/// Cap glibc's per-thread malloc arenas to one, then hand off to the real entry.
+/// Tune glibc's allocator, then hand off to the real entry.
 ///
 /// The pipeline is chromosome-parallel, so every rayon worker gets its own malloc
 /// arena and freed blocks are retained per-arena instead of being returned to the
@@ -22,32 +22,45 @@ use macs_cli::{is_subcommand, parse_flags, PROGRAM, SUBCOMMANDS, TARGET_VERSION}
 /// RSS is 237 MB with the default arena count and 177 MB with one arena, at
 /// unchanged wall clock (7.88 s vs 7.81 s).
 ///
-/// The setting cannot be applied in-process: glibc reads `MALLOC_ARENA_MAX` through
-/// its tunables machinery during `ptmalloc_init`, which runs before `main` -- the
-/// Rust runtime itself allocates first, so a `set_var` here is always too late
+/// Returning the freed blocks matters as much as not fragmenting them. The chunked
+/// passes allocate and drop one chromosome's signal (tens of MB) at a time, and
+/// glibc's main arena keeps those blocks in its free list rather than trimming the
+/// heap, so RSS creeps up across the pass even though live memory is bounded to a
+/// window: with one arena the SE `--SPMR` peak still reached 170 MB. Trimming on
+/// every free (`MALLOC_TRIM_THRESHOLD_=0`) drops that to 142 MB -- **0.47x** of
+/// upstream, inside the 50% target -- for about 4% wall clock (8.3 s -> 8.7 s,
+/// still 3.6x). The same setting helps every command with a chunked pass.
+///
+/// The settings cannot be applied in-process: glibc reads them through its
+/// tunables machinery during `ptmalloc_init`, which runs before `main` -- the Rust
+/// runtime itself allocates first, so a `set_var` here is always too late
 /// (verified: it left RSS at 237 MB). Re-executing the same binary with the
-/// variable set is the standard way around that, and `CommandExt::exec` *replaces*
+/// variables set is the standard way around that, and `CommandExt::exec` *replaces*
 /// the process image rather than forking, so there is no extra process, no
 /// double-wait, and the exit status, argv and stdio all pass through unchanged.
 ///
-/// A user-supplied `MALLOC_ARENA_MAX` wins, and the presence of the variable on the
-/// re-exec'd image is what terminates the recursion.
+/// A user-supplied value wins for each variable individually, and the presence of
+/// the private sentinel on the re-exec'd image is what terminates the recursion.
 #[cfg(unix)]
 fn cap_malloc_arenas() {
     use std::os::unix::process::CommandExt as _;
-    if std::env::var_os("MALLOC_ARENA_MAX").is_some() {
+    if std::env::var_os("MACS3_RS_ALLOC_TUNED").is_some() {
         return;
     }
     let Ok(exe) = std::env::current_exe() else {
         return;
     };
-    let err = std::process::Command::new(exe)
-        .args(std::env::args_os().skip(1))
-        .env("MALLOC_ARENA_MAX", "1")
-        .exec();
+    let mut child = std::process::Command::new(exe);
+    child.args(std::env::args_os().skip(1));
+    child.env("MACS3_RS_ALLOC_TUNED", "1");
+    for (name, value) in [("MALLOC_ARENA_MAX", "1"), ("MALLOC_TRIM_THRESHOLD_", "0")] {
+        if std::env::var_os(name).is_none() {
+            child.env(name, value);
+        }
+    }
     // `exec` only returns on failure; fall through and run normally in that case
     // rather than refusing to start.
-    let _ = err;
+    let _ = child.exec();
 }
 
 #[cfg(not(unix))]
