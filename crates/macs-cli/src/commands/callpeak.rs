@@ -936,6 +936,7 @@ pub fn run(o: &Options) -> Result<()> {
     // a flag upstream does not have would be an accept/reject divergence. Inert unless
     // the variable is set.
     let rss_trace = std::env::var("MACS3_RS_RSS_TRACE").is_ok();
+    let t_start = std::time::Instant::now();
     if rss_trace {
         eprintln!("rss[entry] {} kB", rss_kb());
     }
@@ -1549,7 +1550,6 @@ pub fn run(o: &Options) -> Result<()> {
         let mut histogram = macs_score::PScoreHistogram::new();
         let ladder = cut_analysis.then(macs_peaks::callpeak::cutoff_ladder);
         let mut cut_stats = macs_peaks::callpeak::CutoffStats::new();
-        let mut cache = PScoreCache::new();
         let spool = tempfile::NamedTempFile::new_in(&tempdir)?;
         let mut spool_writer = BufWriter::new(spool.as_file());
         let mut stream_bodies = if o.flag("store_bdg") {
@@ -1569,55 +1569,97 @@ pub fn run(o: &Options) -> Result<()> {
         } else {
             1.0
         };
-        for name_bytes in &source.names {
-            let Some(signal) = source.chromosome(name_bytes) else {
-                spool_writer.write_all(&[0])?;
-                continue;
+        // Chunked pipeline: build + score a bounded window of chromosomes in
+        // parallel, then write the spool serially in chromosome order.
+        //
+        // The pass used to be a plain serial `for`, which lost the chromosome-level
+        // parallelism `build_all_se_chromosomes` used to provide and cost ~6 s on
+        // 24 chromosomes. Processing all chromosomes at once (the pre-streaming
+        // design) restores the parallelism but keeps every signal resident, which is
+        // the 2.9 GB the streaming rewrite removed. A window of `CHUNK` chromosomes
+        // keeps peak memory bounded while still fitting the machine.
+        //
+        // Determinism: each chromosome's work is independent (`chromosome()` takes
+        // `&self` and allocates its own `PScoreCache`), results are collected in slice
+        // order, and the histogram merge and cutoff accumulation stay serial in
+        // chromosome order. The histogram buckets are `i64`, so even a reordered
+        // merge would be exact.
+        const CHUNK: usize = 3;
+        for names in source.names.chunks(CHUNK) {
+            let prepared: Vec<Option<PreparedChrom>> = {
+                use rayon::prelude::*;
+                names
+                    .par_iter()
+                    .map(|name_bytes| {
+                        let signal = source.chromosome(name_bytes)?;
+                        let mut cache = PScoreCache::new();
+                        let ptrack = macs_peaks::callpeak::se_pscore_track(&signal, &mut cache);
+                        let mut hist = macs_score::PScoreHistogram::new();
+                        hist.add_track_from(&ptrack, 0);
+                        let mut spool_bytes: Vec<u8> = Vec::new();
+                        spool_bytes.push(1);
+                        write_signal_track(&mut spool_bytes, &signal.treat).ok()?;
+                        if let Some(ctrl) = &signal.ctrl {
+                            spool_bytes.push(1);
+                            write_signal_track(&mut spool_bytes, ctrl).ok()?;
+                        } else {
+                            spool_bytes.push(0);
+                        }
+                        let body = if o.flag("store_bdg") && signal.ctrl.is_some() {
+                            let mut t_body = String::new();
+                            let mut c_body = String::new();
+                            append_paired_bdg_signal(
+                                &signal,
+                                coord_shift,
+                                denominator,
+                                &mut t_body,
+                                &mut c_body,
+                            );
+                            Some((t_body, c_body))
+                        } else {
+                            None
+                        };
+                        Some(PreparedChrom {
+                            hist,
+                            spool_bytes,
+                            body,
+                            ptrack,
+                        })
+                    })
+                    .collect()
             };
-            spool_writer.write_all(&[1])?;
-            write_signal_track(&mut spool_writer, &signal.treat)?;
-            if let Some(ctrl) = &signal.ctrl {
-                spool_writer.write_all(&[1])?;
-                write_signal_track(&mut spool_writer, ctrl)?;
-            } else {
-                spool_writer.write_all(&[0])?;
-            }
-            cache.clear();
-            let ptrack = macs_peaks::callpeak::se_pscore_track(&signal, &mut cache);
-            histogram.add_track_from(&ptrack, 0);
-            if let Some(ladder) = &ladder {
-                macs_peaks::callpeak::accumulate_cutoffs(
-                    &mut cut_stats,
-                    &ptrack,
-                    ladder,
-                    tsize.max(1) as macs_core::Coord,
-                    d,
-                );
-            }
-            if let (Some((tfile, cfile)), Some(_)) = (&mut stream_bodies, &signal.ctrl) {
-                let mut t_body = String::new();
-                let mut c_body = String::new();
-                append_paired_bdg_signal(
-                    &signal,
-                    coord_shift,
-                    denominator,
-                    &mut t_body,
-                    &mut c_body,
-                );
-                tfile.write_all(t_body.as_bytes())?;
-                cfile.write_all(c_body.as_bytes())?;
+            for entry in prepared {
+                let Some(entry) = entry else {
+                    spool_writer.write_all(&[0])?;
+                    continue;
+                };
+                spool_writer.write_all(&entry.spool_bytes)?;
+                histogram.merge_owned(entry.hist);
+                if let Some(ladder) = &ladder {
+                    macs_peaks::callpeak::accumulate_cutoffs(
+                        &mut cut_stats,
+                        &entry.ptrack,
+                        ladder,
+                        tsize.max(1) as macs_core::Coord,
+                        d,
+                    );
+                }
+                if let (Some((tfile, cfile)), Some((t_body, c_body))) =
+                    (&mut stream_bodies, &entry.body)
+                {
+                    tfile.write_all(t_body.as_bytes())?;
+                    cfile.write_all(c_body.as_bytes())?;
+                }
             }
         }
         if let Some(ladder) = &ladder {
             macs_peaks::callpeak::seed_cutoffs(&mut histogram, ladder);
         }
-        if let Some((tfile, cfile)) = &mut stream_bodies {
-            tfile.as_file_mut().sync_all()?;
-            cfile.as_file_mut().sync_all()?;
-        }
+        // No `sync_all` on the spool or the streamed bedGraph bodies: they are
+        // read back by this same process within the run, so durability is
+        // irrelevant and forcing ~800 MB to physical disk cost 2.6 s.
         spool_writer.flush()?;
         drop(spool_writer);
-        spool.as_file().sync_all()?;
         let table = macs_score::PqTable::from_histogram(&histogram);
         let cut_stats = if cut_analysis {
             cut_stats
@@ -1696,13 +1738,11 @@ pub fn run(o: &Options) -> Result<()> {
         if let Some(ladder) = &ladder {
             macs_peaks::callpeak::seed_cutoffs(&mut histogram, ladder);
         }
-        if let Some((tfile, cfile)) = &mut stream_bodies {
-            tfile.as_file_mut().sync_all()?;
-            cfile.as_file_mut().sync_all()?;
-        }
+        // No `sync_all` on the spool or the streamed bedGraph bodies: they are
+        // read back by this same process within the run, so durability is
+        // irrelevant and forcing ~800 MB to physical disk cost 2.6 s.
         spool_writer.flush()?;
         drop(spool_writer);
-        spool.as_file().sync_all()?;
         let table = macs_score::PqTable::from_histogram(&histogram);
         let cut_stats = if cut_analysis {
             cut_stats
@@ -1734,8 +1774,16 @@ pub fn run(o: &Options) -> Result<()> {
     let cut_stats = &cut_stats;
 
     if rss_trace {
-        eprintln!("rss[signals built] {} kB", rss_kb());
-        eprintln!("rss[after qtable] {} kB", rss_kb());
+        eprintln!(
+            "rss[signals built] {} kB t={:.2}s",
+            rss_kb(),
+            t_start.elapsed().as_secs_f64()
+        );
+        eprintln!(
+            "rss[after qtable] {} kB t={:.2}s",
+            rss_kb(),
+            t_start.elapsed().as_secs_f64()
+        );
     }
     if sdump_on {
         let cutoff_text = macs_peaks::callpeak::render_cutoff_analysis(
@@ -2189,6 +2237,18 @@ struct SpmrDenom {
 /// The inputs stay resident, but the genome-wide pileup and lambda tracks do
 /// not. The first pass reduces each chromosome to the q-value histogram; the
 /// second pass calls peaks and drops each chromosome before moving on.
+/// One chromosome's q-table-pass output, produced in parallel and consumed serially.
+struct PreparedChrom {
+    /// This chromosome's p-score histogram, merged into the run-wide one in order.
+    hist: macs_score::PScoreHistogram,
+    /// The spool record, already serialised (marker + treatment + optional control).
+    spool_bytes: Vec<u8>,
+    /// Streamed bedGraph bodies for `-B`, when the control exists.
+    body: Option<(String, String)>,
+    /// The p-score track, still needed for `--cutoff-analysis`.
+    ptrack: macs_rle::SignalTrack<f32>,
+}
+
 struct SeSignalSource {
     treat: SingleEndTrack,
     ctrl: Option<SingleEndTrack>,

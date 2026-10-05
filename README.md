@@ -124,28 +124,24 @@ coverage still vary; see [status](docs/status.md). Parser details:
 
 ## Performance
 
-The table below is the original benchmark baseline. On the same real 5M-read
-single-end CTCF workload (`--nomodel --extsize 200`, one thread), a newer Rust
-run took 11.31 s and used 265,788 kB peak RSS; pinned upstream took 32.0 s and
-used 297,628 kB. That's about 2.8x speed and 0.89x upstream RSS, so it does not
-meet the release targets of at least 3x speed and at most 0.5x RSS on this workload.
-The fresh summit check matches narrowPeak and summits byte-for-byte; the XLS
-difference is only the output-directory command line header. Performance work
-continues, and this single workload is not the full benchmark matrix. See
-[status](docs/status.md) for current progress.
-
 Measured on real CTCF ChIP-seq data (5.0 M treatment + 5.0 M control reads,
 human `hs` genome size), median of 3, release build:
 
 | workload | macs3 3.0.5 | macs3-rs | speedup | peak RSS |
 |---|---|---|---|---|
-| SE `--nomodel --extsize 200 -B` | 45.3 s / 297 MB | 13.3 s / 2967 MB | **3.4x** | **10.0x** |
-| SE `--nomodel --SPMR` | 34.0 s / 294 MB | 4.8 s / 2304 MB | **7.0x** | **7.9x** |
-| SE `--nomodel`, no control | 23.9 s / 171 MB | 7.2 s / 1391 MB | **3.3x** | **8.1x** |
+| SE `--nomodel --extsize 200 -B` | 41.3 s / 297 MB | 12.4 s / 1010 MB | **3.3x** | 3.4x |
+| SE `--nomodel --SPMR` | 31.5 s / 302 MB | 7.6 s / 547 MB | **4.2x** | 1.8x |
+| SE model mode (default) | 43.6 s / 296 MB | 13.0 s / 958 MB | **3.4x** | 3.2x |
+| SE `--nomodel`, no control | 22.1 s / 169 MB | 6.8 s / 389 MB | **3.3x** | 2.3x |
+| BAMPE narrow | 1.4 s / 80 MB | 0.4 s / 49 MB | **3.2x** | **0.6x** |
 
-At the time of this baseline, wall clock was 3–7x better and peak memory was
-8–10x higher than upstream. Those RSS figures have since been substantially
-reduced and must not be read as current measurements.
+Wall clock is 3.2-4.2x better on every workload. Peak memory is still above
+upstream on the single-end paths (0.6x-3.4x): the chromosome-level pipeline
+processes a bounded window of chromosomes at a time, and the window size is the
+memory/speed dial. Closing the remaining gap needs a smaller read representation
+(single-end positions are `u64` today), not more streaming.
+
+## Testing
 
 ## Testing
 
