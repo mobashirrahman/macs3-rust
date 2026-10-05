@@ -159,7 +159,7 @@ pub fn bdgcmp(o: &Options) -> Result<()> {
             .find(|(n, _)| n == method)
             .expect("validated")
             .1;
-        sbtrack.change_score_method(sm);
+        sbtrack.change_score_method(sm)?;
         let upper = method.to_uppercase();
         sbtrack.write_bedgraph(
             &dir.join(&ofile),

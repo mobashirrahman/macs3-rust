@@ -159,3 +159,141 @@ chr1\t0\t700\tt_broadRegion1\t120\t.\t0\t0\t0\t4\t1,200,200,1\t0,100,400,699\t0\
     assert_eq!(got, want);
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+/// Peak numbers run continuously across chromosomes, matching upstream's
+/// `write_to_narrowPeak` (`PeakIO.py:719-735`), where `n_peak` is initialised
+/// once before the chromosome loop.
+///
+/// Bytes below are MACS3 3.0.5's for `bdgpeakcall -c 5 -l 50 -g 30
+/// --o-prefix t` on this two-chromosome bedGraph: the chr2 peak is
+/// `t_narrowPeak2`, not `t_narrowPeak1`.
+#[test]
+fn peak_numbers_run_continuously_across_chromosomes() {
+    let dir = tmpdir("continuous");
+    let input = dir.join("in.bdg");
+    std::fs::write(
+        &input,
+        "chr1\t0\t100\t10\n\
+         chr1\t100\t300\t1\n\
+         chr2\t0\t150\t10\n\
+         chr2\t150\t400\t1\n",
+    )
+    .unwrap();
+    let out = dir.join("o");
+    std::fs::create_dir_all(&out).unwrap();
+    let args = vec![
+        s("-i"),
+        s(input.to_str().unwrap()),
+        s("-c"),
+        s("5"),
+        s("-l"),
+        s("50"),
+        s("-g"),
+        s("30"),
+        s("--outdir"),
+        s(out.to_str().unwrap()),
+        s("--o-prefix"),
+        s("t"),
+    ];
+    let o: Options = parse_flags("bdgpeakcall", &args).expect("parse");
+    macs_cli::commands::bdgpeakcall::bdgpeakcall(&o).expect("bdgpeakcall runs");
+    let got = std::fs::read_to_string(out.join("t_c5.0_l50_g30_peaks.narrowPeak")).unwrap();
+    let want = "track type=narrowPeak name=\"t\" description=\"t\" nextItemButton=on\n\
+chr1\t0\t100\tt_narrowPeak1\t100\t.\t0\t0\t0\t50\n\
+chr2\t0\t150\tt_narrowPeak2\t100\t.\t0\t0\t0\t75\n";
+    assert_eq!(got, want);
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// `call_broadpeaks` (`BedGraph.py:564-567`) iterates only the chromosomes of
+/// the lvl1 peaks, so a chromosome that only reaches the linking cutoff
+/// contributes no broad peak. Here chr2 peaks at 3, above the linking cutoff
+/// 2 but below the peak cutoff 5.
+///
+/// Bytes below are MACS3 3.0.5's for `bdgbroadcall -c 5 -C 2 -l 50 -g 30 -G
+/// 800 --o-prefix t` on this bedGraph.
+#[test]
+fn bdgbroadcall_drops_chromosomes_without_strong_peaks() {
+    let dir = tmpdir("broad-drop");
+    let input = dir.join("in.bdg");
+    std::fs::write(
+        &input,
+        "chr1\t0\t100\t10\n\
+         chr1\t100\t300\t1\n\
+         chr2\t0\t150\t3\n\
+         chr2\t150\t400\t1\n",
+    )
+    .unwrap();
+    let out = dir.join("o");
+    std::fs::create_dir_all(&out).unwrap();
+    let args = vec![
+        s("-i"),
+        s(input.to_str().unwrap()),
+        s("-c"),
+        s("5"),
+        s("-C"),
+        s("2"),
+        s("-l"),
+        s("50"),
+        s("-g"),
+        s("30"),
+        s("-G"),
+        s("800"),
+        s("--outdir"),
+        s(out.to_str().unwrap()),
+        s("--o-prefix"),
+        s("t"),
+    ];
+    let o: Options = parse_flags("bdgbroadcall", &args).expect("parse");
+    macs_cli::commands::bdgpeakcall::bdgbroadcall(&o).expect("bdgbroadcall runs");
+    let got = std::fs::read_to_string(out.join("t_c5.0_C2.00_l50_g30_G800_broad.bed12")).unwrap();
+    let want = "track name=\"peak\" description=\"peak\" type=gappedPeak nextItemButton=on\n\
+chr1\t0\t100\tt_broadRegion1\t100\t.\t0\t0\t0\t1\t100\t0\t0\t0\t0\n";
+    assert_eq!(got, want);
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// With `-o`, upstream renames the o-prefix to the ofile name
+/// (`bdgbroadcall_cmd.py:53-55`), so the peak names use the ofile too.
+/// Bytes below are MACS3 3.0.5's for the same bedGraph as above with `-o
+/// custom.bed12`.
+#[test]
+fn bdgbroadcall_names_peaks_after_ofile_when_o_given() {
+    let dir = tmpdir("broad-ofile");
+    let input = dir.join("in.bdg");
+    std::fs::write(
+        &input,
+        "chr1\t0\t100\t10\n\
+         chr1\t100\t300\t1\n\
+         chr2\t0\t150\t3\n\
+         chr2\t150\t400\t1\n",
+    )
+    .unwrap();
+    let out = dir.join("o");
+    std::fs::create_dir_all(&out).unwrap();
+    let args = vec![
+        s("-i"),
+        s(input.to_str().unwrap()),
+        s("-c"),
+        s("5"),
+        s("-C"),
+        s("2"),
+        s("-l"),
+        s("50"),
+        s("-g"),
+        s("30"),
+        s("-G"),
+        s("800"),
+        s("--outdir"),
+        s(out.to_str().unwrap()),
+        s("-o"),
+        s("custom.bed12"),
+    ];
+    let o: Options = parse_flags("bdgbroadcall", &args).expect("parse");
+    macs_cli::commands::bdgpeakcall::bdgbroadcall(&o).expect("bdgbroadcall runs");
+    let got = std::fs::read_to_string(out.join("custom.bed12")).unwrap();
+    let want = "track name=\"peak\" description=\"peak\" type=gappedPeak nextItemButton=on\n\
+chr1\t0\t100\tcustom.bed12_broadRegion1\t100\t.\t0\t0\t0\t1\t100\t0\t0\t0\t0\n";
+    assert_eq!(got, want);
+    let _ = std::fs::remove_dir_all(&dir);
+}

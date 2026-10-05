@@ -237,24 +237,50 @@ impl ScoreTrack2 {
     }
 
     /// `change_score_method` (`ScoreTrack.py:391-423`).
-    pub fn change_score_method(&mut self, method: ScoreMethod) {
+    ///
+    /// Fails exactly where upstream fails: a non-positive lambda with `-p 0`
+    /// raises out of `compute_pvalue` (`Prob.py:269`), and a zero denominator
+    /// with `-p 0` raises `ZeroDivisionError` out of `get_logFE`
+    /// (`ScoreTrack.py:150-152`). Both abort before any output file is opened
+    /// (`bdgcmp_cmd.py:70-91` computes the score before `open(ofile, "w")`), so
+    /// the caller must propagate the error before creating the file.
+    pub fn change_score_method(&mut self, method: ScoreMethod) -> macs_core::Result<()> {
         match method {
             ScoreMethod::P => self.compute_pvalue(),
             ScoreMethod::Q => {
                 // p must exist to build the pq table
                 if self.scoring_method != ScoreMethod::P {
-                    self.compute_pvalue();
+                    self.compute_pvalue()?;
                 }
                 self.compute_qvalue();
+                Ok(())
             }
-            ScoreMethod::LogLR => self.compute_likelihood(),
-            ScoreMethod::SymLogLR => self.compute_sym_likelihood(),
+            ScoreMethod::LogLR => {
+                self.compute_likelihood();
+                Ok(())
+            }
+            ScoreMethod::SymLogLR => {
+                self.compute_sym_likelihood();
+                Ok(())
+            }
             ScoreMethod::LogFE => self.compute_logfe(),
-            ScoreMethod::FE => self.compute_foldenrichment(),
-            ScoreMethod::Subtract => self.compute_subtraction(),
-            ScoreMethod::SPMR => self.compute_spmr(),
-            ScoreMethod::Max => self.compute_max(),
-            ScoreMethod::None => {}
+            ScoreMethod::FE => {
+                self.compute_foldenrichment();
+                Ok(())
+            }
+            ScoreMethod::Subtract => {
+                self.compute_subtraction();
+                Ok(())
+            }
+            ScoreMethod::SPMR => {
+                self.compute_spmr();
+                Ok(())
+            }
+            ScoreMethod::Max => {
+                self.compute_max();
+                Ok(())
+            }
+            ScoreMethod::None => Ok(()),
         }
     }
 
@@ -263,14 +289,14 @@ impl ScoreTrack2 {
     /// Note the treatment side is **truncated to an integer** after the `f32`
     /// pseudocount add (`cython.cast(cython.int, ...)`), while the lambda side
     /// stays `f32` -- the same asymmetry as the peak caller's p-score.
-    fn compute_pvalue(&mut self) {
+    fn compute_pvalue(&mut self) -> macs_core::Result<()> {
         let pc = self.pseudocount;
         for chrom in self.chroms_sorted() {
             let e = &self.data[&chrom];
             let mut prev_pos: Coord = 0;
             let mut score = Vec::with_capacity(e.pos.len());
             for i in 0..e.pos.len() {
-                let v = pscore_interval(e.treat[i], e.ctrl[i], pc);
+                let v = pscore_interval(e.treat[i], e.ctrl[i], pc)?;
                 score.push(v);
                 let len = e.pos[i] - prev_pos;
                 *self.pvalue_stat.entry(macs_score_key(v)).or_insert(0) += u64::from(len);
@@ -279,6 +305,7 @@ impl ScoreTrack2 {
             self.data.get_mut(&chrom).expect("present").score = score;
         }
         self.scoring_method = ScoreMethod::P;
+        Ok(())
     }
 
     /// `compute_qvalue` (`ScoreTrack.py:454-476`): map `-log10 p` through the
@@ -390,16 +417,16 @@ impl ScoreTrack2 {
     /// `1.2095149755477905`, which is `f32(log10(f64(f32(16.2/1.0))))`. Doing
     /// the division in `f64` as well gives `1.209515095`, a different `f32`
     /// printing as `1.20952` instead of `1.20951`.
-    fn compute_logfe(&mut self) {
+    fn compute_logfe(&mut self) -> macs_core::Result<()> {
         let pc = self.pseudocount;
         for chrom in self.chroms_sorted() {
             let e = self.data.get_mut(&chrom).expect("present");
             for i in 0..e.pos.len() {
-                let ratio = (e.treat[i] + pc) / (e.ctrl[i] + pc);
-                e.score[i] = f64::from(ratio).log10() as f32;
+                e.score[i] = logfe_interval(e.treat[i], e.ctrl[i], pc)?;
             }
         }
         self.scoring_method = ScoreMethod::LogFE;
+        Ok(())
     }
 
     /// `compute_foldenrichment` (`ScoreTrack.py:599-621`).
@@ -565,17 +592,68 @@ fn row(genome: &Genome, chrom: ChromId, start: Coord, end: Coord, value: f32) ->
 /// integer truncation -- see [`pseudocounted_inputs`](crate::pseudocounted_inputs) for why the
 /// `f32` rounding of that sum gives the wrong count.
 ///
-/// # Panics
-/// If the control pileup plus pseudocount is not positive. With the default
-/// `bdgcmp` pseudocount of `0.0` and a control track containing explicit zeros
-/// upstream raises `AssertionError: Lambda must > 0` in exactly the same place,
-/// so this is a faithful failure rather than a divergence -- but it does mean
-/// `bdgcmp -m ppois -p 0` crashes on sparse control bedGraphs in both.
-fn pscore_interval(treat: f32, ctrl: f32, pseudocount: f32) -> f32 {
+/// Returns [`MacsError::Rejected`] when the control pileup plus pseudocount is
+/// not positive. With `bdgcmp -p 0` and a control track containing explicit
+/// zeros, upstream raises `AssertionError: Lambda must > 0` (`Prob.py:269`) in
+/// exactly the same place, and `bdgcmp_cmd.py` computes the score before
+/// opening the output file -- so the observable contract is exit 1 with no
+/// output file, not a panic (exit 101) and not a partial file.
+/// Shared guard for the p-score lambda: `Prob.py:269` asserts
+/// `lam > 0.0`, and `!(x > 0.0)` rejects `<= 0.0` and `NaN` alike.
+/// Both [`pscore_interval`] and [`score_would_fail`] go through here so the
+/// two can never disagree on whether a row fails.
+fn pscore_guard(expectation: f32) -> Option<MacsError> {
+    if expectation <= 0.0 || expectation.is_nan() {
+        Some(MacsError::Rejected(format!(
+            "Lambda must > 0, however we got {expectation}"
+        )))
+    } else {
+        None
+    }
+}
+
+/// Shared guard for the `logFE` denominator: Cython raises
+/// `ZeroDivisionError: float division` when `y == 0.0`
+/// (`ScoreTrack.py:150-152`). Both [`logfe_interval`] and
+/// [`score_would_fail`] go through here so the two can never disagree.
+/// The addition stays in `f32`, matching `(c[i] + pseudocount)` upstream.
+fn logfe_guard(denominator: f32) -> Option<MacsError> {
+    if denominator == 0.0 {
+        Some(MacsError::Rejected(
+            "ZeroDivisionError: float division".into(),
+        ))
+    } else {
+        None
+    }
+}
+
+fn pscore_interval(treat: f32, ctrl: f32, pseudocount: f32) -> macs_core::Result<f32> {
     let (observed, expectation) = crate::pseudocounted_inputs(treat, ctrl, pseudocount);
-    let v = poisson_cdf(observed, f64::from(expectation), false, true)
-        .expect("pseudocounted control is positive");
-    (-v) as f32
+    if let Some(e) = pscore_guard(expectation) {
+        return Err(e);
+    }
+    // The guard above rejects exactly the inputs `poisson_cdf` rejects
+    // (`!(lam > 0.0)` on the exactly-converted `f64` lambda), so this
+    // cannot fail.
+    let v =
+        poisson_cdf(observed, f64::from(expectation), false, true).expect("lambda guarded above");
+    Ok((-v) as f32)
+}
+
+/// `get_logFE` (`ScoreTrack.py:150-152`): `log10(x/y)`.
+///
+/// Cython checks float division by zero and raises `ZeroDivisionError: float
+/// division` when `y == 0`, so with `bdgcmp -p 0` any zero control interval is
+/// fatal -- including `0/0`, which Rust would otherwise answer with `nan`.
+/// The check runs on the `f32` denominator, matching `(p[i] + pseudocount) /
+/// (c[i] + pseudocount)` upstream.
+fn logfe_interval(treat: f32, ctrl: f32, pseudocount: f32) -> macs_core::Result<f32> {
+    let y = ctrl + pseudocount;
+    if let Some(e) = logfe_guard(y) {
+        return Err(e);
+    }
+    let ratio = (treat + pseudocount) / y;
+    Ok(f64::from(ratio).log10() as f32)
 }
 
 /// One row's score for the bedGraph scorers that are pure functions of
@@ -590,23 +668,72 @@ fn pscore_interval(treat: f32, ctrl: f32, pseudocount: f32) -> f32 {
 /// Returns `None` for the methods that are not row-local: `Q` needs the
 /// genome-wide p-value table, `SPMR` needs a track-wide scale factor, and `None`
 /// means no method has been selected. Those keep the materialising path.
-pub fn score_value(method: ScoreMethod, treat: f32, ctrl: f32, pseudocount: f32) -> Option<f32> {
-    Some(match method {
-        ScoreMethod::P => pscore_interval(treat, ctrl, pseudocount),
+///
+/// Returns `Err` exactly where the materialising `compute_*` methods fail --
+/// a non-positive lambda for `P` (`Prob.py:269`) and a zero denominator for
+/// `LogFE` (`ScoreTrack.py:150-152`) -- so the streaming fast path and the
+/// materialising path agree on exit status and on leaving no output file.
+pub fn score_value(
+    method: ScoreMethod,
+    treat: f32,
+    ctrl: f32,
+    pseudocount: f32,
+) -> macs_core::Result<Option<f32>> {
+    Ok(Some(match method {
+        ScoreMethod::P => pscore_interval(treat, ctrl, pseudocount)?,
         ScoreMethod::Subtract => treat - ctrl,
         ScoreMethod::LogLR => log_lr_asym(treat + pseudocount, ctrl + pseudocount),
         ScoreMethod::SymLogLR => log_lr_sym(treat + pseudocount, ctrl + pseudocount),
-        ScoreMethod::LogFE => {
-            let ratio = (treat + pseudocount) / (ctrl + pseudocount);
-            f64::from(ratio).log10() as f32
-        }
+        ScoreMethod::LogFE => logfe_interval(treat, ctrl, pseudocount)?,
         ScoreMethod::FE => {
             let pc = f64::from(pseudocount);
             ((f64::from(treat) + pc) / (f64::from(ctrl) + pc)) as f32
         }
         ScoreMethod::Max => treat.max(ctrl),
-        ScoreMethod::Q | ScoreMethod::SPMR | ScoreMethod::None => return None,
-    })
+        ScoreMethod::Q | ScoreMethod::SPMR | ScoreMethod::None => return Ok(None),
+    }))
+}
+
+/// Whether [`score_value`] can fail for `method`.
+///
+/// Only `P` (non-positive lambda, `Prob.py:269`) and `LogFE` (zero
+/// denominator, `ScoreTrack.py:150-152`) return `Err`; every other method
+/// answers every input (numpy semantics or plain arithmetic). Callers use
+/// this to skip a validation walk entirely for methods that cannot fail.
+pub fn score_can_fail(method: ScoreMethod) -> bool {
+    matches!(method, ScoreMethod::P | ScoreMethod::LogFE)
+}
+
+/// Cheap precondition check: `Some(error)` exactly when [`score_value`]
+/// would return `Err` for this row, without computing the score (in
+/// particular without the Poisson CDF).
+///
+/// The guards are the shared [`pscore_guard`]/[`logfe_guard`] helpers that
+/// `score_value` itself uses, with the same `f32` widths (the lambda via
+/// [`pseudocounted_inputs`](crate::pseudocounted_inputs), the denominator via
+/// `f32` addition), so the two can never disagree. Methods that cannot fail
+/// always answer `None`.
+pub fn score_would_fail(
+    method: ScoreMethod,
+    treat: f32,
+    ctrl: f32,
+    pseudocount: f32,
+) -> Option<MacsError> {
+    match method {
+        ScoreMethod::P => {
+            let (_, expectation) = crate::pseudocounted_inputs(treat, ctrl, pseudocount);
+            pscore_guard(expectation)
+        }
+        ScoreMethod::LogFE => logfe_guard(ctrl + pseudocount),
+        ScoreMethod::Subtract
+        | ScoreMethod::LogLR
+        | ScoreMethod::SymLogLR
+        | ScoreMethod::FE
+        | ScoreMethod::Max
+        | ScoreMethod::Q
+        | ScoreMethod::SPMR
+        | ScoreMethod::None => None,
+    }
 }
 
 /// The two likelihood-ratio formulas, evaluated the way C does.
@@ -1126,8 +1253,8 @@ mod tests {
     fn pscore_truncates_treatment_to_int() {
         // 5.9 + 0.0 -> 5 observed, not 6
         assert_eq!(
-            pscore_interval(5.9, 1.0, 0.0),
-            pscore_interval(5.0, 1.0, 0.0)
+            pscore_interval(5.9, 1.0, 0.0).unwrap(),
+            pscore_interval(5.0, 1.0, 0.0).unwrap()
         );
     }
 
@@ -1138,5 +1265,98 @@ mod tests {
         let (observed, _) = crate::pseudocounted_inputs(19.9, 5.0, 0.1);
         assert_eq!(observed, 19, "must not round the sum up to 20");
         assert_eq!((19.9f32 + 0.1f32) as i64, 20, "f32 addition would give 20");
+    }
+
+    /// At `-p 0`, zero-valued inputs fail exactly where upstream fails, so the
+    /// streaming fast path (`score_value`) and the materialising path
+    /// (`compute_*`) agree on exit status: `get_logFE` raises
+    /// `ZeroDivisionError` on a zero denominator (`ScoreTrack.py:150-152`,
+    /// including `0/0`), and `get_pscore` raises `AssertionError` on a
+    /// non-positive lambda (`Prob.py:269`). `FE` instead follows numpy
+    /// semantics (`nan`, `inf`) and `logLR`/`slogLR` are 0 on the diagonal.
+    #[test]
+    fn zero_valued_inputs_fail_like_upstream_at_zero_pseudocount() {
+        assert!(logfe_interval(0.0, 0.0, 0.0).is_err());
+        assert!(logfe_interval(5.0, 0.0, 0.0).is_err());
+        assert!(logfe_interval(5.0, 2.0, 0.0).is_ok());
+        assert!(pscore_interval(0.0, 0.0, 0.0).is_err());
+        assert!(pscore_interval(5.0, 0.0, 0.0).is_err());
+        assert!(pscore_interval(5.0, 2.0, 0.0).is_ok());
+        // the row scorer used by the streaming path agrees
+        assert!(score_value(ScoreMethod::LogFE, 0.0, 0.0, 0.0).is_err());
+        assert!(score_value(ScoreMethod::P, 0.0, 0.0, 0.0).is_err());
+        assert!(score_value(ScoreMethod::LogFE, 5.0, 2.0, 0.0)
+            .unwrap()
+            .unwrap()
+            .is_finite());
+        // numpy semantics: FE never raises
+        let fe = score_value(ScoreMethod::FE, 0.0, 0.0, 0.0)
+            .unwrap()
+            .unwrap();
+        assert!(fe.is_nan(), "FE 0/0 is nan, not an error");
+        let fe = score_value(ScoreMethod::FE, 5.0, 0.0, 0.0)
+            .unwrap()
+            .unwrap();
+        assert!(fe.is_infinite() && fe.is_sign_positive(), "FE x/0 is inf");
+        // likelihood ratios are 0 on the diagonal, finite elsewhere
+        assert_eq!(
+            score_value(ScoreMethod::LogLR, 0.0, 0.0, 0.0).unwrap(),
+            Some(0.0)
+        );
+        assert!(
+            score_value(ScoreMethod::SymLogLR, 0.0, 0.0, 0.0)
+                .unwrap()
+                .unwrap()
+                == 0.0
+        );
+    }
+
+    /// The cheap precondition check ([`score_would_fail`]) and the full
+    /// [`score_value`] agree on `Err` vs `Ok` for every streamable method,
+    /// over a grid covering 0, negative, tiny and NaN inputs.
+    #[test]
+    fn score_would_fail_agrees_with_score_value() {
+        const STREAMABLE: [ScoreMethod; 7] = [
+            ScoreMethod::P,
+            ScoreMethod::Subtract,
+            ScoreMethod::LogLR,
+            ScoreMethod::SymLogLR,
+            ScoreMethod::LogFE,
+            ScoreMethod::FE,
+            ScoreMethod::Max,
+        ];
+        const VALUES: [f32; 8] = [0.0, -0.0, 5.0, -1.0, 1e-30, 0.5, 10.0, f32::NAN];
+        const PSEUDOCOUNTS: [f32; 6] = [0.0, 1.0, 0.5, -1.0, 1e-30, f32::NAN];
+        for &method in &STREAMABLE {
+            for &treat in &VALUES {
+                for &ctrl in &VALUES {
+                    for &pc in &PSEUDOCOUNTS {
+                        let cheap = score_would_fail(method, treat, ctrl, pc);
+                        let full = score_value(method, treat, ctrl, pc);
+                        assert_eq!(
+                            cheap.is_some(),
+                            full.is_err(),
+                            "disagreement for {method:?} treat={treat} ctrl={ctrl} pc={pc}"
+                        );
+                        // Same failure, same message: the streaming
+                        // validation must not change the reported error.
+                        if let (Some(want), Err(got)) = (cheap, full) {
+                            assert_eq!(
+                                format!("{want}"),
+                                format!("{got}"),
+                                "message drift for {method:?} treat={treat} ctrl={ctrl} pc={pc}"
+                            );
+                        }
+                        // Methods that cannot fail never take the
+                        // validation walk.
+                        assert_eq!(
+                            score_can_fail(method),
+                            matches!(method, ScoreMethod::P | ScoreMethod::LogFE),
+                            "score_can_fail must list exactly the failing methods"
+                        );
+                    }
+                }
+            }
+        }
     }
 }

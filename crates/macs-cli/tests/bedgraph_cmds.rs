@@ -87,6 +87,40 @@ fn bdgopt_p2q_is_byte_identical_to_upstream() {
 }
 
 #[test]
+fn bdgopt_p2q_narrows_the_log10_n_term() {
+    // `p2q` keeps `f = -log10(N)` in an f32 -- upstream declares `f: cython.float`
+    // (`BedGraph.py:929`) -- instead of summing in f64 throughout. `N = 49` here, so
+    // `f = -1.6901960800285136` narrows to `-1.6901960372924805`, `4.3e-8` higher.
+    // Summing that term in f64 put the result that much low, and `%.5f` printed
+    // `16.69018` where upstream prints `16.69019`.
+    //
+    // The pinned bytes are upstream's for this exact input
+    // (`chr1 0 20 18.38038` / `chr1 20 49 1.5`), from
+    // `macs3 bdgopt -i in.bdg -m p2q -o o.bdg`. The first value is chosen so the
+    // two candidate sums straddle a 6th-decimal tie, which is what makes the
+    // difference visible at five; the second goes negative and clamps to 0.
+    let dir = tmpdir("p2q-narrow");
+    let input = write(&dir, "in.bdg", "chr1\t0\t20\t18.38038\nchr1\t20\t49\t1.5\n");
+    let out = dir.join("o_p2q.bdg");
+    let args = vec![
+        s("-i"),
+        s(&input),
+        s("-m"),
+        s("p2q"),
+        s("-o"),
+        s("o_p2q.bdg"),
+        s("--outdir"),
+        s(dir.to_str().unwrap()),
+    ];
+    let o = parse("bdgopt", &args);
+    macs_cli::commands::bedgraph_cmds::bdgopt(&o).expect("bdgopt p2q runs");
+    let got = std::fs::read_to_string(&out).expect("written");
+    let want = "track type=bedGraph name=\"P2Q_modified_scores\" description=\"Scores calculated by P2Q\" visibility=2 alwaysZero=on\nchr1\t0\t20\t16.69019\nchr1\t20\t49\t0.00000\n";
+    assert_eq!(got, want);
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+#[test]
 fn cmbreps_methods_are_byte_identical_to_upstream() {
     let dir = tmpdir("cmb");
     let a = write(

@@ -119,8 +119,13 @@ pub fn write_narrowpeak(
             "track type=narrowPeak name=\"{name}\" description=\"{name}\" nextItemButton=on\n"
         ));
     }
+    // upstream's `write_to_narrowPeak` (`PeakIO.py:719-735`) initialises
+    // `n_peak = 0` once, before the chromosome loop, and increments it per
+    // peak group -- so numbering is continuous across chromosomes.
+    let mut n_peak = 0usize;
     for (chrom, list) in peaks {
-        for (i, p) in list.iter().enumerate() {
+        for p in list {
+            n_peak += 1;
             let s = (p.summit as i64 - p.start as i64).max(-1);
             out.push_str(&format!(
                 "{}\t{}\t{}\t{}{}\t{}\t.\t0\t0\t0\t{}\n",
@@ -128,7 +133,7 @@ pub fn write_narrowpeak(
                 p.start,
                 p.end,
                 peakprefix,
-                i + 1,
+                n_peak,
                 (10.0 * f64::from(p.score)) as i64,
                 s
             ));
@@ -244,7 +249,14 @@ pub fn bdgbroadcall(o: &Options) -> Result<()> {
 
     let mut out = String::new();
     let trackline = o.flag("trackline"); // default true; --no-trackline sets false
-    let oprefix = o.get("oprefix").unwrap_or("bdgbroadcall").to_string();
+                                         // `bdgbroadcall_cmd.py:53-58`: when `-o` is given, `options.oprefix` is
+                                         // overwritten with the ofile name before writing, so the peak prefix uses
+                                         // the ofile -- mirroring `bdgpeakcall`'s F198 handling above.
+    let ofile_opt = o.get("ofile").map(str::to_string);
+    let oprefix = match &ofile_opt {
+        Some(f) => f.clone(),
+        None => o.get("oprefix").unwrap_or("bdgbroadcall").to_string(),
+    };
     if trackline {
         // upstream's write_to_gappedPeak defaults name/description to "peak"
         // (the command does not pass them), so the track line does not use the
@@ -257,11 +269,23 @@ pub fn bdgbroadcall(o: &Options) -> Result<()> {
     let mut n_peak = 0usize;
     let mut total = 0usize;
     for (chrom, lvl2_list) in &lvl2_all {
-        let inner: Vec<&BdgPeak> = lvl1_all
+        // `call_broadpeaks` (`BedGraph.py:564-567`) iterates only the
+        // chromosomes of the lvl1 peaks, so a chromosome with lvl2 regions but
+        // no lvl1 peak contributes nothing upstream. Both lists come from the
+        // same track, so the chromosome is always present here; only an empty
+        // lvl1 list (no peaks on this chromosome) skips output.
+        let (_, lvl1_list) = lvl1_all
             .iter()
             .find(|(c, _)| c == chrom)
-            .map(|(_, l)| l.iter().collect())
-            .unwrap_or_default();
+            .expect("lvl1 and lvl2 share chromosomes");
+        // `call_peaks_from_bedgraph` returns an entry per input chromosome even
+        // when it holds no peaks; upstream's `PeakIO` only contains chromosomes
+        // with at least one peak, and `call_broadpeaks` iterates those -- so an
+        // empty lvl1 list also means "skip this chromosome".
+        if lvl1_list.is_empty() {
+            continue;
+        }
+        let inner: Vec<&BdgPeak> = lvl1_list.iter().collect();
         for p2 in lvl2_list {
             let set: Vec<&&BdgPeak> = inner
                 .iter()
@@ -314,7 +338,7 @@ pub fn bdgbroadcall(o: &Options) -> Result<()> {
         }
     }
 
-    let ofile = o.get("ofile").map(str::to_string).unwrap_or_else(|| {
+    let ofile = ofile_opt.unwrap_or_else(|| {
         format!(
             "{}_c{:.1}_C{:.2}_l{}_g{}_G{}_broad.bed12",
             oprefix, lvl1_cutoff, lvl2_cutoff, minlen, lvl1_max_gap, lvl2_max_gap

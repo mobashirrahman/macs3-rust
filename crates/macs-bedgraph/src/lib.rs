@@ -257,7 +257,12 @@ impl BedGraph {
         path: &Path,
     ) -> Result<()> {
         use std::io::Write as _;
-        let mut out = std::io::BufWriter::new(std::fs::File::create(path).map_err(MacsError::Io)?);
+        // Score before creating the file: `bdgcmp_cmd.py:70-89` computes the
+        // score for a method before `open(ofile, "w")`, so a failing method
+        // (ZeroDivisionError in `get_logFE`, AssertionError for a zero lambda
+        // in `ppois`/`qpois` at `-p 0`) leaves NO output file. Creating the
+        // file first would leave an empty or partial file behind instead.
+        // Probe every merged row first; only open the file once all rows score.
         let mut common: Vec<ChromId> = self
             .tracks
             .keys()
@@ -265,6 +270,39 @@ impl BedGraph {
             .filter(|c| other.tracks.contains_key(c))
             .collect();
         common.sort_by(|&a, &b| self.genome.name(a).cmp(self.genome.name(b)));
+        // Validate first so a failure leaves no file behind. Only the guard
+        // expressions are evaluated (no Poisson CDF): `score_would_fail`
+        // shares the guards `score_value` uses, so the two agree on every
+        // row. Methods that cannot fail skip the walk entirely.
+        if macs_score::score_can_fail(method) {
+            for chrom in &common {
+                let r1 = self.tracks[chrom].runs();
+                let r2 = other.tracks[chrom].runs();
+                if r1.is_empty() || r2.is_empty() {
+                    continue;
+                }
+                let (mut i1, mut i2) = (0usize, 0usize);
+                while let (Some(p1), Some(p2)) =
+                    (r1.get(i1).map(|x| x.end), r2.get(i2).map(|x| x.end))
+                {
+                    if let Some(e) = macs_score::score_would_fail(
+                        method,
+                        r1[i1].value,
+                        r2[i2].value,
+                        pseudocount,
+                    ) {
+                        return Err(e);
+                    }
+                    if p1 <= p2 {
+                        i1 += 1;
+                    }
+                    if p2 <= p1 {
+                        i2 += 1;
+                    }
+                }
+            }
+        }
+        let mut out = std::io::BufWriter::new(std::fs::File::create(path).map_err(MacsError::Io)?);
         for chrom in common {
             let r1 = self.tracks[&chrom].runs();
             let r2 = other.tracks[&chrom].runs();
@@ -280,7 +318,8 @@ impl BedGraph {
             while let (Some(p1), Some(p2)) = (r1.get(i1).map(|x| x.end), r2.get(i2).map(|x| x.end))
             {
                 let v = macs_score::score_value(method, r1[i1].value, r2[i2].value, pseudocount)
-                    .expect("caller selected a streamable method");
+                    .expect("caller selected a streamable method")
+                    .expect("validated above");
                 if !have {
                     pre_v = v;
                     have = true;
@@ -646,15 +685,29 @@ impl BedGraph {
         if total == 0 {
             return self.clone();
         }
-        let f = -(total as f64).log10();
+        // `f = -log10(N)`. `log10` runs in f64 (C promotes the `long` operand),
+        // but the result is stored into `f`, declared `cython.float`
+        // (`BedGraph.py:929`), so `f` is an f32 *rounded from* the f64 logarithm.
+        // Keeping it f64 instead biases every q by ~1.6e-7 for a human-genome
+        // track -- invisible per value, but enough to move the last digit of
+        // `%.5f` on the rows whose q lands just under a rounding boundary.
+        // Observed as 227084 of 2577274 rows of a real `prep --ppois` track
+        // reporting `2.17195` where upstream reports `2.17196`.
+        let f = (-(total as f64).log10()) as f32;
         let mut table: std::collections::HashMap<u32, f32> = std::collections::HashMap::new();
-        let mut pre_q = f32::MAX;
+        // upstream initialises `pre_q = 2147483647` (`BedGraph.py:960`), which as
+        // a `cython.float` rounds up to 2^31; unlike `FLT_MAX` that seed does bind,
+        // clipping any score above 2^31 to 2147483648.00000.
+        let mut pre_q = 2_147_483_647.0f32;
         // descending distinct scores
         let mut uniq: Vec<f32> = stat.keys().map(|&b| f32::from_bits(b)).collect();
         uniq.sort_by(|a, b| b.partial_cmp(a).expect("NaN score"));
         for v in uniq {
-            let q = v as f64 + (0.0 + f); // log10(k)=0, k==1
-            let q = q.max(0.0).min(pre_q as f64) as f32;
+            // `q = v + (log10(k) + f)`: the sum is evaluated in f64 (C promotes
+            // every operand) and narrowed once, at the store into the `cython.float`
+            // `q`. `log10(k)` is exactly 0 -- `k` is never incremented -- so it
+            // drops out, but `v` and `f` are first widened from their f32.
+            let q = ((f64::from(v) + f64::from(f)) as f32).min(pre_q).max(0.0);
             table.insert(v.to_bits(), q);
             pre_q = q;
         }
@@ -969,6 +1022,24 @@ mod tests {
         assert_eq!(Op::parse(b"nope"), None);
     }
 
+    /// The streaming scorer validates before creating the file: upstream
+    /// computes the score before `open(ofile, "w")` (`bdgcmp_cmd.py:70-91`),
+    /// so a `ZeroDivisionError` in `get_logFE` at `-p 0` leaves no output
+    /// file behind -- not an empty or partial one.
+    #[test]
+    fn stream_score_leaves_no_file_when_a_row_fails() {
+        let t = bg(&[("chr1", 0, 100, 0.0), ("chr1", 100, 200, 5.0)], 0.0);
+        let c = bg(&[("chr1", 0, 100, 0.0), ("chr1", 100, 200, 2.0)], 0.0);
+        let d = std::env::temp_dir().join(format!("macs3rs-streamfail-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&d);
+        std::fs::create_dir_all(&d).unwrap();
+        let out = d.join("o.bdg");
+        let r = t.stream_score_bedgraph(&c, macs_score::ScoreMethod::LogFE, 0.0, &out);
+        assert!(r.is_err(), "logFE 0/0 must fail");
+        assert!(!out.exists(), "no partial file may be left behind");
+        let _ = std::fs::remove_dir_all(&d);
+    }
+
     /// Every value below was produced by *upstream* MACS3 3.0.5
     /// (`bedGraphTrackI.overlie`) on this input pair, dumped with `%.6g`:
     ///
@@ -1052,5 +1123,32 @@ mod tests {
                 "fisher[{i}]: got {g} want {w}"
             );
         }
+    }
+
+    /// `p2q` must narrow `f = -log10(N)` to `f32` *before* it enters the per-score
+    /// sum, because upstream declares `f: cython.float` (`BedGraph.py:929`) and the
+    /// narrowing happens at that store.
+    ///
+    /// `N = 49` here, so `-log10(49) = -1.6901960800285136`, whose `f32` rounding is
+    /// `-1.6901960372924805` -- `4.3e-8` *higher*. Carrying `f` as `f64` put the sum
+    /// that much low, which `%.5f` printed as `16.69018` against upstream's
+    /// `16.69019`, and shifted 227084 of the 2577274 rows of a real `prep --ppois`
+    /// track (`2.17195` against upstream's `2.17196`, `0.01949` against `0.01950`).
+    ///
+    /// The expected values below are upstream's, for this exact input
+    /// (`chr1 0 20 18.38038` / `chr1 20 49 1.5`): `16.69019` and `0.00000`.
+    #[test]
+    fn p2q_narrows_the_log10_n_term_to_f32() {
+        let a = bg(&[("chr1", 0, 20, 18.38038), ("chr1", 20, 49, 1.5)], 0.0);
+        let q = a.p2q();
+        let c = q.genome().get(b"chr1").expect("chr1 survives");
+        let runs = q.track(c).expect("track").runs();
+        assert_eq!(runs.len(), 2, "{runs:?}");
+        // The exact f32, 16.690185546875, asserted on its bits: the two candidate
+        // sums straddle a 6th-decimal tie, so only the value itself is unambiguous.
+        assert_eq!(runs[0].value.to_bits(), 0x4185_8580);
+        assert_eq!(macs_score::bedgraph_value(runs[0].value), "16.69019");
+        // the lower score goes negative and is clamped by `max(0, min(pre_q, q))`
+        assert_eq!(runs[1].value, 0.0);
     }
 }
