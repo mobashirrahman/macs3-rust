@@ -129,19 +129,37 @@ human `hs` genome size), median of 3, release build:
 
 | workload | macs3 3.0.5 | macs3-rs | speedup | peak RSS |
 |---|---|---|---|---|
-| SE `--nomodel --extsize 200 -B` | 41.3 s / 297 MB | 12.4 s / 1010 MB | **3.3x** | 3.4x |
-| SE `--nomodel --SPMR` | 31.5 s / 302 MB | 7.6 s / 547 MB | **4.2x** | 1.8x |
-| SE model mode (default) | 43.6 s / 296 MB | 13.0 s / 958 MB | **3.4x** | 3.2x |
-| SE `--nomodel`, no control | 22.1 s / 169 MB | 6.8 s / 389 MB | **3.3x** | 2.3x |
-| BAMPE narrow | 1.4 s / 80 MB | 0.4 s / 49 MB | **3.2x** | **0.6x** |
+| SE `--nomodel --extsize 200 -B` | 41.8 s / 296 MB | 12.4 s / 929 MB | **3.4x** | 3.1x |
+| SE `--nomodel --SPMR` | 31.9 s / 302 MB | 7.7 s / 520 MB | **4.2x** | 1.7x |
+| SE model mode (default) | 44.0 s / 300 MB | 12.8 s / 958 MB | **3.4x** | 3.2x |
+| SE `--nomodel`, no control | 21.9 s / 172 MB | 6.8 s / 392 MB | **3.2x** | 2.3x |
+| BAMPE narrow | 1.36 s / 80 MB | 0.42 s / 50 MB | **3.2x** | **0.6x** |
 
-Wall clock is 3.2-4.2x better on every workload. Peak memory is still above
-upstream on the single-end paths (0.6x-3.4x): the chromosome-level pipeline
-processes a bounded window of chromosomes at a time, and the window size is the
-memory/speed dial. Closing the remaining gap needs a smaller read representation
-(single-end positions are `u64` today), not more streaming.
+Wall clock clears the >=3x target on every workload. Peak memory is the one
+metric still short of its target (<=0.5x): BAMPE meets it, single-end does not.
+
+The single-end floor is structural, not tuning. Measured on this fixture, a
+fully serial run with no bedGraph output still peaks at **266 MB against
+upstream's ~300 MB**, so ~1.8x upstream is reachable today and 0.5x is not. Of
+that floor, ~80 MB is the resident reads alone: single-end positions are stored
+as `u64` (10 M positions x 8 B) where upstream uses `i32`. The rest is the
+per-chromosome signal tracks, which the pipeline materialises for the q-table
+pass and then spools for the peak pass.
+
+Reaching 0.5x needs the two things `docs/status.md` already identifies, as a
+storage refactor rather than more streaming:
+
+1. narrower positions (`u32`, matching upstream's `cython.int`) and a compact run
+   type, halving the read and signal footprint;
+2. scoring the union walk directly from the resident sorted positions, so pass 1
+   never materialises a genome-wide `SignalTrack`.
+
+The chromosome window (`CHUNK` in `callpeak.rs`) is the memory/speed dial in the
+meantime: 3 is the smallest setting that holds >=3x; 1 gives 327 MB at 2.1x.
 
 ## Testing
+
+
 
 ## Testing
 
