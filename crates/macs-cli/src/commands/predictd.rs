@@ -41,17 +41,33 @@ pub fn predictd(o: &Options) -> Result<()> {
     }
     let track = super::input::load_tag_files(&ifiles, &format, true)?.0;
 
-    let mfold: (f64, f64) = match o.get("mfold") {
-        Some(s) => {
-            let mut it = s.split(',');
-            let lo = it
-                .next()
-                .and_then(|x| x.parse().ok())
-                .ok_or_else(|| MacsError::InvalidParameter("--mfold must be `lo,hi`".into()))?;
-            let hi = it.next().and_then(|x| x.parse().ok()).unwrap_or(lo);
+    // `-m/--mfold` is `nargs=2` with `type=int` (`bin/macs3`, argparser_predictd),
+    // so it arrives as two separate argv entries and `Options::get` -- which keeps
+    // only the first -- would read `-m 100 200` as the single value "100".
+    //
+    // That is not cosmetic. The upper bound silently fell back to the lower one,
+    // so `min_tags == max_tags`; `naive_call_peaks` then required a summit value
+    // both `> min_v` and `< max_v`, which nothing can satisfy, so *every* peak was
+    // discarded and the command reported "can only find 0 paired peaks" on real
+    // input where upstream builds a model from 3,803 of them. Caught by widening the
+    // differential to real data; the existing gate only ever passed `-m` values it
+    // read back the same broken way.
+    let mfold: (f64, f64) = match o.get_all("mfold") {
+        [] => (5.0, 50.0),
+        [lo, hi] => {
+            let lo = lo
+                .parse::<f64>()
+                .map_err(|_| MacsError::InvalidParameter("-m/--mfold takes two integers".into()))?;
+            let hi = hi
+                .parse::<f64>()
+                .map_err(|_| MacsError::InvalidParameter("-m/--mfold takes two integers".into()))?;
             (lo, hi)
         }
-        None => (5.0, 50.0),
+        _ => {
+            return Err(MacsError::InvalidParameter(
+                "-m/--mfold takes exactly two values".into(),
+            ))
+        }
     };
     // `-g/--gsize` is a string that is either a shortcut or a number, and upstream
     // rejects anything else with exit 1 before doing any work

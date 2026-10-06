@@ -11231,3 +11231,56 @@ This is the same failure mode as F245 (a positional column read that named the w
 (a diagnostic whose columns did not line up): a summary that is technically accurate and
 practically misleading. Worth noting that this one survived a long time precisely because the corpus
 *was* short of 100% for most of it -- the number only became obviously wrong once it was right.
+
+---
+
+## F274. `predictd -m 100 200` read only its first value, and silently discarded every peak
+
+`bin/macs3`, `argparser_predictd.add_argument("-m", "--mfold", type=int, default=[5, 50], nargs=2)`.
+
+This is not an upstream behaviour but a divergence found while answering "how would the corpus be
+widened past `callpeak`". Recording it here because the mechanism is the interesting part.
+
+`nargs=2` means the two bounds arrive as two separate argv entries. Our `Options` keeps the **first**
+value in `values` and the whole list in `lists` (`flags.rs`, `take_action`), and `predictd.rs` read it
+with `o.get("mfold")` -- which returns `"100"` for `-m 100 200` -- then split that on `,`:
+
+```rust
+let mut it = s.split(',');
+let lo = it.next()...;                    // 100
+let hi = it.next()...unwrap_or(lo);       // no comma -> falls back to lo
+```
+
+So `-m 100 200` became `(100, 100)`. In `PeakModel.build` that makes
+
+```text
+min_tags = total * lmfold * peaksize / gsize / 2
+max_tags = total * umfold * peaksize / gsize / 2
+```
+
+equal, and `naive_call_peaks` keeps a summit only when `v > min_v` **and** (in `__close_peak`)
+`summit_value < max_v`. With the bounds equal, no value satisfies both, so every peak was discarded.
+On the real CTCF fixture:
+
+```text
+MACS3   : Total number of paired peaks: 3803, d = 99, writes predictd_model.R
+macs3-rs: "can only find 0 paired peaks", writes nothing
+```
+
+`oracle/check_predictd_randsample.sh` passed throughout, because it drives `-m` through the same
+reader and therefore agreed with the bug. Confirming the arithmetic was *not* the fault: a probe of
+`find_paired_peaks` on the same file reproduced upstream's per-chromosome counts exactly
+(chr2: 682 plus / 0 minus; chr8: 425 / 403) and its 3,803 paired centres, so only the values
+*reaching* it were wrong.
+
+Fixed by reading `o.get_all("mfold")` and pattern-matching both elements, as `callpeak.rs` already
+did. `predictd_model.R` is now byte-identical on the 5 M-read fixture.
+
+Two lessons, both already stated elsewhere and both re-confirmed here:
+
+- **A differential gate that drives the parser under test agrees with itself.** It has to compare
+  against upstream *and* pin the parsed value, or it cannot see a value that never arrives.
+- **The recorded corpus covered `callpeak` only, so `predictd` had no gate at corpus scale.** The
+  per-command gate used one synthetic fixture whose bounds happen not to distinguish `(100, 100)`
+  from `(100, 200)`. The first non-callpeak invocation on real data found a command-breaking bug in
+  about ten minutes.

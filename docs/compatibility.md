@@ -18,7 +18,7 @@ item.
 | `pileup` | real data, single-end; small data, paired-end | byte-identical |
 | `filterdup` | real and small data | same rows; chromosome order differs on multi-chromosome input |
 | `randsample` | small data, single chromosome | byte-identical; multi-chromosome sampling differs |
-| `predictd` | real data (two inputs); small data, paired-end | byte-identical, including `*_model.r` |
+| `predictd` | real data (5 M-read CTCF, `--mfold 100 200` and the default); small data, paired-end | byte-identical, including `*_model.r` |
 | `refinepeak` | real data | byte-identical |
 | `bdgcmp` | real data, all eight methods | byte-identical |
 | `bdgopt` | real data, `p2q` and `multiply`; `add`, `max`, `min` on a subset | byte-identical |

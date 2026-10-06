@@ -37,7 +37,7 @@ each one is named in the left column.
 | `callvar` with assembly off / auto / on — `oracle/check_callvar.sh` | **22/22, 16/16, 15/15** variant records identical |
 | Exit-status contract, and errors must precede any output file — `oracle/check_exit_contract.py` | **3 / 3** pass |
 | Every accepted flag must actually change the output — `oracle/audit_accepted_flags.py` | no silent no-ops |
-| Unit tests — `cargo test --workspace` | **900** pass |
+| Unit tests — `cargo test --workspace` | **903** pass |
 
 The corpus is pinned to MACS3 3.0.5 at commit `c5443190`. Upstream is a git
 checkout and a Python environment, deliberately *not* vendored, so the reference
@@ -161,7 +161,7 @@ the point — the shipped binary must not need an interpreter.
 
 | layer | what it proves |
 |---|---|
-| **L1** unit | 900 tests, plus `clippy -D warnings` and `cargo fmt --check` |
+| **L1** unit | 903 tests, plus `clippy -D warnings` and `cargo fmt --check` |
 | **L2** invariants | property tests over the RLE, pileup, scoring and statistics cores |
 | **L3** differential | stage-by-stage comparison against the live oracle |
 | **L4** golden | byte-for-byte replay of all 7,685 recorded invocations |
@@ -182,7 +182,7 @@ both are why `audit_accepted_flags.py` is a CI gate rather than a nicety.
 compares bytes; `tests/` holds the fixtures and the recorded outputs.
 
 ```sh
-cargo test --workspace     # 900 tests
+cargo test --workspace     # 903 tests
 oracle/run_golden.sh       # replay every recorded run, compare every byte
 ```
 
