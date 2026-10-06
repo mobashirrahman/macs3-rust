@@ -13,18 +13,18 @@ OUT = Path(__file__).resolve().parent.parent / "docs" / "figures"
 
 # (workload, macs3 seconds, macs3-rs seconds, macs3 MB, macs3-rs MB)
 BENCH = [
-    ("callpeak, single-end -B", 42.9, 12.6, 294, 165),
-    ("callpeak, single-end --SPMR", 32.4, 8.4, 303, 139),
-    ("callpeak, single-end --broad", 38.0, 10.5, 291, 152),
-    ("callpeak, no control", 17.3, 4.6, 165, 76),
-    ("callpeak, paired-end BAM", 1.22, 0.34, 80, 26),
-    ("pileup", 7.5, 3.2, 134, 32),
-    ("filterdup", 5.4, 1.56, 134, 22),
-    ("randsample", 4.5, 1.71, 134, 94),
-    ("bdgpeakcall", 20.1, 4.5, 225, 200),
-    ("bdgopt -m p2q", 29.1, 5.9, 231, 234),
-    ("cmbreps -m max", 43.8, 10.0, 391, 194),
-    ("bdgcmp -m ppois", 56.6, 18.7, 611, 195),
+    ("callpeak, single-end -B", 43.08, 12.55, 294, 165),
+    ("callpeak, single-end --SPMR", 32.37, 8.50, 298, 139),
+    ("callpeak, single-end --broad", 37.68, 10.38, 294, 151),
+    ("callpeak, no control", 17.30, 4.56, 174, 76),
+    ("callpeak, paired-end BAM", 1.26, 0.34, 80, 26),
+    ("pileup", 7.55, 3.32, 134, 32),
+    ("filterdup", 5.51, 1.59, 134, 22),
+    ("randsample", 4.41, 1.72, 134, 93),
+    ("bdgpeakcall", 20.72, 4.67, 224, 200),
+    ("bdgopt -m p2q", 29.78, 6.06, 231, 234),
+    ("cmbreps -m max", 43.76, 10.37, 391, 194),
+    ("bdgcmp -m ppois", 59.00, 19.43, 612, 195),
 ]
 
 TILES = [
@@ -87,7 +87,7 @@ def performance(t):
         rows.append(f'<text x="{label_x}" y="{TOP + i * PITCH + 11.5}" font-size="12.5" fill="{t["text"]}">{name}</text>')
     speed = [m / r for _, m, r, _, _ in BENCH]
     mem = [100 * r / m for _, _, _, m, r in BENCH]
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="{FONT}" role="img" aria-label="macs3-rs is 2.3 to 4.9 times faster than MACS3 and uses 16 to 101 percent of its peak memory across twelve workloads">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" font-family="{FONT}" role="img" aria-label="macs3-rs is 2.3 to 4.9 times faster than MACS3 and uses 17 to 101 percent of its peak memory across twelve workloads">
 <rect x="0.5" y="0.5" width="{W - 1}" height="{H - 1}" rx="10" fill="{t["surface"]}" stroke="{t["border"]}"/>
 {chr(10).join(rows)}
 {panel(t, a_x, pw, "Speedup over MACS3", "wall clock, higher is better", speed, 6, [0, 2, 4, 6], lambda v: f"{v:.1f}×" if v % 1 else f"{v:.0f}×", [(1, "MACS3")])}

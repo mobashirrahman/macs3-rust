@@ -1,56 +1,58 @@
 # Compatibility
 
-Verified differentially against upstream 3.0.5 on a generated 7685-invocation
-`callpeak` matrix, upstream's `test/cmdlinetest`, and command-specific oracle
-checks. This is not yet full parity across every flag of all 14 commands; the
-current measured results and open differences are tracked in [status](status.md).
+What has been compared against MACS3 3.0.5 (commit `c5443190`, NumPy 2.5.3),
+command by command. "Real data" means MACS3's 5 M-read CTCF ChIP-seq and input
+files; "small data" means the chr22 and yeast files MACS3 ships for its tests.
 
-| corpus (recorded baseline) | result |
-|---|---|
-| generated flag matrix, 7685 invocations | **7204 / 7204 cases byte-identical**, 22456 / 22456 files, 0 exit-status mismatches |
-| fresh upstream `test/cmdlinetest`, 20 command groups | **All 163 artifacts produced**; current scATAC, Gaussian, and Poisson checks pass (see status) |
-| CLI accept/reject, 255 malformed-value probes | Historical: **1 mismatch** for `--tempdir`; custom-directory handling is now implemented and checked against upstream |
+**These are one-off differential comparisons, not gates.** Only `callpeak` has a
+recorded corpus that CI replays on every push; every row below it was produced by
+running both implementations on the named input and diffing. That is weaker
+evidence, and it has already earned its keep — three real defects in
+`bdgpeakcall`, `bdgopt` and `bdgcmp` were found this way after the `callpeak`
+corpus was already green. Recording these comparisons as a corpus is the top open
+item.
 
-**Byte-identical:**
+| command | compared on | result |
+|---|---|---|
+| `callpeak` | 7,204 recorded runs; real data in narrow, broad, model, `-p`, `--call-summits`, `--min-length`, `--max-gap`, `--shift`, `--keep-dup`, `-B`, paired-end | byte-identical |
+| `pileup` | real data, single-end; small data, paired-end | byte-identical |
+| `filterdup` | real and small data | same rows; chromosome order differs on multi-chromosome input |
+| `randsample` | small data, single chromosome | byte-identical; multi-chromosome sampling differs |
+| `predictd` | real data (two inputs); small data, paired-end | byte-identical, including `*_model.r` |
+| `refinepeak` | real data | byte-identical |
+| `bdgcmp` | real data, all eight methods | byte-identical |
+| `bdgopt` | real data, `p2q` and `multiply`; `add`, `max`, `min` on a subset | byte-identical |
+| `cmbreps` | real data, `max`, `mean`, `fisher` | byte-identical |
+| `bdgpeakcall` | real data, including `--cutoff-analysis` | byte-identical |
+| `bdgbroadcall` | real data, two settings | byte-identical |
+| `bdgdiff` | real data | byte-identical |
+| `hmmratac` | yeast ATAC-seq, Gaussian and Poisson, BAM, BEDPE and fragment input | regions, states and signal tracks byte-identical; model files equal to ~10 digits |
+| `callvar` | small data, assembly off / auto / on | VCF records identical |
 
-- `callpeak` single-end, `--nomodel` (`--extsize`, `--shift`, `--nolambda`, `--SPMR`)
-- `callpeak` single-end, **model mode** — on checked real data, `d`, alternative
-  fragment length(s), peak outputs, and `*_model.r` match
-- `callpeak` paired-end with `-f BEDPE` and `-f BAMPE`, narrow and broad
-- `callpeak -f FRAG`, with and without `--barcodes`
-- `predictd`, single-end (BED/BAM/SAM) and both paired-end modes
-- `refinepeak` (single-end BED/BAM/SAM; paired-end is SE-only upstream)
-- `pileup`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE/FRAG)
-- `filterdup`, single-end (BED/BAM/SAM) and paired-end (BEDPE/BAMPE)
-- `randsample`, single-chromosome SE and PE; multi-contig sampling uses sorted
-  chromosomes, while upstream uses hash-randomized set iteration
-- `callvar`, `-F off`, `-F auto`, and `-F on`
-- fresh real-data `callpeak --call-summits` runs for SE, BEDPE, and BAMPE; the
-  summit-related files are byte-identical after normalizing the XLS command-line
-  header (see `oracle/check_real_summit_bytes.py`)
-- 5M-read `callpeak --call-summits`, in model and `--nomodel` modes: all eight
-  output files match, including the model script and cutoff analysis
-- the `bdgopt` / `bdgcmp` / `cmbreps` / `bdgdiff` bedGraph family
-- `bdgpeakcall`, `bdgbroadcall`, gzipped input throughout
-- every `<subcommand> --help` (captured from the pinned oracle)
+Command-line parsing follows argparse: attached short-option values (`-q0.05`),
+unambiguous long-option prefixes, Python's numeric literals, `--`, and the same
+accept/reject decision and exit status on invalid values.
 
-**Historical differences and current checks:**
+## Differences that remain
 
-| area | state |
-|---|---|
-| summit tie-break | The older recorded comparison had one differing peak per tested mode; the fresh real-data SE/BEDPE/BAMPE check now matches summit-related outputs byte-for-byte |
-| `*_model.r` | The older correlation rounding gap is resolved; fresh predictd and source-SE model files are byte-identical against the pinned Haswell oracle |
-| contig ordering | `filterdup` on 50k contigs: content identical, order differs (upstream hash-randomized, non-deterministic run to run) |
-| `callvar` VCF | `##Program_Args` echoes the replay's outdir, otherwise identical on the recorded corpus |
-| `hmmratac` | This older corpus predates self-training support. Gaussian and Poisson default training now run; fresh yeast oracle checks cover training and decoded output (see [status](status.md)). |
-
+- **`filterdup` and seeded `randsample` on many chromosomes.** MACS3 iterates
+  chromosomes in Python hash order, which changes from run to run; this port
+  uses sorted order. Rows are the same for `filterdup`; the sample differs for
+  `randsample`.
+- **`hmmratac` model files.** Parameters agree to about 2 × 10⁻¹⁰. Two MACS3
+  runs of the same command differ from each other at that level.
+- **`callvar` VCF header.** `##Program_Args` echoes the output path, so it
+  differs whenever the path does.
+- **SAM input.** MACS3's SAM parser fails on any minus-strand read; this port
+  parses SAM and matches on inputs MACS3 can read.
+- **Threads.** `MACS3_RS_THREADS` sets the thread count. There is no
+  `--threads` flag because MACS3 rejects one.
 
 ## Input formats
 
 Single-end `BED`, `BAM`, `SAM`, `ELAND`, `ELANDMULTI`, `ELANDEXPORT`, `BOWTIE`
 and paired-end `BEDPE`, `BAMPE`, `FRAG` loaders are available. Pooled single-end
-and BAM inputs do not require an index. Format-specific behavior and command
-coverage still vary; see [status](status.md). Parser details:
+and BAM inputs do not require an index. Parser details:
 
 - Upstream's SAM parser crashes on any minus-strand read (`TypeError` in CIGAR
   parsing), making `-f SAM` effectively unusable upstream. This port parses SAM
