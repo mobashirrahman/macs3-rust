@@ -10,10 +10,11 @@ It runs 2.3–4.9× faster and uses 17–101% of the memory.
   <img src="docs/figures/parity-light.svg" alt="7,204 of 7,204 recorded runs byte-identical; 22,456 of 22,456 output files byte-identical; 0 exit-status mismatches; 2.3 to 4.9 times faster across 12 workloads">
 </picture>
 
-> **Status: a development project, not a release.** All 14 subcommands are
-> implemented and the recorded corpus is at byte parity, but that corpus only
-> covers `callpeak`. The other 13 commands are verified by smaller comparisons,
-> listed command by command in [docs/compatibility.md](docs/compatibility.md).
+> **Status: early release (v0.1.0).** All 14 subcommands are implemented and the
+> recorded corpus is at byte parity, but that corpus only covers `callpeak`. The
+> other 13 commands are verified by smaller comparisons, listed command by command
+> in [docs/compatibility.md](docs/compatibility.md). Treat the version as a
+> snapshot, not a stable API.
 
 ## Byte-identical, not "close enough"
 
@@ -36,7 +37,7 @@ each one is named in the left column.
 | `callvar` with assembly off / auto / on — `oracle/check_callvar.sh` | **22/22, 16/16, 15/15** variant records identical |
 | Exit-status contract, and errors must precede any output file — `oracle/check_exit_contract.py` | **3 / 3** pass |
 | Every accepted flag must actually change the output — `oracle/audit_accepted_flags.py` | no silent no-ops |
-| Unit tests — `cargo test --workspace` | **897** pass |
+| Unit tests — `cargo test --workspace` | **900** pass |
 
 The corpus is pinned to MACS3 3.0.5 at commit `c5443190`. Upstream is a git
 checkout and a Python environment, deliberately *not* vendored, so the reference
@@ -132,10 +133,24 @@ Five behavioural differences are known, and none of them is silent:
 
 ## Quick start
 
+Prebuilt Linux x86-64 binary, no toolchain needed:
+
+```sh
+tar xzf macs3-rs-v0.1.0-x86_64-linux-gnu.tar.gz
+./macs3-rs --version
+./macs3-rs callpeak -t chip.bed.gz -c input.bed.gz -f BED -g hs -n sample
+```
+
+Or build from source:
+
 ```sh
 cargo install --path crates/macs-cli
 macs3-rs callpeak -t chip.bed.gz -c input.bed.gz -f BED -g hs -n sample
 ```
+
+`macs3-rs` replaces the `macs3` entry point, so an existing pipeline keeps
+working unchanged. It needs no Python. The published binary links against glibc;
+build from source for any other target.
 
 ## How it is verified
 
@@ -146,7 +161,7 @@ the point — the shipped binary must not need an interpreter.
 
 | layer | what it proves |
 |---|---|
-| **L1** unit | 897 tests, plus `clippy -D warnings` and `cargo fmt --check` |
+| **L1** unit | 900 tests, plus `clippy -D warnings` and `cargo fmt --check` |
 | **L2** invariants | property tests over the RLE, pileup, scoring and statistics cores |
 | **L3** differential | stage-by-stage comparison against the live oracle |
 | **L4** golden | byte-for-byte replay of all 7,685 recorded invocations |
@@ -167,7 +182,7 @@ both are why `audit_accepted_flags.py` is a CI gate rather than a nicety.
 compares bytes; `tests/` holds the fixtures and the recorded outputs.
 
 ```sh
-cargo test --workspace     # 897 tests
+cargo test --workspace     # 900 tests
 oracle/run_golden.sh       # replay every recorded run, compare every byte
 ```
 
@@ -176,10 +191,11 @@ oracle/run_golden.sh       # replay every recorded run, compare every byte
 Recorded corpus at byte parity; all 14 subcommands implemented and differentially
 checked against the pinned oracle; faster on every measured workload.
 
-- **Not a release.** Only `callpeak` has a recorded corpus. The other 13
-  commands were verified on real data in smaller ad-hoc comparisons, which is
-  weaker evidence — three real bugs in the bedGraph commands were found that way
-  after the corpus was already green. Widening the corpus is the top open item.
+- **Evidence is uneven across commands.** Only `callpeak` has a recorded corpus.
+  The other 13 commands were verified on real data in smaller ad-hoc
+  comparisons, which is weaker evidence — three real bugs in the bedGraph
+  commands were found that way after the corpus was already green. Widening the
+  corpus is the top open item.
 - **One real dataset.** All real-data numbers come from one 5 M-read CTCF
   experiment plus the chr22 and yeast files MACS3 ships. No histone marks, no
   deep library, no second genome.

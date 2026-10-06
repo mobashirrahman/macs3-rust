@@ -11,7 +11,7 @@
 
 use std::process::ExitCode;
 
-use macs_cli::{is_subcommand, parse_flags, PROGRAM, SUBCOMMANDS, TARGET_VERSION};
+use macs_cli::{is_subcommand, parse_flags, PROGRAM, SUBCOMMANDS, TARGET_VERSION, VERSION};
 
 /// Tune glibc's allocator, then hand off to the real entry.
 ///
@@ -88,7 +88,7 @@ fn main() -> ExitCode {
             ExitCode::SUCCESS
         }
         "--version" => {
-            println!("{PROGRAM} {TARGET_VERSION}");
+            println!("{PROGRAM} {VERSION} (MACS3 {TARGET_VERSION} compatible)");
             ExitCode::SUCCESS
         }
         _ if !is_subcommand(head) => {
