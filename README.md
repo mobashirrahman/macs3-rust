@@ -119,8 +119,10 @@ Five behavioural differences are known, and none of them is silent:
   multi-chromosome input, and seeded `randsample` picks different reads. MACS3
   iterates chromosomes in Python hash order, which is randomised per process —
   two runs of MACS3 itself disagree. This port sorts.
-- `hmmratac` model files agree to about 2 × 10⁻¹⁰, which is where two runs of
-  MACS3 stop agreeing with each other.
+- `hmmratac`'s trained model parameters agree to about 8 × 10⁻¹² relative, where
+  two MACS3 runs of the same command differ from each other by about 2 × 10⁻¹².
+  It changes nothing downstream: the decoded regions and the cutoff analysis are
+  byte-identical.
 - The `callvar` VCF header echoes the output path, so it differs when the path
   does.
 - MACS3's SAM parser crashes on any minus-strand read. This port parses SAM, and

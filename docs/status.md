@@ -6,16 +6,35 @@ This snapshot supersedes older status notes below where they conflict. The proje
 has live implementations across the CLI, but command coverage is uneven and it is
 not yet a full all-flags, all-corpus replacement.
 
-- **Final validation:** 806 workspace release tests pass with zero failures and
+- **Final validation:** 897 workspace release tests pass with zero failures and
   zero ignored tests; formatting and strict Clippy pass. The golden replay passes
   7,204 cases and matches all 22,456 files, with zero exit-status mismatches across
-  481 rejection cases.
+  481 rejection cases. `oracle/check_thread_invariance.py --limit 0` replays all
+  7,685 recorded cases at 1 and 32 threads with zero differences.
 - **HMMRATAC self-training is implemented for Gaussian and Poisson models.**
   `oracle/check_hmm_training.py` runs fresh pinned-oracle training and decoding checks.
   On the yeast 500k fixture, training regions and feature rows match (feature-row max
   deviation 2.53e-12); model max deviations are 2.52e-10 (Gaussian) and 3.87e-12
   (Poisson). Accessible-region intervals and state outputs match exactly for both
   model types. `oracle/check_hmmratac.py` separately gates inference and signal output.
+- **The hmmratac model-parameter gap is measured against upstream's own noise floor,
+  not assumed.** Training a fresh Gaussian model three times — twice with MACS3,
+  once with `macs3-rs` — and comparing all 77 parameters:
+
+  | comparison | max abs | max rel |
+  |---|---|---|
+  | MACS3 run 1 vs MACS3 run 2 | 1.76e-13 | 1.93e-12 |
+  | MACS3 run 1 vs macs3-rs | 2.07e-10 | 8.01e-12 |
+
+  So upstream is *not* bit-reproducible against itself at the 1e-12 level, and our
+  gap is about 4× that floor in relative terms — a real residual, not noise, and
+  not the 2e-10 figure quoted in earlier notes as though it were upstream's own
+  variation. It has no effect on output: `fresh_cutoff_analysis.tsv` is
+  byte-identical, and `oracle/check_hmmratac.py` gates the decoded regions,
+  states and digested tracks as byte-identical (Jaccard 1.0000). Reproduce with
+  `--modelonly --jump 1.5` on `test/yeast_500k_SRR1822137.bedpe.gz`, run from
+  the oracle source root with `PYTHONPATH` set to it, comparing the three
+  `fresh_model.json` files numerically.
 - **Input support includes pooled single-end and BAM reads without an index**, plus
   legacy parsers. Utility commands pool all supplied inputs, detect AUTO per file, and retain the
   first-file tag-size estimate. ELAND and ELANDEXPORT match fresh comparisons;
@@ -38,7 +57,7 @@ not yet a full all-flags, all-corpus replacement.
   Gaussian and Poisson HMM training, HMM inference, and all three callvar modes: no assembly, automatic assembly, and forced assembly.
 - **Performance: both targets partly met.** Re-measured with `scripts/bench_real.py`
   (real CTCF 5M treatment + 5M control reads, median of 3): Rust is 2.3-4.9x faster
-  than pinned upstream across twelve workloads, at 0.16-1.01x its peak RSS. The
+  than pinned upstream across twelve workloads, at 0.17-1.01x its peak RSS. The
   release targets are at least 3x and at most 0.5x. Speed is met on 10 of 12
   (`pileup` 2.3x and `randsample` 2.6x miss); memory is met on 7 of 12 (`callpeak
   -B` 0.56x, `--broad` 0.52x, `randsample` 0.70x, `bdgpeakcall` 0.89x, `bdgopt`
@@ -51,10 +70,12 @@ not yet a full all-flags, all-corpus replacement.
   term, the q value before the clamp and the `pre_q` seed are f32 upstream);
   `bdgcmp -m logFE|ppois|qpois` now exits 1 with no output file where upstream
   raises. All five 5M-read `pileup`/`bdg*` outputs are byte-identical; workspace
-  tests are at 806. `hmmratac --save-training-data` now prints values as Python's
+  tests are at 897. `hmmratac --save-training-data` now prints values as Python's
   `repr` does (ties-to-even on the last digit), taking upstream's `cmdlinetest`
-  to 154 of 163 files byte-identical. `filterdup` output still has the same rows in a different
-  chromosome order.
+  to 154 of 163 files byte-identical — a real measurement, but run ad hoc against
+  the oracle checkout and not committed as a harness, which is why it is absent
+  from the README's reproducible table. `filterdup` output still has the same rows
+  in a different chromosome order.
 - **Continuation fixes verified:** `callpeak -p` is honored; fresh 5M-read
   `--call-summits` runs now match all eight files across model and `--nomodel`
   modes, after reproducing Haswell OpenBLAS's fused dot-product reduction.
@@ -64,12 +85,14 @@ not yet a full all-flags, all-corpus replacement.
   correctly, including the negative no-control `--llocal` case that previously
   panicked. These checks establish parity for the tested cases, not every CLI edge.
 - **CI portability:** live-reference tests resolve the provisioned source and
-  interpreter and skip explicitly when absent. All 806 release tests pass both
+  interpreter and skip explicitly when absent. All 897 release tests pass both
   with the pinned oracle and in a snapshot containing neither `.oracle` nor
   `ENV.provisioned` (five live-reference checks report skips there). NumPy-based
   probes use the pinned interpreter, and the Savitzky–Golay differential has a
-  checked-in Rust probe. Tracked fuzz build output has been removed. The workflow
-  was checked locally; GitHub Actions itself has not been run in this continuation.
+  checked-in Rust probe. Tracked fuzz build output has been removed. GitHub
+  Actions runs all six layers on every push; the six-layer split (L1 unit,
+  L2 invariants, L3 differential, L4 golden, L5 regression, L6 fuzzing) is green
+  on `master` at commit `3f1bd248`.
 - **The C fermi-lite assembler bridge is intentionally retained.** Replacing it with
   a pure-Rust assembler remains post-v1.0 scope; the existing bridge is tested in CI.
 - `oracle/check_real_summit_bytes.py` reruns source-tree CTCF SE, BEDPE, and BAMPE
@@ -94,12 +117,14 @@ Use the current snapshot above for current high-level status.
 | Item | State |
 |---|---|
 | MACS3 source | pinned, `c544319` (v3.0.5), `oracle/ENV.lock` |
-| Build | working, `/scratch/mdra00001/tmp/opencode/macs3-venv` |
-| Reproducible build | `scripts/build_oracle.sh <venv>` |
+| Build | provisioned by `oracle/provision_oracle.sh`, into `.oracle/venv` (gitignored) |
+| Reproducible build | `oracle/provision_oracle.sh`, pinned by `oracle/ENV.lock` |
 | `macs3 --version` | `macs3 3.0.5` |
 
 Note: `MACS3/fermi-lite/lib` is a git submodule and the build **fails** without
-it (`fermi-lite/ksw.c` includes `lib/x86/sse2.h`). `build_oracle.sh` fetches it.
+it (`fermi-lite/ksw.c` includes `lib/x86/sse2.h`). `provision_oracle.sh` fetches
+it. (`scripts/build_oracle.sh` is the older manual variant, kept for working
+outside `.oracle/`.)
 
 ---
 

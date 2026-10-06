@@ -2387,7 +2387,7 @@ ModuleNotFoundError: No module named 'cython'
 No such file or directory
 ```
 
-* Cython is **not installed** in `/scratch/mdra00001/tmp/opencode/macs3-venv`;
+* Cython is **not installed** in the pinned oracle venv (`oracle/ENV.lock`);
 * there is no `.pyx` -- the `.py` is the source and `.c`/`.so` were generated
   from it at build time.
 

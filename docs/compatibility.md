@@ -26,7 +26,7 @@ item.
 | `bdgpeakcall` | real data, including `--cutoff-analysis` | byte-identical |
 | `bdgbroadcall` | real data, two settings | byte-identical |
 | `bdgdiff` | real data | byte-identical |
-| `hmmratac` | yeast ATAC-seq, Gaussian and Poisson, BAM, BEDPE and fragment input | regions, states and signal tracks byte-identical; model files equal to ~10 digits |
+| `hmmratac` | yeast ATAC-seq, Gaussian and Poisson, BAM, BEDPE and fragment input | regions, states, signal tracks and cutoff analysis byte-identical; trained model parameters agree to ~8 × 10⁻¹² relative |
 | `callvar` | small data, assembly off / auto / on | VCF records identical |
 
 Command-line parsing follows argparse: attached short-option values (`-q0.05`),
@@ -39,8 +39,12 @@ accept/reject decision and exit status on invalid values.
   chromosomes in Python hash order, which changes from run to run; this port
   uses sorted order. Rows are the same for `filterdup`; the sample differs for
   `randsample`.
-- **`hmmratac` model files.** Parameters agree to about 2 × 10⁻¹⁰. Two MACS3
-  runs of the same command differ from each other at that level.
+- **`hmmratac` trained model parameters.** Ours agree with upstream's to about
+  8 × 10⁻¹² relative; two runs of upstream agree with *each other* to about
+  2 × 10⁻¹², so the gap is roughly 4× upstream's own reproducibility floor rather
+  than zero. Measured over all 77 parameters of a freshly trained yeast model
+  (see status). Nothing downstream moves: the decoded accessible regions, the
+  states and the cutoff analysis are byte-identical.
 - **`callvar` VCF header.** `##Program_Args` echoes the output path, so it
   differs whenever the path does.
 - **SAM input.** MACS3's SAM parser fails on any minus-strand read; this port
